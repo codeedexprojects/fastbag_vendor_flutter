@@ -61,7 +61,8 @@ TextStyle normalFont3(
       fontSize: fontsize,
       fontWeight: FontWeight.bold,
       color: color,
-      fontStyle: FontStyle.italic);
+      // fontStyle: FontStyle.italic
+      );
 }
 
 TextStyle normalFont4(
@@ -72,7 +73,7 @@ TextStyle normalFont4(
       fontSize: fontsize,
       fontWeight: FontWeight.bold,
       color: color,
-      fontStyle: FontStyle.italic);
+      );
 }
 TextStyle normalFont5(
     {required double fontsize,
@@ -82,7 +83,8 @@ TextStyle normalFont5(
       fontSize: fontsize,
       fontWeight: FontWeight.bold,
       color: color,
-      fontStyle: FontStyle.italic);
+      // fontStyle: FontStyle.italic
+      );
 }
 TextStyle homeFont(
     {required double fontsize,

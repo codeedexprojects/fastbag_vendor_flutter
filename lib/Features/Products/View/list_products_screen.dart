@@ -97,7 +97,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                           return Column(
                             children: [
                               GestureDetector(onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(productId: productProvider.foodProducts[index].id ?? 0,)));
                               },
                                 child: ListTile(
                                   leading: Container(

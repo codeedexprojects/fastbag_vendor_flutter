@@ -1,14 +1,30 @@
+import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../Commons/colors.dart';
 import '../../../Commons/fonts.dart';
 
-class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({Key? key}) : super(key: key);
+class ProductDetailScreen extends StatefulWidget {
+  final int productId;
+  const ProductDetailScreen({Key? key, required this.productId}) : super(key: key);
 
   @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  String? imageIndex;
+  @override
+  void initState() {
+    final _viewModel=Provider.of<FoodViewModel>(context,listen: false);
+    _viewModel.getfooddata(widget.productId);
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+  final _viewModel=Provider.of<FoodViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: FbColors.backgroundcolor,
@@ -31,23 +47,39 @@ class ProductDetailScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top:11),
-              child: Center(child: Image.asset('assets/Images/image_5-removebg-preview.png',height:305.22,width: 336,)),
+              child: Center(child: ClipRRect(borderRadius: BorderRadius.all( Radius.circular(360)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle
+                  ),
+                  height:336.22,width: 336,
+                  child: Image.network(
+                     imageIndex??_viewModel.foodDetail?.imageUrls?.first.image ?? "",fit: BoxFit.cover,),
+                ),
+              ),),
             ),
             SizedBox(height: 24.78,),
             Container(
-                height: 60,
-                width: 340,
-              child:Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  productDifferntimage('assets/Images/Rectangle 2193.png'),
-                  productDifferntimage('assets/Images/Rectangle 2193.png'),
-                  productDifferntimage('assets/Images/Rectangle 2193.png'),
-                  productDifferntimage('assets/Images/Rectangle 2193.png'),
-                  productDifferntimage('assets/Images/Rectangle 2193.png'),
-                ],
+              height: 60,
+              width: 340,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal, // Allows horizontal scrolling
+                itemCount:_viewModel.foodDetail?.imageUrls?.length??0  , // Number of images
+                itemBuilder: (BuildContext context, int index) {
+                  final imageUrl = _viewModel.foodDetail?.imageUrls?[index].image ??'';
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0), // Adds spacing
+                    child: productDifferntimage('${imageUrl}',() {
+                     setState(() {
+                       imageIndex=imageUrl;
+                       print(imageUrl);
+                     });
+                    }),
+                  );
+                },
               ),
             ),
+
             SizedBox(height: 36,),
             Container(
               height: 52,
@@ -57,14 +89,14 @@ class ProductDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Food',style: normalFont5(fontsize: 20, fontweight: FontWeight.w400, color: FbColors.black),),
-                      Text('\$115',style: normalFont5(fontsize: 20, fontweight: FontWeight.w400, color: FbColors.black),),
+                      Text(_viewModel.foodDetail?.name??'',style: normalFont5(fontsize: 20, fontweight: FontWeight.w400, color: FbColors.black),),
+                      Text(_viewModel.foodDetail?.price??'\$115',style: normalFont5(fontsize: 20, fontweight: FontWeight.w400, color: FbColors.black),),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Category',style: normalFont4(fontsize: 16, fontweight: FontWeight.w400, color: FbColors.black),),
+                      Text('${_viewModel.foodDetail?.categoryName?? 0}',style: normalFont4(fontsize: 16, fontweight: FontWeight.w400, color: FbColors.black),),
                       Row(
                         children: [
                           Icon(Icons.star,size: 16,color: Color.fromRGBO(231, 176, 8, 1),),
@@ -94,7 +126,7 @@ class ProductDetailScreen extends StatelessWidget {
 
                   children: [
                     Text(textAlign: TextAlign.start,
-                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
+                       _viewModel.foodDetail?.description?? 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
                     style: normalFont4(fontsize: 16, fontweight: FontWeight.w400, color: FbColors.black),),
                     // Align(alignment:Alignment.centerLeft,
                     //   child: GestureDetector(
@@ -109,8 +141,15 @@ class ProductDetailScreen extends StatelessWidget {
       ),
     );
   }
-  Widget productDifferntimage(String path){
-    return ClipRRect(borderRadius: BorderRadius.all(Radius.circular(10)),
-        child: Image.asset(path,height: 60,width: 60,));
+
+  Widget productDifferntimage(String path, VoidCallback onTap){
+    return GestureDetector(
+      onTap: onTap,
+      child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(10)),
+          child: Container(
+              height: 60,width: 60,
+            decoration: BoxDecoration(shape: BoxShape.circle),
+              child: Image.network(path,fit: BoxFit.cover,))),
+    );
   }
 }
