@@ -75,7 +75,7 @@ class AccountCreatedScreen extends StatelessWidget {
                   ),
                   title: const Text("Create your category/product list"),
                   subtitle: const Text(
-                      "Add items to your product list with images  "),
+                      "Add items to your product list with Images  "),
                 )),
             FbButton(
                 onClick: () {
