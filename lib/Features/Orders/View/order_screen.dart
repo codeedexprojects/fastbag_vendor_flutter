@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Features/Orders/View/order_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,7 +15,6 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   String selectedCategory = "All";
-  final List<String> categories = ["All", "New Order", "Awaiting Pickup", "In Transit"];
   final List<Map<String, dynamic>> orders = [
     {"name": "Raiden Lord", "id": "#212323", "date": "Today | 9:00 am", "status": "New Order",'color' :OrderColor.green},
     {"name": "Raiden Lord", "id": "#212323", "date": "Today | 9:00 am", "status": "Awaiting Pickup", 'color' :OrderColor.orange},
@@ -33,6 +33,8 @@ class _OrderScreenState extends State<OrderScreen> {
 
     {"id": "#212328", "date": "26 Nov 2023 | 9:00 am", "status": "Cancelled", "items": "1 item", "color": Colors.red},
   ];
+  final List<String> categories = ["All", "New Order", "Awaiting Pickup", "In Transit"];
+
 
   final Map<String, List<Map<String, dynamic>>> orderCategories = {
     "All": [
@@ -76,7 +78,6 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     height=MediaQuery.of(context).size.height;
     width=MediaQuery.of(context).size.width;
-    MediaQuery.of(context).size.height;
     return Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -191,48 +192,61 @@ class _OrderScreenState extends State<OrderScreen> {
                    final order = filteredOrders[index];
                    return SizedBox(
                      height: height*0.1,
-                     child: ListTile(
-                       leading: Column(
-                         mainAxisAlignment: MainAxisAlignment.start,
-                         crossAxisAlignment: CrossAxisAlignment.start,
+                     child: GestureDetector(
+                       onTap: () {
+                         if(selectedCategory!='All')
+                         Navigator.push(context, MaterialPageRoute(builder: (context) =>OrderDetails(orderItems: filteredOrders, selectedCategory: selectedCategory,),));
+                       },
+                       child: ListTile(
+                         leading: Column(
+                           mainAxisAlignment: MainAxisAlignment.start,
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                             if(selectedCategory=='All')
+                             Text(order['name'],style: GoogleFonts.nunito(
+                               fontSize: 16,
+                               fontWeight: FontWeight.w500
+                             ),),
+                             Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
+                                 fontSize: 12,
+                                 fontWeight: FontWeight.w400
+                             )),
+                             Text(order['date'],style: GoogleFonts.nunito(
+                                 fontSize: 11,
+                                 fontWeight: FontWeight.w400
+                             )),
+                           ],
+                         ),
+                         trailing:  selectedCategory == "All"
+                       ? Row(
+                           mainAxisSize: MainAxisSize.min,
                          children: [
-                           if(selectedCategory=='All')
-                           Text(order['name'],style: GoogleFonts.nunito(
-                             fontSize: 16,
-                             fontWeight: FontWeight.w500
-                           ),),
-                           Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
-                               fontSize: 12,
-                               fontWeight: FontWeight.w400
-                           )),
-                           Text(order['date'],style: GoogleFonts.nunito(
-                               fontSize: 11,
-                               fontWeight: FontWeight.w400
-                           )),
+                           Icon(Icons.circle,size: width*0.015,color: order['color'],),
+                           SizedBox(width: width*0.01,),
+                           Text(
+                           order['status'],
+                             style: GoogleFonts.nunito(
+                                 fontSize: 14,
+                                 fontWeight: FontWeight.w600,
+                                 color: order['color']
+                             ),
+                           ),
                          ],
+                       )
+                             : Row(
+                           mainAxisSize: MainAxisSize.min,
+                           children: [
+                             Text(order['items'], style: GoogleFonts.nunito(
+                                 fontSize: 14,
+                                 fontWeight: FontWeight.w600,
+                                 color: OrderColor.textColor
+                             ),),
+                             SizedBox(width: width*0.03),
+                             Icon(Icons.arrow_forward_ios, size: 14),
+                           ],
+                         ),
                        ),
-                       trailing:  selectedCategory == "All"
-                     ? Text(
-                     order['status'],
-                       style: GoogleFonts.nunito(
-                           fontSize: 14,
-                           fontWeight: FontWeight.w600,
-                           color: order['color']
-                       ),
-                     )
-                           : Row(
-                         mainAxisSize: MainAxisSize.min,
-                         children: [
-                           Text(order['items'], style: GoogleFonts.nunito(
-                               fontSize: 14,
-                               fontWeight: FontWeight.w600,
-                               color: OrderColor.textColor
-                           ),),
-                           SizedBox(width: width*0.03), // Space between text and icon
-                           Icon(Icons.arrow_forward_ios, size: 14), // ✅ Arrow button
-                         ],
-                       ),
-                   ),
+                     ),
                    );
                  },
                  separatorBuilder: (context, index) {

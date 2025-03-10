@@ -34,5 +34,6 @@ class OrderColor{
   static const blue=Color(0xff0754ea);
   static const darkGreen=Color(0xff324e32);
   static const red=Color(0xffa32424);
+  static const white=Color(0xffffffff);
 
 }
