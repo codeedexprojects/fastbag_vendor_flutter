@@ -6,13 +6,20 @@ import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_m
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
   const Settings({super.key});
-  
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  @override
 
   @override
   Widget build(BuildContext context) {
-    var vendorProvider=Provider.of<ProfileViewModel>(context,listen: false);
+
+    // var vendorProvider=Provider.of<ProfileViewModel>(context,listen: false);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -45,9 +52,9 @@ class Settings extends StatelessWidget {
                     child: const Text("Change",style: TextStyle(color: Colors.green),)),
                 ),
               ),
-              FbVendorInfo(label: "FULL NAME", value: data.vendor?.owner_name as String),
-              FbVendorInfo(label: "EMAIL ADDRESS", value: data.vendor?.email as String),
-              FbVendorInfo(label: "PHONE NUMBER", value: data.vendor?.contact_number.toString() as String),
+              FbVendorInfo(label: "FULL NAME", value: data.vendor?.owner_name ?? 'N/A'),
+              FbVendorInfo(label: "EMAIL ADDRESS", value: data.vendor?.email ?? 'N/A'),
+              FbVendorInfo(label: "PHONE NUMBER", value: data.vendor?.contact_number.toString() ?? 'N/A'),
             ],
           );
         }
