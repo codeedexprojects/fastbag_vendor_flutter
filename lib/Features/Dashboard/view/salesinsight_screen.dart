@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../Commons/colors.dart';
-import '../../../../Commons/fonts.dart';
+import '../../../Commons/colors.dart';
+import '../../../Commons/fonts.dart';
 
 class SalesinsightScreen extends StatelessWidget {
   const SalesinsightScreen({Key? key}) : super(key: key);

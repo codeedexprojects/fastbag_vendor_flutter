@@ -18,7 +18,7 @@ class _FbTextAgreementState extends State<FbTextAgreement> {
     final screenHeight = MediaQuery.of(context).size.height;
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * .07, vertical: screenHeight * .02),
+          horizontal: screenWidth * .01, vertical: screenHeight * .02),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,10 +31,13 @@ class _FbTextAgreementState extends State<FbTextAgreement> {
                 onChanged: (bool? value) {
                   setState(() {
                     _isAgreed = value!;
-                    widget.onAgreeChanged(_isAgreed); // Pass the updated value back
+                    widget.onAgreeChanged(
+                        _isAgreed); // Pass the updated value back
                   });
                 },
-                activeColor: _isAgreed ? Colors.green : Colors.transparent, // Green when selected
+                activeColor: _isAgreed
+                    ? Colors.green
+                    : Colors.transparent, // Green when selected
                 //fillColor: const WidgetStatePropertyAll(Colors.grey),
               ),
               Expanded(
@@ -59,7 +62,7 @@ class _FbTextAgreementState extends State<FbTextAgreement> {
                     RichText(
                       text: const TextSpan(
                         children: [
-                           TextSpan(
+                          TextSpan(
                             text: 'and ',
                             style: TextStyle(color: Colors.black),
                           ),

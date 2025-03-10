@@ -1,17 +1,31 @@
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/Dashboard/view/productinsight_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/Dashboard/view/salesinsight_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Dashboard/view/productinsight_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Dashboard/view/salesinsight_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Dashboard/view_model/dash_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({
     super.key,
   });
 
   @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    final _viewModel = Provider.of<DashViewModel>(context,listen: false);
+    _viewModel.getdata();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+    final _viewModel = Provider.of<DashViewModel>(context);
     return Scaffold(
       backgroundColor: FbColors.backgroundcolor,
       body: SingleChildScrollView(
@@ -79,7 +93,7 @@ class DashboardScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildproductInsightCard(
-                      'Total\nPoducts', 75, 'assets/icons/Icon_Order.png'),
+                      'Total\nPoducts', _viewModel.dishClass?.productCount ?? 0, 'assets/icons/Icon_Order.png'),
                   _buildproductInsightCard('Available\nProducts', 357,
                       'assets/icons/icon Delivered.png'),
                   _buildproductInsightCard('Out of stock\nProducts', 65,
@@ -316,7 +330,7 @@ class DashboardScreen extends StatelessWidget {
                   height: 32.26,
                   width: 32,
                 ),
-                Text(total.toString(),
+                Text('$total',
                     style: normalFont3(
                       fontsize: 28,
                       fontweight: FontWeight.w700,

@@ -9,7 +9,10 @@ class FbFilePicker extends StatefulWidget {
   final Color? borderColor;
 
   const FbFilePicker(
-      {super.key, required this.onFilePicked, required this.fileCategory,this.borderColor});
+      {super.key,
+      required this.onFilePicked,
+      required this.fileCategory,
+      this.borderColor});
 
   @override
   FbFilePickerState createState() => FbFilePickerState();
@@ -53,63 +56,67 @@ class FbFilePickerState extends State<FbFilePicker> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * .07, vertical: screenHeight * .02),
-      child: GestureDetector(
-        onTap: _pickFile,
-        child: Container(
-          height:
-              _selectedFile != null ? screenHeight * .25 : screenHeight * .18,
-          decoration: BoxDecoration(
-            border: Border.all(color: widget.borderColor ?? Colors.white, width: 1),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.fileCategory.toUpperCase(),
-                  style: const TextStyle(color: Colors.grey),
-                ),
+    return GestureDetector(
+      onTap: _pickFile,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        height: _selectedFile != null ? screenHeight * .25 : screenHeight * .18,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border:
+              Border.all(color: widget.borderColor ?? Colors.white, width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.fileCategory.toUpperCase(),
+                style: const TextStyle(color: Colors.grey),
               ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/file_upload.svg',
-                      width: 50.0, // Set desired width
-                      height: 50.0, // Set desired height
-                    ),
-                     Text(
-                      "Upload ${widget.fileCategory} Image",
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    const Text(
-                      "jpg/png should be less than 5mb",
-                      style: TextStyle(color: Colors.black12),
-                    ),
-                    if (_selectedFile != null)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          child: ListTile(
-                            title: Text(_selectedFile!.path.split('/').last),
-                            trailing: const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                            ),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min, // Prevents extra space
+
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/file_upload.svg',
+                    width: 50.0, // Set desired width
+                    height: 50.0, // Set desired height
+                  ),
+                  Text(
+                    "Upload ${widget.fileCategory} Image",
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                  const Text(
+                    "jpg/png should be less than 5mb",
+                    style: TextStyle(color: Colors.black12),
+                  ),
+                  if (_selectedFile != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: SizedBox(
+                        child: ListTile(
+                          title: Text(
+                            _selectedFile!.path.split('/').last,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: const Icon(
+                            Icons.check,
+                            color: Colors.green,
                           ),
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

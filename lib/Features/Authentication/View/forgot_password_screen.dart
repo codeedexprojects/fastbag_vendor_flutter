@@ -13,7 +13,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-
   var emailController = TextEditingController();
 
   Widget _gap(BuildContext context) {
@@ -24,7 +23,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
 
     return Scaffold(
         backgroundColor: FbColors.mainbackgroundColor,
@@ -59,9 +57,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     color: Colors.grey),
               ),
               _gap(context),
-              FbTextFormField(label: "email Address", controller: emailController,noPadding: true,),
+              FbTextFormField(
+                label: "email Address",
+                controller: emailController,
+              ),
               _gap(context),
-              FbButton(onClick: (){}, label: "RESET PASSWORD")
+              FbButton(onClick: () {}, label: "RESET PASSWORD")
             ],
           ),
         ));

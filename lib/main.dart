@@ -1,11 +1,11 @@
 
+import 'package:fastbag_vendor_flutter/Features/Dashboard/view_model/dash_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/ViewModel/auth_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Splash/View/splash_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -21,12 +21,14 @@ void main() async {
     print('Error during locale initialization: $e');
   }
 
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_)=>AuthViewModel()),
       ChangeNotifierProvider(create: (_)=>CategoryViewModel()),
       ChangeNotifierProvider(create: (_)=>ProfileViewModel()),
-      ChangeNotifierProvider(create: (_)=>ProductViewModel())
+      ChangeNotifierProvider(create: (_)=>ProductViewModel()),
+      ChangeNotifierProvider(create: (_)=>DashViewModel()),
     ],
     child: const MyApp()));
 
@@ -42,7 +44,9 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          scaffoldBackgroundColor:
+              const Color(0xFFF5F5F5), // Global scaffold color
+
           useMaterial3: true,
         ),
         home: const SplashScreen());

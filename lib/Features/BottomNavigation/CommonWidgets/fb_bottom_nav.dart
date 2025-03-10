@@ -1,4 +1,4 @@
-import '../Dashboard/view/dashboard_screen.dart';
+import '../../Dashboard/view/dashboard_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Orders/View/order_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/profile_screen.dart';
@@ -39,24 +39,27 @@ class _FbBottomNavState extends State<FbBottomNav> {
           selectedIconTheme: const IconThemeData(color: Colors.green),
           showUnselectedLabels: true,
           items: [
-            navItem("nav1", "Dashboard", 0),
-            navItem("nav2", "Products", 1),
-            navItem("nav3", "Orders", 2),
-            navItem("nav4", "Profile", 3)
+            navItem("dashboard", "Dashboard", 0),
+            navItem("product", "Products", 1),
+            navItem("order", "Orders", 2),
+            navItem("person", "Profile", 3)
           ]),
     );
   }
 
-  BottomNavigationBarItem navItem(String svgName, String label, int count) {
+  BottomNavigationBarItem navItem(String pngName, String label, int count) {
     return BottomNavigationBarItem(
-        icon: SvgPicture.asset(
-          'assets/icons/$svgName.svg',
-          width: 25,
-          height: 25,
-          colorFilter: count == _selectedIndex
-              ? const ColorFilter.mode(Colors.green, BlendMode.srcIn)
-              : null,
+      icon: ColorFiltered(
+        colorFilter: count == _selectedIndex
+            ? const ColorFilter.mode(Colors.green, BlendMode.srcIn)
+            : const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+        child: Image.asset(
+          'assets/icons/$pngName.png',
+          width: 20,
+          height: 20,
         ),
-        label: label);
+      ),
+      label: label,
+    );
   }
 }

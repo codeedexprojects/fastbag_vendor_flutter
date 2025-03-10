@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
+import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/Fb_Text_Form_Field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
@@ -49,11 +50,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   void initState() {
-    FbStore.retrieveData(FbLocalStorage.vendorId).then((data) {
-      setState(() {
-        vendorId = data;
-      });
-    });
+    // FbStore.retrieveData(FbLocalStorage.vendorId).then((data) {
+    //   setState(() {
+    //     vendorId = data;
+    //   });
+    // }
+    //  );
     super.initState();
   }
 
@@ -148,12 +150,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              FbCategoryFormField(
+              FbTextFormField(
                 label: "Category Name",
                 controller: nameController,
                 validator: customValidatornoSpaceError,
+                border: true,
               ),
               FbCategoryFormField(
                 label: "Describe the product",

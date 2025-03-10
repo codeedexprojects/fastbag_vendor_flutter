@@ -4,7 +4,7 @@ import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../BottomNavigation/Dashboard/view/dashboard_screen.dart';
+import '../../Dashboard/view/dashboard_screen.dart';
 
 class AccountCreatedScreen extends StatelessWidget {
   const AccountCreatedScreen({super.key});
@@ -75,7 +75,7 @@ class AccountCreatedScreen extends StatelessWidget {
                   ),
                   title: const Text("Create your category/product list"),
                   subtitle: const Text(
-                      "Add items to your product list with Images  "),
+                      "Add items to your product list with images  "),
                 )),
             FbButton(
                 onClick: () {

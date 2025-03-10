@@ -15,7 +15,8 @@ class FbCategoryFormField extends StatefulWidget {
       this.keyboard,
       required this.controller,
       this.validator,
-      this.noPadding = false, this.hint});
+      this.noPadding = false,
+      this.hint});
 
   @override
   State<FbCategoryFormField> createState() => _FbCategoryFormFieldState();
@@ -92,9 +93,11 @@ class _FbCategoryFormFieldState extends State<FbCategoryFormField> {
                     ? const Icon(Icons.check, color: Colors.green)
                     : null,
                 enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(color: Colors.grey, width: 0.2),
                 ),
                 focusedBorder: const UnderlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(color: Colors.grey, width: 0.2),
                 ),
               ),

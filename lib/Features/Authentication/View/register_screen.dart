@@ -58,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     "time": TextEditingController(),
     "password": TextEditingController(),
     "confirmPassword": TextEditingController(),
-    "alternativeEmail":TextEditingController()
+    "alternativeEmail": TextEditingController()
   };
 
   String _selectedTimeRange = "";
@@ -117,27 +117,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
       List<String> times = _selectedTimeRange.split(' - ');
 
       RegisterModel model = RegisterModel(
-        owner_name: _controllers['name']!.text,
-        since: int.tryParse(_controllers["since"]!.text) ?? 0,
-        email: _controllers['email']!.text,
-        business_name: _controllers['shop']!.text,
-        contact_number: int.tryParse(_controllers['phone']!.text) ?? 0,
-        address: _controllers['address']!.text,
-        city: _controllers['city']!.text,
-        state: _controllers['state']!.text,
-        pincode: int.tryParse(_controllers['pincode']!.text) ?? 0,
-        store_logo: _selectedFiles['logo']!,
-        store_description: _controllers['description']!.text,
-        store_type: selectedCategory?.name ?? "Default",
-        closing_time: times[1],
-        opening_time: times[0],
-        fssai_no: int.parse(_controllers['fssai']!.text),
-        fssai_certicate: _selectedFiles['certificate']!,
-        bussiness_location: _controllers['location']!.text,
-        business_landmark: _controllers['landmark']!.text,
-        display_image: _selectedFiles["view"]!,
-        alternate_email: _controllers['alternativeEmail']!.text
-      );
+          owner_name: _controllers['name']!.text,
+          since: int.tryParse(_controllers["since"]!.text) ?? 0,
+          email: _controllers['email']!.text,
+          business_name: _controllers['shop']!.text,
+          contact_number: int.tryParse(_controllers['phone']!.text) ?? 0,
+          address: _controllers['address']!.text,
+          city: _controllers['city']!.text,
+          state: _controllers['state']!.text,
+          pincode: int.tryParse(_controllers['pincode']!.text) ?? 0,
+          store_logo: _selectedFiles['logo']!,
+          store_description: _controllers['description']!.text,
+          store_type: selectedCategory?.name ?? "Default",
+          closing_time: times[1],
+          opening_time: times[0],
+          fssai_no: int.parse(_controllers['fssai']!.text),
+          fssai_certicate: _selectedFiles['certificate']!,
+          bussiness_location: _controllers['location']!.text,
+          business_landmark: _controllers['landmark']!.text,
+          display_image: _selectedFiles["view"]!,
+          alternate_email: _controllers['alternativeEmail']!.text);
 
       registerViewModel.userRegister(registerVendor: model, context: context);
     }
@@ -152,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _gap(BuildContext context) {
-    return SizedBox(height: MediaQuery.of(context).size.height * 0.02);
+    return SizedBox(height: MediaQuery.of(context).size.height * 0.01);
   }
 
   @override
@@ -173,125 +172,143 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(left: screenWidth * .07),
                   child: const FbAuthTitle(
-                      title: "Create Account", fontWidth: .05),
+                      title: "Create Account", fontWidth: .055),
                 ),
               ),
               _gap(context),
               // Text Form Fields
-              FbTextFormField(
-                  label: "Full Name",
-                  controller: _controllers["name"]!,
-                  validator: customValidatornoSpaceError),
-              FbTextFormField(
-                  label: "Email Address",
-                  controller: _controllers["email"]!,
-                  validator: emailValidator),
-              FbTextFormField(
-                  label: "Phone No",
-                  controller: _controllers["phone"]!,
-                  keyboard: TextInputType.phone,
-                  validator: phoneValidator),
-              FbTextFormField(
-                  label: "Shop Name",
-                  controller: _controllers["shop"]!,
-                  validator: customValidatornoSpaceError),
-              FbTextFormField(
-                  label: "Location",
-                  controller: _controllers["location"]!,
-                  validator: customValidatornoSpaceError),
-              FbTextFormField(
-                  label: "Landmark",
-                  controller: _controllers["landmark"]!,
-                  validator: customValidatornoSpaceError),
-              FbTextFormField(
-                  label: "Address",
-                  controller: _controllers["address"]!,
-                  validator: customValidatornoSpaceError),
-              FbTextFormField(
-                  label: "City",
-                  controller: _controllers["city"]!,
-                  validator: customValidator),
-              FbTextFormField(
-                  label: "State",
-                  controller: _controllers["state"]!,
-                  validator: customValidator),
-              FbTextFormField(
-                  label: "Pincode",
-                  controller: _controllers["pincode"]!,
-                  keyboard: TextInputType.number,
-                  validator: customValidatornoSpaceError),
-              FbFilePicker(
-                onFilePicked: (file) => _onFilePicked("logo", file),
-                fileCategory: "Store Logo",
-              ),
-              FbFilePicker(
-                onFilePicked: (file) => _onFilePicked("view", file),
-                fileCategory: "Store View",
-              ),
-              FbTextFormField(
-                  label: "Store Description",
-                  controller: _controllers["description"]!,
-                  validator: customValidatornoSpaceError),
-              FbTextFormField(
-                label: "FSSAI No",
-                controller: _controllers["fssai"]!,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter a valid FSSAI number.";
-                  }
-                  if (int.tryParse(value) == null) {
-                    return "FSSAI number must be a valid number.";
-                  }
-                  return null;
-                },
-              ),
-              FbFilePicker(
-                onFilePicked: (file) => _onFilePicked("certificate", file),
-                fileCategory: "FSSAI Certificate",
-              ),
-              FbFilePicker(
-                onFilePicked: (file) => _onFilePicked("license", file),
-                fileCategory: "License",
-              ),
-              FbCategoryDropdown(
-                hint: "Food",
-                categories: categories,
-                selectedCategory: selectedCategory,
-                onChanged: (CategoryModel? category) {
-                  setState(() {
-                    selectedCategory = category; // Update the selected category
-                  });
-                  print('Selected Category: ${category?.name}');
-                },
-              ),
-
-              FbTextFormField(
-                  label: "Since",
-                  controller: _controllers["since"]!,
-                  validator: customValidator),
-              FbTimePicker(
-                onTimeRangeChanged: (selectedTimeRange) {
-                  setState(() {
-                    print(selectedTimeRange);
-                    _selectedTimeRange =
-                        selectedTimeRange; // Update the selected time range
-                  });
-                },
-              ),
-              FbTextFormField(
-                  label: "Alternative Email",
-                  controller: _controllers["alternativeEmail"]!,
-                  validator: emailValidator),
-              FbTextAgreement(onAgreeChanged: _onAgreeChanged),
-              Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * .07,
-                    vertical: screenHeight * .02,
-                  ),
-                  child: FbButton(
-                    onClick: _submitForm,
-                    label: "SIGN UP",
-                  )),
+              Container(
+                margin: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  children: [
+                    FbTextFormField(
+                        label: "Full Name",
+                        controller: _controllers["name"]!,
+                        validator: customValidatornoSpaceError),
+                    FbTextFormField(
+                        label: "Email Address",
+                        controller: _controllers["email"]!,
+                        validator: emailValidator),
+                    FbTextFormField(
+                        label: "Phone No",
+                        controller: _controllers["phone"]!,
+                        keyboard: TextInputType.phone,
+                        validator: phoneValidator),
+                    FbTextFormField(
+                        label: "Shop Name",
+                        controller: _controllers["shop"]!,
+                        validator: customValidatornoSpaceError),
+                    FbTextFormField(
+                        label: "Location",
+                        controller: _controllers["location"]!,
+                        validator: customValidatornoSpaceError),
+                    FbTextFormField(
+                        label: "Landmark",
+                        controller: _controllers["landmark"]!,
+                        validator: customValidatornoSpaceError),
+                    FbTextFormField(
+                        label: "Address",
+                        controller: _controllers["address"]!,
+                        validator: customValidatornoSpaceError),
+                    FbTextFormField(
+                        label: "City",
+                        controller: _controllers["city"]!,
+                        validator: customValidator),
+                    FbTextFormField(
+                        label: "State",
+                        controller: _controllers["state"]!,
+                        validator: customValidator),
+                    FbTextFormField(
+                        label: "Pincode",
+                        controller: _controllers["pincode"]!,
+                        keyboard: TextInputType.number,
+                        validator: customValidatornoSpaceError),
+                    FbFilePicker(
+                      onFilePicked: (file) => _onFilePicked("logo", file),
+                      fileCategory: "Store Logo",
+                      borderColor: Colors.grey[300],
+                    ),
+                    _gap(context),
+                    FbFilePicker(
+                      onFilePicked: (file) => _onFilePicked("view", file),
+                      fileCategory: "Store View",
+                      borderColor: Colors.grey[300],
+                    ),
+                    FbTextFormField(
+                        label: "Store Description",
+                        controller: _controllers["description"]!,
+                        validator: customValidatornoSpaceError),
+                    FbTextFormField(
+                      label: "FSSAI No",
+                      controller: _controllers["fssai"]!,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter a valid FSSAI number.";
+                        }
+                        if (int.tryParse(value) == null) {
+                          return "FSSAI number must be a valid number.";
+                        }
+                        return null;
+                      },
+                    ),
+                    FbFilePicker(
+                      onFilePicked: (file) =>
+                          _onFilePicked("certificate", file),
+                      fileCategory: "FSSAI Certificate",
+                      borderColor: Colors.grey[300],
+                    ),
+                    _gap(context),
+                    FbFilePicker(
+                      onFilePicked: (file) => _onFilePicked("license", file),
+                      fileCategory: "License",
+                      borderColor: Colors.grey[300],
+                    ),
+                    FbCategoryDropdown(
+                      hint: "Food",
+                      categories: categories,
+                      selectedCategory: selectedCategory,
+                      onChanged: (CategoryModel? category) {
+                        setState(() {
+                          selectedCategory =
+                              category; // Update the selected category
+                        });
+                        print('Selected Category: ${category?.name}');
+                      },
+                    ),
+                    FbTextFormField(
+                        label: "Since",
+                        controller: _controllers["since"]!,
+                        validator: customValidator),
+                    FbTimePicker(
+                      onTimeRangeChanged: (selectedTimeRange) {
+                        setState(() {
+                          print(selectedTimeRange);
+                          _selectedTimeRange =
+                              selectedTimeRange; // Update the selected time range
+                        });
+                      },
+                    ),
+                    FbTextFormField(
+                        label: "Alternative Email",
+                        controller: _controllers["alternativeEmail"]!,
+                        validator: emailValidator),
+                    FbTextAgreement(onAgreeChanged: _onAgreeChanged),
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * .0,
+                          vertical: screenHeight * .02,
+                        ),
+                        child: FbButton(
+                          onClick: _submitForm,
+                          label: "SIGN UP",
+                        )),
+                  ],
+                ),
+              )
             ],
           ),
         ),

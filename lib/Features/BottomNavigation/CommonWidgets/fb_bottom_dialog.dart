@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui' as ui;
 
-import '../Dashboard/view/dashboard_screen.dart';
+import '../../Dashboard/view/dashboard_screen.dart';
 
 class FbBottomDialog extends StatefulWidget {
   final String text;

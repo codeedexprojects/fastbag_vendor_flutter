@@ -92,7 +92,7 @@ class ProductRepository {
         "variants": jsonEncode(model.variants),
         "discount": model.discount,
         "is_available": model.is_available,
-        "Images": imageFiles,
+        "images": imageFiles,
         "is_popular_product": model.is_popular_product,
         "is_offer_product": model.is_offer_product
       };
@@ -217,7 +217,7 @@ class ProductRepository {
 
     List<MultipartFile> imageFiles = [];
 
-    // Add only new Images as files
+    // Add only new images as files
     // if (newImages != null) {
     //   for (File file in model.image_urls) {
     //     imageFiles.add(await MultipartFile.fromFile(
