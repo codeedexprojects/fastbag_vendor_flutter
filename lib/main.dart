@@ -10,6 +10,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'Features/Orders/View/order_screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
@@ -49,6 +51,6 @@ class MyApp extends StatelessWidget {
 
           useMaterial3: true,
         ),
-        home: const SplashScreen());
+        home: const OrderScreen());
   }
 }
