@@ -4,6 +4,7 @@ import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import '../../Dashboard/view/dashboard_screen.dart';
 
 class AccountCreatedScreen extends StatelessWidget {
@@ -84,7 +85,7 @@ class AccountCreatedScreen extends StatelessWidget {
                 label: "Continue to Setup"),
             FbButton(
               onClick: () {
-                navigate(context: context, screen: DashboardScreen());
+                navigate(context: context, screen: FbBottomNav());
               },
               label: "Skip for later",
               color: Colors.white,
