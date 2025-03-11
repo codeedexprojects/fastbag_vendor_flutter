@@ -18,7 +18,7 @@ class SalesinsightScreen extends StatelessWidget {
             },
             icon: Icon(Icons.arrow_back_ios)),
         title: Text(
-          'Product Insight',
+          'Sales Insight',
           style: mainFont(
               fontsize: 16, fontweight: FontWeight.w600, color: FbColors.black),
         ),

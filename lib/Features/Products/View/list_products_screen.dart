@@ -4,6 +4,7 @@ import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/add_product_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
@@ -95,50 +96,54 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
-                              ListTile(
-                                leading: Container(
-                                  height: screenHeight * .05,
-                                  width: screenHeight * .06,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(productProvider
-                                          .foodProducts[index].image_urls[0]),
-                                    ),
-                                    border: Border.all(
-                                        color: Colors.grey, width: 0.2),
-                                  ),
-                                ),
-                                title: Text(
-                                    productProvider.foodProducts[index].name),
-                                subtitle: Text(
-                                    productProvider.foodProducts[index].price),
-                                trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Switch(
-                                            activeColor: Colors.green,
-                                            inactiveThumbColor: Colors.white,
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                            value: false,
-                                            onChanged: (value) {
-                                              // Handle switch toggle logic
-                                            },
-                                          ),
-                                        ],
+                              GestureDetector(onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(productId: productProvider.foodProducts[index].id ?? 0,)));
+                              },
+                                child: ListTile(
+                                  leading: Container(
+                                    height: screenHeight * .05,
+                                    width: screenHeight * .06,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(productProvider
+                                            .foodProducts[index].image_urls[0]),
                                       ),
-                                // trailing: Switch(
-                                //             activeColor: Colors.green,
-                                //             inactiveThumbColor: Colors.white,
-                                //             materialTapTargetSize:
-                                //                 MaterialTapTargetSize
-                                //                     .shrinkWrap,
-                                //             value: false,
-                                //             onChanged: (value) {
-                                //               // Handle switch toggle logic
-                                //             },
-                                //           ),
+                                      border: Border.all(
+                                          color: Colors.grey, width: 0.2),
+                                    ),
+                                  ),
+                                  title: Text(
+                                      productProvider.foodProducts[index].name),
+                                  subtitle: Text(
+                                      productProvider.foodProducts[index].price),
+                                  trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Switch(
+                                              activeColor: Colors.green,
+                                              inactiveThumbColor: Colors.white,
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              value: false,
+                                              onChanged: (value) {
+                                                // Handle switch toggle logic
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                  // trailing: Switch(
+                                  //             activeColor: Colors.green,
+                                  //             inactiveThumbColor: Colors.white,
+                                  //             materialTapTargetSize:
+                                  //                 MaterialTapTargetSize
+                                  //                     .shrinkWrap,
+                                  //             value: false,
+                                  //             onChanged: (value) {
+                                  //               // Handle switch toggle logic
+                                  //             },
+                                  //           ),
+                                ),
                               ),
                             ],
                           );

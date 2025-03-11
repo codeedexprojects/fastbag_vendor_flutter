@@ -90,7 +90,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               SizedBox(height: 5.0),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildproductInsightCard(
                       'Total\nPoducts', _viewModel.dishClass?.productCount ?? 0, 'assets/icons/Icon_Order.png'),
@@ -125,7 +125,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildSalesInsightItem(
                       'Total Orders',
@@ -148,68 +148,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
               SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Card(
-                    elevation: 1,
-                    child: Container(
-                      width: 386,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: FbColors.white),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CircleAvatar(
-                            radius: 35,
-                            backgroundColor: Colors.green[200],
-                            child: Image.asset(
-                              'assets/icons/Group 119.png',
-                              height: 37,
-                              width: 41,
-                            ),
-                          ),
-                          Text('₹4,560',
-                              style: normalFont3(
-                                  fontsize: 30,
-                                  fontweight: FontWeight.w700,
-                                  color: FbColors.lightBlack)),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                  textAlign: TextAlign.center,
-                                  'Total Revenue',
-                                  style: mainFont(
-                                      fontsize: 16,
-                                      fontweight: FontWeight.w400,
-                                      color: FbColors.lightBlack)),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/icons/Icon (1).png',
-                                    height: 16,
-                                    width: 16.13,
-                                  ),
-                                  Text(' 12%(30 days)',
-                                      style: mainFont(
-                                        fontsize: 12,
-                                        fontweight: FontWeight.w400,
-                                        color: FbColors.greyColor,
-                                      ))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+              Container(
+                padding: EdgeInsets.only(left: 10,right: 10),
+                width: 376,
+                height: 82,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: FbColors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(width: 2,),
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.green[200],
+                      child: Image.asset(
+                        'assets/icons/Group 119.png',
+                        height: 37,
+                        width: 41,
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 12,),
+                    Text('₹4,560',
+                        style: normalFont3(
+                            fontsize: 30,
+                            fontweight: FontWeight.w700,
+                            color: FbColors.lightBlack)),
+                    SizedBox(width: 12,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FittedBox(
+                          child: Text(
+                              textAlign: TextAlign.center,
+                              'Total Revenue',
+                              style: mainFont(
+                                  fontsize: 16,
+                                  fontweight: FontWeight.w400,
+                                  color: FbColors.lightBlack)),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/icons/Icon (1).png',
+                              height: 16,
+                              width: 16.13,
+                            ),
+                            Text(' 12%(30 days)',
+                                style: mainFont(
+                                  fontsize: 12,
+                                  fontweight: FontWeight.w400,
+                                  color: FbColors.greyColor,
+                                ))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 10.0),
               Column(
@@ -315,8 +312,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildproductInsightCard(String title, int total, String assetpath) {
     return Card(
       child: Container(
-        height: 110,
-        width: 120,
+        height: 90,
+        width: 100,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: FbColors.white),
         child: Column(
@@ -356,8 +353,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       String path, String percentage) {
     return Card(
         child: Container(
-      height: 110,
-      width: 120,
+      height: 90,
+      width: 100,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: FbColors.white),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [

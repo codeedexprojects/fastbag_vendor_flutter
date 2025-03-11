@@ -57,9 +57,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text('jjjjjhhhhhhhhh'),
                             Text('jjjjj'),
-                            Text('jjjjj'),
-                            Text('jjjjj'),
+                            Text('jjjjjjjjjjjjjjj'),
                           ],
                         ),
                         Text('hhhhh')
@@ -67,9 +67,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                     ),
                   )
                 ),
-                SizedBox(height: height*0.02,),
+                SizedBox(height: height*0.015,),
                 Container(
-                  height: height*0.68,
                   width: width*1,
                   decoration: BoxDecoration(
                     color: OrderColor.white,
@@ -80,10 +79,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                       Padding(
                         padding:  EdgeInsets.all(width*0.02),
                         child: SizedBox(
-                          height: height*0.46,
                           child: ListView.separated(
                             shrinkWrap: true,
-                              // physics: NeverScrollableScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   leading: Container(
@@ -105,7 +103,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                   color: OrderColor.textColor.withOpacity(0.05),
                                 );
                               },
-                              itemCount: 5),
+                              itemCount: widget.orderItems.length),
                         ),
                       ),
                       Padding(
@@ -151,9 +149,10 @@ class _OrderDetailsState extends State<OrderDetails> {
                       ),
                       Padding(
                         padding:  EdgeInsets.only(
-                          top: height*0.02,
+                          top: height*0.01,
                           left: width*0.03,
                           right: width*0.03,
+                          bottom: height*0.02
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -211,39 +210,30 @@ class _OrderDetailsState extends State<OrderDetails> {
                   color: OrderColor.white,
                   borderRadius: BorderRadius.circular(width * 0.015),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: AssetImage('assets/Images/agentImage.png'),
-                        )
-                      ],
-                    ),
-                    Text('Order awaiting pickup9:00 am \nAdekunle is on his way to pickup',style: GoogleFonts.nunito(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400
-                        ),
-                        textAlign: TextAlign.start,),
-                    Icon(Icons.call),
-                  ],
+                child: Padding(
+                  padding:  EdgeInsets.all(width*0.03),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundImage: AssetImage('assets/Images/agentImage.png'),
+                          )
+                        ],
+                      ),
+                      Text('Order awaiting pickup9:00 am \nAdekunle is on his way to pickup',style: GoogleFonts.nunito(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400
+                          ),
+                          textAlign: TextAlign.start,),
+                      Icon(Icons.call),
+                    ],
+                  ),
                 )
-                // ListTile(
-                //   leading: CircleAvatar(
-                //     radius: 30,
-                //     backgroundImage: AssetImage('assets/Images/agentImage.png'),
-                //   ),
-                //   title: Text('Order awaiting pickup9:00 am Adekunle is on his way to pickup',style: GoogleFonts.nunito(
-                //     fontSize: 13,
-                //     fontWeight: FontWeight.w400
-                //   ),
-                //   textAlign: TextAlign.start,),
-                //   trailing: Icon(Icons.call),
-                // ),
               ),
             ]
               ],

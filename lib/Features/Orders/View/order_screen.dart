@@ -193,73 +193,69 @@ class _OrderScreenState extends State<OrderScreen> {
                  shrinkWrap: true,
                  itemBuilder: (context, index) {
                    final order = filteredOrders[index];
-                   return SizedBox(
-                     height: height*0.13,
-                     child: GestureDetector(
-                       onTap: () {
-                         if(selectedCategory!='All')
-                         Navigator.push(context, MaterialPageRoute(builder: (context) =>OrderDetails(orderItems: filteredOrders, selectedCategory: selectedCategory,),));
-                       },
-                       child:Container(
-                         height: height*0.15,
-                         width: width*1,
-                         decoration: BoxDecoration(),
-                         child: Padding(
-                           padding:  EdgeInsets.all(width*0.03),
-                           child: Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                               children: [
-                                 Column(
-                                   mainAxisAlignment: MainAxisAlignment.center,
-                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                   children: [
-                                     if(selectedCategory=='All')
-                                       Text(order['name'],style: GoogleFonts.nunito(
-                                           fontSize: 16,
-                                           fontWeight: FontWeight.w500
-                                       ),),
-                                     Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
+                   return GestureDetector(
+                     onTap: () {
+                       if(selectedCategory!='All')
+                       Navigator.push(context, MaterialPageRoute(builder: (context) =>OrderDetails(orderItems: filteredOrders, selectedCategory: selectedCategory,),));
+                     },
+                     child:Container(
+                       width: width*1,
+                       decoration: BoxDecoration(),
+                       child: Padding(
+                         padding:  EdgeInsets.all(width*0.03),
+                         child: Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               Column(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                 children: [
+                                   if(selectedCategory=='All')
+                                     Text(order['name'],style: GoogleFonts.nunito(
+                                         fontSize: 16,
+                                         fontWeight: FontWeight.w500
+                                     ),),
+                                   Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
+                                       fontSize: 14,
+                                       fontWeight: FontWeight.w400
+                                   )),
+                                   Text(order['date'],style: GoogleFonts.nunito(
+                                       fontSize: 14,
+                                       fontWeight: FontWeight.w400
+                                   )),
+                                 ],
+                               ),
+                               selectedCategory=='All'?
+                              Row(
+                                 mainAxisSize: MainAxisSize.min,
+                                 children: [
+                                   Icon(Icons.circle,size: width*0.015,color: order['color'],),
+                                   SizedBox(width: width*0.01,),
+                                   Text(
+                                     order['status'],
+                                     style: GoogleFonts.nunito(
                                          fontSize: 14,
-                                         fontWeight: FontWeight.w400
-                                     )),
-                                     Text(order['date'],style: GoogleFonts.nunito(
-                                         fontSize: 14,
-                                         fontWeight: FontWeight.w400
-                                     )),
-                                   ],
-                                 ),
-                                 selectedCategory=='All'?
-                                Row(
-                                   mainAxisSize: MainAxisSize.min,
-                                   children: [
-                                     Icon(Icons.circle,size: width*0.015,color: order['color'],),
-                                     SizedBox(width: width*0.01,),
-                                     Text(
-                                       order['status'],
-                                       style: GoogleFonts.nunito(
+                                         fontWeight: FontWeight.w600,
+                                         color: order['color']
+                                     ),
+                                   ),
+                                 ],
+                               ):
+                                   Row(
+                                     children: [
+                                       Text(order['items'], style: GoogleFonts.nunito(
                                            fontSize: 14,
                                            fontWeight: FontWeight.w600,
-                                           color: order['color']
-                                       ),
-                                     ),
-                                   ],
-                                 ):
-                                     Row(
-                                       children: [
-                                         Text(order['items'], style: GoogleFonts.nunito(
-                                             fontSize: 14,
-                                             fontWeight: FontWeight.w600,
-                                             color: OrderColor.textColor
-                                         ),),
-                                         SizedBox(width: width*0.03),
-                                         Icon(Icons.arrow_forward_ios, size: 14),
-                                       ],
-                                     )
-                               ]
-                           ),
+                                           color: OrderColor.textColor
+                                       ),),
+                                       SizedBox(width: width*0.03),
+                                       Icon(Icons.arrow_forward_ios, size: 14),
+                                     ],
+                                   )
+                             ]
                          ),
-                       ) ,
-                     ),
+                       ),
+                     ) ,
                    );
                  },
                  separatorBuilder: (context, index) {
