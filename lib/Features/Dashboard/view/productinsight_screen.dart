@@ -18,7 +18,7 @@ class ProductinsightScreen extends StatelessWidget {
             },
             icon: Icon(Icons.arrow_back_ios)),
         title: Text(
-          'Sales Insight',
+          'Product Insight',
           style: mainFont(
               fontsize: 16, fontweight: FontWeight.w600, color: FbColors.black),
         ),
@@ -49,7 +49,7 @@ class ProductinsightScreen extends StatelessWidget {
     return Card(
       child: Container(
         height: 144,
-        width: 386,
+        width: 400,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: FbColors.white),
         child: Column(
@@ -78,14 +78,17 @@ class ProductinsightScreen extends StatelessWidget {
                         fontweight: FontWeight.w700,
                         color: FbColors.lightBlack),
                   ),
-                  GestureDetector(
-                      onTap: () {},
-                      child: Text('View All',
-                          style: normalFont4(
-                            fontsize: 16,
-                            fontweight: FontWeight.w400,
-                            color: FbColors.greendark,
-                          )))
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: GestureDetector(
+                        onTap: () {},
+                        child: Text('View All',
+                            style: normalFont4(
+                              fontsize: 16,
+                              fontweight: FontWeight.w400,
+                              color: FbColors.greendark,
+                            ))),
+                  )
                 ],
               ),
             )

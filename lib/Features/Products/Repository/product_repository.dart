@@ -5,10 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_detail_class.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductRepository {
   final Dio _dio = Dio();
@@ -291,5 +293,30 @@ class ProductRepository {
     print("Error: $e");
   }
 }
+  Future<FoodDetail?>fetchfoodDetail(int productId)async{
+    try{
+      final prefs=await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
+      var headers = {
+        'Authorization': 'Bearer $tokenId'
+      };
+      var dio = Dio();
+      var response = await dio.request(
+        '${baseUrl}/food/dishes/$productId/',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print(response.data);
+        return FoodDetail.fromJson(response.data);
+      }
+
+    }on DioException catch (e) {
+      print("error $e");
+    }
+  }
 
 }
