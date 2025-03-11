@@ -17,7 +17,7 @@ TextStyle mainFont(
       fontSize: fontsize,
       fontWeight: fontweight,
       color: color,
-      letterSpacing: 1);
+     );
 }
 
 TextStyle normalFont(
