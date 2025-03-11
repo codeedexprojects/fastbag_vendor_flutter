@@ -67,7 +67,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Image.asset(
                           'assets/Images/image_5-removebg-preview.png'),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      errorWidget: (context, url, error) => Icon(Icons.downloading),
                     ),
                   ),
                 ),
