@@ -17,7 +17,7 @@ TextStyle mainFont(
       fontSize: fontsize,
       fontWeight: fontweight,
       color: color,
-      letterSpacing: 1);
+     );
 }
 
 TextStyle normalFont(
@@ -61,7 +61,8 @@ TextStyle normalFont3(
       fontSize: fontsize,
       fontWeight: FontWeight.bold,
       color: color,
-      fontStyle: FontStyle.italic);
+      // fontStyle: FontStyle.italic
+      );
 }
 
 TextStyle normalFont4(
@@ -72,9 +73,19 @@ TextStyle normalFont4(
       fontSize: fontsize,
       fontWeight: FontWeight.bold,
       color: color,
-      fontStyle: FontStyle.italic);
+      );
 }
-
+TextStyle normalFont5(
+    {required double fontsize,
+      required FontWeight fontweight,
+      required Color color}) {
+  return GoogleFonts.inder(
+      fontSize: fontsize,
+      fontWeight: FontWeight.bold,
+      color: color,
+      // fontStyle: FontStyle.italic
+      );
+}
 TextStyle homeFont(
     {required double fontsize,
     required FontWeight fontweight,
