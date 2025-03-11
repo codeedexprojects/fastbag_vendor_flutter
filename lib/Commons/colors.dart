@@ -24,3 +24,16 @@ class FbColors {
   static Color black2 = Color.fromRGBO(51, 51, 51, 1);
   static Color buttonColor = const Color(0xFF5EB14E);
 }
+
+class OrderColor{
+  static const backGroundColor=Color(0xfff0f0f0);
+  static const borderColor=Color(0xff868686);
+  static const textColor=Color(0xff666666);
+  static const green=Color(0xff5eb14e);
+  static const orange=Color(0xffffa500);
+  static const blue=Color(0xff0754ea);
+  static const darkGreen=Color(0xff324e32);
+  static const red=Color(0xffa32424);
+  static const white=Color(0xffffffff);
+
+}
