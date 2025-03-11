@@ -1,10 +1,13 @@
-import 'package:fastbag_vendor_flutter/Features/Orders/View/order_details.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
+
 import '../../../Commons/colors.dart';
 import '../../../Commons/localvariables.dart';
+import 'order_details.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -84,7 +87,7 @@ class _OrderScreenState extends State<OrderScreen> {
             children: [
               Padding(
                 padding:  EdgeInsets.only(
-                    top: height*0.05,
+                    top: height*0.08,
                     left: width*0.05
                 ),
                 child: Row(
@@ -197,55 +200,65 @@ class _OrderScreenState extends State<OrderScreen> {
                          if(selectedCategory!='All')
                          Navigator.push(context, MaterialPageRoute(builder: (context) =>OrderDetails(orderItems: filteredOrders, selectedCategory: selectedCategory,),));
                        },
-                       child: ListTile(
-                         leading: Column(
-                           mainAxisAlignment: MainAxisAlignment.start,
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           children: [
-                             if(selectedCategory=='All')
-                             Text(order['name'],style: GoogleFonts.nunito(
-                               fontSize: 16,
-                               fontWeight: FontWeight.w500
-                             ),),
-                             Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
-                                 fontSize: 12,
-                                 fontWeight: FontWeight.w400
-                             )),
-                             Text(order['date'],style: GoogleFonts.nunito(
-                                 fontSize: 11,
-                                 fontWeight: FontWeight.w400
-                             )),
-                           ],
-                         ),
-                         trailing:  selectedCategory == "All"
-                       ? Row(
-                           mainAxisSize: MainAxisSize.min,
-                         children: [
-                           Icon(Icons.circle,size: width*0.015,color: order['color'],),
-                           SizedBox(width: width*0.01,),
-                           Text(
-                           order['status'],
-                             style: GoogleFonts.nunito(
-                                 fontSize: 14,
-                                 fontWeight: FontWeight.w600,
-                                 color: order['color']
-                             ),
+                       child:Container(
+                         height: height*0.15,
+                         width: width*1,
+                         decoration: BoxDecoration(),
+                         child: Padding(
+                           padding:  EdgeInsets.all(width*0.03),
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               children: [
+                                 Column(
+                                   mainAxisAlignment: MainAxisAlignment.start,
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                   children: [
+                                     if(selectedCategory=='All')
+                                       Text(order['name'],style: GoogleFonts.nunito(
+                                           fontSize: 16,
+                                           fontWeight: FontWeight.w500
+                                       ),),
+                                     Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
+                                         fontSize: 12,
+                                         fontWeight: FontWeight.w400
+                                     )),
+                                     Text(order['date'],style: GoogleFonts.nunito(
+                                         fontSize: 11,
+                                         fontWeight: FontWeight.w400
+                                     )),
+                                   ],
+                                 ),
+                                 selectedCategory=='All'?
+                                Row(
+                                   mainAxisSize: MainAxisSize.min,
+                                   children: [
+                                     Icon(Icons.circle,size: width*0.015,color: order['color'],),
+                                     SizedBox(width: width*0.01,),
+                                     Text(
+                                       order['status'],
+                                       style: GoogleFonts.nunito(
+                                           fontSize: 14,
+                                           fontWeight: FontWeight.w600,
+                                           color: order['color']
+                                       ),
+                                     ),
+                                   ],
+                                 ):
+                                     Row(
+                                       children: [
+                                         Text(order['items'], style: GoogleFonts.nunito(
+                                             fontSize: 14,
+                                             fontWeight: FontWeight.w600,
+                                             color: OrderColor.textColor
+                                         ),),
+                                         SizedBox(width: width*0.03),
+                                         Icon(Icons.arrow_forward_ios, size: 14),
+                                       ],
+                                     )
+                               ]
                            ),
-                         ],
-                       )
-                             : Row(
-                           mainAxisSize: MainAxisSize.min,
-                           children: [
-                             Text(order['items'], style: GoogleFonts.nunito(
-                                 fontSize: 14,
-                                 fontWeight: FontWeight.w600,
-                                 color: OrderColor.textColor
-                             ),),
-                             SizedBox(width: width*0.03),
-                             Icon(Icons.arrow_forward_ios, size: 14),
-                           ],
                          ),
-                       ),
+                       ) ,
                      ),
                    );
                  },

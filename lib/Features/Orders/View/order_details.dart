@@ -240,3 +240,54 @@ class _OrderDetailsState extends State<OrderDetails> {
     );
   }
 }
+child: Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+children: [
+Column(
+mainAxisAlignment: MainAxisAlignment.start,
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+if(selectedCategory=='All')
+Text(order['name'],style: GoogleFonts.nunito(
+fontSize: 16,
+fontWeight: FontWeight.w500
+),),
+Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
+fontSize: 12,
+fontWeight: FontWeight.w400
+)),
+Text(order['date'],style: GoogleFonts.nunito(
+fontSize: 11,
+fontWeight: FontWeight.w400
+)),
+],
+),
+selectedCategory=='All'?
+Row(
+mainAxisSize: MainAxisSize.min,
+children: [
+Icon(Icons.circle,size: width*0.015,color: order['color'],),
+SizedBox(width: width*0.01,),
+Text(
+order['status'],
+style: GoogleFonts.nunito(
+fontSize: 14,
+fontWeight: FontWeight.w600,
+color: order['color']
+),
+),
+],
+):
+Row(
+children: [
+Text(order['items'], style: GoogleFonts.nunito(
+fontSize: 14,
+fontWeight: FontWeight.w600,
+color: OrderColor.textColor
+),),
+SizedBox(width: width*0.03),
+Icon(Icons.arrow_forward_ios, size: 14),
+],
+)
+]
+),
