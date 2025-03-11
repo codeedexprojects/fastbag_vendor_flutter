@@ -1,7 +1,9 @@
+import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
@@ -108,6 +110,8 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
       print("Combined List: $combinedList"); // Debugging output
     }
 
+    final gap = SizedBox(height: screenWidth * 0.02);
+
     return Scaffold(
       //resizeToAvoidBottomInset: true,
       body: GestureDetector(
@@ -124,20 +128,28 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: screenHeight * 0.08),
-              TextField(
-                controller: searchController,
-                focusNode: searchFocusNode,
-                decoration: searchBarDecoration(
-                    hint: 'Search here', icon: Icons.search),
-                onChanged: _filterSearch,
+              SizedBox(
+                height: screenWidth * 0.15,
+                child: TextField(
+                  controller: searchController,
+                  focusNode: searchFocusNode,
+                  decoration: searchBarDecoration(
+                    hint: 'Search here',
+                  ),
+                  onChanged: _filterSearch,
+                ),
               ),
               if (filteredList.isEmpty)
                 Expanded(
                     child: Column(
                   children: [
                     if (searchController.text.isNotEmpty)
-                      const Text("No results"),
-                    SizedBox(height: screenHeight * .02),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: screenWidth * 0.07),
+                        child: const Text("No results"),
+                      ),
+                    gap,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -166,43 +178,30 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: screenHeight * .01),
-                    // Conditional rendering: display search results or original content
+                    //  category  List  Horzontal
                     SizedBox(
-                      height: screenHeight * .14,
+                      height: screenHeight * .17,
                       child: Consumer<CategoryViewModel>(
                         builder: (context, data, _) {
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: data.categories.length,
                             itemBuilder: (context, index) {
-                              return SizedBox(
-                                width: screenWidth * .23,
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        navigate(
-                                          context: context,
-                                          screen: AllSubCategoryScreen(
-                                            subCategories: data.subCategories,
-                                            categories: data.categories,
-                                            isOperable: true,
-                                          ),
-                                        );
-                                      },
-                                      child: CircleAvatar(
-                                        radius: screenWidth * .1,
-                                        backgroundImage: NetworkImage(
-                                          data.categories[index].category_image,
-                                        ),
-                                      ),
+                              return categoryCard(
+                                text: data.categories[index].name,
+                                onTap: () {
+                                  navigate(
+                                    context: context,
+                                    screen: AllSubCategoryScreen(
+                                      subCategories: data.subCategories,
+                                      categories: data.categories,
+                                      isOperable: true,
                                     ),
-                                    Text(
-                                      data.categories[index].name,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
+                                  );
+                                },
+                                radius: screenWidth * .115,
+                                image: NetworkImage(
+                                  data.categories[index].category_image,
                                 ),
                               );
                             },
@@ -210,7 +209,6 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
                         },
                       ),
                     ),
-                    SizedBox(height: screenHeight * .02),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -242,52 +240,38 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
                           )
                       ],
                     ),
-                    Consumer<CategoryViewModel>(
-                      builder: (context, data, _) {
-                        return Expanded(
-                          child: GridView.builder(
-                            padding: EdgeInsets.only(top: screenHeight * .015),
+                    Expanded(
+                      child: Consumer<CategoryViewModel>(
+                        builder: (context, data, _) {
+                          return GridView.builder(
+                            padding: const EdgeInsets.all(5),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              childAspectRatio: 0.7,
-                            ),
+                                    crossAxisCount: 3,
+                                    childAspectRatio: .57,
+                                    crossAxisSpacing: 14),
                             itemCount: data.subCategories.length,
                             itemBuilder: (context, index) {
-                              return SizedBox(
-                                width: screenWidth * .23,
-                                child: Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        navigate(
-                                            context: context,
-                                            screen: ListProductsScreen(
-                                              subCategory:
-                                                  data.subCategories[index],
-                                              subCategories: data.subCategories,
-                                            ));
-                                      },
-                                      child: CircleAvatar(
-                                        radius: screenWidth * .1,
-                                        backgroundImage: NetworkImage(
-                                          data.subCategories[index]
-                                              .sub_category_image,
-                                        ),
-                                      ),
+                              return subCategoryCard(
+                                height: screenWidth * 0.33,
+                                text: data.subCategories[index].name,
+                                image: data
+                                    .subCategories[index].sub_category_image,
+                                onTap: () {
+                                  navigate(
+                                    context: context,
+                                    screen: ListProductsScreen(
+                                      subCategory: data.subCategories[index],
+                                      subCategories: data.subCategories,
                                     ),
-                                    Text(
-                                      data.subCategories[index].name,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
+                                  );
+                                },
                               );
                             },
-                          ),
-                        );
-                      },
-                    )
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ))
               else

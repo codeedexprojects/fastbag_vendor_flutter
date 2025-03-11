@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
@@ -91,45 +92,33 @@ class AllSubCategoryScreen extends StatelessWidget {
             subCategories.isNotEmpty
                 ? Expanded(
                     child: GridView.builder(
-                        padding: EdgeInsets.only(top: screenHeight * .015),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4, childAspectRatio: 0.7),
-                        itemCount: subCategories.length,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: screenWidth * .23,
-                            child: Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    navigate(
-                                        context: context,
-                                        screen: ListProductsScreen(
-                                          subCategory: subCategories[index],
-                                          subCategories: subCategories,
-                                        ));
-                                  },
-                                  child: CircleAvatar(
-                                    radius: screenWidth * .1,
-                                    backgroundImage: NetworkImage(
-                                        subCategories[index]
-                                            .sub_category_image),
-                                  ),
-                                ),
-                                Text(
-                                  subCategories[index].name,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              ],
+                    padding: const EdgeInsets.all(5),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 0.57,
+                            crossAxisSpacing: 14),
+                    itemCount: subCategories.length,
+                    itemBuilder: (context, index) {
+                      return subCategoryCard(
+                        height: screenWidth * 0.33,
+                        text: subCategories[index].name,
+                        image: subCategories[index].sub_category_image,
+                        onTap: () {
+                          navigate(
+                            context: context,
+                            screen: ListProductsScreen(
+                              subCategory: subCategories[index],
+                              subCategories: subCategories,
                             ),
                           );
-                        }),
-                  )
+                        },
+                      );
+                    },
+                  ))
                 : const Center(
                     child: Text("Start adding your sub category now"),
                   ),
-            if (isOperable) const Spacer(),
             if (isOperable)
               Padding(
                 padding: EdgeInsets.symmetric(

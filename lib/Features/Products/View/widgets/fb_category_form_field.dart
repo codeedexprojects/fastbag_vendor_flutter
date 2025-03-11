@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -65,12 +66,14 @@ class _FbCategoryFormFieldState extends State<FbCategoryFormField> {
       padding: EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: widget.controller,
+        style: nunito(fontBold: FontWeight.w600),
         keyboardType: widget.keyboard,
         focusNode: _focusNode,
         validator: widget.validator,
         decoration: InputDecoration(
           hintText: widget.hint ?? widget.label,
-          hintStyle: const TextStyle(color: Colors.grey),
+          hintStyle:
+              nunito(color: Colors.grey.shade600, fontBold: FontWeight.w300),
           suffixIcon: _showCheckIcon
               ? const Icon(Icons.check, color: Colors.green)
               : null,

@@ -153,6 +153,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
           padding: EdgeInsets.symmetric(horizontal: screenWidth / 17),
           child: Column(
             children: [
+              SizedBox(height: screenWidth * .06),
+
               FbCategoryFormField(
                 label: "Category Name",
                 controller: nameController,
