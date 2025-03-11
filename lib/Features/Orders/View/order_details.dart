@@ -48,29 +48,24 @@ class _OrderDetailsState extends State<OrderDetails> {
                     color: OrderColor.white,
                     borderRadius: BorderRadius.circular(width*0.015)
                   ),
-                  child: ListTile(
-                    leading: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Padding(
+                    padding:  EdgeInsets.all(width*0.03),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('rrrrrrr',style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: OrderColor.textColor
-                        ),),
-                        Text('gghhhhh',style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: OrderColor.textColor
-                        )),
-                        Text('gghhhhh',style: GoogleFonts.nunito(
-                        fontWeight: FontWeight.w400,
-                            fontSize: 10,
-                            color: OrderColor.textColor
-                        )),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('jjjjj'),
+                            Text('jjjjj'),
+                            Text('jjjjj'),
+                          ],
+                        ),
+                        Text('hhhhh')
                       ],
                     ),
-                    trailing: Text('hjjjj'),
-                  ),
+                  )
                 ),
                 SizedBox(height: height*0.02,),
                 Container(
@@ -216,22 +211,41 @@ class _OrderDetailsState extends State<OrderDetails> {
                   color: OrderColor.white,
                   borderRadius: BorderRadius.circular(width * 0.015),
                 ),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/Images/agentImage.png'),
-                  ),
-                  title: Text('Order awaiting pickup9:00 am Adekunle is on his way to pickup',style: GoogleFonts.nunito(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400
-                  ),
-                  textAlign: TextAlign.start,),
-                  trailing: Icon(Icons.call),
-                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: AssetImage('assets/Images/agentImage.png'),
+                        )
+                      ],
+                    ),
+                    Text('Order awaiting pickup9:00 am \nAdekunle is on his way to pickup',style: GoogleFonts.nunito(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400
+                        ),
+                        textAlign: TextAlign.start,),
+                    Icon(Icons.call),
+                  ],
+                )
+                // ListTile(
+                //   leading: CircleAvatar(
+                //     radius: 30,
+                //     backgroundImage: AssetImage('assets/Images/agentImage.png'),
+                //   ),
+                //   title: Text('Order awaiting pickup9:00 am Adekunle is on his way to pickup',style: GoogleFonts.nunito(
+                //     fontSize: 13,
+                //     fontWeight: FontWeight.w400
+                //   ),
+                //   textAlign: TextAlign.start,),
+                //   trailing: Icon(Icons.call),
+                // ),
               ),
             ]
-
-
               ],
             ),
           ),
@@ -240,54 +254,3 @@ class _OrderDetailsState extends State<OrderDetails> {
     );
   }
 }
-child: Row(
-mainAxisAlignment: MainAxisAlignment.spaceBetween,
-children: [
-Column(
-mainAxisAlignment: MainAxisAlignment.start,
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-if(selectedCategory=='All')
-Text(order['name'],style: GoogleFonts.nunito(
-fontSize: 16,
-fontWeight: FontWeight.w500
-),),
-Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
-fontSize: 12,
-fontWeight: FontWeight.w400
-)),
-Text(order['date'],style: GoogleFonts.nunito(
-fontSize: 11,
-fontWeight: FontWeight.w400
-)),
-],
-),
-selectedCategory=='All'?
-Row(
-mainAxisSize: MainAxisSize.min,
-children: [
-Icon(Icons.circle,size: width*0.015,color: order['color'],),
-SizedBox(width: width*0.01,),
-Text(
-order['status'],
-style: GoogleFonts.nunito(
-fontSize: 14,
-fontWeight: FontWeight.w600,
-color: order['color']
-),
-),
-],
-):
-Row(
-children: [
-Text(order['items'], style: GoogleFonts.nunito(
-fontSize: 14,
-fontWeight: FontWeight.w600,
-color: OrderColor.textColor
-),),
-SizedBox(width: width*0.03),
-Icon(Icons.arrow_forward_ios, size: 14),
-],
-)
-]
-),

@@ -187,14 +187,14 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
               ),
            SizedBox(
-             height: height*0.7,
+             height: height*1,
              child: ListView.separated(
                scrollDirection: Axis.vertical,
                  shrinkWrap: true,
                  itemBuilder: (context, index) {
                    final order = filteredOrders[index];
                    return SizedBox(
-                     height: height*0.1,
+                     height: height*0.13,
                      child: GestureDetector(
                        onTap: () {
                          if(selectedCategory!='All')
@@ -210,7 +210,7 @@ class _OrderScreenState extends State<OrderScreen> {
                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                children: [
                                  Column(
-                                   mainAxisAlignment: MainAxisAlignment.start,
+                                   mainAxisAlignment: MainAxisAlignment.center,
                                    crossAxisAlignment: CrossAxisAlignment.start,
                                    children: [
                                      if(selectedCategory=='All')
@@ -219,11 +219,11 @@ class _OrderScreenState extends State<OrderScreen> {
                                            fontWeight: FontWeight.w500
                                        ),),
                                      Text("Order ID ${order['id']}",style: GoogleFonts.nunito(
-                                         fontSize: 12,
+                                         fontSize: 14,
                                          fontWeight: FontWeight.w400
                                      )),
                                      Text(order['date'],style: GoogleFonts.nunito(
-                                         fontSize: 11,
+                                         fontSize: 14,
                                          fontWeight: FontWeight.w400
                                      )),
                                    ],
