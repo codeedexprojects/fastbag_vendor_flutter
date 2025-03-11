@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     ListTile(
                       leading: Image.asset(
-                        'assets/profileicon/shop (1).png',
+                        'assets/profileicon/shop.png',
                         width: 25,
                         height: 25,
                       ),
@@ -151,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/profileicon/wallet-3.png',
+                        'assets/profileicon/wallet.png',
                         width: 25,
                         height: 25,
                       ),
@@ -167,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/profileicon/setting-2.png',
+                        'assets/profileicon/setting.png',
                         width: 25,
                         height: 25,
                       ),
