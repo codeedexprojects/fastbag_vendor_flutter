@@ -71,22 +71,25 @@ class SalesinsightScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Product',
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16,right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Product',
+                                  style: mainFont(
+                                      fontsize: 14,
+                                      fontweight: FontWeight.w700,
+                                      color: FbColors.lightBlue)),
+                              Text(
+                                'Number Sold',
                                 style: mainFont(
-                                    fontsize: 14,
-                                    fontweight: FontWeight.w700,
-                                    color: FbColors.lightBlue)),
-                            Text(
-                              'Number Sold',
-                              style: mainFont(
-                                  fontsize: 12,
-                                  fontweight: FontWeight.w400,
-                                  color: FbColors.lightBlue),
-                            ),
-                          ],
+                                    fontsize: 12,
+                                    fontweight: FontWeight.w400,
+                                    color: FbColors.lightBlue),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 16.0),
                         _buildOrderHistory(),
