@@ -71,7 +71,6 @@ TextStyle normalFont4(
     required Color color}) {
   return GoogleFonts.nunito(
       fontSize: fontsize,
-      fontWeight: FontWeight.bold,
       color: color,
       );
 }

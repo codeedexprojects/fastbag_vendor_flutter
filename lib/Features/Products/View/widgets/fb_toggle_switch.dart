@@ -36,7 +36,7 @@ class _FbToggleSwitchState extends State<FbToggleSwitch> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 0.2),
+          border: Border.all(color: Color.fromRGBO(240, 240, 240, 1), width: 0.2),
         ),
         child: ListTile(
           title: Text(widget.title),
