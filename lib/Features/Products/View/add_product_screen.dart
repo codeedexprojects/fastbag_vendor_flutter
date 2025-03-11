@@ -163,7 +163,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 controller: descriptionController,
                 validator: customValidatornoSpaceError,
               ),
-             
+
               FbProductsFilePicker(
                 fileCategory: "Product",
                 onFilesPicked: _onFilePicked,

@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:flutter/material.dart';
@@ -122,31 +123,13 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: screenHeight * 0.1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: screenWidth * 0.8,
-                    child: TextField(
-                      controller: searchController,
-                      focusNode: searchFocusNode,
-                      decoration: InputDecoration(
-                        hintText: "Search here",
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              BorderSide(color: FbColors.black, width: 0.5),
-                        ),
-                      ),
-                      onChanged:
-                          _filterSearch, // Update filtered list as user types
-                      //onSubmitted: _onSubmitted, // Trigger search on submit
-                    ),
-                  ),
-                  const Icon(Icons.more_vert)
-                ],
+              SizedBox(height: screenHeight * 0.08),
+              TextField(
+                controller: searchController,
+                focusNode: searchFocusNode,
+                decoration: searchBarDecoration(
+                    hint: 'Search here', icon: Icons.search),
+                onChanged: _filterSearch,
               ),
               if (filteredList.isEmpty)
                 Expanded(

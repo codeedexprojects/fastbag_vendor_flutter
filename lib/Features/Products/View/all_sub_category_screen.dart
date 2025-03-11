@@ -9,6 +9,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_s
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/sub_category_edit_list.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AllSubCategoryScreen extends StatelessWidget {
   final List<CategoryModel> categories;
@@ -130,33 +131,41 @@ class AllSubCategoryScreen extends StatelessWidget {
                   ),
             if (isOperable) const Spacer(),
             if (isOperable)
-              FbButton(
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth / 15, vertical: 5),
+                child: FbButton(
+                    onClick: () {
+                      navigate(
+                          context: context,
+                          screen: AddSubCategoryScreen(
+                            categories: categories,
+                          ));
+                    },
+                    label: "+ Add Category"),
+              ),
+            if (isOperable && subCategories.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth / 15, vertical: 5),
+                child: FbButton(
                   onClick: () {
                     navigate(
                         context: context,
-                        screen: AddSubCategoryScreen(
+                        screen: SubCategoryEditList(
+                          subCategories: subCategories,
                           categories: categories,
                         ));
                   },
-                  label: "+ Add Category"),
-            if (isOperable && subCategories.isNotEmpty)
-              FbButton(
-                onClick: () {
-                  navigate(
-                      context: context,
-                      screen: SubCategoryEditList(
-                        subCategories: subCategories,
-                        categories: categories,
-                      ));
-                },
-                label: "Edit",
-                color: Colors.white,
-                textColor: Colors.blue,
-                borderColor: Colors.blue,
-              ),
-            if (isOperable)
-              SizedBox(
-                height: screenHeight * .02,
+                  icon: const FaIcon(
+                    FontAwesomeIcons.penToSquare,
+                    size: 20,
+                  ),
+                  label: "Edit",
+                  color: Colors.white,
+                  textColor: Colors.blue,
+                  borderColor: Colors.blue,
+                ),
               ),
           ],
         ),
