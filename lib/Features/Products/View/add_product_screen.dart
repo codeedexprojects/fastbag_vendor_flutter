@@ -150,20 +150,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: screenWidth / 17),
           child: Column(
             children: [
-              FbTextFormField(
+              FbCategoryFormField(
                 label: "Category Name",
                 controller: nameController,
                 validator: customValidatornoSpaceError,
-                border: true,
               ),
               FbCategoryFormField(
                 label: "Describe the product",
                 controller: descriptionController,
                 validator: customValidatornoSpaceError,
               ),
+             
               FbProductsFilePicker(
                 fileCategory: "Product",
                 onFilesPicked: _onFilePicked,
