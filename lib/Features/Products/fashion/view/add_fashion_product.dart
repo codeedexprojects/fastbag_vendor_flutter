@@ -1,16 +1,11 @@
 import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/productname_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/select_field.dart';
-import 'package:flutter/material.dart';
 
 import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
-import '../../../../Commons/validators.dart';
-import '../../../Authentication/View/Widgets/Fb_Text_Form_Field.dart';
-import '../../View/widgets/fb_category_file_picker.dart';
-import '../../View/widgets/fb_category_form_field.dart';
 import '../../View/widgets/fb_products_file_picker.dart';
 import '../../View/widgets/fb_toggle_switch.dart';
 
@@ -22,42 +17,65 @@ class AddFashionProduct extends StatefulWidget {
 }
 
 class _AddFashionProductState extends State<AddFashionProduct> {
-  var nameController=TextEditingController();
-  var descriptionController=TextEditingController();
-  var genderController=TextEditingController();
-  var stockUnitController=TextEditingController();
-  var priceController=TextEditingController();
-  var discountpriceController=TextEditingController();
-  var categoryController=TextEditingController();
-  var subcategoryController=TextEditingController();
-  List? _selectedImages;
-  bool _inStock=false;
+  var nameController = TextEditingController();
+  var descriptionController = TextEditingController();
+  var genderController = TextEditingController();
+  var stockUnitController = TextEditingController();
+  var priceController = TextEditingController();
+  var discountPriceController = TextEditingController();
+  var categoryController = TextEditingController();
+  var subcategoryController = TextEditingController();
+  List<File>? _selectedImages;
+  bool _inStock = false;
 
+  List<Map<String, dynamic>> sizeRules = []; // List to store size & color variants
 
   void _onFilePicked(List<File> files) {
-    print(files);
     setState(() {
       _selectedImages = files;
     });
   }
+
+  void addNewSizeRule() {
+    setState(() {
+      sizeRules.add({
+        "size": "",
+        "price": "",
+        "color": "",
+        "stock": "",
+      });
+    });
+  }
+
+  void removeRule(int index) {
+    setState(() {
+      sizeRules.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      backgroundColor: Color.fromRGBO(245, 245, 245, 1),
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(245, 245, 245, 1),
+        backgroundColor: const Color(0xFFF5F5F5),
         centerTitle: true,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back_ios)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
         title: Text(
-          'Add Product',
+          'Add Fashion Product',
           style: mainFont(
-              fontsize: 16, fontweight: FontWeight.w600, color: FbColors.black),
+            fontsize: 16,
+            fontweight: FontWeight.w600,
+            color: FbColors.black,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -65,9 +83,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
           children: [
             ProductnameField(label: 'Product Name', controller: nameController),
             ProductnameField(label: 'Describe the Product', controller: descriptionController),
-           SelectField(label: 'Select Gender', controller: genderController, items: [
-             'Male','Female'
-           ]),
+            SelectField(label: 'Select Gender', controller: genderController, items: ['Male', 'Female']),
             FbProductsFilePicker(
               fileCategory: "Product",
               onFilesPicked: _onFilePicked,
@@ -75,66 +91,192 @@ class _AddFashionProductState extends State<AddFashionProduct> {
             Row(
               children: [
                 Expanded(
-                  child: SelectField(label: 'Category', controller: categoryController, items: [
-                    'Male','Female'
-                  ]),
+                  child: SelectField(label: 'Category', controller: categoryController, items: ['Men', 'Women']),
                 ),
                 Expanded(
-                  child: SelectField(label: 'Sub Category', controller: subcategoryController, items: [
-                  'Male','Female'
-                ]),),
+                  child: SelectField(label: 'Sub Category', controller: subcategoryController, items: ['Shirts', 'Pants']),
+                ),
               ],
             ),
-            ProductnameField(label: 'Stock Unit', controller:stockUnitController ),
-            ProductnameField(label: 'Product Price', controller: priceController),
-            ProductnameField(label: 'Discount Price', controller: discountpriceController),
+            ProductnameField(label: 'Stock Unit', controller: stockUnitController),
+            ProductnameField(label: 'Product Price (N)', controller: priceController),
+            ProductnameField(label: 'Discount Price (Optional)', controller: discountPriceController),
             Padding(
-              padding:  EdgeInsets.symmetric(
-                horizontal: screenWidth * .07,
-                vertical: screenHeight * .01,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * .07, vertical: screenHeight * .01),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Expanded(child: Text('Select Varient')),
-                  SizedBox(
-                    width: screenWidth*.4
-                  ),
-
-        Expanded(child:
-                    Row(
-                      children: [
-                        Icon(Icons.add),
-                        Text('New Rule'),
+                  Text('Select Varient', style: TextStyle(fontWeight: FontWeight.bold)),
+                  GestureDetector(
+                    onTap: addNewSizeRule,
+                    child: Row(
+                      children: const [
+                        Icon(Icons.add, color: Colors.blue),
+                        SizedBox(width: 5),
+                        Text('New Rule', style: TextStyle(color: Colors.blue)),
                       ],
                     ),
-                  )
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              children: sizeRules.asMap().entries.map((entry) {
+                int index = entry.key;
+                var sizeRule = entry.value;
+                return Card(
+                  margin: EdgeInsets.symmetric(horizontal: screenWidth * .07, vertical: 5),
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        // Size, Price, Color, and Stock fields
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text('Color Name'),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: sizeRule["color"],
+                                decoration: const InputDecoration(labelText: "Color"),
+                                onChanged: (value) {
+                                  setState(() {
+                                    sizeRules[index]["color"] = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child:FbProductsFilePicker(
+                                fileCategory: "Product",
+                                onFilesPicked: _onFilePicked,
+                              ),
+
+                            ),
+                            IconButton(
+                              onPressed: () => removeRule(index),
+                              icon: const Icon(Icons.close, color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * .07, vertical: screenHeight * .01),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Select Size', style: TextStyle(fontWeight: FontWeight.bold)),
+                  GestureDetector(
+                    onTap: addNewSizeRule,
+                    child: Row(
+                      children: const [
+                        Icon(Icons.add, color: Colors.blue),
+                        SizedBox(width: 5),
+                        Text('New Rule', style: TextStyle(color: Colors.blue)),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
 
-            Padding(
-              padding:  EdgeInsets.symmetric(
-                horizontal: screenWidth * .07,
-                vertical: screenHeight * .01,
-              ),
-              child: Row(
-                children: [
-                  Expanded(child: Text('Select Size')),
-                  SizedBox(
-                      width: screenWidth*.4
-                  ),
-
-                     Expanded(child:
-                    Row(
+            // Dynamically generated size & color rules
+            Column(
+              children: sizeRules.asMap().entries.map((entry) {
+                int index = entry.key;
+                var sizeRule = entry.value;
+                return Card(
+                  margin: EdgeInsets.symmetric(horizontal: screenWidth * .07, vertical: 5),
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
                       children: [
-                        Icon(Icons.add),
-                        Text('New Rule'),
+                        // Size, Price, Color, and Stock fields
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: sizeRule["size"],
+                                decoration: const InputDecoration(labelText: "Size"),
+                                onChanged: (value) {
+                                  setState(() {
+                                    sizeRules[index]["size"] = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: sizeRule["price"],
+                                decoration: const InputDecoration(labelText: "Price"),
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  setState(() {
+                                    sizeRules[index]["price"] = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: sizeRule["color"],
+                                decoration: const InputDecoration(labelText: "Color"),
+                                onChanged: (value) {
+                                  setState(() {
+                                    sizeRules[index]["color"] = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: sizeRule["stock"],
+                                decoration: const InputDecoration(labelText: "Available Stock"),
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  setState(() {
+                                    sizeRules[index]["stock"] = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => removeRule(index),
+                              icon: const Icon(Icons.close, color: Colors.red),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                );
+              }).toList(),
             ),
+
             FbToggleSwitch(
               title: 'Mark Product in stock',
               initialValue: _inStock,
@@ -144,12 +286,8 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                 });
               },
             ),
-            FbButton(onClick: (){}, label: 'Add to Product'),
-            SizedBox(
-              height: 10,
-            ),
-
-
+            FbButton(onClick: () {}, label: 'Add to Product'),
+            const SizedBox(height: 10),
           ],
         ),
       ),
