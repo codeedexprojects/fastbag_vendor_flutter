@@ -59,6 +59,6 @@ class MyApp extends StatelessWidget {
 
           useMaterial3: true,
         ),
-        home: const TransactionHistory());
+        home: const SplashScreen());
   }
 }

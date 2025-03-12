@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Features/Profile/View/transaction_history.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -110,11 +111,16 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                     fontWeight: FontWeight.w400,
                     color: OrderColor.black
                   ),),
-                  Text('view all',style: GoogleFonts.nunito(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.green
-                  ),),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => TransactionHistory(),), (route) => false,);
+                    },
+                    child: Text('view all',style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: OrderColor.green
+                    ),),
+                  ),
                 ],
               ),
             ),
