@@ -145,7 +145,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text("Add Product"),
+        title: const Text("Add Product" ),
       ),
       body: Form(
         key: _formKey,

@@ -32,7 +32,8 @@ class _FbToggleSwitchState extends State<FbToggleSwitch> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 0.2),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade300),
       ),
       child: ListTile(
         title: Text(widget.title),

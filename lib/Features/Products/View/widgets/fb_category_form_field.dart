@@ -66,31 +66,31 @@ class _FbCategoryFormFieldState extends State<FbCategoryFormField> {
       padding: EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: widget.controller,
-        style: nunito(fontBold: FontWeight.w600),
+        style: nunito(fontWeight: FontWeight.w600),
         keyboardType: widget.keyboard,
         focusNode: _focusNode,
         validator: widget.validator,
         decoration: InputDecoration(
           hintText: widget.hint ?? widget.label,
           hintStyle:
-              nunito(color: Colors.grey.shade600, fontBold: FontWeight.w300),
+              nunito(color: Colors.grey.shade600, fontWeight: FontWeight.w300),
           suffixIcon: _showCheckIcon
               ? const Icon(Icons.check, color: Colors.green)
               : null,
           enabledBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(color: Colors.grey.shade300),
           ),
           focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(color: Colors.grey),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(color: Colors.red.shade300),
           ),
           focusedErrorBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(color: Colors.red),
           ),
         ),
