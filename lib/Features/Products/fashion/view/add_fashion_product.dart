@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/productname_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/select_field.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
@@ -52,6 +53,63 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       sizeRules.removeAt(index);
     });
   }
+
+  ////////////////////////////////////////////
+
+  final List<Map<String, dynamic>> variants = [];
+
+  void addVariant() {
+    setState(() {
+      variants.add({
+        "color_name": "",
+        "color_image": null,
+        "sizes": []
+      });
+    });
+  }
+
+  void removeVariant(int index) {
+    setState(() {
+      variants.removeAt(index);
+    });
+  }
+
+  void addSize(int variantIndex) {
+    setState(() {
+      variants[variantIndex]["sizes"].add({"size": "", "price": "", "stock": ""});
+    });
+  }
+
+  void removeSize(int variantIndex, int sizeIndex) {
+    setState(() {
+      variants[variantIndex]["sizes"].removeAt(sizeIndex);
+    });
+  }
+
+  Future<void> pickImage(int index) async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        variants[index]["color_image"] = File(pickedFile.path);
+      });
+    }
+  }
+
+  void submitVariants() {
+    final List<Map<String, dynamic>> formattedData = variants.map((variant) {
+      return {
+        "color_name": variant["color_name"],
+        "color_image": variant["color_image"] != null ? variant["color_image"].path : "",
+        "sizes": variant["sizes"].map((size) => {
+          "size": size["size"],
+          "price": size["price"],
+          "stock": size["stock"]
+        }).toList()
+      };
+    }).toList();
+    print(formattedData);
+  }
+
 
   @override
   Widget build(BuildContext context) {

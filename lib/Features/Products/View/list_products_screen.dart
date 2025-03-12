@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
@@ -11,6 +13,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ListProductsScreen extends StatefulWidget {
@@ -191,6 +194,201 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+
+class AddVariantScreen extends StatefulWidget {
+  @override
+  _AddVariantScreenState createState() => _AddVariantScreenState();
+}
+
+class _AddVariantScreenState extends State<AddVariantScreen> {
+  final List<Map<String, dynamic>> variants = [];
+
+  void addVariant() {
+    setState(() {
+      variants.add({
+        "color_name": "",
+        "color_image": null,
+        "sizes": []
+      });
+    });
+  }
+
+  void removeVariant(int index) {
+    setState(() {
+      variants.removeAt(index);
+    });
+  }
+
+  void addSize(int variantIndex) {
+    setState(() {
+      variants[variantIndex]["sizes"].add({"size": "", "price": "", "stock": ""});
+    });
+  }
+
+  void removeSize(int variantIndex, int sizeIndex) {
+    setState(() {
+      variants[variantIndex]["sizes"].removeAt(sizeIndex);
+    });
+  }
+
+  Future<void> pickImage(int index) async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        variants[index]["color_image"] = File(pickedFile.path);
+      });
+    }
+  }
+
+  void submitVariants() {
+    final List<Map<String, dynamic>> formattedData = variants.map((variant) {
+      return {
+        "color_name": variant["color_name"],
+        "color_image": variant["color_image"] != null ? variant["color_image"].path : "",
+        "sizes": variant["sizes"].map((size) => {
+          "size": size["size"],
+          "price": size["price"],
+          "stock": size["stock"]
+        }).toList()
+      };
+    }).toList();
+    print(formattedData);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Add Product")),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Product Information Fields
+            _buildTextField("Product Name"),
+            _buildTextField("Describe the Product"),
+            _buildDropdown("Select Gender"),
+            _buildImagePicker("Upload Product Image", () {}),
+            _buildDropdown("Category"),
+            _buildDropdown("Sub Category"),
+            _buildTextField("Stock Unit"),
+            _buildTextField("Product Price"),
+            _buildTextField("Discount Price (Optional)"),
+            const SizedBox(height: 16),
+
+            // Variants Section
+            for (int i = 0; i < variants.length; i++)
+              _buildVariantSection(i),
+
+            // Add Variant Button
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: addVariant,
+                child: Text("+ Add Variant"),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Submit Button
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: submitVariants,
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: Text("Add to Product"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        decoration: InputDecoration(labelText: label, border: OutlineInputBorder()),
+      ),
+    );
+  }
+
+  Widget _buildDropdown(String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField(
+        decoration: InputDecoration(labelText: label, border: OutlineInputBorder()),
+        items: [DropdownMenuItem(value: label, child: Text(label))],
+        onChanged: (value) {},
+      ),
+    );
+  }
+
+  Widget _buildImagePicker(String label, VoidCallback onPick) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label),
+          SizedBox(height: 8),
+          GestureDetector(
+            onTap: onPick,
+            child: Container(
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+              child: Center(child: Icon(Icons.upload_file)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVariantSection(int index) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTextField("Color Name"),
+            _buildImagePicker("Upload Color Image", () => pickImage(index)),
+            for (int j = 0; j < variants[index]["sizes"].length; j++)
+              _buildSizeRow(index, j),
+            TextButton(
+              onPressed: () => addSize(index),
+              child: Text("+ Add Size"),
+            ),
+            TextButton(
+              onPressed: () => removeVariant(index),
+              child: Text("Remove Variant", style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSizeRow(int variantIndex, int sizeIndex) {
+    return Row(
+      children: [
+        Expanded(child: _buildTextField("Size")),
+        Expanded(child: _buildTextField("Price")),
+        Expanded(child: _buildTextField("Stock")),
+        IconButton(
+          icon: Icon(Icons.delete, color: Colors.red),
+          onPressed: () => removeSize(variantIndex, sizeIndex),
+        ),
+      ],
     );
   }
 }
