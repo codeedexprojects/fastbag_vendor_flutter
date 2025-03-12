@@ -6,7 +6,6 @@ class FbTextFormField extends StatefulWidget {
   final TextInputType? keyboard;
   final TextEditingController controller;
   final String? Function(String?)? validator;
-  final bool border;
 
   const FbTextFormField({
     super.key,
@@ -14,7 +13,6 @@ class FbTextFormField extends StatefulWidget {
     this.keyboard,
     required this.controller,
     this.validator,
-    this.border = false,
   });
 
   @override
@@ -125,47 +123,18 @@ class _FbTextFormFieldState extends State<FbTextFormField> {
                   : _showCheckIcon
                       ? const Icon(Icons.check, color: Colors.green)
                       : null,
-              enabledBorder: widget.border
-                  ? OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 199, 199, 199)),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    )
-                  : const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-              focusedBorder: widget.border
-                  ? OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    )
-                  : const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-              border: widget.border
-                  ? OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    )
-                  : const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-              errorBorder: widget.border
-                  ? OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    )
-                  : const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              border: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              errorBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              ),
             ),
           ),
         ],

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-TextStyle nunito({
-  fontSize,
-  fontBold = FontWeight.w500,
-}) {
+TextStyle nunito(
+    {double? fontSize, FontWeight fontBold = FontWeight.w500, Color? color}) {
   return GoogleFonts.nunito(
-      fontSize: fontSize, fontWeight: fontBold, color: Colors.black);
+      fontSize: fontSize, fontWeight: fontBold, color: color);
 }
 
 TextStyle mainFont(
@@ -14,10 +12,10 @@ TextStyle mainFont(
     required FontWeight fontweight,
     required Color color}) {
   return GoogleFonts.poppins(
-      fontSize: fontsize,
-      fontWeight: fontweight,
-      color: color,
-     );
+    fontSize: fontsize,
+    fontWeight: fontweight,
+    color: color,
+  );
 }
 
 TextStyle normalFont(
@@ -58,11 +56,11 @@ TextStyle normalFont3(
     required FontWeight fontweight,
     required Color color}) {
   return GoogleFonts.barlow(
-      fontSize: fontsize,
-      fontWeight: FontWeight.bold,
-      color: color,
-      // fontStyle: FontStyle.italic
-      );
+    fontSize: fontsize,
+    fontWeight: FontWeight.bold,
+    color: color,
+    // fontStyle: FontStyle.italic
+  );
 }
 
 TextStyle normalFont4(
@@ -70,22 +68,24 @@ TextStyle normalFont4(
     required FontWeight fontweight,
     required Color color}) {
   return GoogleFonts.nunito(
-      fontSize: fontsize,
-      fontWeight: FontWeight.bold,
-      color: color,
-      );
+    fontSize: fontsize,
+    fontWeight: FontWeight.bold,
+    color: color,
+  );
 }
+
 TextStyle normalFont5(
     {required double fontsize,
-      required FontWeight fontweight,
-      required Color color}) {
+    required FontWeight fontweight,
+    required Color color}) {
   return GoogleFonts.inder(
-      fontSize: fontsize,
-      fontWeight: FontWeight.bold,
-      color: color,
-      // fontStyle: FontStyle.italic
-      );
+    fontSize: fontsize,
+    fontWeight: FontWeight.bold,
+    color: color,
+    // fontStyle: FontStyle.italic
+  );
 }
+
 TextStyle homeFont(
     {required double fontsize,
     required FontWeight fontweight,

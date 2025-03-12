@@ -1,5 +1,6 @@
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
@@ -9,12 +10,14 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delet
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ListProductsScreen extends StatefulWidget {
   final SubCategoryModel subCategory;
   final List<SubCategoryModel> subCategories;
-  const ListProductsScreen({super.key,required this.subCategory,required this.subCategories});
+  const ListProductsScreen(
+      {super.key, required this.subCategory, required this.subCategories});
 
   @override
   State<ListProductsScreen> createState() => _ListProductsScreenState();
@@ -28,7 +31,8 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
     super.initState();
     final productProvider =
         Provider.of<ProductViewModel>(context, listen: false);
-    productProvider.getProductCategories(context: context,subCategoryId: widget.subCategory.id as int);
+    productProvider.getProductCategories(
+        context: context, subCategoryId: widget.subCategory.id as int);
   }
 
   @override
@@ -45,23 +49,14 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: screenHeight * 0.1),
+            SizedBox(height: screenHeight * 0.08),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
+                  height: screenWidth * 0.15,
                   width: screenWidth * 0.8,
                   child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search here",
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide:
-                            BorderSide(color: FbColors.black, width: 0.5),
-                      ),
-                    ),
-                  ),
+                      decoration: searchBarDecoration(hint: "Search Here")),
                 ),
                 const Icon(Icons.more_vert)
               ],
@@ -96,9 +91,16 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
-                              GestureDetector(onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(productId: productProvider.foodProducts[index].id ?? 0,)));
-                              },
+                              GestureDetector(
+                                onTap: () {
+                                  navigate(
+                                      context: context,
+                                      screen: ProductDetailScreen(
+                                        productId: productProvider
+                                                .foodProducts[index].id ??
+                                            0,
+                                      ));
+                                },
                                 child: ListTile(
                                   leading: Container(
                                     height: screenHeight * .05,
@@ -114,24 +116,23 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                   ),
                                   title: Text(
                                       productProvider.foodProducts[index].name),
-                                  subtitle: Text(
-                                      productProvider.foodProducts[index].price),
+                                  subtitle: Text(productProvider
+                                      .foodProducts[index].price),
                                   trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Switch(
-                                              activeColor: Colors.green,
-                                              inactiveThumbColor: Colors.white,
-                                              materialTapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                              value: false,
-                                              onChanged: (value) {
-                                                // Handle switch toggle logic
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Switch(
+                                        activeColor: Colors.green,
+                                        inactiveThumbColor: Colors.white,
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                        value: false,
+                                        onChanged: (value) {
+                                          // Handle switch toggle logic
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                   // trailing: Switch(
                                   //             activeColor: Colors.green,
                                   //             inactiveThumbColor: Colors.white,
@@ -152,17 +153,39 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                     );
             }),
             const Spacer(),
-            FbButton(onClick: () {
-              navigate(context: context, screen:  AddProductScreen(subCategories:widget.subCategories,subCategory: widget.subCategory, ));
-            }, label: "+ Add Product"),
-            FbButton(
-              onClick: () {
-                navigate(context: context, screen: ProductEditDeleteScreen(products: productProvider.foodProducts));
-              },
-              label: "Edit or Delete",
-              color: Colors.white,
-              textColor: Colors.blue,
-              borderColor: Colors.blue,
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth / 15, vertical: 5),
+              child: FbButton(
+                  onClick: () {
+                    navigate(
+                        context: context,
+                        screen: AddProductScreen(
+                          subCategories: widget.subCategories,
+                          subCategory: widget.subCategory,
+                        ));
+                  },
+                  label: "+ Add Product"),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth / 15, vertical: 5),
+              child: FbButton(
+                onClick: () {
+                  navigate(
+                      context: context,
+                      screen: ProductEditDeleteScreen(
+                          products: productProvider.foodProducts));
+                },
+                label: "Export",
+                icon: const FaIcon(
+                  FontAwesomeIcons.arrowUpFromBracket,
+                  size: 17,
+                ),
+                color: Colors.white,
+                textColor: Colors.green,
+                borderColor: Colors.green,
+              ),
             ),
             SizedBox(height: screenHeight * .02),
           ],
