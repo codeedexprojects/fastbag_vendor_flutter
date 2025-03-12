@@ -41,7 +41,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             },
             icon: Icon(Icons.arrow_back_ios)),
         title: Text(
-          'Product Insight',
+          'Product Details',
           style: mainFont(
               fontsize: 16, fontweight: FontWeight.w600, color: FbColors.black),
         ),
@@ -67,7 +67,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Image.asset(
                           'assets/Images/image_5-removebg-preview.png'),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      errorWidget: (context, url, error) => Icon(Icons.downloading),
                     ),
                   ),
                 ),

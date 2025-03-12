@@ -68,10 +68,11 @@ TextStyle normalFont4(
     required FontWeight fontweight,
     required Color color}) {
   return GoogleFonts.nunito(
-    fontSize: fontsize,
-    fontWeight: FontWeight.bold,
-    color: color,
-  );
+
+      fontSize: fontsize,
+      color: color,
+      );
+
 }
 
 TextStyle normalFont5(
@@ -80,7 +81,6 @@ TextStyle normalFont5(
     required Color color}) {
   return GoogleFonts.inder(
     fontSize: fontsize,
-    fontWeight: FontWeight.bold,
     color: color,
     // fontStyle: FontStyle.italic
   );

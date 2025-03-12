@@ -74,7 +74,7 @@ class _FbTextFormFieldState extends State<FbTextFormField> {
           TextFormField(
             controller: widget.controller,
             obscureText: (widget.label == "Password" ||
-                    widget.label == "Confirm Password") &&
+                widget.label == "Confirm Password") &&
                 _isObscure,
             keyboardType: widget.keyboard,
             focusNode: _focusNode,
@@ -86,43 +86,43 @@ class _FbTextFormFieldState extends State<FbTextFormField> {
             },
             inputFormatters: widget.label == "Phone No"
                 ? [
-                    LengthLimitingTextInputFormatter(10),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ]
+              LengthLimitingTextInputFormatter(10),
+              FilteringTextInputFormatter.digitsOnly,
+            ]
                 : widget.label == "Pincode"
-                    ? [
-                        LengthLimitingTextInputFormatter(6),
-                        FilteringTextInputFormatter.digitsOnly,
-                      ]
-                    : widget.label == "fssai" || widget.label == "FSSAI No"
-                        ? [
-                            LengthLimitingTextInputFormatter(14),
-                            FilteringTextInputFormatter.digitsOnly,
-                          ]
-                        : null,
+                ? [
+              LengthLimitingTextInputFormatter(6),
+              FilteringTextInputFormatter.digitsOnly,
+            ]
+                : widget.label == "fssai" || widget.label == "FSSAI No"
+                ? [
+              LengthLimitingTextInputFormatter(14),
+              FilteringTextInputFormatter.digitsOnly,
+            ]
+                : null,
             decoration: InputDecoration(
               suffixIcon: (widget.label == "Password" ||
-                      widget.label == "Confirm Password")
+                  widget.label == "Confirm Password")
                   ? Column(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            _isObscure
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.grey,
-                          ),
-                          onPressed: _toggleVisibilityOfPwd,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                        if (_showCheckIcon)
-                          const Icon(Icons.check, color: Colors.green),
-                      ],
-                    )
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      _isObscure
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: _toggleVisibilityOfPwd,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  if (_showCheckIcon)
+                    const Icon(Icons.check, color: Colors.green),
+                ],
+              )
                   : _showCheckIcon
-                      ? const Icon(Icons.check, color: Colors.green)
-                      : null,
+                  ? const Icon(Icons.check, color: Colors.green)
+                  : null,
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey.shade300),
               ),
