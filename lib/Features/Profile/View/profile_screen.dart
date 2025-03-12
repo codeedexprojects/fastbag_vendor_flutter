@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       onTap: () {
                         // Handle settings
-                        navigate(context: context, screen: const Settings());
+                        navigate(context: context, screen: const AddFashionProduct());
                       },
                     ),
                     ListTile(
