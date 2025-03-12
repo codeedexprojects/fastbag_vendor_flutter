@@ -62,52 +62,56 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                         ),
                         child: SizedBox(
                           width: width*1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                      padding: EdgeInsets.only(
-                                        top: height*0.015,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                            top: height*0.015,
+                                          ),
+                                          child: SvgPicture.asset(SvgConstants.import)),
+                                      SizedBox(width: width*0.02,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Order Payment',style: GoogleFonts.nunito(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: OrderColor.black
+                                          )),
+                                          Text('#212323',style: GoogleFonts.nunito(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: OrderColor.textColor
+                                          )),
+                                        ],
                                       ),
-                                      child: SvgPicture.asset(SvgConstants.import)),
-                                  SizedBox(width: width*0.02,),
+                                    ],
+                                  ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Order Payment',style: GoogleFonts.nunito(
+                                      Text('50,000',style: GoogleFonts.nunito(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w400,
                                           color: OrderColor.black
                                       )),
-                                      Text('#212323',style: GoogleFonts.nunito(
+                                      Text('November 25th,2023',style: GoogleFonts.nunito(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
                                           color: OrderColor.textColor
                                       )),
                                     ],
-                                  ),
+                                  )
                                 ],
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('50,000',style: GoogleFonts.nunito(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: OrderColor.black
-                                  )),
-                                  Text('November 25th,2023',style: GoogleFonts.nunito(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: OrderColor.textColor
-                                  )),
-                                ],
-                              )
                             ],
                           ),
                         ),
