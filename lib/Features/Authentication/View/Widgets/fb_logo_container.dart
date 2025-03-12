@@ -15,7 +15,7 @@ class FbLogoContainer extends StatelessWidget {
               height: screenHeight * customHeight,
               child: Center(
                   child: Image.asset(
-                "logo.png".imagePath,
+                "logo.png".iconPath,
                 //height: screenHeight * .25,
                 width: screenWidth * customWidth,
                 fit: BoxFit.fill,

@@ -1,4 +1,5 @@
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_category.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/grocery_category.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Dashboard/view/dashboard_screen.dart';
@@ -48,7 +49,7 @@ class _FbBottomNavState extends State<FbBottomNav> {
 
   final List<Widget> _grocery = [
     DashboardScreen(),
-    FashionCategoryScreen(),
+    GroceryCategoryScreen(),
     OrderScreen(),
     ProfileScreen(),
   ];
