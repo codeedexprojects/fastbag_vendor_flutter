@@ -22,7 +22,7 @@ class FbProductsFilePickerState extends State<FbProductsFilePicker> {
 
   Future<void> _pickFiles() async {
     final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,  // ✅ Ensuring multiple selection
+      allowMultiple: true, // ✅ Ensuring multiple selection
       type: FileType.custom,
       allowedExtensions: ['png', 'jpg', 'jpeg'],
     );
@@ -35,7 +35,8 @@ class FbProductsFilePickerState extends State<FbProductsFilePicker> {
           File newFile = File(file.path!);
           int fileSize = await newFile.length();
 
-          if (fileSize <= 5 * 1024 * 1024) { // ✅ 5MB limit
+          if (fileSize <= 5 * 1024 * 1024) {
+            // ✅ 5MB limit
             selectedFiles.add(newFile);
           } else {
             _showError("${file.name} exceeds 5MB and was not selected.");
@@ -45,7 +46,7 @@ class FbProductsFilePickerState extends State<FbProductsFilePicker> {
 
       if (selectedFiles.isNotEmpty) {
         setState(() {
-          _selectedFiles.addAll(selectedFiles);  // ✅ Append selected files
+          _selectedFiles.addAll(selectedFiles); // ✅ Append selected files
         });
         widget.onFilesPicked(_selectedFiles);
       }
@@ -56,7 +57,7 @@ class FbProductsFilePickerState extends State<FbProductsFilePicker> {
 
   void _deleteFile(int index) {
     setState(() {
-      _selectedFiles.removeAt(index);  // ✅ Remove selected file
+      _selectedFiles.removeAt(index); // ✅ Remove selected file
     });
     widget.onFilesPicked(_selectedFiles);
   }
@@ -76,13 +77,15 @@ class FbProductsFilePickerState extends State<FbProductsFilePicker> {
     return GestureDetector(
       onTap: _pickFiles,
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6),
         alignment: Alignment.center,
-        width: screenWidth * .85,
-        height: screenHeight * .25,  // ✅ Fixed height to prevent overflow
+        height: screenHeight * .25, // ✅ Fixed height to prevent overflow
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey, width: 0.2),
         ),
-        child: SingleChildScrollView(  // ✅ Prevents overflow
+        child: SingleChildScrollView(
+          // ✅ Prevents overflow
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -96,14 +99,16 @@ class FbProductsFilePickerState extends State<FbProductsFilePicker> {
                 style: TextStyle(color: Colors.black12),
               ),
               const SizedBox(height: 10.0),
-               Wrap(
+              Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
-                children: List.generate(4, (index) => SvgPicture.asset(
-                      'assets/icons/file_upload.svg',
-                      width: 50.0,
-                      height: 50.0,
-                    )),
+                children: List.generate(
+                    4,
+                    (index) => SvgPicture.asset(
+                          'assets/icons/file_upload.svg',
+                          width: 50.0,
+                          height: 50.0,
+                        )),
               ),
               if (_selectedFiles.isNotEmpty)
                 Padding(
@@ -116,7 +121,8 @@ class FbProductsFilePickerState extends State<FbProductsFilePicker> {
                         title: Text(file.path.split('/').last),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => _deleteFile(index),  // ✅ Delete file on tap
+                          onPressed: () =>
+                              _deleteFile(index), // ✅ Delete file on tap
                         ),
                       );
                     }).toList(),

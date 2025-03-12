@@ -29,11 +29,12 @@ class _FbToggleSwitchState extends State<FbToggleSwitch> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * .07,
-        vertical: screenHeight * .02,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 0.2),
       ),
+
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Color.fromRGBO(240, 240, 240, 1), width: 0.2),
@@ -52,6 +53,8 @@ class _FbToggleSwitchState extends State<FbToggleSwitch> {
               widget.onToggleChanged(value);
             },
           ),
+
+
         ),
       ),
     );

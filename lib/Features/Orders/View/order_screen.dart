@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -166,36 +167,12 @@ class _OrderScreenState extends State<OrderScreen> {
               child: Row(
                 children: [
                   SizedBox(
-                    height: height * 0.07,
+                    height: width * 0.15,
                     width: width * 0.8,
                     child: TextFormField(
-                      decoration: InputDecoration(
-                          hintText: 'Search here',
-                          suffixIcon: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/search.svg',
-                                height: height * 0.03,
-                              ),
-                            ],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width * 0.03),
-                            borderSide:
-                                BorderSide(color: OrderColor.borderColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width * 0.03),
-                            borderSide:
-                                BorderSide(color: OrderColor.borderColor),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width * 0.03),
-                            borderSide:
-                                BorderSide(color: OrderColor.borderColor),
-                          )),
-                    ),
+                        decoration: searchBarDecoration(
+                      hint: 'Search here',
+                    )),
                   ),
                   PopupMenuButton(
                     itemBuilder: (context) {
