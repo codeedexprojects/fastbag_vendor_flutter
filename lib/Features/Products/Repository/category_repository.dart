@@ -23,9 +23,11 @@ class CategoryRepository {
       // _dio.options.headers = {"Authorization": "Bearer $token"};
       print(token);
 
+      String storeType = await StoreManager().getStoreType() as String;
+
       // Perform the POST request
       Response response = await _dio.get(
-        "${baseUrl}vendors/categories/view/",
+        "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
       );
 
       // Handle the response
@@ -42,7 +44,8 @@ class CategoryRepository {
         // );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OOPs something happened in category get")),
+          const SnackBar(
+              content: Text("OOPs something happened in category get")),
         );
         SVProgressHUD.dismiss();
         print("Bad data: ${response.data}");
@@ -91,7 +94,8 @@ class CategoryRepository {
         // );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OOPs something happened in Sub category get")),
+          const SnackBar(
+              content: Text("OOPs something happened in Sub category get")),
         );
         SVProgressHUD.dismiss();
         print("Bad data: ${response.data}");
@@ -154,7 +158,12 @@ class CategoryRepository {
         showDialog(
           context: context,
           barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(text: "Sub Category Added",descrription: "Your Category has been added to the list and is visible to customers",type: FbBottomDialogType.addSubCategory,),
+          builder: (BuildContext context) => const FbBottomDialog(
+            text: "Sub Category Added",
+            descrription:
+                "Your Category has been added to the list and is visible to customers",
+            type: FbBottomDialogType.addSubCategory,
+          ),
         );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -168,7 +177,8 @@ class CategoryRepository {
           const SnackBar(content: Text("OOPs something happened")),
         );
       }
-    } catch (e) {
+    } on DioException catch (e) {
+      print(e.response?.data);
       SVProgressHUD.dismiss();
       // ScaffoldMessenger.of(context).showSnackBar(
       //   SnackBar(content: Text("OOPs something happened , Error: $e")),
@@ -184,16 +194,14 @@ class CategoryRepository {
     try {
       print("inside try");
 
-      FormData formData = FormData.fromMap({ 
+      FormData formData = FormData.fromMap({
         "enable_subcategory": model.is_enabled,
         "name": model.name,
-        
-        if(model.sub_category_image.isNotEmpty)
+        if (model.sub_category_image.isNotEmpty)
           "subcategory_image": await MultipartFile.fromFile(
-          model.sub_category_image,
-          filename: basename(model.sub_category_image),
-        ),
-        
+            model.sub_category_image,
+            filename: basename(model.sub_category_image),
+          ),
       });
 
       // Create FormData for file uploads
@@ -224,7 +232,12 @@ class CategoryRepository {
         showDialog(
           context: context,
           barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(text: "Sub Category Updated",descrription: "Your Category has been updated to the list and is visible to customers",type: FbBottomDialogType.editSubCategory,),
+          builder: (BuildContext context) => const FbBottomDialog(
+            text: "Sub Category Updated",
+            descrription:
+                "Your Category has been updated to the list and is visible to customers",
+            type: FbBottomDialogType.editSubCategory,
+          ),
         );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(

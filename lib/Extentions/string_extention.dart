@@ -7,4 +7,7 @@ extension ImagePathExtension on String{
 extension RupeePathExtention on String{
  String get rupee => "₹ $this";
 }
-
+//!============================Image Extention
+extension IconPathExtension on String{
+ String get iconPath => "assets/icons/$this";
+}
