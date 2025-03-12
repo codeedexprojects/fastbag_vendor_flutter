@@ -104,7 +104,10 @@ class _ProductnameFieldState extends State<ProductnameField> {
                   ),
                 ),
                 hintText: widget.hint ?? widget.label,
-                hintStyle:  normalFont4(fontsize: 14, fontweight: FontWeight.w400, color: Color.fromRGBO(26, 26, 26, 1)),
+                hintStyle: normalFont4(
+                    fontsize: 14,
+                    fontweight: FontWeight.w400,
+                    color: Color.fromRGBO(26, 26, 26, 1)),
                 suffixIcon: _showCheckIcon
                     ? const Icon(Icons.check, color: Colors.green)
                     : null,

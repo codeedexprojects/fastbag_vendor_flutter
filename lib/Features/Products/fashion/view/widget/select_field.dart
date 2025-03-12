@@ -6,7 +6,6 @@ class SelectField extends StatefulWidget {
   final TextEditingController controller;
   final List<String> items;
 
-
   const SelectField({
     Key? key,
     required this.label,
@@ -24,7 +23,8 @@ class _SelectFieldState extends State<SelectField> {
   @override
   void initState() {
     super.initState();
-    selectedValue = widget.controller.text.isNotEmpty ? widget.controller.text : null;
+    selectedValue =
+        widget.controller.text.isNotEmpty ? widget.controller.text : null;
   }
 
   @override
@@ -38,18 +38,24 @@ class _SelectFieldState extends State<SelectField> {
         vertical: screenHeight * .01,
       ),
       child: DropdownButtonFormField<String>(
-        style: normalFont4(fontsize: 14, fontweight: FontWeight.w400, color: Color.fromRGBO(26, 26, 26, 1)),
+        style: normalFont4(
+            fontsize: 14,
+            fontweight: FontWeight.w400,
+            color: Color.fromRGBO(26, 26, 26, 1)),
         decoration: InputDecoration(
           border: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+            borderSide:
+                const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
             borderRadius: BorderRadius.circular(0),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+            borderSide:
+                const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
             borderRadius: BorderRadius.circular(0),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+            borderSide:
+                const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
             borderRadius: BorderRadius.circular(0),
           ),
           hintText: widget.label,

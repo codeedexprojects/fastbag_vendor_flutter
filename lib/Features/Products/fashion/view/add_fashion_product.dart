@@ -121,17 +121,23 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ProductnameField(label: 'Product Name', controller: nameController, keyboard: TextInputType.text,),
             ProductnameField(
-                label: 'Describe the Product',
-                controller: descriptionController, keyboard: TextInputType.text,),
+              label: 'Product Name',
+              controller: nameController,
+              keyboard: TextInputType.text,
+            ),
+            ProductnameField(
+              label: 'Describe the Product',
+              controller: descriptionController,
+              keyboard: TextInputType.text,
+            ),
             SelectField(
                 label: 'Select Gender',
                 controller: genderController,
                 items: ['Male', 'Female']),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth*.07,
-              vertical: screenHeight*.01),
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
               child: FbProductsFilePicker(
                 fileCategory: "Product",
                 onFilesPicked: _onFilePicked,
@@ -154,24 +160,33 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               ],
             ),
             ProductnameField(
-                label: 'Stock Unit', controller: stockUnitController, keyboard: TextInputType.number,),
+              label: 'Stock Unit',
+              controller: stockUnitController,
+              keyboard: TextInputType.number,
+            ),
             ProductnameField(
-                label: 'Product Price (N)', controller: priceController, keyboard: TextInputType.number,),
+              label: 'Product Price (N)',
+              controller: priceController,
+              keyboard: TextInputType.number,
+            ),
             ProductnameField(
-                label: 'Discount Price (Optional)',
-                controller: discountPriceController, keyboard: TextInputType.number,),
+              label: 'Discount Price (Optional)',
+              controller: discountPriceController,
+              keyboard: TextInputType.number,
+            ),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * .07, vertical: screenHeight * .01),
               child: Row(
-
                 children: [
                   Text('Add Varient',
                       style: normalFont4(
                           fontsize: 18,
                           fontweight: FontWeight.w400,
                           color: Colors.blue)),
-                  SizedBox(width: 5,),
+                  SizedBox(
+                    width: 5,
+                  ),
                   GestureDetector(
                     onTap: addVariant,
                     child: Row(
@@ -190,8 +205,8 @@ class _AddFashionProductState extends State<AddFashionProduct> {
             ),
             for (int i = 0; i < variants.length; i++) _buildVariantSection(i),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth*.07,
-              vertical: screenHeight*.01),
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
               child: FbToggleSwitch(
                 title: 'Mark Product in stock',
                 initialValue: _inStock,
@@ -203,12 +218,11 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth*.07,
-                  vertical: screenHeight*.01),
-
-              child: FbButton(onClick: (){}, label: 'Add to Product'),
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
+              child: FbButton(onClick: () {}, label: 'Add to Product'),
             ),
-             SizedBox(height: 10),
+            SizedBox(height: 10),
           ],
         ),
       ),
@@ -216,11 +230,11 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   }
 
   Widget _buildVariantSection(int index) {
-    final screenheight=MediaQuery.of(context).size.height;
-    final screenwidth=MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
+    final screenwidth = MediaQuery.of(context).size.width;
     return Padding(
-      padding:  EdgeInsets.symmetric(vertical:screenheight*.01,
-          horizontal: screenwidth*.07),
+      padding: EdgeInsets.symmetric(
+          vertical: screenheight * .01, horizontal: screenwidth * .07),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -263,9 +277,8 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   Widget _buildSizeRow(int variantIndex, int sizeIndex) {
     return Row(
       children: [
-        Expanded(child: _buildDropdown('Size', [
-         "XS","S","M","L","Xl","XXL"
-        ])),
+        Expanded(
+            child: _buildDropdown('Size', ["XS", "S", "M", "L", "Xl", "XXL"])),
         SizedBox(width: 10),
         Expanded(child: _buildTextField("Price", false)),
         SizedBox(width: 10),
@@ -286,7 +299,10 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       keyboardType: (!isSize) ? TextInputType.phone : null,
       decoration: InputDecoration(
         hintText: label,
-        hintStyle: normalFont4(fontsize: 14, fontweight: FontWeight.w400, color: Color.fromRGBO(26, 26, 26, 1)),
+        hintStyle: normalFont4(
+            fontsize: 14,
+            fontweight: FontWeight.w400,
+            color: Color.fromRGBO(26, 26, 26, 1)),
         border: OutlineInputBorder(
           borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
           borderRadius: BorderRadius.circular(
@@ -309,34 +325,38 @@ class _AddFashionProductState extends State<AddFashionProduct> {
     );
   }
 
-  Widget _buildDropdown(String label,List<String> items) {
+  Widget _buildDropdown(String label, List<String> items) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField(
-
-        decoration:
-            InputDecoration(labelText: label,
-
-              labelStyle: normalFont4(fontsize: 14, fontweight: FontWeight.w400, color: Color.fromRGBO(26, 26, 26, 1)),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
-                borderRadius: BorderRadius.circular(
-                  0,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
-                borderRadius: BorderRadius.circular(
-                  0,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
-                borderRadius: BorderRadius.circular(
-                  0,
-                ),
-              ),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: normalFont4(
+              fontsize: 14,
+              fontweight: FontWeight.w400,
+              color: Color.fromRGBO(26, 26, 26, 1)),
+          border: OutlineInputBorder(
+            borderSide:
+                const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+            borderRadius: BorderRadius.circular(
+              0,
             ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide:
+                const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+            borderRadius: BorderRadius.circular(
+              0,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide:
+                const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+            borderRadius: BorderRadius.circular(
+              0,
+            ),
+          ),
+        ),
         items: items.map((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -349,11 +369,16 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   }
 
   Widget _buildImagePicker(int index) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Text("Upload Color Image",style: normalFont4(fontsize: 14, fontweight: FontWeight.w400, color: Color.fromRGBO(26, 26, 26, 1)),),
+        Text(
+          "Upload Color Image",
+          style: normalFont4(
+              fontsize: 14,
+              fontweight: FontWeight.w400,
+              color: Color.fromRGBO(26, 26, 26, 1)),
+        ),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: () => pickImage(index),
