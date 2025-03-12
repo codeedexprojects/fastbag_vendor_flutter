@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../Commons/localvariables.dart';
+import '../../../Authentication/View/Widgets/fb_file_picker.dart';
 
 class AddGroceryProduct extends StatefulWidget {
   const AddGroceryProduct({super.key});
@@ -105,17 +108,18 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                     )),
               ),
               SizedBox(height: height*0.013),
-              Container(
+              SizedBox(
                 height: height*0.3,
-                width: width*1,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width*0.02),
-                  border: Border.all(
-                    color: OrderColor.borderColor.withOpacity(0.17)
-                  ),
-                ),
-                child: Center(
-                  child: Text('Uoload Image'),
+                child: FbFilePicker(
+                  onFilePicked: (File? file) {
+                    if (file != null) {
+                      print("Selected file: ${file.path}");
+                    } else {
+                      print("No file selected");
+                    }
+                  },
+                  fileCategory: "product",
+                  borderColor:OrderColor.borderColor.withOpacity(0.17),
                 ),
               ),
               SizedBox(height: height*0.013),
@@ -433,109 +437,113 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                 ),
               ),
               SizedBox(height: height*0.015),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: selectWight,
-                      decoration: InputDecoration(
-                        hintText: "Weight",
-                        hintStyle: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: OrderColor.textColor
+              SingleChildScrollView(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectWight,
+                        decoration: InputDecoration(
+                          hintText: "Weight",
+                          hintStyle: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: OrderColor.textColor
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(width*0.015),
+                              borderSide: BorderSide(
+                                  color: OrderColor.borderColor.withOpacity(0.17)
+                              )
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(width*0.015),
+                              borderSide: BorderSide(
+                                  color: OrderColor.borderColor.withOpacity(0.17)
+                              )
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(width*0.015),
+                              borderSide: BorderSide(
+                                  color: OrderColor.borderColor.withOpacity(0.17)
+                              )
+                          ),
                         ),
-                        border: OutlineInputBorder(
+                        items: weight.map((String weight) {
+                          return DropdownMenuItem<String>(
+                            value: weight,
+                            child: Text(weight),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectWight = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(width: width*0.02),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectKg,
+                        decoration: InputDecoration(
+                          hintText: "Kg",
+                          hintStyle: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: OrderColor.textColor
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(width*0.015),
+                              borderSide: BorderSide(
+                                  color: OrderColor.borderColor.withOpacity(0.17)
+                              )
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(width*0.015),
+                              borderSide: BorderSide(
+                                  color: OrderColor.borderColor.withOpacity(0.17)
+                              )
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(width*0.015),
+                              borderSide: BorderSide(
+                                  color: OrderColor.borderColor.withOpacity(0.17)
+                              )
+                          ),
+                        ),
+                        items: kg.map((String kg) {
+                          return DropdownMenuItem<String>(
+                            value: kg,
+                            child: Text(kg),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectKg = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(width: width*0.02),
+                    Expanded(
+                      child: Container(
+                        height: height*0.076,
+                        width: width*1,
+                        decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
+                            border: Border.all(
                                 color: OrderColor.borderColor.withOpacity(0.17)
                             )
                         ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
+                        child: Center(
+                          child: Text('${selectWight}  ${selectKg}'),
                         ),
                       ),
-                      items: weight.map((String weight) {
-                        return DropdownMenuItem<String>(
-                          value: weight,
-                          child: Text(weight),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectWight = newValue;
-                        });
-                      },
                     ),
-                  ),
-                  SizedBox(width: width*0.02),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: selectKg,
-                      decoration: InputDecoration(
-                        hintText: "Kg",
-                        hintStyle: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: OrderColor.textColor
-                        ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                      ),
-                      items: kg.map((String kg) {
-                        return DropdownMenuItem<String>(
-                          value: kg,
-                          child: Text(kg),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectKg = newValue;
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(width: width*0.02),
-                  Container(
-                    height: height*0.076,
-                    width: width*0.1,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(width*0.015),
-                        border: Border.all(
-                            color: OrderColor.borderColor.withOpacity(0.17)
-                        )
-                    ),
-                    child: Center(
-                      child: Text('${selectWight}\n${selectKg}'),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               SizedBox(height: height*0.013),
               Padding(
@@ -714,7 +722,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
               ),
               SizedBox(height: height*0.03),
               Container(
-                height: height*0.076,
+                height: height*0.07,
                 width: width*0.94,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(width*0.017),
