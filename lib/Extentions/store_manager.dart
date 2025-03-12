@@ -87,4 +87,9 @@ class StoreManager {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('vendorType');
   }
+
+  Future<String?> getOtp() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('otp');
+  }
 }
