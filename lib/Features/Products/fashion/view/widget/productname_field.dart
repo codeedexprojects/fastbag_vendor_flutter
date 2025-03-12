@@ -13,7 +13,7 @@ class ProductnameField extends StatefulWidget {
   const ProductnameField(
       {super.key,
       required this.label,
-      this.keyboard,
+      required this.keyboard,
       required this.controller,
       this.validator,
       this.noPadding = false,
