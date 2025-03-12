@@ -29,6 +29,21 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   bool _inStock = false;
 
   List<Map<String, dynamic>> sizeRules = []; // List to store size & color variants
+  List <Map<String,dynamic>> addVarient=[];
+  void addVarientRule() {
+    setState(() {
+      addVarient.add({
+        "size": "",
+        "image":"",
+
+      });
+    });
+  }
+  void removeRuleVarient(int index) {
+    setState(() {
+      addVarient.removeAt(index);
+    });
+  }
 
   void _onFilePicked(List<File> files) {
     setState(() {
@@ -84,9 +99,15 @@ class _AddFashionProductState extends State<AddFashionProduct> {
             ProductnameField(label: 'Product Name', controller: nameController),
             ProductnameField(label: 'Describe the Product', controller: descriptionController),
             SelectField(label: 'Select Gender', controller: genderController, items: ['Male', 'Female']),
-            FbProductsFilePicker(
-              fileCategory: "Product",
-              onFilesPicked: _onFilePicked,
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: screenHeight*.01,
+                horizontal: screenWidth*.07
+              ),
+              child: FbProductsFilePicker(
+                fileCategory: "Product",
+                onFilesPicked: _onFilePicked,
+              ),
             ),
             Row(
               children: [
@@ -106,14 +127,14 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Select Varient', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Select Varient', style: normalFont4(fontsize: 16, fontweight: FontWeight.w400, color: FbColors.black2)),
                   GestureDetector(
-                    onTap: addNewSizeRule,
+                    onTap: addVarientRule,
                     child: Row(
-                      children: const [
-                        Icon(Icons.add, color: Colors.blue),
+                      children:  [
+                        Icon(Icons.add, color: Color.fromRGBO(76, 76, 76, 1),size: 14,),
                         SizedBox(width: 5),
-                        Text('New Rule', style: TextStyle(color: Colors.blue)),
+                        Text('New Rule', style:normalFont5(fontsize: 14, fontweight: FontWeight.w500, color: Color.fromRGBO(76, 76, 76, 1))),
                       ],
                     ),
                   ),
@@ -121,9 +142,9 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               ),
             ),
             Column(
-              children: sizeRules.asMap().entries.map((entry) {
+              children: addVarient.asMap().entries.map((entry) {
                 int index = entry.key;
-                var sizeRule = entry.value;
+                var varientRule = entry.value;
                 return Card(
                   margin: EdgeInsets.symmetric(horizontal: screenWidth * .07, vertical: 5),
                   elevation: 2,
@@ -140,11 +161,11 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: TextFormField(
-                                initialValue: sizeRule["color"],
+                                initialValue: varientRule["color"],
                                 decoration: const InputDecoration(labelText: "Color"),
                                 onChanged: (value) {
                                   setState(() {
-                                    sizeRules[index]["color"] = value;
+                                    varientRule[index]["color"] = value;
                                   });
                                 },
                               ),
@@ -164,7 +185,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
 
                             ),
                             IconButton(
-                              onPressed: () => removeRule(index),
+                              onPressed: () => removeRuleVarient(index),
                               icon: const Icon(Icons.close, color: Colors.red),
                             ),
                           ],
@@ -181,14 +202,14 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Select Size', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Select Size', style: normalFont4(fontsize: 16, fontweight: FontWeight.w400, color: FbColors.black2)),
                   GestureDetector(
                     onTap: addNewSizeRule,
                     child: Row(
-                      children: const [
-                        Icon(Icons.add, color: Colors.blue),
+                      children:  [
+                        Icon(Icons.add, color: Color.fromRGBO(76, 76, 76, 1),size: 14,),
                         SizedBox(width: 5),
-                        Text('New Rule', style: TextStyle(color: Colors.blue)),
+                        Text('New Rule', style: normalFont5(fontsize: 14, fontweight: FontWeight.w500, color: Color.fromRGBO(76, 76, 76, 1))),
                       ],
                     ),
                   ),
@@ -277,16 +298,26 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               }).toList(),
             ),
 
-            FbToggleSwitch(
-              title: 'Mark Product in stock',
-              initialValue: _inStock,
-              onToggleChanged: (value) {
-                setState(() {
-                  _inStock = value;
-                });
-              },
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal:  screenWidth * .07,
+                  vertical: screenHeight * .01),
+              child: FbToggleSwitch(
+                title: 'Mark Product in stock',
+                initialValue: _inStock,
+                onToggleChanged: (value) {
+                  setState(() {
+                    _inStock = value;
+                  });
+                },
+              ),
             ),
-            FbButton(onClick: () {}, label: 'Add to Product'),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal:  screenWidth * .07,
+                  vertical: screenHeight * .01),
+              child: FbButton(onClick: () {}, label: 'Add to Product'),
+            ),
             const SizedBox(height: 10),
           ],
         ),
