@@ -80,10 +80,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         String accessToken = response.data['access'];
         String refreshToken = response.data['refresh'];
         bool isApproved = response.data['is_approved'];
+        String storeType = response.data['store_type'];
 
         // Save tokens
         await tokenManager.saveTokens(accessToken, refreshToken);
         await tokenManager.saveApprovalStatus(isApproved);
+        await tokenManager.saveStoreType(storeType);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OTP verified successfully!")),
         );

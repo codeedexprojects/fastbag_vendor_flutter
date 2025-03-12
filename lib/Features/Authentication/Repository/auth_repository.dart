@@ -122,6 +122,7 @@ class AuthRepository {
         SVProgressHUD.dismiss();
         print("Registration successful: ${response.data}");
         await StoreManager().saveVendorId(response.data["id"]);
+        await StoreManager().saveStoreType(response.data["store_type"]);
         navigate(
             context: context,
             screen: ApprovalWaitingScreen(
