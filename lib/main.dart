@@ -13,6 +13,9 @@ import 'package:provider/provider.dart';
 
 import 'Features/Orders/View/order_details.dart';
 import 'Features/Orders/View/order_screen.dart';
+import 'Features/Profile/View/payment_transaction.dart';
+import 'Features/Profile/View/profile_payments.dart';
+import 'Features/Profile/View/transaction_history.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +57,6 @@ class MyApp extends StatelessWidget {
 
           useMaterial3: true,
         ),
-        home: const SplashScreen());
+        home: const TransactionHistory());
   }
 }
