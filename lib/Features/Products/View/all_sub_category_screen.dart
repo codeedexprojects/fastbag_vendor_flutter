@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
@@ -9,6 +10,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_s
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/sub_category_edit_list.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AllSubCategoryScreen extends StatelessWidget {
   final List<CategoryModel> categories;
@@ -90,73 +92,69 @@ class AllSubCategoryScreen extends StatelessWidget {
             subCategories.isNotEmpty
                 ? Expanded(
                     child: GridView.builder(
-                        padding: EdgeInsets.only(top: screenHeight * .015),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4, childAspectRatio: 0.7),
-                        itemCount: subCategories.length,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: screenWidth * .23,
-                            child: Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    navigate(
-                                        context: context,
-                                        screen: ListProductsScreen(
-                                          subCategory: subCategories[index],
-                                          subCategories: subCategories,
-                                        ));
-                                  },
-                                  child: CircleAvatar(
-                                    radius: screenWidth * .1,
-                                    backgroundImage: NetworkImage(
-                                        subCategories[index]
-                                            .sub_category_image),
-                                  ),
-                                ),
-                                Text(
-                                  subCategories[index].name,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              ],
+                    padding: const EdgeInsets.all(5),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 0.57,
+                            crossAxisSpacing: 14),
+                    itemCount: subCategories.length,
+                    itemBuilder: (context, index) {
+                      return subCategoryCard(
+                        height: screenWidth * 0.33,
+                        text: subCategories[index].name,
+                        image: subCategories[index].sub_category_image,
+                        onTap: () {
+                          navigate(
+                            context: context,
+                            screen: ListProductsScreen(
+                              subCategory: subCategories[index],
+                              subCategories: subCategories,
                             ),
                           );
-                        }),
-                  )
+                        },
+                      );
+                    },
+                  ))
                 : const Center(
                     child: Text("Start adding your sub category now"),
                   ),
-            if (isOperable) const Spacer(),
             if (isOperable)
-              FbButton(
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth / 15, vertical: 5),
+                child: FbButton(
+                    onClick: () {
+                      navigate(
+                          context: context,
+                          screen: AddSubCategoryScreen(
+                            categories: categories,
+                          ));
+                    },
+                    label: "+ Add Category"),
+              ),
+            if (isOperable && subCategories.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth / 15, vertical: 5),
+                child: FbButton(
                   onClick: () {
                     navigate(
                         context: context,
-                        screen: AddSubCategoryScreen(
+                        screen: SubCategoryEditList(
+                          subCategories: subCategories,
                           categories: categories,
                         ));
                   },
-                  label: "+ Add Category"),
-            if (isOperable && subCategories.isNotEmpty)
-              FbButton(
-                onClick: () {
-                  navigate(
-                      context: context,
-                      screen: SubCategoryEditList(
-                        subCategories: subCategories,
-                        categories: categories,
-                      ));
-                },
-                label: "Edit",
-                color: Colors.white,
-                textColor: Colors.blue,
-                borderColor: Colors.blue,
-              ),
-            if (isOperable)
-              SizedBox(
-                height: screenHeight * .02,
+                  icon: const FaIcon(
+                    FontAwesomeIcons.penToSquare,
+                    size: 20,
+                  ),
+                  label: "Edit",
+                  color: Colors.white,
+                  textColor: Colors.blue,
+                  borderColor: Colors.blue,
+                ),
               ),
           ],
         ),
