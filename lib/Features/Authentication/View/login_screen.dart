@@ -96,7 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onSubmit() {
     if (formKey.currentState!.validate()) {
-      navigate(context: context, screen: FbBottomNav());
       Provider.of<AuthViewModel>(context, listen: false).vendorLogin(
           email: emailController.text,
           password: passwordContoller.text,

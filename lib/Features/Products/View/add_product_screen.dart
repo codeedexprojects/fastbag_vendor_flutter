@@ -59,6 +59,32 @@ class _AddProductScreenState extends State<AddProductScreen> {
     super.initState();
   }
 
+  final List<Map<String, dynamic>> sizes = [];
+  final TextEditingController colorController = TextEditingController();
+  final TextEditingController wholesalePriceController = TextEditingController();
+  final TextEditingController offerPrice = TextEditingController();
+  void addSize() {
+    setState(() {
+      sizes.add({
+        "size": "",
+        "price": 0,
+        "stock": 0,
+      });
+    });
+  }
+
+  void submitVariant() {
+    final variantData = {
+      "color_name": colorController.text,
+      "color_image": int.parse(wholesalePriceController.text),
+      "sizes": sizes.map((size) => {
+        "size": size["size"],
+        "stock": size["stock"],
+        "price" : size["price"],
+      }).toList(),
+    };
+  }
+
   void _onFilePicked(List<File> files) {
     print(files);
     setState(() {
