@@ -18,30 +18,32 @@ class PaymentTransaction extends StatefulWidget {
 class _PaymentTransactionState extends State<PaymentTransaction> {
   @override
   Widget build(BuildContext context) {
-    height=MediaQuery.of(context).size.height;
-    width=MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: OrderColor.backGroundColor,
       appBar: AppBar(
         backgroundColor: OrderColor.backGroundColor,
         centerTitle: true,
-        title: Text('Payments',style: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: OrderColor.black
-        ),),
+        title: Text(
+          'Payments',
+          style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: OrderColor.black),
+        ),
         leading: Icon(CupertinoIcons.back),
       ),
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Container(
-                height: height*0.25,
-                width: width*1,
+                height: height * 0.25,
+                width: width * 1,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(width*0.03),
+                    borderRadius: BorderRadius.circular(width * 0.03),
                     gradient: LinearGradient(
                         begin: Alignment.bottomLeft,
                         end: Alignment.topRight,
@@ -54,12 +56,11 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                         color: OrderColor.gradientRed.withOpacity(0.17),
                         blurRadius: 63,
                         spreadRadius: 0,
-                        offset: Offset(0,30),
+                        offset: Offset(0, 30),
                       )
-                    ]
-                ),
+                    ]),
                 child: Padding(
-                  padding: EdgeInsets.all(width*0.05),
+                  padding: EdgeInsets.all(width * 0.05),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,32 +68,41 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('₹000000',style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 30,
-                              color: OrderColor.white
-                          ),),
-                          Text('My Bank',style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: OrderColor.white
-                          ))
+                          Text(
+                            '₹000000',
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 30,
+                                color: OrderColor.white),
+                          ),
+                          Text('My Bank',
+                              style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: OrderColor.white))
                         ],
                       ),
-                      Text('.... .... .... 4456',style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: OrderColor.white
-                      ),),
+                      Text(
+                        '.... .... .... 4456',
+                        style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: OrderColor.white),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Praveen Tp',style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: OrderColor.white
-                          ),),
-                          SvgPicture.asset(SvgConstants.MasterCard,height: height*0.05,),
+                          Text(
+                            'Praveen Tp',
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                                color: OrderColor.white),
+                          ),
+                          SvgPicture.asset(
+                            SvgConstants.MasterCard,
+                            height: height * 0.05,
+                          ),
                         ],
                       )
                     ],
@@ -100,40 +110,52 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                 ),
               ),
             ),
-            SizedBox(height: height*0.01,),
+            SizedBox(
+              height: height * 0.01,
+            ),
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Recent Transaction',style: GoogleFonts.nunito(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: OrderColor.black
-                  ),),
+                  Text(
+                    'Recent Transaction',
+                    style: GoogleFonts.nunito(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: OrderColor.black),
+                  ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => TransactionHistory(),), (route) => false,);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TransactionHistory(),
+                        ),
+                        (route) => false,
+                      );
                     },
-                    child: Text('view all',style: GoogleFonts.nunito(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: OrderColor.green
-                    ),),
+                    child: Text(
+                      'view all',
+                      style: GoogleFonts.nunito(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: OrderColor.green),
+                    ),
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(width*0.04),
+              padding: EdgeInsets.all(width * 0.04),
               child: SizedBox(
-                height: height*1,
+                height: height * 1,
                 child: ListView.separated(
-                  shrinkWrap: true,
+                    shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return  SizedBox(
-                        width: width*1,
+                      return SizedBox(
+                        width: width * 1,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,23 +166,26 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                               children: [
                                 Padding(
                                     padding: EdgeInsets.only(
-                                      top: height*0.015,
+                                      top: height * 0.015,
                                     ),
-                                    child: SvgPicture.asset(SvgConstants.import)),
-                                SizedBox(width: width*0.02,),
+                                    child:
+                                        SvgPicture.asset(SvgConstants.import)),
+                                SizedBox(
+                                  width: width * 0.02,
+                                ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Order Payment',style: GoogleFonts.nunito(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: OrderColor.black
-                                    )),
-                                    Text('#212323',style: GoogleFonts.nunito(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: OrderColor.textColor
-                                    )),
+                                    Text('Order Payment',
+                                        style: GoogleFonts.nunito(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            color: OrderColor.black)),
+                                    Text('#212323',
+                                        style: GoogleFonts.nunito(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: OrderColor.textColor)),
                                   ],
                                 ),
                               ],
@@ -168,16 +193,16 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('50,000',style: GoogleFonts.nunito(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: OrderColor.black
-                                )),
-                                Text('November 25th,2023',style: GoogleFonts.nunito(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: OrderColor.textColor
-                                )),
+                                Text('50,000',
+                                    style: GoogleFonts.nunito(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: OrderColor.black)),
+                                Text('November 25th,2023',
+                                    style: GoogleFonts.nunito(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: OrderColor.textColor)),
                               ],
                             )
                           ],
@@ -194,7 +219,7 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
             )
           ],
         ),
-      ) ,
+      ),
     );
   }
 }
