@@ -23,6 +23,7 @@ class GroceryRepository {
 
       // Handle the response
       if (response.statusCode == 200) {
+        print("resposne ${response.data}");
         SVProgressHUD.dismiss();
         List<dynamic> res = response.data;
         return res;
@@ -37,9 +38,9 @@ class GroceryRepository {
         SVProgressHUD.dismiss();
         print("category fetching failed: ${response.data}");
       }
-    } catch (e) {
+    } on DioException catch (e) {
       SVProgressHUD.dismiss();
-      print("Error: $e");
+      print("Error fetching category: ${e.response?.data}");
     }
   }
 

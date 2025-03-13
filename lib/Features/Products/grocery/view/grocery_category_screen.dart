@@ -36,10 +36,11 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
   void initState() {
     super.initState();
     // Fetch categories and subcategories asynchronously using provider
-    var categoryProvider =
-        Provider.of<CategoryViewModel>(context, listen: false);
-    categoryProvider.getProductCategories(context: context);
-    categoryProvider.getProductSubCategories(context: context);
+    var viewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
+    viewModel.getGroceryCategory(context: context);
+    print("fetch Catgpry");
+    viewModel.getGrocerySubCategory(context: context);
   }
 
   void _filterSearch(String query) {
