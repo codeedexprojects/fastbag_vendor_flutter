@@ -40,7 +40,7 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
             Padding(
               padding: EdgeInsets.all(width * 0.03),
               child: Container(
-                height: height * 0.25,
+                height: height * 0.28,
                 width: width * 1,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(width * 0.03),
@@ -149,7 +149,6 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
             Padding(
               padding: EdgeInsets.all(width * 0.04),
               child: SizedBox(
-                height: height * 1,
                 child: ListView.separated(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
