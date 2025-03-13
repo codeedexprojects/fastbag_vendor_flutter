@@ -14,6 +14,10 @@ import 'package:provider/provider.dart';
 
 import 'Features/Orders/View/order_details.dart';
 import 'Features/Orders/View/order_screen.dart';
+import 'Features/Profile/View/payment_transaction.dart';
+import 'Features/Profile/View/profile_payments.dart';
+import 'Features/Profile/View/transaction_history.dart';
+
 import 'Features/Products/grocery/view/add_grocery_product.dart';
 
 void main() async {
