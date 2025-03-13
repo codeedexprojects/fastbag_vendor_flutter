@@ -60,7 +60,7 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                       )
                     ]),
                 child: Padding(
-                  padding: EdgeInsets.all(width * 0.05),
+                  padding: EdgeInsets.all(width * 0.07),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +69,7 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '₹000000',
+                            '₹ 4 560',
                             style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 30,
@@ -78,12 +78,12 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                           Text('My Bank',
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.w700,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: OrderColor.white))
                         ],
                       ),
                       Text(
-                        '.... .... .... 4456',
+                        '..... ..... .....   4456',
                         style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w700,
                             fontSize: 16,
