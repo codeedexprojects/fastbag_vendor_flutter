@@ -17,14 +17,13 @@ class GroceryRepository {
       SVProgressHUD.show();
       var dio = Dio();
       var response = await dio.request(
-        'https://fastbag.pythonanywhere.com/vendors/categories/filter/?store_type_name=Grocery',
+        '${baseUrl}vendors/categories/filter/?store_type_name=Grocery',
         options: Options(
           method: 'GET',
         ),
       );
-
       if (response.statusCode == 200) {
-        print("resposneeeeeeeeeeeeeeee ${response.data}");
+        SVProgressHUD.dismiss();
         List jsonList = response.data;
         List<GroceryCategoryModel> groceryCategories = jsonList
             .map((json) => GroceryCategoryModel.fromJson(json))
@@ -32,43 +31,12 @@ class GroceryRepository {
         return groceryCategories;
       }
     } on DioException catch (e) {
+      SVProgressHUD.dismiss();
       print("error ${e.response}");
-    } catch (e) {}
+    } catch (e) {
+      SVProgressHUD.dismiss();
+    }
   }
-
-  // Future<dynamic> groceryCategories(BuildContext context) async {
-  //   try {
-  //     SVProgressHUD.show();
-  //     String storeType = await StoreManager().getStoreType() as String;
-  //
-  //     // Perform the POST request
-  //     Response response = await _dio.get(
-  //       "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
-  //     );
-  //
-  //     // Handle the response
-  //     if (response.statusCode == 200) {
-  //       print("resposne ${response.data}");
-  //       SVProgressHUD.dismiss();
-  //       List<dynamic> res = response.data;
-  //       return res;
-  //     } else if (response.statusCode == 401) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //             content: Text("OOPs something happened in category get")),
-  //       );
-  //       SVProgressHUD.dismiss();
-  //       print("Bad data: ${response.data}");
-  //     } else {
-  //       SVProgressHUD.dismiss();
-  //       print("category fetching failed: ${response.data}");
-  //     }
-  //   } on DioException catch (e) {
-  //     SVProgressHUD.dismiss();
-  //     print("Error fetching category: ${e.response?.data}");
-  //     print("${e.response}");
-  //   }
-  // }
 
   Future<dynamic> grocerySubCategory(BuildContext context) async {
     try {
