@@ -4,10 +4,13 @@ import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../model/grocery_catgeory_model.dart';
+
 class AllGroceryCategoriesScreen extends StatelessWidget {
-  final List<CategoryModel> categories;
+  final List<GroceryCategoryModel> categories;
   final List<SubCategoryModel> subCategories;
   const AllGroceryCategoriesScreen(
       {super.key, required this.categories, required this.subCategories});
@@ -74,7 +77,7 @@ class AllGroceryCategoriesScreen extends StatelessWidget {
                                       .toList();
                               navigate(
                                   context: context,
-                                  screen: AllSubCategoryScreen(
+                                  screen: AllGrocerySubCategoryScreen(
                                     subCategories: filteredSubCategories,
                                     categories: categories,
                                     isOperable: true,
@@ -83,11 +86,11 @@ class AllGroceryCategoriesScreen extends StatelessWidget {
                             child: CircleAvatar(
                               radius: screenWidth * .1,
                               backgroundImage: NetworkImage(
-                                  categories[index].category_image),
+                                  categories[index].categoryImage ?? ""),
                             ),
                           ),
                           Text(
-                            categories[index].name,
+                            categories[index].name ?? "",
                             overflow: TextOverflow.ellipsis,
                           )
                         ],

@@ -3,6 +3,7 @@ import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
@@ -10,39 +11,64 @@ import 'package:path/path.dart';
 class GroceryRepository {
   final Dio _dio = Dio();
 
-  Future<dynamic> groceryCategories(BuildContext context) async {
+  Future<List<GroceryCategoryModel>?> groceryCategories(
+      BuildContext context) async {
     try {
       SVProgressHUD.show();
-      String token = await StoreManager().getAccessToken() as String;
-      String storeType = await StoreManager().getStoreType() as String;
-
-      // Perform the POST request
-      Response response = await _dio.get(
-        "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
+      var dio = Dio();
+      var response = await dio.request(
+        'https://fastbag.pythonanywhere.com/vendors/categories/filter/?store_type_name=Grocery',
+        options: Options(
+          method: 'GET',
+        ),
       );
 
-      // Handle the response
       if (response.statusCode == 200) {
-        print("resposne ${response.data}");
-        SVProgressHUD.dismiss();
-        List<dynamic> res = response.data;
-        return res;
-      } else if (response.statusCode == 401) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("OOPs something happened in category get")),
-        );
-        SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
-      } else {
-        SVProgressHUD.dismiss();
-        print("category fetching failed: ${response.data}");
+        print("resposneeeeeeeeeeeeeeee ${response.data}");
+        List jsonList = response.data;
+        List<GroceryCategoryModel> groceryCategories = jsonList
+            .map((json) => GroceryCategoryModel.fromJson(json))
+            .toList();
+        return groceryCategories;
       }
     } on DioException catch (e) {
-      SVProgressHUD.dismiss();
-      print("Error fetching category: ${e.response?.data}");
-    }
+      print("error ${e.response}");
+    } catch (e) {}
   }
+
+  // Future<dynamic> groceryCategories(BuildContext context) async {
+  //   try {
+  //     SVProgressHUD.show();
+  //     String storeType = await StoreManager().getStoreType() as String;
+  //
+  //     // Perform the POST request
+  //     Response response = await _dio.get(
+  //       "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
+  //     );
+  //
+  //     // Handle the response
+  //     if (response.statusCode == 200) {
+  //       print("resposne ${response.data}");
+  //       SVProgressHUD.dismiss();
+  //       List<dynamic> res = response.data;
+  //       return res;
+  //     } else if (response.statusCode == 401) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //             content: Text("OOPs something happened in category get")),
+  //       );
+  //       SVProgressHUD.dismiss();
+  //       print("Bad data: ${response.data}");
+  //     } else {
+  //       SVProgressHUD.dismiss();
+  //       print("category fetching failed: ${response.data}");
+  //     }
+  //   } on DioException catch (e) {
+  //     SVProgressHUD.dismiss();
+  //     print("Error fetching category: ${e.response?.data}");
+  //     print("${e.response}");
+  //   }
+  // }
 
   Future<dynamic> grocerySubCategory(BuildContext context) async {
     try {

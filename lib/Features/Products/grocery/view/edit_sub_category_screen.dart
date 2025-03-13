@@ -16,9 +16,11 @@ import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/grocery_catgeory_model.dart';
+
 class EditGrocerySubCategoryScreen extends StatefulWidget {
-  final List<CategoryModel> categories;
-  final CategoryModel category;
+  final List<GroceryCategoryModel> categories;
+  final GroceryCategoryModel category;
   final SubCategoryModel subCategory;
   const EditGrocerySubCategoryScreen(
       {super.key,
@@ -35,7 +37,7 @@ class _EditGrocerySubCategoryScreenState extends State<EditGrocerySubCategoryScr
   File? _selectedImage;
   int vendorId = 0;
   bool? _switchValue;
-  CategoryModel? selectedCategory;
+  GroceryCategoryModel? selectedCategory;
 
   @override
   void initState() {

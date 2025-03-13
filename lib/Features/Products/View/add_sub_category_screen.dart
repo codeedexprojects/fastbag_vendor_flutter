@@ -13,6 +13,8 @@ import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../grocery/model/grocery_catgeory_model.dart';
+
 class AddSubCategoryScreen extends StatefulWidget {
   final List<CategoryModel> categories;
   const AddSubCategoryScreen({super.key, required this.categories});

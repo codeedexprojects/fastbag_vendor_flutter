@@ -6,6 +6,8 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_mode
 import 'package:fastbag_vendor_flutter/Features/Products/View/edit_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../grocery/model/grocery_catgeory_model.dart';
+
 class SubCategoryEditList extends StatelessWidget {
   final List<SubCategoryModel> subCategories;
   final List<CategoryModel> categories;

@@ -66,13 +66,13 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     if (item.type == "category") {
       navigate(
           context: context,
-          screen: AllCategoriesScreen(
+          screen: AllGroceryCategoriesScreen(
               categories: [item.model],
               subCategories: _viewModel.subCategories));
     } else {
       navigate(
           context: context,
-          screen: AllSubCategoryScreen(
+          screen: AllGrocerySubCategoryScreen(
               subCategories: [item.model],
               categories: _viewModel.categories,
               isOperable: false));
@@ -95,8 +95,8 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
       List<SerachItem> categoryItems = categoryProvider.categories.isNotEmpty
           ? categoryProvider.categories
               .map<SerachItem>((category) => SerachItem(
-                  id: category.id,
-                  name: category.name,
+                  id: category.id ?? 0,
+                  name: category.name ?? "",
                   type: "category",
                   model: category))
               .toList()
@@ -186,7 +186,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                     //  category  List  Horzontal
                     SizedBox(
                       height: screenHeight * .17,
-                      child: Consumer<CategoryViewModel>(
+                      child: Consumer<GroceryViewModel>(
                         builder: (context, data, _) {
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -206,7 +206,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                                 },
                                 radius: screenWidth * .115,
                                 image: NetworkImage(
-                                  data.categories[index].category_image,
+                                  data.categories[index].categoryImage ?? "",
                                 ),
                               );
                             },

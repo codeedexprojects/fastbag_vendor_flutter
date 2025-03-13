@@ -17,12 +17,6 @@ class CategoryRepository {
       print("inside try");
       // Create FormData for file uploads
       SVProgressHUD.show();
-
-      String token = await StoreManager().getAccessToken() as String;
-      // Add the authorization header with the token
-      // _dio.options.headers = {"Authorization": "Bearer $token"};
-      print(token);
-
       String storeType = await StoreManager().getStoreType() as String;
 
       // Perform the POST request
