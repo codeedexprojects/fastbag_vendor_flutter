@@ -38,9 +38,9 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(width * 0.03),
+              padding: EdgeInsets.all(width * 0.04),
               child: Container(
-                height: height * 0.28,
+                height: height * 0.21,
                 width: width * 1,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(width * 0.03),
