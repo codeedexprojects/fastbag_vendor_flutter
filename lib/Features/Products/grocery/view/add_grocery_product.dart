@@ -1,19 +1,19 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_drop_down.dart';
+import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
-import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/Fb_Text_Form_Field.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
+import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_products_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../Commons/localvariables.dart';
-import '../../../Authentication/View/Widgets/fb_file_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddGroceryProduct extends StatefulWidget {
   const AddGroceryProduct({super.key});
@@ -23,22 +23,24 @@ class AddGroceryProduct extends StatefulWidget {
 }
 
 class _AddGroceryProductState extends State<AddGroceryProduct> {
+  final _formkey = GlobalKey<FormState>();
   String? selectedCategory;
   String? selectedSubCategory;
   String? selectedColor;
   String? selectWight;
-  String? selectKg;
+  String? selectedMeasurment;
   String? selectPrice;
   String? selectQuantity;
+  List<File> selectedImages = [];
   bool isOfferProduct = false;
   bool isPopularProduct = false;
-  bool markProduct = false;
-  List<Map<String, dynamic>> variantFields = [];
+  bool isProductInStock = false;
+  List<Map<String, dynamic>> variantFields = []; // Corrected declaration
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
   var priceController = TextEditingController();
   var discountController = TextEditingController();
-  var wholeSaleController = TextEditingController();
+  var wholesalePriceController = TextEditingController();
   var weightController = TextEditingController();
 
   List<String> categories = ["Electronics", "Clothing", "Groceries"];
@@ -55,22 +57,81 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
     'Box',
     'Piece'
   ];
-  addVariant() {
+
+  void addVariant() {
     setState(() {
       variantFields.add({
         'weightController': TextEditingController(),
         'priceController': TextEditingController(),
-        'quantityController': TextEditingController(),
-        'stockStatus': bool,
+        'selectedQuantity': null, // Track selected quantity here
+        'selectedVariantMeasurment': null,
+        'stockStatus': false,
       });
     });
   }
-  // Function to remove a variant field
 
   void removeVariant(int index) {
     setState(() {
       variantFields.removeAt(index);
     });
+  }
+
+  onAddProductClicked() async {
+    final groceryViewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
+
+    // Convert selected images into multipart files
+    List<MultipartFile> imageFiles = await Future.wait(
+      selectedImages
+          .map((file) async => await MultipartFile.fromFile(file.path)),
+    );
+
+    print('Selected Images: $selectedImages');
+    print('Converted Image Files: $imageFiles');
+
+    final data = {
+      "vendor": 18,
+      "category": 14,
+      "sub_category": 2,
+      "name": nameController.text.trim(),
+      "wholesale_price": double.parse(wholesalePriceController.text..trim()),
+      "price": double.parse(priceController.text.trim()),
+
+      "discount": int.parse(discountController.text.trim()),
+      "description": descriptionController.text.trim(),
+      "weight_measurement": selectedMeasurment,
+      "Available": isProductInStock,
+      "is_offer_product": isOfferProduct,
+      "is_popular_product": isPopularProduct,
+      "weights": {
+        for (var variant in variantFields)
+          if (variant['weightController']!.text.isNotEmpty &&
+              variant['priceController']!.text.isNotEmpty &&
+              variant['selectedQuantity'] != null)
+            "${variant['weightController']!.text}${variant['selectedVariantMeasurment']}":
+                {
+              "price": double.parse(variant['priceController']!.text.trim()),
+              "quantity": int.parse(variant['selectedQuantity']),
+              "in_stock": variant['stockStatus'],
+            }
+      },
+      // "images": imageFiles, // Sending images as MultipartFile
+    };
+
+    print("Final Data: $data");
+
+    if (_formkey.currentState!.validate()) {
+      if (selectedImages.isEmpty) {
+        showFlushbar(
+          context: context,
+          color: Colors.red,
+          icon: Icons.image,
+          message: 'Select at least one Image',
+        );
+      } else {
+        await groceryViewModel.addProduct(context, data);
+      }
+    }
   }
 
   @override
@@ -82,7 +143,9 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
       backgroundColor: OrderColor.backGroundColor,
       appBar: AppBar(
         backgroundColor: OrderColor.backGroundColor,
-        leading: const Icon(Icons.arrow_back_ios_new_rounded),
+        leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: const Icon(Icons.arrow_back_ios_new_rounded)),
         centerTitle: true,
         title: Text(
           'Add product',
@@ -94,122 +157,152 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: width / 17),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            gap,
-            FbCategoryFormField(
-                label: 'Product Name', controller: nameController),
-            FbCategoryFormField(
-                label: 'Describe the Product',
-                controller: descriptionController),
-            FbProductsFilePicker(
-                fileCategory: 'Product', onFilesPicked: _onFilePicked),
-            SizedBox(height: height * 0.013),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: FbCustomDropdown(
-                    value: selectedCategory,
-                    hintText: "Category",
-                    items: categories,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedCategory = newValue;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: width * 0.03,
-                ),
-                Expanded(
-                  child: FbCustomDropdown(
-                    value: selectedSubCategory,
-                    hintText: "Sub Category",
-                    items: subCategories,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedSubCategory = newValue;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            FbCategoryFormField(
-                label: 'Wholesale Price', controller: wholeSaleController),
-            FbCategoryFormField(
-                label: 'Product Price', controller: priceController),
-            FbCategoryFormField(
-                label: 'Discount Price (Optional)',
-                controller: discountController),
-            FbCustomDropdown(
-              value: selectKg,
-              hintText: "Weight Measurement",
-              items: itemMeasurements,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectKg = newValue;
-                });
-              },
-            ),
-            FbToggleSwitch(
-              title: 'Offer Product',
-              initialValue: isOfferProduct,
-              onToggleChanged: (value) {
-                setState(() {
-                  isOfferProduct = value;
-                });
-              },
-            ),
-            FbToggleSwitch(
-              title: 'Popular Product',
-              initialValue: isPopularProduct,
-              onToggleChanged: (value) {
-                setState(() {
-                  isPopularProduct = value;
-                });
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: width * 0.04,
-                horizontal: width * 0.03,
-              ),
-              child: Row(
+        child: Form(
+          key: _formkey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              gap,
+              FbCategoryFormField(
+                  label: 'Product Name',
+                  controller: nameController,
+                  validator: customValidatornoSpaceError),
+              FbCategoryFormField(
+                  label: 'Describe the Product',
+                  controller: descriptionController,
+                  validator: customValidatornoSpaceError),
+              FbProductsFilePicker(
+                  fileCategory: 'Product',
+                  onFilesPicked: (List<File> files) {
+                    setState(() {
+                      selectedImages = files;
+                    });
+                  }),
+              SizedBox(height: height * 0.013),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Select Weight Variant',
-                      style: nunito(fontSize: 17, fontWeight: FontWeight.w600)),
-                  GestureDetector(
-                    onTap: () {
-                      addVariant();
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: OrderColor.black,
-                          size: width * 0.05,
-                        ),
-                        const SizedBox(
-                          width: 1,
-                        ),
-                        Text('New Rule', style: nunito())
-                      ],
+                  Expanded(
+                    child: FbCustomDropdown(
+                      value: selectedCategory,
+                      hintText: "Category",
+                      items: categories,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCategory = newValue;
+                        });
+                      },
                     ),
-                  )
+                  ),
+                  SizedBox(
+                    width: width * 0.03,
+                  ),
+                  Expanded(
+                    child: FbCustomDropdown(
+                      value: selectedSubCategory,
+                      hintText: "Sub Category",
+                      items: subCategories,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedSubCategory = newValue;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               ),
-            ),
-            genaratevariantFields(),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: width * .04),
-              child: FbButton(onClick: () {}, label: 'Add to Product'),
-            ),
-          ],
+              FbCategoryFormField(
+                  keyboard: TextInputType.number,
+                  label: 'Wholesale Price',
+                  controller: wholesalePriceController,
+                  validator: customValidatornoSpaceError),
+              FbCategoryFormField(
+                  keyboard: TextInputType.number,
+                  label: 'Product Price',
+                  controller: priceController,
+                  validator: customValidatornoSpaceError),
+              FbCategoryFormField(
+                  keyboard: TextInputType.number,
+                  label: 'Discount Price (Optional)',
+                  controller: discountController,
+                  validator: customValidatornoSpaceError),
+              FbCustomDropdown(
+                value: selectedMeasurment,
+                hintText: "Weight Measurement",
+                items: itemMeasurements,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedMeasurment = newValue;
+                  });
+                },
+              ),
+              FbToggleSwitch(
+                title: 'Offer Product',
+                initialValue: isOfferProduct,
+                onToggleChanged: (value) {
+                  setState(() {
+                    isOfferProduct = value;
+                  });
+                },
+              ),
+              FbToggleSwitch(
+                title: 'Popular Product',
+                initialValue: isPopularProduct,
+                onToggleChanged: (value) {
+                  setState(() {
+                    isPopularProduct = value;
+                  });
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: width * 0.04,
+                  horizontal: width * 0.03,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Select Weight Variant',
+                        style:
+                            nunito(fontSize: 17, fontWeight: FontWeight.w600)),
+                    GestureDetector(
+                      onTap: () {
+                        addVariant();
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: OrderColor.black,
+                            size: width * 0.05,
+                          ),
+                          const SizedBox(
+                            width: 1,
+                          ),
+                          Text('New Rule', style: nunito())
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              genaratevariantFields(),
+              FbToggleSwitch(
+                title: 'Mark Product Is Available',
+                initialValue: isProductInStock,
+                onToggleChanged: (value) {
+                  setState(() {
+                    isProductInStock = value;
+                  });
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: width * .04),
+                child: FbButton(
+                    onClick: onAddProductClicked, label: 'Add to Product'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -219,7 +312,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
     return Column(
         children: List.generate(variantFields.length, (index) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
             Row(
@@ -227,20 +320,22 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                 Expanded(
                   child: FbCategoryFormField(
                       keyboard: TextInputType.number,
-                      label: 'Wieght',
-                      controller: variantFields[index]['weightController']),
+                      label: 'Weight',
+                      controller: variantFields[index]['weightController'],
+                      validator: customValidatornoSpaceError),
                 ),
-                SizedBox(
-                  width: width * 0.03,
+                const SizedBox(
+                  width: 20,
                 ),
                 Expanded(
                   child: FbCustomDropdown(
-                    value: selectKg,
+                    value: variantFields[index]['selectedVariantMeasurment'],
                     items: itemMeasurements,
                     hintText: "Kg",
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectKg = newValue;
+                        variantFields[index]['selectedVariantMeasurment'] =
+                            newValue;
                       });
                     },
                   ),
@@ -253,21 +348,23 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                     child: FbCategoryFormField(
                         keyboard: TextInputType.number,
                         label: 'Price',
-                        controller: variantFields[index]['priceController'])),
-                SizedBox(
-                  width: width * 0.03,
+                        controller: variantFields[index]['priceController'],
+                        validator: customValidatornoSpaceError)),
+                const SizedBox(
+                  width: 20,
                 ),
                 Expanded(
-                    child: FbCustomDropdown(
-                  value: selectQuantity,
-                  hintText: "Quantity",
-                  items: List.generate(10, (index) => (index + 1).toString()),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectQuantity = newValue;
-                    });
-                  },
-                ))
+                  child: FbCustomDropdown(
+                    value: variantFields[index]['selectedQuantity'],
+                    hintText: "Quantity",
+                    items: List.generate(10, (index) => (index + 1).toString()),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        variantFields[index]['selectedQuantity'] = newValue;
+                      });
+                    },
+                  ),
+                )
               ],
             ),
             FbToggleSwitch(
@@ -275,7 +372,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
               initialValue: variantFields[index]['stockStatus'],
               onToggleChanged: (value) {
                 setState(() {
-                  isPopularProduct = value;
+                  variantFields[index]['stockStatus'] = value;
                 });
               },
             ),
@@ -286,7 +383,6 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      
                       Icon(
                         Icons.delete,
                         color: Colors.red,

@@ -43,7 +43,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   SubCategoryModel? selectedCategory;
 
   // Map to store variants data
-  List<Map<String, dynamic>>   = [];
+  List<Map<String, dynamic>> variants = [];
 
   // Text Editing Controllers for dynamic variants
   List<Map<String, dynamic>> variantFields = [];
@@ -99,7 +99,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         'nameController': TextEditingController(),
         'priceController': TextEditingController(),
         'quantityController': TextEditingController(),
-        'stockStatus': 'in stock', 
+        'stockStatus': 'in stock', // Default stock status
       });
     });
   }
