@@ -6,7 +6,7 @@ class SubCategoryModel {
   final String name;
   final String sub_category_image;
   final bool is_enabled;
-  final int vendor;
+  final dynamic vendor;
 
   SubCategoryModel(
       {required this.categoryId,
