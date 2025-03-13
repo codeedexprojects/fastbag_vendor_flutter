@@ -5,6 +5,7 @@ import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/Model/category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Authentication/Model/login.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/Model/register_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/approval_waiting_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/verify_otp_screen.dart';
@@ -13,6 +14,7 @@ import 'package:fastbag_vendor_flutter/Features/Splash/View/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
   final Dio _dio = Dio();
@@ -122,6 +124,7 @@ class AuthRepository {
         SVProgressHUD.dismiss();
         print("Registration successful: ${response.data}");
         await StoreManager().saveVendorId(response.data["id"]);
+        await StoreManager().saveStoreType(response.data["store_type"]);
         navigate(
             context: context,
             screen: ApprovalWaitingScreen(
@@ -191,7 +194,7 @@ class AuthRepository {
     return false;
   }
 
-  Future<void> loginVendor(
+  Future<LoginResponse?> loginVendor(
       String email, String password, BuildContext context) async {
     final url = '${baseUrl}vendors/vendor/login/';
     print("final url $url");
@@ -224,6 +227,7 @@ class AuthRepository {
                 password: password,
               ));
         }
+        return LoginResponse.fromJson(response.data);
         // return response.data
         //     .map<CategoryModel>((data) => CategoryModel.fromMap(data))
         //     .toList();

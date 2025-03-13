@@ -7,10 +7,12 @@ import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/fb_auth_title.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/account_created_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Authentication/ViewModel/auth_view_model.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   final String email;
@@ -38,11 +40,16 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   int resendCountDown = 60;
   bool isSubmitting = false;
   Timer? _timer;
+  String? otp;
 
   @override
   void initState() {
     super.initState();
     startResendTimer();
+  }
+
+  getOtp() async {
+    otp = await StoreManager().getOtp();
   }
 
   void verifyOtp() async {
@@ -80,10 +87,13 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         String accessToken = response.data['access'];
         String refreshToken = response.data['refresh'];
         bool isApproved = response.data['is_approved'];
+        String storeType = response.data['store'];
+        print(" nejebhbubpuefbpewuf ${response.data['store']}");
 
         // Save tokens
         await tokenManager.saveTokens(accessToken, refreshToken);
         await tokenManager.saveApprovalStatus(isApproved);
+        await tokenManager.saveStoreType(storeType);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OTP verified successfully!")),
         );
@@ -177,6 +187,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final auth = Provider.of<AuthViewModel>(context);
     return Scaffold(
         backgroundColor: FbColors.mainbackgroundColor,
         appBar: AppBar(
@@ -199,7 +210,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     color: Colors.grey),
               ),
               Text(
-                'to ${widget.email}',
+                'to ${widget.email} otp : ${auth.loginResponse?.otp}',
                 style: mainFont(
                     fontsize: screenHeight * .017,
                     fontweight: FontWeight.normal,

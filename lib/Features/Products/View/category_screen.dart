@@ -12,14 +12,14 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_scr
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
-class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
+class FoodCategoryScreen extends StatefulWidget {
+  const FoodCategoryScreen({super.key});
 
   @override
-  State<CategoryScreen> createState() => _ListCategoryScreenState();
+  State<FoodCategoryScreen> createState() => _ListCategoryScreenState();
 }
 
-class _ListCategoryScreenState extends State<CategoryScreen> {
+class _ListCategoryScreenState extends State<FoodCategoryScreen> {
   late List<SerachItem> combinedList =
       []; // Combined list of categories and subcategories
   List<SerachItem> filteredList = []; // Filtered list for search suggestions

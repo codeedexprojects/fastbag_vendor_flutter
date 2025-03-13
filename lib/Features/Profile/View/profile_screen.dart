@@ -164,7 +164,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       onTap: () {
                         // Handle payments
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>AddFashionProduct()));
                       },
                     ),
                     ListTile(
@@ -181,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       onTap: () {
                         // Handle settings
-                        navigate(context: context, screen: const AddFashionProduct());
+                        navigate(context: context, screen: const Settings());
                       },
                     ),
                     ListTile(
