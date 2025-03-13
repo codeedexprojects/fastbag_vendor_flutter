@@ -12,6 +12,12 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_scr
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
+import '../model/fashion_serach_item.dart';
+import '../view_model/fashion_category_view_model.dart';
+import 'all_fashion_categories_screen.dart';
+import 'all_fashion_sub_category_screen.dart';
+import 'list_fashion_products_screen.dart';
+
 class FashionCategoryScreen extends StatefulWidget {
   const FashionCategoryScreen({super.key});
 
@@ -20,9 +26,8 @@ class FashionCategoryScreen extends StatefulWidget {
 }
 
 class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
-  late List<SerachItem> combinedList =
-  []; // Combined list of categories and subcategories
-  List<SerachItem> filteredList = []; // Filtered list for search suggestions
+  late List<FashionSerachItem> combinedList = []; // Combined list of categories and subcategories
+  List<FashionSerachItem> filteredList = []; // Filtered list for search suggestions
   final TextEditingController searchController =
   TextEditingController(); // SearchBar controller
   final FocusNode searchFocusNode = FocusNode();
@@ -32,7 +37,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
     super.initState();
     // Fetch categories and subcategories asynchronously using provider
     var categoryProvider =
-    Provider.of<CategoryViewModel>(context, listen: false);
+    Provider.of<FashionCategoryViewModel>(context, listen: false);
     categoryProvider.getProductCategories(context: context);
     categoryProvider.getProductSubCategories(context: context);
   }
@@ -53,21 +58,21 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
     }
   }
 
-  void _onSubmitted(SerachItem item) {
+  void _onSubmitted(FashionSerachItem item) {
     var categoryProvider =
-    Provider.of<CategoryViewModel>(context, listen: false);
+    Provider.of<FashionCategoryViewModel>(context, listen: false);
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
       navigate(
           context: context,
-          screen: AllCategoriesScreen(
+          screen: FashionAllCategoriesScreen(
               categories: [item.model],
               subCategories: categoryProvider.subCategories));
     } else {
       navigate(
           context: context,
-          screen: AllSubCategoryScreen(
+          screen: FashionAllSubCategoryScreen(
               subCategories: [item.model],
               categories: categoryProvider.categories,
               isOperable: false));
@@ -79,7 +84,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var categoryProvider = Provider.of<CategoryViewModel>(context);
+    var categoryProvider = Provider.of<FashionCategoryViewModel>(context);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -87,19 +92,19 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
     if (categoryProvider.categories.isNotEmpty ||
         categoryProvider.subCategories.isNotEmpty) {
       // Combine category and subcategory names once data is available
-      List<SerachItem> categoryItems = categoryProvider.categories.isNotEmpty
+      List<FashionSerachItem> categoryItems = categoryProvider.categories.isNotEmpty
           ? categoryProvider.categories
-          .map<SerachItem>((category) => SerachItem(
+          .map<FashionSerachItem>((category) => FashionSerachItem(
           id: category.id,
           name: category.name,
           type: "category",
           model: category))
           .toList()
           : [];
-      List<SerachItem> subCategoryItems =
+      List<FashionSerachItem> subCategoryItems =
       categoryProvider.subCategories.isNotEmpty
           ? categoryProvider.subCategories
-          .map<SerachItem>((subCategory) => SerachItem(
+          .map<FashionSerachItem>((subCategory) => FashionSerachItem(
           id: subCategory.id,
           name: subCategory.name,
           type: "sub_category",
@@ -164,7 +169,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                               onPressed: () {
                                 navigate(
                                     context: context,
-                                    screen: AllCategoriesScreen(
+                                    screen: FashionAllCategoriesScreen(
                                       categories: categoryProvider.categories,
                                       subCategories: categoryProvider.subCategories,
                                     ));
@@ -181,7 +186,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                         //  category  List  Horzontal
                         SizedBox(
                           height: screenHeight * .17,
-                          child: Consumer<CategoryViewModel>(
+                          child: Consumer<FashionCategoryViewModel>(
                             builder: (context, data, _) {
                               return ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -192,7 +197,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                     onTap: () {
                                       navigate(
                                         context: context,
-                                        screen: AllSubCategoryScreen(
+                                        screen: FashionAllSubCategoryScreen(
                                           subCategories: data.subCategories,
                                           categories: data.categories,
                                           isOperable: true,
@@ -224,7 +229,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                 onPressed: () {
                                   navigate(
                                     context: context,
-                                    screen: AllSubCategoryScreen(
+                                    screen: FashionAllSubCategoryScreen(
                                       subCategories: categoryProvider.subCategories,
                                       categories: categoryProvider.categories,
                                       isOperable: false,
@@ -241,7 +246,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                           ],
                         ),
                         Expanded(
-                          child: Consumer<CategoryViewModel>(
+                          child: Consumer<FashionCategoryViewModel>(
                             builder: (context, data, _) {
                               return GridView.builder(
                                 padding: const EdgeInsets.all(5),
@@ -260,7 +265,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                     onTap: () {
                                       navigate(
                                         context: context,
-                                        screen: ListProductsScreen(
+                                        screen: FashionListProductsScreen(
                                           subCategory: data.subCategories[index],
                                           subCategories: data.subCategories,
                                         ),

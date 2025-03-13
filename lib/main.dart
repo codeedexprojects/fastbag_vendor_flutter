@@ -13,6 +13,9 @@ import 'package:provider/provider.dart';
 
 import 'Features/Orders/View/order_details.dart';
 import 'Features/Orders/View/order_screen.dart';
+import 'Features/Products/fashion/view_model/fashion_category_view_model.dart';
+import 'Features/Products/fashion/view_model/fashiondetail_view_model.dart';
+import 'Features/Products/fashion/view_model/fashionproduct_view_model.dart';
 import 'Features/Products/grocery/view/add_grocery_product.dart';
 
 void main() async {
@@ -35,6 +38,9 @@ void main() async {
       ChangeNotifierProvider(create: (_)=>ProductViewModel()),
       ChangeNotifierProvider(create: (_)=>DashViewModel()),
       ChangeNotifierProvider(create: (_)=>FoodViewModel()),
+      ChangeNotifierProvider(create: (_)=>FashionCategoryViewModel()),
+      ChangeNotifierProvider(create: (_)=>FashiondetailViewModel()),
+      ChangeNotifierProvider(create: (_)=>FashionProductViewModel()),
     ],
     child: const MyApp()));
 

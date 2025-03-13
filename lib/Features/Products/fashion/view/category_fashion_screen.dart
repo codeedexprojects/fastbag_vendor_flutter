@@ -11,14 +11,18 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_scr
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
-class FoodCategoryScreen extends StatefulWidget {
-  const FoodCategoryScreen({super.key});
+import '../view_model/fashion_category_view_model.dart';
+import 'all_fashion_categories_screen.dart';
+import 'all_fashion_sub_category_screen.dart';
+
+class FashionCategoryScreen extends StatefulWidget {
+  const FashionCategoryScreen({super.key});
 
   @override
-  State<FoodCategoryScreen> createState() => _ListCategoryScreenState();
+  State<FashionCategoryScreen> createState() => _ListCategoryScreenState();
 }
 
-class _ListCategoryScreenState extends State<FoodCategoryScreen> {
+class _ListCategoryScreenState extends State<FashionCategoryScreen> {
   late List<SerachItem> combinedList =
       []; // Combined list of categories and subcategories
   List<SerachItem> filteredList = []; // Filtered list for search suggestions
@@ -54,19 +58,19 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
 
   void _onSubmitted(SerachItem item) {
     var categoryProvider =
-        Provider.of<CategoryViewModel>(context, listen: false);
+        Provider.of<FashionCategoryViewModel>(context, listen: false);
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
       navigate(
           context: context,
-          screen: AllCategoriesScreen(
+          screen: FashionAllCategoriesScreen(
               categories: [item.model],
               subCategories: categoryProvider.subCategories));
     } else {
       navigate(
           context: context,
-          screen: AllSubCategoryScreen(
+          screen: FashionAllSubCategoryScreen(
               subCategories: [item.model],
               categories: categoryProvider.categories,
               isOperable: false));
