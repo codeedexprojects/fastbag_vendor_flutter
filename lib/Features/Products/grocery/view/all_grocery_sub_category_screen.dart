@@ -9,20 +9,19 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_mode
 import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/sub_category_edit_list.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/sub_fashion_category_edit_list.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/add_grocery_sub_category_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/grocery_sub_category_edit_list.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/list_groceey_products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../model/fashion_category_model.dart';
-import '../model/fashion_sub_category_model.dart';
-import 'add_fashion_sub_category_screen.dart';
-import 'list_fashion_products_screen.dart';
+import '../model/grocery_catgeory_model.dart';
 
-class FashionAllSubCategoryScreen extends StatelessWidget {
-  final List<FashionCategoryModel?> categories;
-  final List<FashionSubCategoryModel?> subCategories;
+class AllGrocerySubCategoryScreen extends StatelessWidget {
+  final List<GroceryCategoryModel> categories;
+  final List<SubCategoryModel> subCategories;
   final bool isOperable;
-  const FashionAllSubCategoryScreen(
+  const AllGrocerySubCategoryScreen(
       {super.key,
       required this.subCategories,
       required this.categories,
@@ -56,30 +55,6 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     SizedBox(
-            //       width: screenWidth * 0.8,
-            //       child: SearchBar(
-            //         backgroundColor: const WidgetStatePropertyAll(Colors.white),
-            //         elevation: const WidgetStatePropertyAll(0),
-            //         shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.circular(5))),
-            //         side: WidgetStatePropertyAll(
-            //             BorderSide(color: FbColors.black, width: 0.5)),
-            //         trailing: const [
-            //           Icon(
-            //             Icons.search,
-            //             size: 35,
-            //           )
-            //         ],
-            //         hintText: "search here",
-            //       ),
-            //     ),
-            //     const Icon(Icons.more_vert)
-            //   ],
-            // ),
             SizedBox(
               height: screenHeight * .02,
             ),
@@ -108,12 +83,12 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return subCategoryCard(
                         height: screenWidth * 0.33,
-                        text: subCategories[index]?.name??'',
-                        image: subCategories[index]?.subcategoryImage??'',
+                        text: subCategories[index].name,
+                        image: subCategories[index].sub_category_image,
                         onTap: () {
                           navigate(
                             context: context,
-                            screen: FashionListProductsScreen(
+                            screen: ListGroceryProducts(
                               subCategory: subCategories[index],
                               subCategories: subCategories,
                             ),
@@ -133,7 +108,7 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                     onClick: () {
                       navigate(
                           context: context,
-                          screen: FashionAddSubCategoryScreen(
+                          screen: AddGrocerySubCategoryScreen(
                             categories: categories,
                           ));
                     },
@@ -145,12 +120,12 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                     horizontal: screenWidth / 15, vertical: 5),
                 child: FbButton(
                   onClick: () {
-                    // navigate(
-                    //     context: context,
-                    //     screen: FashionSubCategoryEditList(
-                    //       subCategories: subCategories,
-                    //       categories: categories,
-                    //     ));
+                    navigate(
+                        context: context,
+                        screen: GrocerySubCategoryEditList(
+                          subCategories: subCategories,
+                          categories: categories,
+                        ));
                   },
                   icon: const FaIcon(
                     FontAwesomeIcons.penToSquare,

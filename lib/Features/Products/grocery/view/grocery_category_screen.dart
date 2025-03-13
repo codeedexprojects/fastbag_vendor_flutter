@@ -2,7 +2,11 @@ import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_categories_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view_model/grocery_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
@@ -11,18 +15,16 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_scr
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
-import '../view_model/fashion_category_view_model.dart';
-import 'all_fashion_categories_screen.dart';
-import 'all_fashion_sub_category_screen.dart';
+import 'list_groceey_products_screen.dart';
 
-class FashionCategoryScreen extends StatefulWidget {
-  const FashionCategoryScreen({super.key});
+class GroceryCategoryScreen extends StatefulWidget {
+  const GroceryCategoryScreen({super.key});
 
   @override
-  State<FashionCategoryScreen> createState() => _ListCategoryScreenState();
+  State<GroceryCategoryScreen> createState() => _ListCategoryScreenState();
 }
 
-class _ListCategoryScreenState extends State<FashionCategoryScreen> {
+class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
   late List<SerachItem> combinedList =
       []; // Combined list of categories and subcategories
   List<SerachItem> filteredList = []; // Filtered list for search suggestions
@@ -34,10 +36,11 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
   void initState() {
     super.initState();
     // Fetch categories and subcategories asynchronously using provider
-    var categoryProvider =
-        Provider.of<CategoryViewModel>(context, listen: false);
-    categoryProvider.getProductCategories(context: context);
-    categoryProvider.getProductSubCategories(context: context);
+    var viewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
+    viewModel.getGroceryCategory(context: context);
+    print("fetch Catgpry");
+    viewModel.getGrocerySubCategory(context: context);
   }
 
   void _filterSearch(String query) {
@@ -57,22 +60,21 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
   }
 
   void _onSubmitted(SerachItem item) {
-    var categoryProvider =
-        Provider.of<FashionCategoryViewModel>(context, listen: false);
+    var _viewModel = Provider.of<GroceryViewModel>(context, listen: false);
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
       navigate(
           context: context,
-          screen: FashionAllCategoriesScreen(
+          screen: AllGroceryCategoriesScreen(
               categories: [item.model],
-              subCategories: categoryProvider.subCategories));
+              subCategories: _viewModel.subCategories));
     } else {
       navigate(
           context: context,
-          screen: FashionAllSubCategoryScreen(
+          screen: AllGrocerySubCategoryScreen(
               subCategories: [item.model],
-              categories: categoryProvider.categories,
+              categories: _viewModel.categories,
               isOperable: false));
     }
     setState(() {
@@ -82,7 +84,7 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var categoryProvider = Provider.of<CategoryViewModel>(context);
+    var categoryProvider = Provider.of<GroceryViewModel>(context);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -93,8 +95,8 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
       List<SerachItem> categoryItems = categoryProvider.categories.isNotEmpty
           ? categoryProvider.categories
               .map<SerachItem>((category) => SerachItem(
-                  id: category.id,
-                  name: category.name,
+                  id: category.id ?? 0,
+                  name: category.name ?? "",
                   type: "category",
                   model: category))
               .toList()
@@ -167,7 +169,7 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
                           onPressed: () {
                             navigate(
                                 context: context,
-                                screen: AllCategoriesScreen(
+                                screen: AllGroceryCategoriesScreen(
                                   categories: categoryProvider.categories,
                                   subCategories: categoryProvider.subCategories,
                                 ));
@@ -184,7 +186,7 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
                     //  category  List  Horzontal
                     SizedBox(
                       height: screenHeight * .17,
-                      child: Consumer<CategoryViewModel>(
+                      child: Consumer<GroceryViewModel>(
                         builder: (context, data, _) {
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -195,7 +197,7 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
                                 onTap: () {
                                   navigate(
                                     context: context,
-                                    screen: AllSubCategoryScreen(
+                                    screen: AllGrocerySubCategoryScreen(
                                       subCategories: data.subCategories,
                                       categories: data.categories,
                                       isOperable: true,
@@ -204,7 +206,7 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
                                 },
                                 radius: screenWidth * .115,
                                 image: NetworkImage(
-                                  data.categories[index].category_image,
+                                  data.categories[index].categoryImage ?? "",
                                 ),
                               );
                             },
@@ -227,7 +229,7 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
                             onPressed: () {
                               navigate(
                                 context: context,
-                                screen: AllSubCategoryScreen(
+                                screen: AllGrocerySubCategoryScreen(
                                   subCategories: categoryProvider.subCategories,
                                   categories: categoryProvider.categories,
                                   isOperable: false,
@@ -244,7 +246,7 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
                       ],
                     ),
                     Expanded(
-                      child: Consumer<CategoryViewModel>(
+                      child: Consumer<GroceryViewModel>(
                         builder: (context, data, _) {
                           return GridView.builder(
                             padding: const EdgeInsets.all(5),
@@ -263,7 +265,7 @@ class _ListCategoryScreenState extends State<FashionCategoryScreen> {
                                 onTap: () {
                                   navigate(
                                     context: context,
-                                    screen: ListProductsScreen(
+                                    screen: ListGroceryProducts(
                                       subCategory: data.subCategories[index],
                                       subCategories: data.subCategories,
                                     ),

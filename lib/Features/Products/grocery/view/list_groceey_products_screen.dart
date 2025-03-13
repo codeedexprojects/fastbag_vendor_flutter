@@ -11,30 +11,26 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../model/fashion_sub_category_model.dart';
-import '../view_model/fashionproduct_view_model.dart';
-import 'add_fashion_product.dart';
-
-class FashionListProductsScreen extends StatefulWidget {
-  final FashionSubCategoryModel? subCategory;
-  final List<FashionSubCategoryModel?> subCategories;
-  const FashionListProductsScreen(
+class ListGroceryProducts extends StatefulWidget {
+  final SubCategoryModel subCategory;
+  final List<SubCategoryModel> subCategories;
+  const ListGroceryProducts(
       {super.key, required this.subCategory, required this.subCategories});
 
   @override
-  State<FashionListProductsScreen> createState() => _ListProductsScreenState();
+  State<ListGroceryProducts> createState() => _ListGroceryProductsState();
 }
 
-class _ListProductsScreenState extends State<FashionListProductsScreen> {
+class _ListGroceryProductsState extends State<ListGroceryProducts> {
   Map<int, bool> isExpandedMap = {}; // Track expanded state per item
 
   @override
   void initState() {
     super.initState();
     final productProvider =
-        Provider.of<FashionProductViewModel>(context, listen: false);
-    productProvider.getFashionProductCategories(
-         subCategoryId: widget.subCategory?.id??0 );
+        Provider.of<ProductViewModel>(context, listen: false);
+    productProvider.getProductCategories(
+        context: context, subCategoryId: widget.subCategory.id as int);
   }
 
   @override
@@ -42,7 +38,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     final productProvider =
-        Provider.of<FashionProductViewModel>(context,);
+        Provider.of<ProductViewModel>(context, listen: false);
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(247, 253, 247, 1),
@@ -63,8 +59,8 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                 const Icon(Icons.more_vert)
               ],
             ),
-            Consumer<FashionProductViewModel>(builder: (context, data, _) {
-              return productProvider.fashionProducts.isEmpty
+            Consumer<ProductViewModel>(builder: (context, data, _) {
+              return productProvider.foodProducts.isEmpty
                   ? SizedBox(
                       height: screenHeight * .6,
                       child: Center(
@@ -89,7 +85,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                   : SizedBox(
                       height: screenHeight * .6,
                       child: ListView.builder(
-                        itemCount: productProvider.fashionProducts.length,
+                        itemCount: productProvider.foodProducts.length,
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
@@ -99,7 +95,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                       context: context,
                                       screen: ProductDetailScreen(
                                         productId: productProvider
-                                                .fashionProducts[index].id ??
+                                                .foodProducts[index].id ??
                                             0,
                                       ));
                                 },
@@ -110,16 +106,16 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
                                         image: NetworkImage(productProvider
-                                            .fashionProducts[index]?.images?.first?.imageUrl??''),
+                                            .foodProducts[index].image_urls[0]),
                                       ),
                                       border: Border.all(
                                           color: Colors.grey, width: 0.2),
                                     ),
                                   ),
                                   title: Text(
-                                      productProvider.fashionProducts[index]?.name??''),
+                                      productProvider.foodProducts[index].name),
                                   subtitle: Text(productProvider
-                                      .fashionProducts[index]?.price??''),
+                                      .foodProducts[index].price),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -162,9 +158,9 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                   onClick: () {
                     navigate(
                         context: context,
-                        screen: AddFashionProduct(
-                          // subCategories: widget.subCategories,
-                          // subCategory: widget.subCategory,
+                        screen: AddProductScreen(
+                          subCategories: widget.subCategories,
+                          subCategory: widget.subCategory,
                         ));
                   },
                   label: "+ Add Product"),
@@ -174,10 +170,10 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                   horizontal: screenWidth / 15, vertical: 5),
               child: FbButton(
                 onClick: () {
-                  // navigate(
-                  //     context: context,
-                  //     screen: ProductEditDeleteScreen(
-                  //         products: productProvider.foodProducts));
+                  navigate(
+                      context: context,
+                      screen: ProductEditDeleteScreen(
+                          products: productProvider.foodProducts));
                 },
                 label: "Export",
                 icon: const FaIcon(

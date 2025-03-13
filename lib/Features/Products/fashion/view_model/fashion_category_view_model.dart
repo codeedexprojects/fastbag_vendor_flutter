@@ -9,52 +9,41 @@ import '../model/fashion_sub_category_model.dart';
 import '../repository/fashion_category_repository.dart';
 
 class FashionCategoryViewModel extends ChangeNotifier {
-  final FashionCategoryRepository _categoryRepository = FashionCategoryRepository();
 
-  List<FashionCategoryModel> _categories = [
+  FashionCategoryRepository _categoryRepository = FashionCategoryRepository();
+
+  List<FashionCategoryModel?> _categories = [
   ];
-  List<FashionCategoryModel> get categories => _categories;
+  List<FashionCategoryModel?> get categories => _categories;
 
   List<FashionSubCategoryModel> _subCategories = [
   ];
   List<FashionSubCategoryModel> get subCategories => _subCategories;
 
-  Future<List<FashionCategoryModel>> getProductCategories(
-      {required BuildContext context}) async {
-    var res = await _categoryRepository.fashionproductCategoryGet(context);
-    if (res != null) {
-      _categories = res
-          .map<FashionCategoryModel>((data) => CategoryModel.fromMap(data))
-          .toList();
-      print(_categories);
-      notifyListeners();
-    }
-    return _categories;
+   getfashionProductCategories()async{
+     await _categoryRepository.fashionproductCategoryGet().then((v) {
+       _categories = v ??[];
+       notifyListeners();
+     });
   }
 
-  Future<List<FashionSubCategoryModel>> getProductSubCategories(
-      {required BuildContext context}) async {
-    var res = await _categoryRepository.fashionproductSubCategoryGet(context);
-    if (res != null) {
-      _subCategories = res
-          .map<FashionSubCategoryModel>((data) => FashionSubCategoryModel.fromMap(data))
-          .toList();
-      print(_subCategories);
-      notifyListeners();
-    }
-    print("returning subcategories $_subCategories");
-    return _subCategories;
-  }
+   getFashionProductSubCategories()async{
+     await _categoryRepository.fashionproductSubCategoryGet().then((v){
+     _subCategories=v??[];
+     notifyListeners();
+     });
+   }
 
-  Future<void> addProductSubCategory(
-      {required BuildContext context,
-      required FashionSubCategoryModel subCategories}) async {
-    await _categoryRepository.fashionProductSubCategoryPost(context, subCategories);
-  }
 
-  Future<void> editProductSubCategory(
-      {required BuildContext context,
-      required FashionSubCategoryModel subCategories}) async {
-    await _categoryRepository.fashionProductSubCategoryEdit(context, subCategories);
-  }
+  // Future<void> addProductSubCategory(
+  //     {required BuildContext context,
+  //     required FashionSubCategoryModel subCategories}) async {
+  //   await _categoryRepository.fashionProductSubCategoryPost(context, subCategories);
+  // }
+  //
+  // Future<void> editProductSubCategory(
+  //     {required BuildContext context,
+  //     required FashionSubCategoryModel subCategories}) async {
+  //   await _categoryRepository.fashionProductSubCategoryEdit(context, subCategories);
+  // }
 }

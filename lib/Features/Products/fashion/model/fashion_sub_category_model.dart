@@ -1,28 +1,44 @@
-// ignore_for_file: non_constant_identifier_names
-
 class FashionSubCategoryModel {
-  final int id;
-  final int categoryId;
-  final String name;
-  final String sub_category_image;
-  final bool is_enabled;
-  final int vendor;
+  int? id;
+  String? vendor;
+  int? category;
+  String? categoryName;
+  String? name;
+  String? subcategoryImage;
+  bool? enableSubcategory;
+  String? createdAt;
 
   FashionSubCategoryModel(
-      {required this.categoryId,
-      required this.is_enabled,
-      required this.name,
-      required this.sub_category_image,
-      required this.id,
-      required this.vendor});
+      {this.id,
+        this.vendor,
+        this.category,
+        this.categoryName,
+        this.name,
+        this.subcategoryImage,
+        this.enableSubcategory,
+        this.createdAt});
 
-  factory FashionSubCategoryModel.fromMap(Map<String, dynamic> subCategoryMap) {
-    return FashionSubCategoryModel(
-        id: subCategoryMap["id"],
-        categoryId: subCategoryMap["category"],
-        is_enabled: subCategoryMap["enable_subcategory"],
-        name: subCategoryMap["name"],
-        sub_category_image: subCategoryMap["subcategory_image"] ?? "",
-        vendor: subCategoryMap["vendor"]);
+  FashionSubCategoryModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    vendor = json['vendor'];
+    category = json['category'];
+    categoryName = json['category_name'];
+    name = json['name'];
+    subcategoryImage = json['subcategory_image'];
+    enableSubcategory = json['enable_subcategory'];
+    createdAt = json['created_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['vendor'] = this.vendor;
+    data['category'] = this.category;
+    data['category_name'] = this.categoryName;
+    data['name'] = this.name;
+    data['subcategory_image'] = this.subcategoryImage;
+    data['enable_subcategory'] = this.enableSubcategory;
+    data['created_at'] = this.createdAt;
+    return data;
   }
 }

@@ -1,17 +1,18 @@
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-
+import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../model/fashion_category_model.dart';
-import '../model/fashion_sub_category_model.dart';
-import 'all_fashion_sub_category_screen.dart';
+import '../model/grocery_catgeory_model.dart';
 
-class FashionAllCategoriesScreen extends StatelessWidget {
-  final List<FashionCategoryModel?> categories;
-  final List<FashionSubCategoryModel> subCategories;
-   FashionAllCategoriesScreen(
+class AllGroceryCategoriesScreen extends StatelessWidget {
+  final List<GroceryCategoryModel> categories;
+  final List<SubCategoryModel> subCategories;
+  const AllGroceryCategoriesScreen(
       {super.key, required this.categories, required this.subCategories});
 
   @override
@@ -68,15 +69,15 @@ class FashionAllCategoriesScreen extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              List<FashionSubCategoryModel> filteredSubCategories =
+                              List<SubCategoryModel> filteredSubCategories =
                                   subCategories
                                       .where((subCat) =>
-                                          subCat.id ==
-                                          categories[index]?.id)
+                                          subCat.categoryId ==
+                                          categories[index].id)
                                       .toList();
                               navigate(
                                   context: context,
-                                  screen: FashionAllSubCategoryScreen(
+                                  screen: AllGrocerySubCategoryScreen(
                                     subCategories: filteredSubCategories,
                                     categories: categories,
                                     isOperable: true,
@@ -85,11 +86,11 @@ class FashionAllCategoriesScreen extends StatelessWidget {
                             child: CircleAvatar(
                               radius: screenWidth * .1,
                               backgroundImage: NetworkImage(
-                                  categories[index]?.categoryImage??''),
+                                  categories[index].categoryImage ?? ""),
                             ),
                           ),
                           Text(
-                            categories[index]?.name??'',
+                            categories[index].name ?? "",
                             overflow: TextOverflow.ellipsis,
                           )
                         ],

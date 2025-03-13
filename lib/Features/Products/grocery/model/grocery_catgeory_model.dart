@@ -1,4 +1,4 @@
-class FashionCategoryModel {
+class GroceryCategoryModel {
   int? id;
   String? name;
   String? createdAt;
@@ -6,7 +6,7 @@ class FashionCategoryModel {
   int? storeType;
   String? storeTypeName;
 
-  FashionCategoryModel(
+  GroceryCategoryModel(
       {this.id,
         this.name,
         this.createdAt,
@@ -14,7 +14,7 @@ class FashionCategoryModel {
         this.storeType,
         this.storeTypeName});
 
-  FashionCategoryModel.fromJson(Map<String, dynamic> json) {
+  GroceryCategoryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     createdAt = json['created_at'];

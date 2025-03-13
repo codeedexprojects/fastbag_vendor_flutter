@@ -38,8 +38,8 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
     // Fetch categories and subcategories asynchronously using provider
     var categoryProvider =
     Provider.of<FashionCategoryViewModel>(context, listen: false);
-    categoryProvider.getProductCategories(context: context);
-    categoryProvider.getProductSubCategories(context: context);
+    categoryProvider.getfashionProductCategories();
+    categoryProvider.getFashionProductSubCategories();
   }
 
   void _filterSearch(String query) {
@@ -95,8 +95,8 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
       List<FashionSerachItem> categoryItems = categoryProvider.categories.isNotEmpty
           ? categoryProvider.categories
           .map<FashionSerachItem>((category) => FashionSerachItem(
-          id: category.id,
-          name: category.name,
+          id: category?.id??0,
+          name: category?.name??'',
           type: "category",
           model: category))
           .toList()
@@ -105,8 +105,8 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
       categoryProvider.subCategories.isNotEmpty
           ? categoryProvider.subCategories
           .map<FashionSerachItem>((subCategory) => FashionSerachItem(
-          id: subCategory.id,
-          name: subCategory.name,
+          id: subCategory?.id??0,
+          name: subCategory?.name??'',
           type: "sub_category",
           model: subCategory))
           .toList()
@@ -193,7 +193,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                 itemCount: data.categories.length,
                                 itemBuilder: (context, index) {
                                   return categoryCard(
-                                    text: data.categories[index].name,
+                                    text: data.categories[index]?.name,
                                     onTap: () {
                                       navigate(
                                         context: context,
@@ -206,7 +206,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                     },
                                     radius: screenWidth * .115,
                                     image: NetworkImage(
-                                      data.categories[index].category_image,
+                                      data.categories[index]?.categoryImage??'',
                                     ),
                                   );
                                 },
@@ -259,9 +259,9 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                 itemBuilder: (context, index) {
                                   return subCategoryCard(
                                     height: screenWidth * 0.33,
-                                    text: data.subCategories[index].name,
+                                    text: data?.subCategories[index]?.name??'',
                                     image: data
-                                        .subCategories[index].sub_category_image,
+                                        .subCategories[index]?.subcategoryImage??'',
                                     onTap: () {
                                       navigate(
                                         context: context,

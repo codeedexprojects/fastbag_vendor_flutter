@@ -30,10 +30,12 @@ class OrderColor{
   static const borderColor=Color(0xff868686);
   static const textColor=Color(0xff666666);
   static const green=Color(0xff5eb14e);
+  static const mediumGreen=Color(0xff489e46);
   static const orange=Color(0xffffa500);
   static const blue=Color(0xff0754ea);
   static const darkGreen=Color(0xff324e32);
   static const red=Color(0xffa32424);
+  static const gradientRed=Color(0xffe62e2e);
   static const white=Color(0xffffffff);
   static const black=Color(0xff000000);
 

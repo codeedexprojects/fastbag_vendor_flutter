@@ -208,11 +208,11 @@ class AuthRepository {
       Response response = await _dio.post(
         url, // Replace with your API endpoint
         data: formData,
-        options: Options(
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        ),
+        // options: Options(
+        //   // headers: {
+        //   //   "Content-Type": "application/x-www-form-urlencoded",
+        //   // },
+        // ),
       );
       print(response.data);
       if (response.statusCode == 200) {
@@ -233,6 +233,7 @@ class AuthRepository {
         //     .toList();
       }
     } on DioException catch (dioError) {
+      print("error${dioError.response?.data}");
       SVProgressHUD.dismiss();
       if (dioError.response != null &&
           dioError.response?.data.error == "Vendor not found") {
