@@ -3,75 +3,53 @@ import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
 
-class CategoryRepository {
+class GroceryRepository {
   final Dio _dio = Dio();
 
-  Future<dynamic> ProductCategoryGet(BuildContext context) async {
-    print("inside");
-    print("${baseUrl}vendors/categories/view/");
+  Future<List<GroceryCategoryModel>?> groceryCategories(
+      BuildContext context) async {
     try {
-      print("inside try");
-      // Create FormData for file uploads
       SVProgressHUD.show();
-      String storeType = await StoreManager().getStoreType() as String;
-
-      // Perform the POST request
-      Response response = await _dio.get(
-        "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
+      var dio = Dio();
+      var response = await dio.request(
+        '${baseUrl}vendors/categories/filter/?store_type_name=Grocery',
+        options: Options(
+          method: 'GET',
+        ),
       );
-
-      // Handle the response
       if (response.statusCode == 200) {
         SVProgressHUD.dismiss();
-        print("category fetched successful: ${response.data}");
-        List<dynamic> res = response.data;
-        return res;
-
-        // showDialog(
-        //   context: context,
-        //   barrierDismissible: true, // Allow dismissing by tapping outside
-        //   builder: (BuildContext context) => const FbBottomDialog(),
-        // );
-      } else if (response.statusCode == 401) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("OOPs something happened in category get")),
-        );
-        SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
-      } else {
-        SVProgressHUD.dismiss();
-        print("category fetching failed: ${response.data}");
+        List jsonList = response.data;
+        List<GroceryCategoryModel> groceryCategories = jsonList
+            .map((json) => GroceryCategoryModel.fromJson(json))
+            .toList();
+        return groceryCategories;
       }
+    } on DioException catch (e) {
+      SVProgressHUD.dismiss();
+      print("error ${e.response}");
     } catch (e) {
       SVProgressHUD.dismiss();
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("OOPs something happened category get , Error: $e")),
-      // );
-      print("Error: $e");
     }
   }
 
-  Future<dynamic> ProductSubCategoryGet(BuildContext context) async {
-    print("inside");
-    print("${baseUrl}food/subcategories/");
+  Future<dynamic> grocerySubCategory(BuildContext context) async {
     try {
-      print("inside try");
       // Create FormData for file uploads
       SVProgressHUD.show();
 
       String token = await StoreManager().getAccessToken() as String;
       // Add the authorization header with the token
       _dio.options.headers = {"Authorization": "Bearer $token"};
-      print(token);
 
       // Perform the POST request
       Response response = await _dio.get(
-        "${baseUrl}food/subcategories/view/",
+        "${baseUrl}grocery/gro-Subcategories/",
       );
 
       // Handle the response
@@ -80,12 +58,6 @@ class CategoryRepository {
         print("\n\nsub category fetched successful: ${response.data}");
         List<dynamic> res = response.data;
         return res;
-
-        // showDialog(
-        //   context: context,
-        //   barrierDismissible: true, // Allow dismissing by tapping outside
-        //   builder: (BuildContext context) => const FbBottomDialog(),
-        // );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -99,20 +71,13 @@ class CategoryRepository {
       }
     } catch (e) {
       SVProgressHUD.dismiss();
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("OOPs something happened Sub category get , Error: $e")),
-      // );
       print("Error: $e");
     }
   }
 
-  Future<dynamic> ProductSubCategoryPost(
+  Future<dynamic> addGrocerySubCategory(
       BuildContext context, SubCategoryModel model) async {
-    print("inside");
-    print("${baseUrl}food/subcategories/");
     try {
-      print("inside try");
-
       FormData formData = FormData.fromMap({
         "category": model.categoryId,
         "enable_subcategory": model.is_enabled,
@@ -124,17 +89,13 @@ class CategoryRepository {
         "vendor": model.vendor
       });
 
-      // Create FormData for file uploads
       SVProgressHUD.show();
 
       String token = await StoreManager().getAccessToken() as String;
-      // Add the authorization header with the token
       _dio.options.headers = {"Authorization": "Bearer $token"};
-      print(token);
-
       // Perform the POST request
       Response response = await _dio.post(
-        "${baseUrl}food/subcategories/",
+        "${baseUrl}grocery/gro-Subcategories/",
         data: formData,
         options: Options(
           headers: {
@@ -142,13 +103,9 @@ class CategoryRepository {
           },
         ),
       );
-
-      print(response.statusCode);
-
       // Handle the response
       if (response.statusCode == 201) {
         SVProgressHUD.dismiss();
-        print("sub category added successful: ${response.data}");
         showDialog(
           context: context,
           barrierDismissible: true, // Allow dismissing by tapping outside
@@ -164,7 +121,6 @@ class CategoryRepository {
           const SnackBar(content: Text("OOPs something happened")),
         );
         SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
       } else {
         SVProgressHUD.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -174,20 +130,13 @@ class CategoryRepository {
     } on DioException catch (e) {
       print(e.response?.data);
       SVProgressHUD.dismiss();
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("OOPs something happened , Error: $e")),
-      // );
       print("Error: $e");
     }
   }
 
-  Future<dynamic> ProductSubCategoryEdit(
+  Future<dynamic> editGrocerySubCategory(
       BuildContext context, SubCategoryModel model) async {
-    print("inside");
-    print("${baseUrl}food/subcategories/${model.id}/");
     try {
-      print("inside try");
-
       FormData formData = FormData.fromMap({
         "enable_subcategory": model.is_enabled,
         "name": model.name,
@@ -204,11 +153,10 @@ class CategoryRepository {
       String token = await StoreManager().getAccessToken() as String;
       // Add the authorization header with the token
       _dio.options.headers = {"Authorization": "Bearer $token"};
-      print(token);
 
       // Perform the POST request
       Response response = await _dio.patch(
-        "${baseUrl}food/subcategories/${model.id}/",
+        "${baseUrl}grocery/gro-Subcategories/${model.id}/",
         data: formData,
         options: Options(
           headers: {
@@ -217,12 +165,9 @@ class CategoryRepository {
         ),
       );
 
-      print(response.statusCode);
-
       // Handle the response
       if (response.statusCode == 200) {
         SVProgressHUD.dismiss();
-        print("sub category updated successful: ${response.data}");
         showDialog(
           context: context,
           barrierDismissible: true, // Allow dismissing by tapping outside
@@ -238,7 +183,6 @@ class CategoryRepository {
           const SnackBar(content: Text("OOPs something happened")),
         );
         SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
       } else {
         SVProgressHUD.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -247,9 +191,6 @@ class CategoryRepository {
       }
     } catch (e) {
       SVProgressHUD.dismiss();
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("OOPs something happened , Error: $e")),
-      // );
       print("Error: $e");
     }
   }

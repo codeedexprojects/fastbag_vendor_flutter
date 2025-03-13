@@ -1,6 +1,7 @@
 
 import 'package:fastbag_vendor_flutter/Features/Dashboard/view_model/dash_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view_model/grocery_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/ViewModel/auth_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
@@ -39,6 +40,7 @@ void main() async {
       ChangeNotifierProvider(create: (_)=>ProductViewModel()),
       ChangeNotifierProvider(create: (_)=>DashViewModel()),
       ChangeNotifierProvider(create: (_)=>FoodViewModel()),
+      ChangeNotifierProvider(create: (_)=>GroceryViewModel()),
     ],
     child: const MyApp()));
 
