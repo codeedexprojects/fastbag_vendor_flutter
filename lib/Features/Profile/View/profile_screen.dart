@@ -6,6 +6,7 @@ import 'package:fastbag_vendor_flutter/Features/Profile/View/profile_payments.da
 import 'package:fastbag_vendor_flutter/Features/Profile/View/widgets/fb_logout_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/edit_shop_details_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/settings.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_shop_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
@@ -25,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     FbStore.retrieveData(FbLocalStorage.vendorId);
+    FbStore.retrieveData(FbLocalStorage.shopId);
     super.initState();
   }
 
@@ -32,6 +34,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final profileProvider =
         Provider.of<ProfileViewModel>(context, listen: false);
+    final profileShopProvider =
+    Provider.of<ProfileShopViewModel>(context);
     // profileProvider.getVendorProfile(vendorId: vendorId!, context: context);
 
     final screenHeight = MediaQuery.of(context).size.height;
@@ -91,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                       ),
                     ),
-                    title: Text("Yoonus",
+                    title: Text(profileShopProvider.shop?.ownerName ?? "name",
                         style: nunito(
                             fontSize: screenWidth * 0.05,
                             fontBold: FontWeight.w700)),
