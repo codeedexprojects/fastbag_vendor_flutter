@@ -145,7 +145,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text("Add Product" ),
+        title: const Text("Add Product"),
       ),
       body: Form(
         key: _formKey,
@@ -165,7 +165,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 controller: descriptionController,
                 validator: customValidatornoSpaceError,
               ),
-
               FbProductsFilePicker(
                 fileCategory: "Product",
                 onFilesPicked: _onFilePicked,
@@ -195,7 +194,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 validator: customValidatornoSpaceError,
               ),
               // Dynamic Variant Fields
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenHeight * .03),
                 child: Align(
@@ -291,7 +290,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: screenHeight * 0.03),
               FbToggleSwitch(
                 title: 'Mark Product in stock',
                 initialValue: _inStock,
