@@ -4,7 +4,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_c
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/repository/grocery_category_repository.dart';
 import 'package:flutter/material.dart';
 
-class GroceryViewModel extends ChangeNotifier {
+class GroceryCategoryViewModel extends ChangeNotifier {
   final GroceryRepository _groceryRepository = GroceryRepository();
 
   List<GroceryCategoryModel> _categories = [];
@@ -15,9 +15,8 @@ class GroceryViewModel extends ChangeNotifier {
 
   List<SubCategoryModel> get subCategories => _subCategories;
 
-  Future getGroceryCategory(
-      {required BuildContext context}) async {
-    _categories  = await _groceryRepository.groceryCategories(context) ?? [];
+  Future getGroceryCategory({required BuildContext context}) async {
+    _categories = await _groceryRepository.groceryCategories(context) ?? [];
     notifyListeners();
   }
 

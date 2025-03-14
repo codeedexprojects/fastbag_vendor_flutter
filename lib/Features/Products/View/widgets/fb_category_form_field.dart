@@ -7,7 +7,11 @@ class FbCategoryFormField extends StatefulWidget {
   final String? hint;
   final TextInputType? keyboard;
   final TextEditingController controller;
+  final TextInputAction? textInputAction;
+  final List<TextInputFormatter> inputFormatters;
   final String? Function(String?)? validator;
+  final Function(String?) onChanged;
+  final bool readOnly;
 
   const FbCategoryFormField(
       {super.key,
@@ -15,8 +19,14 @@ class FbCategoryFormField extends StatefulWidget {
       this.keyboard,
       required this.controller,
       this.validator,
+      this.inputFormatters = const [],
+      this.readOnly = false,
+      this.onChanged = _defaultOnChanged,
+      this.textInputAction,
       this.hint});
-
+  static void _defaultOnChanged(String? value) {
+    // Placeholder function (does nothing)
+  }
   @override
   State<FbCategoryFormField> createState() => _FbCategoryFormFieldState();
 }
@@ -65,11 +75,15 @@ class _FbCategoryFormFieldState extends State<FbCategoryFormField> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
+        readOnly: widget.readOnly,
         controller: widget.controller,
+        onChanged: widget.onChanged,
         style: nunito(fontWeight: FontWeight.w600),
         keyboardType: widget.keyboard,
+        textInputAction: widget.textInputAction,
         focusNode: _focusNode,
         validator: widget.validator,
+        inputFormatters: widget.inputFormatters,
         decoration: InputDecoration(
           hintText: widget.hint ?? widget.label,
           hintStyle:

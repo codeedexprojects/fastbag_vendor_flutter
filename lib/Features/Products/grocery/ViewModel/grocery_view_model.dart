@@ -22,7 +22,7 @@ class GroceryViewModel extends ChangeNotifier {
           context: context,
           color: Colors.red,
           icon: Icons.error_outline,
-          message: 'Product Adding Failed');
+          message: e.toString());
     } finally {
       SVProgressHUD.dismiss();
     }

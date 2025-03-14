@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
-import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 
 class GroceryRepository {
   final dio = Dio();
   addProduct(data) async {
     try {
-      final formData = FormData.fromMap(data);
+      final formData = FormData.fromMap({
+        ...data,
+        "weights": jsonEncode(data["weights"]), // Encode weights as JSON
+      });
 
-  // get token
+      // get token
       // final token = StoreManager().getAccessToken;
 
       const token =
@@ -29,24 +33,22 @@ class GroceryRepository {
     } on DioException catch (e) {
       print(e.response?.data);
 
-      throw Exception('Product Adding Failed $e');
-      // if (e.response != null) {
-      //   String errorMessage = '';
-      //   final responseData = e.response!.data;
-      //   if (responseData is Map<String, dynamic> && responseData.isNotEmpty) {
-      //     errorMessage =
-      //         responseData.values.first.toString(); // Get first value
-      //   }
-      //   print('---------------->${errorMessage}');
+      if (e.response != null) {
+        final responseData = e.response!.data;
 
-      //   throw Exception(errorMessage.isNotEmpty
-      //       ? errorMessage
-      //       : 'Registration Failed failed');
-      // } else {
-      //   throw Exception('Network error: ${e.message}');
-      // }
+        if (responseData is Map<String, dynamic> && responseData.isNotEmpty) {
+          for (var value in responseData.values) {
+            if (value is List && value.isNotEmpty) {
+              throw value.first.toString(); // Show only the first error
+            }
+          }
+        }
+      }
+
+      throw "Network error: ${e.message}";
     } catch (e) {
       print(e.toString());
+      throw Exception("Unexpected error occurred. Please try again.");
     }
   }
 }

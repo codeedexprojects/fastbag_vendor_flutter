@@ -11,8 +11,10 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_categor
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_products_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_category_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class AddGroceryProduct extends StatefulWidget {
@@ -40,6 +42,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
   var descriptionController = TextEditingController();
   var priceController = TextEditingController();
   var discountController = TextEditingController();
+  var discountedPriceController = TextEditingController();
   var wholesalePriceController = TextEditingController();
   var weightController = TextEditingController();
 
@@ -76,6 +79,20 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
     });
   }
 
+  void _updateDiscountedPrice(value) {
+    final price = double.tryParse(priceController.text) ?? 0.0;
+    final discount = double.tryParse(discountController.text) ?? 0.0;
+
+    setState(() {
+      if (price > 0 && discount > 0) {
+        final discountedPrice = price - ((discount / 100) * price);
+        discountedPriceController.text = discountedPrice.toStringAsFixed(2);
+      } else {
+        discountedPriceController.clear();
+      }
+    });
+  }
+
   onAddProductClicked() async {
     final groceryViewModel =
         Provider.of<GroceryViewModel>(context, listen: false);
@@ -94,28 +111,32 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
       "category": 14,
       "sub_category": 2,
       "name": nameController.text.trim(),
-      "wholesale_price": double.parse(wholesalePriceController.text..trim()),
-      "price": double.parse(priceController.text.trim()),
+      "wholesale_price":
+          double.parse(wholesalePriceController.text.trim()).toStringAsFixed(2),
+      "price": double.parse(priceController.text.trim()).toStringAsFixed(2),
 
-      "discount": int.parse(discountController.text.trim()),
+      "discount":
+          double.parse(discountController.text.trim()).toStringAsFixed(2),
       "description": descriptionController.text.trim(),
       "weight_measurement": selectedMeasurment,
       "Available": isProductInStock,
       "is_offer_product": isOfferProduct,
       "is_popular_product": isPopularProduct,
-      "weights": {
+      "weights": [
         for (var variant in variantFields)
           if (variant['weightController']!.text.isNotEmpty &&
               variant['priceController']!.text.isNotEmpty &&
               variant['selectedQuantity'] != null)
-            "${variant['weightController']!.text}${variant['selectedVariantMeasurment']}":
-                {
-              "price": double.parse(variant['priceController']!.text.trim()),
+            {
+              "weight":
+                  "${(variant['weightController']!.text)}${variant['selectedVariantMeasurment']}",
+              "price": double.parse(variant['priceController']!.text.trim())
+                  .toStringAsFixed(2),
               "quantity": int.parse(variant['selectedQuantity']),
-              "in_stock": variant['stockStatus'],
+              "is_in_stock": variant['stockStatus'],
             }
-      },
-      // "images": imageFiles, // Sending images as MultipartFile
+      ],
+      "images": imageFiles, // Sending images as MultipartFile
     };
 
     print("Final Data: $data");
@@ -212,20 +233,51 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                 ],
               ),
               FbCategoryFormField(
-                  keyboard: TextInputType.number,
                   label: 'Wholesale Price',
                   controller: wholesalePriceController,
+                  keyboard:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    LengthLimitingTextInputFormatter(8)
+                  ],
                   validator: customValidatornoSpaceError),
               FbCategoryFormField(
-                  keyboard: TextInputType.number,
                   label: 'Product Price',
                   controller: priceController,
+                  keyboard:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    LengthLimitingTextInputFormatter(8)
+                  ],
+                  onChanged: _updateDiscountedPrice,
                   validator: customValidatornoSpaceError),
               FbCategoryFormField(
-                  keyboard: TextInputType.number,
-                  label: 'Discount Price (Optional)',
-                  controller: discountController,
-                  validator: customValidatornoSpaceError),
+                label: 'Discount Price (%)',
+                controller: discountController,
+                onChanged: _updateDiscountedPrice,
+                keyboard: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                  LengthLimitingTextInputFormatter(4)
+                ],
+              ),
+              if (discountController.text.isNotEmpty &&
+                  priceController.text.isNotEmpty)
+                Row(
+                  children: [
+                    const Text('Discounted Price  ='),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: FbCategoryFormField(
+                        label: 'Discounted Price',
+                        controller: discountedPriceController,
+                        readOnly: true,
+                      ),
+                    ),
+                  ],
+                ),
               FbCustomDropdown(
                 value: selectedMeasurment,
                 hintText: "Weight Measurement",
@@ -319,7 +371,9 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
               children: [
                 Expanded(
                   child: FbCategoryFormField(
-                      keyboard: TextInputType.number,
+                      keyboard:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       label: 'Weight',
                       controller: variantFields[index]['weightController'],
                       validator: customValidatornoSpaceError),
@@ -346,7 +400,13 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
               children: [
                 Expanded(
                     child: FbCategoryFormField(
-                        keyboard: TextInputType.number,
+                        keyboard: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*\.?\d*')),
+                          LengthLimitingTextInputFormatter(8)
+                        ],
                         label: 'Price',
                         controller: variantFields[index]['priceController'],
                         validator: customValidatornoSpaceError)),

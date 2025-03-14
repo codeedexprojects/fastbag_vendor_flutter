@@ -6,6 +6,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/add_product_screen
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/add_grocery_product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -156,12 +157,7 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                   horizontal: screenWidth / 15, vertical: 5),
               child: FbButton(
                   onClick: () {
-                    navigate(
-                        context: context,
-                        screen: AddProductScreen(
-                          subCategories: widget.subCategories,
-                          subCategory: widget.subCategory,
-                        ));
+                    navigate(context: context, screen: AddGroceryProduct());
                   },
                   label: "+ Add Product"),
             ),

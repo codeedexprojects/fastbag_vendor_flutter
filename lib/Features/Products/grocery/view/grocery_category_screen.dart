@@ -4,7 +4,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart'
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_categories_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/view_model/grocery_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_category_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +37,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     super.initState();
     // Fetch categories and subcategories asynchronously using provider
     var viewModel =
-        Provider.of<GroceryViewModel>(context, listen: false);
+        Provider.of<GroceryCategoryViewModel>(context, listen: false);
     viewModel.getGroceryCategory(context: context);
     print("fetch Catgpry");
     viewModel.getGrocerySubCategory(context: context);
@@ -60,7 +60,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
   }
 
   void _onSubmitted(SerachItem item) {
-    var _viewModel = Provider.of<GroceryViewModel>(context, listen: false);
+    var _viewModel = Provider.of<GroceryCategoryViewModel>(context, listen: false);
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
@@ -84,7 +84,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var categoryProvider = Provider.of<GroceryViewModel>(context);
+    var categoryProvider = Provider.of<GroceryCategoryViewModel>(context);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -186,7 +186,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                     //  category  List  Horzontal
                     SizedBox(
                       height: screenHeight * .17,
-                      child: Consumer<GroceryViewModel>(
+                      child: Consumer<GroceryCategoryViewModel>(
                         builder: (context, data, _) {
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -246,7 +246,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                       ],
                     ),
                     Expanded(
-                      child: Consumer<GroceryViewModel>(
+                      child: Consumer<GroceryCategoryViewModel>(
                         builder: (context, data, _) {
                           return GridView.builder(
                             padding: const EdgeInsets.all(5),

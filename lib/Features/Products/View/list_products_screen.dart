@@ -157,9 +157,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                   horizontal: screenWidth / 15, vertical: 5),
               child: FbButton(
                   onClick: () {
-                    navigate(context: context, screen: AddGroceryProduct()
-                        // AddProductScreen(  subCategories: widget.subCategories,
-                        //   subCategory: widget.subCategory)
+                    navigate(context: context, screen: AddProductScreen(
+                          subCategories: widget.subCategories,
+                          subCategory: widget.subCategory,
+                        )                  
                         );
                   },
                   label: "+ Add Product"),
