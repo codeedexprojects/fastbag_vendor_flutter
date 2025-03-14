@@ -1,6 +1,8 @@
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/add_fashion_product.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/View/payment_transaction.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/View/profile_payments.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/widgets/fb_logout_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/edit_shop_details_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/settings.dart';
@@ -163,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       onTap: () {
-                        // Handle payments
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PaymentTransaction(),), (route) => false,);
                       },
                     ),
                     ListTile(

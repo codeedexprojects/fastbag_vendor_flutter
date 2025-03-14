@@ -1,6 +1,10 @@
 import 'package:fastbag_vendor_flutter/Features/Dashboard/view_model/dash_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
+<<<<<<< HEAD
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
+=======
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view_model/grocery_view_model.dart';
+>>>>>>> aa88116e50ba00abb7d4189fb9b42fb4bd09c10c
 import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/ViewModel/auth_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
@@ -13,6 +17,10 @@ import 'package:provider/provider.dart';
 
 import 'Features/Orders/View/order_details.dart';
 import 'Features/Orders/View/order_screen.dart';
+import 'Features/Profile/View/payment_transaction.dart';
+import 'Features/Profile/View/profile_payments.dart';
+import 'Features/Profile/View/transaction_history.dart';
+
 import 'Features/Products/grocery/view/add_grocery_product.dart';
 
 void main() async {
@@ -26,6 +34,7 @@ void main() async {
     print('Error during locale initialization: $e');
   }
 
+<<<<<<< HEAD
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => AuthViewModel()),
     ChangeNotifierProvider(create: (_) => CategoryViewModel()),
@@ -35,6 +44,21 @@ void main() async {
     ChangeNotifierProvider(create: (_) => FoodViewModel()),
     ChangeNotifierProvider(create: (_) => GroceryViewModel()),
   ], child: const MyApp()));
+=======
+
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_)=>AuthViewModel()),
+      ChangeNotifierProvider(create: (_)=>CategoryViewModel()),
+      ChangeNotifierProvider(create: (_)=>ProfileViewModel()),
+      ChangeNotifierProvider(create: (_)=>ProductViewModel()),
+      ChangeNotifierProvider(create: (_)=>DashViewModel()),
+      ChangeNotifierProvider(create: (_)=>FoodViewModel()),
+      ChangeNotifierProvider(create: (_)=>GroceryViewModel()),
+    ],
+    child: const MyApp()));
+
+>>>>>>> aa88116e50ba00abb7d4189fb9b42fb4bd09c10c
 }
 
 class MyApp extends StatelessWidget {

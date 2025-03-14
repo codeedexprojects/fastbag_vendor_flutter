@@ -4,14 +4,14 @@ import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/f
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/edit_sub_category_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/edit_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../grocery/model/grocery_catgeory_model.dart';
-
-class SubCategoryEditList extends StatelessWidget {
+class GrocerySubCategoryEditList extends StatelessWidget {
   final List<SubCategoryModel> subCategories;
-  final List<CategoryModel> categories;
-  const SubCategoryEditList(
+  final List<GroceryCategoryModel> categories;
+  const GrocerySubCategoryEditList(
       {super.key, required this.subCategories, required this.categories});
 
   @override
@@ -40,7 +40,7 @@ class SubCategoryEditList extends StatelessWidget {
                   onTap: () {
                     navigate(
                         context: context,
-                        screen: EditSubCategoryScreen(
+                        screen: EditGrocerySubCategoryScreen(
                           categories: categories,
                           category: categories[0],
                           subCategory: subCategories[index],

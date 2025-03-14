@@ -8,22 +8,22 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_categor
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_product_category_dropdown.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view_model/grocery_view_model.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../grocery/model/grocery_catgeory_model.dart';
-
-class AddSubCategoryScreen extends StatefulWidget {
-  final List<CategoryModel> categories;
-  const AddSubCategoryScreen({super.key, required this.categories});
+class AddGrocerySubCategoryScreen extends StatefulWidget {
+  final List<GroceryCategoryModel> categories;
+  const AddGrocerySubCategoryScreen({super.key, required this.categories});
 
   @override
-  State<AddSubCategoryScreen> createState() => _AddSubCategoryScreenState();
+  State<AddGrocerySubCategoryScreen> createState() => _AddGrocerySubCategoryScreenState();
 }
 
-class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
+class _AddGrocerySubCategoryScreenState extends State<AddGrocerySubCategoryScreen> {
   var nameController = TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
@@ -48,8 +48,8 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
   }
 
   void _onSubmitForm() async {
-    final categoryViewModel =
-        Provider.of<CategoryViewModel>(context, listen: false);
+    final viewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
     if (_formKey.currentState!.validate()) {
       if (_selectedImage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -66,7 +66,7 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
           sub_category_image: _selectedImage?.path ?? "",
           vendor: vendorId);
 
-      await categoryViewModel.addProductSubCategory(
+      await viewModel.addGrocerySubCategory(
           subCategories: category, context: context);
 
       setState(() {
