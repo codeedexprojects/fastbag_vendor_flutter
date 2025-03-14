@@ -1,38 +1,17 @@
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/Repository/grocery_category_repository.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/repository/grocery_category_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 
 class GroceryCategoryViewModel extends ChangeNotifier {
-  final GroceryRepository _groceryRepository = GroceryRepository();
+  final GroceryCtegoryRepository _groceryRepository = GroceryCtegoryRepository();
 
-  List<GroceryCategoryModel> _categories = [];
+  List<GroceryCategoryModel> categories = [];
 
-  List<GroceryCategoryModel> get categories => _categories;
+  List<SubCategoryModel> subCategories = [];
 
-  List<SubCategoryModel> _subCategories = [];
 
-  List<SubCategoryModel> get subCategories => _subCategories;
-
-  Future getGroceryCategory({required BuildContext context}) async {
-    _categories = await _groceryRepository.groceryCategories(context) ?? [];
-    notifyListeners();
-  }
-
-  Future<List<SubCategoryModel>> getGrocerySubCategory(
-      {required BuildContext context}) async {
-    var res = await _groceryRepository.grocerySubCategory(context);
-    if (res != null) {
-      _subCategories = res
-          .map<SubCategoryModel>((data) => SubCategoryModel.fromMap(data))
-          .toList();
-      print(_subCategories);
-      notifyListeners();
-    }
-    print("returning subcategories $_subCategories");
-    return _subCategories;
-  }
 
   Future<void> addGrocerySubCategory(
       {required BuildContext context,

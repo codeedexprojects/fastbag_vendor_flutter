@@ -2,6 +2,7 @@ import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_categories_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_category_view_model.dart';
@@ -35,12 +36,11 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch categories and subcategories asynchronously using provider
-    var viewModel =
-        Provider.of<GroceryCategoryViewModel>(context, listen: false);
-    viewModel.getGroceryCategory(context: context);
-    print("fetch Catgpry");
-    viewModel.getGrocerySubCategory(context: context);
+    // Fetch categories and subcategories
+    final groceryCategoryViewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
+    groceryCategoryViewModel.fetchGroceryCategory( context);
+    groceryCategoryViewModel.fetchGrocerySubCategory( context);
   }
 
   void _filterSearch(String query) {
@@ -60,7 +60,8 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
   }
 
   void _onSubmitted(SerachItem item) {
-    var _viewModel = Provider.of<GroceryCategoryViewModel>(context, listen: false);
+    final groceryCategoryViewModel =
+        Provider.of<GroceryCategoryViewModel>(context, listen: false);
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
@@ -68,13 +69,13 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
           context: context,
           screen: AllGroceryCategoriesScreen(
               categories: [item.model],
-              subCategories: _viewModel.subCategories));
+              subCategories: groceryCategoryViewModel.subCategories));
     } else {
       navigate(
           context: context,
           screen: AllGrocerySubCategoryScreen(
               subCategories: [item.model],
-              categories: _viewModel.categories,
+              categories: groceryCategoryViewModel.categories,
               isOperable: false));
     }
     setState(() {
@@ -186,7 +187,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                     //  category  List  Horzontal
                     SizedBox(
                       height: screenHeight * .17,
-                      child: Consumer<GroceryCategoryViewModel>(
+                      child: Consumer<GroceryViewModel>(
                         builder: (context, data, _) {
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -246,7 +247,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                       ],
                     ),
                     Expanded(
-                      child: Consumer<GroceryCategoryViewModel>(
+                      child: Consumer<GroceryViewModel>(
                         builder: (context, data, _) {
                           return GridView.builder(
                             padding: const EdgeInsets.all(5),

@@ -6,6 +6,74 @@ import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 
 class GroceryRepository {
   final dio = Dio();
+  Future fetchGroceryCategories() async {
+    try {
+      String? storeType = await StoreManager().getStoreType();
+      print("----------------------->$storeType");
+
+      Response response = await dio.get(
+        "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        // Server returned a response (status code other than 2xx)
+        throw e.response?.data ??
+            'Failed to fetch categories. Please try again.';
+      } else if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw 'Connection timed out. Please check your internet and try again.';
+      } else if (e.type == DioExceptionType.connectionError) {
+        throw 'Network error. Please check your internet connection.';
+      } else {
+        throw 'Something went wrong. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+  Future fetchGrocerySubCategory() async {
+    try {
+      String? token = await StoreManager().getAccessToken();
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token", // Add token to header
+        },
+      );
+      Response response = await dio.get("${baseUrl}grocery/gro-Subcategories/list/",
+          options: options);
+      return response.data;
+    } on DioException catch (e) {
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        // Server returned a response (status code other than 2xx)
+        throw e.response?.data ??
+            'Failed to fetch Sub categories. Please try again.';
+      } else if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw 'Connection timed out. Please check your internet and try again.';
+      } else if (e.type == DioExceptionType.connectionError) {
+        throw 'Network error. Please check your internet connection.';
+      } else {
+        throw 'Something went wrong. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
   addProduct(data) async {
     try {
       final formData = FormData.fromMap({
@@ -14,8 +82,7 @@ class GroceryRepository {
       });
 
       // get token
-      final token = await StoreManager().getAccessToken.toString();
-      print('token------------------->$token');
+      final token = await StoreManager().getAccessToken();
 
       // Set headers
       Options options = Options(
@@ -48,7 +115,7 @@ class GroceryRepository {
       throw "Network error: ${e.message}";
     } catch (e) {
       print(e.toString());
-      throw Exception("Unexpected error occurred. Please try again.");
+      throw "Unexpected error occurred. Please try again.";
     }
   }
 }
