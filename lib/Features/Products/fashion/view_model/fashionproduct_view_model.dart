@@ -15,7 +15,7 @@ class FashionProductViewModel extends ChangeNotifier {
   List<Results> get fashionProducts => _fashionProducts;
 
   getFashionProductCategories({required int subCategoryId}) async {
-    await _productRepository.fashiongetAllProducts().then((v) {
+    await _productRepository.fashiongetAllProducts(subCategoryId).then((v) {
       _fashionProducts = v?.results ?? [];
       notifyListeners();
     });

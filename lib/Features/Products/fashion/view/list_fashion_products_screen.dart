@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
@@ -6,6 +7,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/add_product_screen
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/product_fashion_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,9 +19,14 @@ import 'add_fashion_product.dart';
 
 class FashionListProductsScreen extends StatefulWidget {
   final FashionSubCategoryModel? subCategory;
+
   final List<FashionSubCategoryModel?> subCategories;
-  const FashionListProductsScreen(
-      {super.key, required this.subCategory, required this.subCategories});
+
+  const FashionListProductsScreen({
+    super.key,
+    required this.subCategory,
+    required this.subCategories,
+  });
 
   @override
   State<FashionListProductsScreen> createState() => _ListProductsScreenState();
@@ -34,15 +41,16 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
     final productProvider =
         Provider.of<FashionProductViewModel>(context, listen: false);
     productProvider.getFashionProductCategories(
-         subCategoryId: widget.subCategory?.id??0 );
+        subCategoryId: widget.subCategory?.id ?? 0);
   }
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    final productProvider =
-        Provider.of<FashionProductViewModel>(context,);
+    final productProvider = Provider.of<FashionProductViewModel>(
+      context,
+    );
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(247, 253, 247, 1),
@@ -97,7 +105,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                 onTap: () {
                                   navigate(
                                       context: context,
-                                      screen: ProductDetailScreen(
+                                      screen: FashionProductDetailScreen(
                                         productId: productProvider
                                                 .fashionProducts[index].id ??
                                             0,
@@ -107,19 +115,37 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                   leading: Container(
                                     height: screenHeight * .05,
                                     width: screenHeight * .06,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(productProvider
-                                            .fashionProducts[index]?.images?.first?.imageUrl??''),
-                                      ),
-                                      border: Border.all(
-                                          color: Colors.grey, width: 0.2),
-                                    ),
+                                    child: (productProvider
+                                                    .fashionProducts[index]
+                                                    ?.images !=
+                                                null &&
+                                            productProvider
+                                                .fashionProducts[index]!
+                                                .images!
+                                                .isNotEmpty)
+                                        ? CachedNetworkImage(
+                                            imageUrl: productProvider
+                                                    .fashionProducts[index]
+                                                    ?.images?[0]
+                                                    .imageUrl ??
+                                                '',
+                                            placeholder: (context, url) =>
+                                                Image.asset(
+                                                    'assets/profileicon/shop.png'),
+                                            fit: BoxFit.cover,
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                          )
+                                        : Image.asset(
+                                            'assets/profileicon/shop.png'),
                                   ),
-                                  title: Text(
-                                      productProvider.fashionProducts[index]?.name??''),
+                                  title: Text(productProvider
+                                          .fashionProducts[index]?.name ??
+                                      ''),
                                   subtitle: Text(productProvider
-                                      .fashionProducts[index]?.price??''),
+                                          .fashionProducts[index]?.price ??
+                                      ''),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -163,9 +189,9 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                     navigate(
                         context: context,
                         screen: AddFashionProduct(
-                          // subCategories: widget.subCategories,
-                          // subCategory: widget.subCategory,
-                        ));
+                            // subCategories: widget.subCategories,
+                            // subCategory: widget.subCategory,
+                            ));
                   },
                   label: "+ Add Product"),
             ),

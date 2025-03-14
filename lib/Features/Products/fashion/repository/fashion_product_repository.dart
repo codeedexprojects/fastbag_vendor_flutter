@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
@@ -19,83 +18,115 @@ import '../view_model/fashiondetail_view_model.dart';
 class FashionProductRepository {
   final Dio _dio = Dio();
 
-  Future<FashionItemModel?> fashiongetAllProducts() async {
-    // print("inside");
-    // print("${baseUrl}food/dishes/");
-    // try {
-    //   print("inside try");
-    //   // Create FormData for file uploads
-    //   SVProgressHUD.show();
-    //
-    //   String token = await StoreManager().getAccessToken() as String;
-    //   // Add the authorization header with the token
-    //   _dio.options.headers = {"Authorization": "Bearer $token"};
-    //   print(token);
-    //
-    //   // Perform the POST request
-    //   Response response = await _dio.get(
-    //     "${baseUrl}food/dishes/",
-    //   );
-    //
-    //   // Handle the response
-    //   if (response.statusCode == 200) {
-    //     SVProgressHUD.dismiss();
-    //     print("products fetched successful: ${response.data["results"]}");
-    //     List<dynamic> res = response.data["results"];
-    //     return res;
-    //
-    //     // showDialog(
-    //     //   context: context,
-    //     //   barrierDismissible: true, // Allow dismissing by tapping outside
-    //     //   builder: (BuildContext context) => const FbBottomDialog(),
-    //     // );
-    //   } else if (response.statusCode == 401) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       const SnackBar(
-    //           content: Text("OOPs something happened in products get")),
-    //     );
-    //     SVProgressHUD.dismiss();
-    //     print("Bad data: ${response.data}");
-    //   } else {
-    //     SVProgressHUD.dismiss();
-    //     print("products fetching failed: ${response.data}");
-    //   }
-    // } catch (e) {
-    //   SVProgressHUD.dismiss();
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //         content: Text("OOPs something happened category get , Error: $e")),
-    //   );
-    //   print("Error: $e");
-    // }
-    try{
+
+  Future<FashionItemModel?> fashiongetAllProducts( int subcategoryId) async {
+    try {
       SVProgressHUD.show();
-    final prefs= await SharedPreferences.getInstance();
-    var tokenId=prefs.getString('access_token');
-    var headers = {
-      'Authorization': 'Bearer $tokenId'
-    };
+      final prefs = await SharedPreferences.getInstance();
+      // var tokenId = prefs.getString('access_token');
+      var vendorId = prefs.getInt('vendor_id');
 
-    var response = await _dio.request(
-      '${baseUrl}fashion/clothing/',
-      options: Options(
-        method: 'GET',
-        headers: headers,
-      ),
-    );
+      // var headers = {'Authorization': 'Bearer $tokenId'};
 
-    if (response.statusCode == 200) {
-      print(response.data);
+      var response = await _dio.request(
+        '${baseUrl}fashion/products/subcategory/$subcategoryId/vendor/$vendorId/',
+            // 'fashion/clothing/?category=$categoryId&subcategory=$subcategoryId&vendor=$vendorId',
+        options: Options(method: 'GET',
+            // headers: headers
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        SVProgressHUD.dismiss();
+        return FashionItemModel.fromJson(response.data);
+      } else {
+        SVProgressHUD.dismiss();
+        print(response.statusMessage);
+        return null;
+      }
+    } on DioException catch (e) {
       SVProgressHUD.dismiss();
-      return FashionItemModel.fromJson(response.data);
-    }
-    else {
-      print(response.statusMessage);
-    }}on DioException catch (e) {
-
-      print("error ${e.response?.data}");
+      print("Error ${e.response?.data}");
+      return null;
     }
   }
+  // Future<FashionItemModel?> fashiongetAllProducts(int subcategoryId) async {
+  //   // print("inside");
+  //   // print("${baseUrl}food/dishes/");
+  //   // try {
+  //   //   print("inside try");
+  //   //   // Create FormData for file uploads
+  //   //   SVProgressHUD.show();
+  //   //
+  //   //   String token = await StoreManager().getAccessToken() as String;
+  //   //   // Add the authorization header with the token
+  //   //   _dio.options.headers = {"Authorization": "Bearer $token"};
+  //   //   print(token);
+  //   //
+  //   //   // Perform the POST request
+  //   //   Response response = await _dio.get(
+  //   //     "${baseUrl}food/dishes/",
+  //   //   );
+  //   //
+  //   //   // Handle the response
+  //   //   if (response.statusCode == 200) {
+  //   //     SVProgressHUD.dismiss();
+  //   //     print("products fetched successful: ${response.data["results"]}");
+  //   //     List<dynamic> res = response.data["results"];
+  //   //     return res;
+  //   //
+  //   //     // showDialog(
+  //   //     //   context: context,
+  //   //     //   barrierDismissible: true, // Allow dismissing by tapping outside
+  //   //     //   builder: (BuildContext context) => const FbBottomDialog(),
+  //   //     // );
+  //   //   } else if (response.statusCode == 401) {
+  //   //     ScaffoldMessenger.of(context).showSnackBar(
+  //   //       const SnackBar(
+  //   //           content: Text("OOPs something happened in products get")),
+  //   //     );
+  //   //     SVProgressHUD.dismiss();
+  //   //     print("Bad data: ${response.data}");
+  //   //   } else {
+  //   //     SVProgressHUD.dismiss();
+  //   //     print("products fetching failed: ${response.data}");
+  //   //   }
+  //   // } catch (e) {
+  //   //   SVProgressHUD.dismiss();
+  //   //   ScaffoldMessenger.of(context).showSnackBar(
+  //   //     SnackBar(
+  //   //         content: Text("OOPs something happened category get , Error: $e")),
+  //   //   );
+  //   //   print("Error: $e");
+  //   // }
+  //   try{
+  //     SVProgressHUD.show();
+  //   final prefs= await SharedPreferences.getInstance();
+  //   var tokenId=prefs.getString('access_token');
+  //   var headers = {
+  //     'Authorization': 'Bearer $tokenId'
+  //   };
+  //
+  //   var response = await _dio.request(
+  //     '${baseUrl}fashion/clothing/?subcategory=$subcategoryId',
+  //     options: Options(
+  //       method: 'GET',
+  //       headers: headers,
+  //     ),
+  //   );
+  //
+  //   if (response.statusCode == 200) {
+  //     print(response.data);
+  //     SVProgressHUD.dismiss();
+  //     return FashionItemModel.fromJson(response.data);
+  //   }
+  //   else {
+  //     print(response.statusMessage);
+  //   }}on DioException catch (e) {
+  //
+  //     print("error ${e.response?.data}");
+  //   }
+  // }
 
   Future<dynamic> fashionAddProductItem(
       BuildContext context, FoodItemModel model) async {
@@ -333,7 +364,7 @@ class FashionProductRepository {
       };
       var dio = Dio();
       var response = await dio.request(
-        '${baseUrl}/food/dishes/$productId/',
+        '${baseUrl}fashion/clothing/details/$productId/',
         options: Options(
           method: 'GET',
           headers: headers,

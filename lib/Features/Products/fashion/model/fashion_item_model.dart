@@ -1,7 +1,7 @@
 class FashionItemModel {
   int? count;
-  Null? next;
-  Null? previous;
+  dynamic next;
+  dynamic previous;
   List<Results>? results;
 
   FashionItemModel({this.count, this.next, this.previous, this.results});
@@ -34,7 +34,7 @@ class Results {
   int? id;
   int? vendor;
   String? category;
-  Null? subcategory;
+  String? subcategory;
   String? name;
   String? description;
   String? gender;

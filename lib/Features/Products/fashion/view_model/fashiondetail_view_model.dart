@@ -7,11 +7,11 @@ import '../repository/fashion_product_repository.dart';
 
 class FashiondetailViewModel extends ChangeNotifier{
   FashionProductRepository _getfashiondetail=FashionProductRepository();
-  FashionDetail? foodDetail;
+  FashionDetail? fashionDetail;
 
   getfashiondata(productId) async{
     await _getfashiondetail.fetchfashionDetail(productId).then((v){
-      foodDetail=v;
+      fashionDetail=v;
       notifyListeners();
     });
   }

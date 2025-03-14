@@ -1,156 +1,169 @@
 class FashionDetail {
   int? id;
   int? vendor;
-  String? vendorName;
-  int? category;
-  String? categoryName;
-  int? subcategory;
-  String? subcategoryName;
+  String? category;
+  String? subcategory;
   String? name;
   String? description;
+  String? gender;
   String? price;
-  String? wholesalePrice;
-  String? offerPrice;
-  List<Variants>? variants;
   String? discount;
-  bool? isAvailable;
-  List<ImageUrls>? imageUrls;
-  bool? isPopularProduct;
-  bool? isOfferProduct;
+  String? offerPrice;
+  int? totalStock;
+  List<Colors>? colors;
+  String? material;
+  List<Images>? images;
+  bool? isActive;
+  String? createdAt;
+  String? updatedAt;
 
   FashionDetail(
       {this.id,
         this.vendor,
-        this.vendorName,
         this.category,
-        this.categoryName,
         this.subcategory,
-        this.subcategoryName,
         this.name,
         this.description,
+        this.gender,
         this.price,
-        this.wholesalePrice,
-        this.offerPrice,
-        this.variants,
         this.discount,
-        this.isAvailable,
-        this.imageUrls,
-        this.isPopularProduct,
-        this.isOfferProduct});
+        this.offerPrice,
+        this.totalStock,
+        this.colors,
+        this.material,
+        this.images,
+        this.isActive,
+        this.createdAt,
+        this.updatedAt});
 
   FashionDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     vendor = json['vendor'];
-    vendorName = json['vendor_name'];
     category = json['category'];
-    categoryName = json['category_name'];
     subcategory = json['subcategory'];
-    subcategoryName = json['subcategory_name'];
     name = json['name'];
     description = json['description'];
+    gender = json['gender'];
     price = json['price'];
-    wholesalePrice = json['wholesale_price'];
-    offerPrice = json['offer_price'];
-    if (json['variants'] != null) {
-      variants = <Variants>[];
-      json['variants'].forEach((v) {
-        variants!.add(new Variants.fromJson(v));
-      });
-    }
     discount = json['discount'];
-    isAvailable = json['is_available'];
-    if (json['image_urls'] != null) {
-      imageUrls = <ImageUrls>[];
-      json['image_urls'].forEach((v) {
-        imageUrls!.add(new ImageUrls.fromJson(v));
+    offerPrice = json['offer_price'];
+    totalStock = json['total_stock'];
+    if (json['colors'] != null) {
+      colors = <Colors>[];
+      json['colors'].forEach((v) {
+        colors!.add(new Colors.fromJson(v));
       });
     }
-    isPopularProduct = json['is_popular_product'];
-    isOfferProduct = json['is_offer_product'];
+    material = json['material'];
+    if (json['images'] != null) {
+      images = <Images>[];
+      json['images'].forEach((v) {
+        images!.add(new Images.fromJson(v));
+      });
+    }
+    isActive = json['is_active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['vendor'] = this.vendor;
-    data['vendor_name'] = this.vendorName;
     data['category'] = this.category;
-    data['category_name'] = this.categoryName;
     data['subcategory'] = this.subcategory;
-    data['subcategory_name'] = this.subcategoryName;
     data['name'] = this.name;
     data['description'] = this.description;
+    data['gender'] = this.gender;
     data['price'] = this.price;
-    data['wholesale_price'] = this.wholesalePrice;
-    data['offer_price'] = this.offerPrice;
-    if (this.variants != null) {
-      data['variants'] = this.variants!.map((v) => v.toJson()).toList();
-    }
     data['discount'] = this.discount;
-    data['is_available'] = this.isAvailable;
-    if (this.imageUrls != null) {
-      data['image_urls'] = this.imageUrls!.map((v) => v.toJson()).toList();
+    data['offer_price'] = this.offerPrice;
+    data['total_stock'] = this.totalStock;
+    if (this.colors != null) {
+      data['colors'] = this.colors!.map((v) => v.toJson()).toList();
     }
-    data['is_popular_product'] = this.isPopularProduct;
-    data['is_offer_product'] = this.isOfferProduct;
+    data['material'] = this.material;
+    if (this.images != null) {
+      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    }
+    data['is_active'] = this.isActive;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }
 
-class Variants {
-  Half? half;
+class Colors {
+  List<Sizes>? sizes;
+  String? colorName;
+  String? colorImage;
 
-  Variants({this.half});
+  Colors({this.sizes, this.colorName, this.colorImage});
 
-  Variants.fromJson(Map<String, dynamic> json) {
-    half = json['half'] != null ? new Half.fromJson(json['half']) : null;
+  Colors.fromJson(Map<String, dynamic> json) {
+    if (json['sizes'] != null) {
+      sizes = <Sizes>[];
+      json['sizes'].forEach((v) {
+        sizes!.add(new Sizes.fromJson(v));
+      });
+    }
+    colorName = json['color_name'];
+    colorImage = json['color_image'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.half != null) {
-      data['half'] = this.half!.toJson();
+    if (this.sizes != null) {
+      data['sizes'] = this.sizes!.map((v) => v.toJson()).toList();
     }
+    data['color_name'] = this.colorName;
+    data['color_image'] = this.colorImage;
     return data;
   }
 }
 
-class Half {
-  dynamic price;
-  dynamic quantity;
-  String? stockStatus;
+class Sizes {
+  String? size;
+  String? price;
+  int? stock;
 
-  Half({this.price, this.quantity, this.stockStatus});
+  Sizes({this.size, this.price, this.stock});
 
-  Half.fromJson(Map<String, dynamic> json) {
+  Sizes.fromJson(Map<String, dynamic> json) {
+    size = json['size'];
     price = json['price'];
-    quantity = json['quantity'];
-    stockStatus = json['stock_status'];
+    stock = json['stock'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['size'] = this.size;
     data['price'] = this.price;
-    data['quantity'] = this.quantity;
-    data['stock_status'] = this.stockStatus;
+    data['stock'] = this.stock;
     return data;
   }
 }
 
-class ImageUrls {
+class Images {
   int? id;
+  String? imageUrl;
+  int? clothing;
   String? image;
 
-  ImageUrls({this.id, this.image});
+  Images({this.id, this.imageUrl, this.clothing, this.image});
 
-  ImageUrls.fromJson(Map<String, dynamic> json) {
+  Images.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    imageUrl = json['image_url'];
+    clothing = json['clothing'];
     image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['image_url'] = this.imageUrl;
+    data['clothing'] = this.clothing;
     data['image'] = this.image;
     return data;
   }

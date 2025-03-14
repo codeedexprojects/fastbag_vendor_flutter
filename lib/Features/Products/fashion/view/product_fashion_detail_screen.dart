@@ -22,6 +22,8 @@ class FashionProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
   String? imageIndex;
   int _isSelected = 0;
+  Color? selectedColor;
+  String? selectedSize;
 
   @override
   void initState() {
@@ -32,7 +34,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _viewModel = Provider.of<FoodViewModel>(context);
+    final _viewModel = Provider.of<FashiondetailViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: FbColors.backgroundcolor,
@@ -64,7 +66,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                     width: 336,
                     child: CachedNetworkImage(
                       imageUrl: imageIndex ??
-                          _viewModel.foodDetail?.imageUrls?.first.image ??
+                          _viewModel.fashionDetail?.images?.first.image ??
                           "",
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Image.asset(
@@ -83,10 +85,10 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               width: 340,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: _viewModel.foodDetail?.imageUrls?.length ?? 0,
+                itemCount: _viewModel.fashionDetail?.images?.length ?? 0,
                 itemBuilder: (BuildContext context, int index) {
                   final imageUrl =
-                      _viewModel.foodDetail?.imageUrls?[index].image ?? '';
+                      _viewModel.fashionDetail?.images?[index].image ?? '';
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: productDifferntimage(imageUrl, () {
@@ -103,7 +105,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               height: 36,
             ),
             Container(
-              height: 62,
+              height: 302,
               width: 335,
               child: Column(
                 children: [
@@ -111,14 +113,14 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        _viewModel.foodDetail?.name ?? '',
+                        _viewModel.fashionDetail?.name ?? '',
                         style: normalFont5(
                             fontsize: 20,
                             fontweight: FontWeight.w400,
                             color: FbColors.black),
                       ),
                       Text(
-                        '₹${_viewModel.foodDetail?.price ?? '₹00'}',
+                        '₹${_viewModel.fashionDetail?.price ?? '₹00'}',
                         style: normalFont5(
                             fontsize: 20,
                             fontweight: FontWeight.w400,
@@ -131,7 +133,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${_viewModel.foodDetail?.categoryName ?? 0}',
+                        '${_viewModel.fashionDetail?.category ?? 0}',
                         style: normalFont4(
                             fontsize: 16,
                             fontweight: FontWeight.w400,
@@ -154,7 +156,12 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                         ],
                       )
                     ],
-                  )
+                  ),
+                 Container(
+                   child: ListView.builder(itemBuilder: (context,index){
+
+                   }),
+                 )
                 ],
               ),
             ),
@@ -175,7 +182,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                   children: [
                     Text(
                       textAlign: TextAlign.start,
-                      _viewModel.foodDetail?.description ??
+                      _viewModel.fashionDetail?.description ??
                           'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
                       style: normalFont4(
                           fontsize: 16,
