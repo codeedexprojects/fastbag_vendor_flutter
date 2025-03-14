@@ -2,6 +2,7 @@ import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_shop_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ class _UpdateSettingsState extends State<UpdateSettings> {
   @override
   Widget build(BuildContext context) {
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
+    final updateProvider=Provider.of<ProfileShopViewModel>(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -28,19 +30,33 @@ class _UpdateSettingsState extends State<UpdateSettings> {
       if (nameController.text.isNotEmpty ||
           phoneController.text.isNotEmpty ||
           addressController.text.isNotEmpty) {
-        Map<String, dynamic> updateMap = {
-          "owner_name": nameController.text.isNotEmpty
-              ? nameController.text
-              : vendorProvider.vendor?.owner_name,
-          "email": addressController.text.isNotEmpty
-              ? addressController.text
-              : vendorProvider.vendor?.email,
-          "contact_number": phoneController.text.isNotEmpty
-              ? phoneController.text
-              : vendorProvider.vendor?.contact_number
+        // Map<String, dynamic> updateMap = {
+        //   "owner_name": nameController.text.isNotEmpty
+        //       ? nameController.text
+        //       : vendorProvider.vendor?.owner_name,
+        //   "email": addressController.text.isNotEmpty
+        //       ? addressController.text
+        //       : vendorProvider.vendor?.email,
+        //   "contact_number": phoneController.text.isNotEmpty
+        //       ? phoneController.text
+        //       : vendorProvider.vendor?.contact_number
+        // };
+
+        Map<String,dynamic> updatesMap={
+         "ownerName" :nameController.text.isNotEmpty
+          ?nameController.text
+             :updateProvider.shop?.ownerName,
+          "email" :addressController.text.isNotEmpty
+              ?addressController.text
+              :updateProvider.shop?.email,
+          "contactNumber" :phoneController.text.isNotEmpty
+              ?phoneController.text
+              :updateProvider.shop?.contactNumber,
         };
 
-        vendorProvider.updateSettingsDetails(vendorId:vendorProvider.vendor!.id , context: context, settingsMap: updateMap);
+        // vendorProvider.updateSettingsDetails(vendorId:vendorProvider.vendor!.id , context: context, settingsMap: updateMap);
+        updateProvider.updateShopProfile(context: context, updatesMap: updatesMap);
+
       }
     }
 

@@ -1,5 +1,6 @@
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
+import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/add_fashion_product.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/payment_transaction.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/profile_payments.dart';
@@ -26,8 +27,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     FbStore.retrieveData(FbLocalStorage.vendorId);
-    FbStore.retrieveData(FbLocalStorage.shopId);
+    final profileShopProvider =
+    Provider.of<ProfileShopViewModel>(context,listen: false);
+    profileShopProvider.getShopProfile(context: context);
     super.initState();
+
   }
 
   @override
@@ -71,14 +75,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor:
                           Colors.grey[200], // Optional: Background color
                       child: ClipOval(
-                        child: abc
-                            ? const Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.grey,
-                              )
-                            : Image.network(
-                                'https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg',
+                        child:
+                        // abc
+                        //     ? const Icon(
+                        //         Icons.person,
+                        //         size: 40,
+                        //         color: Colors.grey,
+                        //       )
+                        //     :
+                        Image.network(
+                                profileShopProvider.shop?.displayImage ?? "loading",
                                 fit: BoxFit
                                     .cover, // Ensures the image fills the circle
                                 width:
@@ -100,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             fontSize: screenWidth * 0.05,
                             fontBold: FontWeight.w700)),
                     subtitle: Text(
-                      "Oorakam",
+                      profileShopProvider.shop?.businessLocation ?? 'location',
                       style: nunito(fontSize: screenWidth * 0.04),
                     ),
                   ),

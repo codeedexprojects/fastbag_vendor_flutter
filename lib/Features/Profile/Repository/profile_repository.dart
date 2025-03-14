@@ -15,11 +15,12 @@ import 'package:path/path.dart';
 class ProfileRepository {
   final Dio _dio = Dio();
 
-  Future<dynamic> getProfile(int id, BuildContext context) async {
+  Future<dynamic> getProfile( BuildContext context) async {
     SVProgressHUD.show();
+    String vendorId=StoreManager().getVendorId() as String;
 
     // Log the URL to ensure it is correctly formatted
-    final url = '${baseUrl}vendors/vendors/$id';
+    final url = '${baseUrl}vendors/vendors/$vendorId';
     print('Requesting URL: $url');
 
     try {

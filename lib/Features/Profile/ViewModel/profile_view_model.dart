@@ -12,7 +12,7 @@ class ProfileViewModel extends ChangeNotifier {
 
   getVendorProfile(
       {required int vendorId, required BuildContext context}) async {
-    await profileRepository.getProfile(vendorId, context).then((data) {
+    await profileRepository.getProfile( context).then((data) {
       if (data.runtimeType == VendorModel) {
         _vendor = data;
         notifyListeners();

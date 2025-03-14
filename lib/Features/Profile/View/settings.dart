@@ -1,7 +1,9 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/update_settings.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/widgets/fb_vendor_info.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_shop_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,15 +17,23 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final settingsProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
+    settingsProvider.updateShopProfile(context: context, updatesMap: {});
+  }
+  @override
 
   @override
   Widget build(BuildContext context) {
-
+    final settingsProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
     // var vendorProvider=Provider.of<ProfileViewModel>(context,listen: false);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
        appBar: AppBar(
+         backgroundColor: FbColors.backgroundcolor,
         title: Text(
           "Settings",
           style: mainFont(
@@ -52,9 +62,9 @@ class _SettingsState extends State<Settings> {
                     child: const Text("Change",style: TextStyle(color: Colors.green),)),
                 ),
               ),
-              FbVendorInfo(label: "FULL NAME", value: data.vendor?.owner_name ?? 'N/A'),
-              FbVendorInfo(label: "EMAIL ADDRESS", value: data.vendor?.email ?? 'N/A'),
-              FbVendorInfo(label: "PHONE NUMBER", value: data.vendor?.contact_number.toString() ?? 'N/A'),
+              FbVendorInfo(label: "FULL NAME", value: settingsProvider.shop?.ownerName ?? 'N/A'),
+              FbVendorInfo(label: "EMAIL ADDRESS", value: settingsProvider.shop?.email ?? 'N/A'),
+              FbVendorInfo(label: "PHONE NUMBER", value: settingsProvider.shop?.contactNumber.toString() ?? 'N/A'),
             ],
           );
         }

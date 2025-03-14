@@ -28,7 +28,7 @@ class ProfileShopModel {
   String? createdAt;
   bool? isRestaurent;
   bool? isGrocery;
-  Null? alternateEmail;
+  String? alternateEmail;
   String? since;
 
   ProfileShopModel(
