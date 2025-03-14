@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/time_conversion.dart';
@@ -42,6 +43,8 @@ class _EditShopTimingsState extends State<EditShopTimings> {
     }
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
+        centerTitle: true,
         title: Text(
           "Edit Shop Timings",
           style: mainFont(
@@ -56,52 +59,39 @@ class _EditShopTimingsState extends State<EditShopTimings> {
             child: const Icon(Icons.arrow_back_ios_new)),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: screenHeight * .01, horizontal: screenWidth * .05),
+        padding:  EdgeInsets.all(screenWidth*0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * .07,
-              ),
-              child: Text(
-                "Shop Information",
-                style: mainFont(
-                    fontsize: screenWidth * 0.038,
-                    fontweight: FontWeight.w600,
-                    color: Colors.black),
-              ),
+            Text(
+              "Shop Information",
+              style: mainFont(
+                  fontsize: screenWidth * 0.05,
+                  fontweight: FontWeight.w400,
+                  color: Colors.black),
             ),
             SizedBox(height: screenHeight*.01,),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * .07,
-              ),
-              child: Text(
-                "Update your shop timing",
-                style: mainFont(
-                    fontsize: screenWidth * 0.032,
-                    fontweight: FontWeight.normal,
-                    color: Colors.black),
+            Text(
+              "Update your shop timing",
+              style: mainFont(
+                  fontsize: screenWidth * 0.033,
+                  fontweight: FontWeight.normal,
+                  color: OrderColor.textColor),
+            ),
+            SizedBox(
+              height: screenHeight*0.2,
+              child: FbTimePicker(
+                  onTimeRangeChanged: (selectedTimeRange) {
+                    setState(() {
+                      print(selectedTimeRange);
+                      _selectedTimeRange =
+                          selectedTimeRange; // Update the selected time range
+                    });
+                  }
               ),
             ),
-            FbTimePicker(
-                onTimeRangeChanged: (selectedTimeRange) {
-                  setState(() {
-                    print(selectedTimeRange);
-                    _selectedTimeRange =
-                        selectedTimeRange; // Update the selected time range
-                  });
-                }
-            ),
-            Padding(
-               padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * .07,
-                vertical: screenHeight * .01,
-              ),
-              child: FbButton(onClick: onFormSubmit, label: "Update Shop timing"),
-            )
+            SizedBox(height: screenHeight*.03,),
+            FbButton(onClick: onFormSubmit, label: "Update Shop timing")
           ],
         ),
       ),

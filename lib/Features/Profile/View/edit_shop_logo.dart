@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/fb_file_picker.dart';
@@ -41,6 +42,8 @@ class _EditShopLogoState extends State<EditShopLogo> {
     }
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: FbColors.backgroundcolor,
         title: Text(
           "Edit Shop Logo",
           style: mainFont(
@@ -55,47 +58,34 @@ class _EditShopLogoState extends State<EditShopLogo> {
             child: const Icon(Icons.arrow_back_ios_new)),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: screenHeight * .01, horizontal: screenWidth * .05),
+        padding:  EdgeInsets.all(screenWidth*0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * .07,
-              ),
-              child: Text(
-                "Shop Information",
-                style: mainFont(
-                    fontsize: screenWidth * 0.038,
-                    fontweight: FontWeight.w600,
-                    color: Colors.black),
-              ),
+            Text(
+              "Shop Information",
+              style: mainFont(
+                  fontsize: screenWidth * 0.05,
+                  fontweight: FontWeight.w400,
+                  color: Colors.black),
             ),
             SizedBox(height: screenHeight*.01,),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * .07,
-              ),
-              child: Text(
-                "Update your shop logo",
-                style: mainFont(
-                    fontsize: screenWidth * 0.032,
-                    fontweight: FontWeight.normal,
-                    color: Colors.black),
-              ),
+            Text(
+              "Update your shop logo",
+              style: mainFont(
+                  fontsize: screenWidth * 0.033,
+                  fontweight: FontWeight.normal,
+                  color: OrderColor.textColor),
             ),
+            SizedBox(height: screenHeight*.02,),
             FbCategoryFilePicker(
               onFilePicked: (file) => _onFilePicked(file),
               fileCategory: "Shop Logo",
             ),
-            Padding(
-               padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * .07,
-                vertical: screenHeight * .01,
-              ),
-              child: FbButton(onClick: onFormSubmit, label: "Update Shop Logo"),
-            )
+            SizedBox(height: screenHeight*.03,),
+            FbButton(
+                height: screenHeight*0.07,
+                onClick: onFormSubmit, label: "Update Shop Logo")
           ],
         ),
       ),

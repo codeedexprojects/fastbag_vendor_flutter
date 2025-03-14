@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
@@ -175,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       onTap: () {
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PaymentTransaction(),), (route) => false,);
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentTransaction()));
                       },
                     ),
                     ListTile(

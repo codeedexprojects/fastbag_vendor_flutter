@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
@@ -32,6 +33,8 @@ class _EditShopDescriptionState extends State<EditShopDescription> {
     }
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
+        centerTitle: true,
         title: Text(
           "Edit Shop Description",
           style: mainFont(
@@ -45,53 +48,38 @@ class _EditShopDescriptionState extends State<EditShopDescription> {
             },
             child: const Icon(Icons.arrow_back_ios_new)),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: screenHeight * .01, horizontal: screenWidth * .05),
-        child: Form(
-          key: formKey,
+      body: Form(
+        key: formKey,
+        child: Padding(
+          padding:  EdgeInsets.all(screenWidth*0.05),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07,
-                ),
-                child: Text(
-                  "Shop Information",
-                  style: mainFont(
-                      fontsize: screenWidth * 0.038,
-                      fontweight: FontWeight.w600,
-                      color: Colors.black),
-                ),
+              Text(
+                "Shop Information",
+                style: mainFont(
+                    fontsize: screenWidth * 0.05,
+                    fontweight: FontWeight.w400,
+                    color: Colors.black),
               ),
-              SizedBox(
-                height: screenHeight * .01,
+              SizedBox(height: screenHeight*.01),
+              Text(
+                "Update your shop description",
+                style: mainFont(
+                    fontsize: screenWidth * 0.033,
+                    fontweight: FontWeight.w400,
+                    color: OrderColor.textColor),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07,
-                ),
-                child: Text(
-                  "Update your shop logo",
-                  style: mainFont(
-                      fontsize: screenWidth * 0.032,
-                      fontweight: FontWeight.normal,
-                      color: Colors.black),
-                ),
-              ),
+              SizedBox(height: screenHeight*.02),
               FbCategoryFormField(
                   label: "Store description",
                   controller: descriptionController,
                   validator: customValidatornoSpaceError,
                   ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07,
-                  vertical: screenHeight * .01,
-                ),
-                child: FbButton(onClick: onFormSubmit, label: "Update Shop Description"),
-              )
+              SizedBox(height: screenHeight*.03),
+              FbButton(
+                  height: screenHeight*0.07,
+                  onClick: onFormSubmit, label: "Update Shop Description")
             ],
           ),
         ),
