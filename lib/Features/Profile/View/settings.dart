@@ -20,20 +20,20 @@ class _SettingsState extends State<Settings> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final settingsProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
-    settingsProvider.updateShopProfile(context: context, updatesMap: {});
+    final settingsProvider =
+        Provider.of<ProfileShopViewModel>(context, listen: false);
+    settingsProvider.getShopProfile(context: context);
   }
-  @override
 
   @override
   Widget build(BuildContext context) {
-    final settingsProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
+    final settingsProvider = Provider.of<ProfileShopViewModel>(context);
     // var vendorProvider=Provider.of<ProfileViewModel>(context,listen: false);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-       appBar: AppBar(
-         backgroundColor: FbColors.backgroundcolor,
+      appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         title: Text(
           "Settings",
           style: mainFont(
@@ -47,28 +47,37 @@ class _SettingsState extends State<Settings> {
             },
             child: const Icon(Icons.arrow_back_ios_new)),
       ),
-      body: Consumer<ProfileViewModel>(
-        builder: (context,data,_) {
-          return Column(
-            children: [
-              SizedBox(
-                height: screenHeight * .05,
-                child:  ListTile(
-                  leading:  const Text("Personal Information"),
-                  trailing:  GestureDetector(
-                    onTap: (){
-                      navigate(context: context, screen: const UpdateSettings());
+      body: Consumer<ProfileShopViewModel>(builder: (context, data, _) {
+        return Column(
+          children: [
+            SizedBox(
+              height: screenHeight * .05,
+              child: ListTile(
+                leading: const Text("Personal Information"),
+                trailing: GestureDetector(
+                    onTap: () {
+                      navigate(
+                          context: context, screen: const UpdateSettings());
                     },
-                    child: const Text("Change",style: TextStyle(color: Colors.green),)),
-                ),
+                    child: const Text(
+                      "Change",
+                      style: TextStyle(color: Colors.green),
+                    )),
               ),
-              FbVendorInfo(label: "FULL NAME", value: settingsProvider.shop?.ownerName ?? 'N/A'),
-              FbVendorInfo(label: "EMAIL ADDRESS", value: settingsProvider.shop?.email ?? 'N/A'),
-              FbVendorInfo(label: "PHONE NUMBER", value: settingsProvider.shop?.contactNumber.toString() ?? 'N/A'),
-            ],
-          );
-        }
-      ),
+            ),
+            FbVendorInfo(
+                label: "FULL NAME",
+                value: settingsProvider.shop?.ownerName ?? 'N/A'),
+            FbVendorInfo(
+                label: "EMAIL ADDRESS",
+                value: settingsProvider.shop?.email ?? 'N/A'),
+            FbVendorInfo(
+                label: "PHONE NUMBER",
+                value:
+                    settingsProvider.shop?.contactNumber.toString() ?? 'N/A'),
+          ],
+        );
+      }),
     );
   }
 }

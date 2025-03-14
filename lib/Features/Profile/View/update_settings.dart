@@ -7,6 +7,8 @@ import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_m
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Commons/localvariables.dart';
+
 class UpdateSettings extends StatefulWidget {
   const UpdateSettings({super.key});
 
@@ -22,7 +24,7 @@ class _UpdateSettingsState extends State<UpdateSettings> {
   @override
   Widget build(BuildContext context) {
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
-    final updateProvider=Provider.of<ProfileShopViewModel>(context);
+    final updateProvider = Provider.of<ProfileShopViewModel>(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -42,21 +44,21 @@ class _UpdateSettingsState extends State<UpdateSettings> {
         //       : vendorProvider.vendor?.contact_number
         // };
 
-        Map<String,dynamic> updatesMap={
-         "ownerName" :nameController.text.isNotEmpty
-          ?nameController.text
-             :updateProvider.shop?.ownerName,
-          "email" :addressController.text.isNotEmpty
-              ?addressController.text
-              :updateProvider.shop?.email,
-          "contactNumber" :phoneController.text.isNotEmpty
-              ?phoneController.text
-              :updateProvider.shop?.contactNumber,
+        Map<String, dynamic> updatesMap = {
+          "ownerName": nameController.text.isNotEmpty
+              ? nameController.text
+              : updateProvider.shop?.ownerName,
+          "email": addressController.text.isNotEmpty
+              ? addressController.text
+              : updateProvider.shop?.email,
+          "contactNumber": phoneController.text.isNotEmpty
+              ? phoneController.text
+              : updateProvider.shop?.contactNumber,
         };
 
         // vendorProvider.updateSettingsDetails(vendorId:vendorProvider.vendor!.id , context: context, settingsMap: updateMap);
-        updateProvider.updateShopProfile(context: context, updatesMap: updatesMap);
-
+        updateProvider.updateShopProfile(
+            context: context, updatesMap: updatesMap);
       }
     }
 
@@ -76,38 +78,41 @@ class _UpdateSettingsState extends State<UpdateSettings> {
             child: const Icon(Icons.arrow_back_ios_new)),
       ),
       body: Consumer<ProfileViewModel>(builder: (context, data, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07, vertical: screenHeight * .02),
-              child: const Text("Personal Information"),
-            ),
-            FbCategoryFormField(
-              label: "full name",
-              controller: nameController,
-              //validator: customValidatornoSpaceError,
-              hint: data.vendor?.owner_name,
-            ),
-            FbCategoryFormField(
-              label: "email address",
-              controller: addressController,
-              //validator: customValidatornoSpaceError,
-              hint: data.vendor?.email,
-            ),
-            FbCategoryFormField(
-              label: "phone number",
-              controller: phoneController,
-              //validator: customValidatornoSpaceError,
-              hint: data.vendor?.contact_number.toString(),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07, vertical: screenHeight * .02),
-              child: FbButton(onClick: _onFormSubmit, label: "UPDATE"),
-            )
-          ],
+        return Padding(
+          padding:  EdgeInsets.all(screenWidth*0.03),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * .07, vertical: screenHeight * .02),
+                child: const Text("Personal Information"),
+              ),
+              FbCategoryFormField(
+                label: "full name",
+                controller: nameController,
+                //validator: customValidatornoSpaceError,
+                hint: data.vendor?.owner_name,
+              ),
+              FbCategoryFormField(
+                label: "email address",
+                controller: addressController,
+                //validator: customValidatornoSpaceError,
+                hint: data.vendor?.email,
+              ),
+              FbCategoryFormField(
+                label: "phone number",
+                controller: phoneController,
+                //validator: customValidatornoSpaceError,
+                hint: data.vendor?.contact_number.toString(),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * .07, vertical: screenHeight * .02),
+                child: FbButton(onClick: _onFormSubmit, label: "UPDATE"),
+              )
+            ],
+          ),
         );
       }),
     );
