@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
+import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 
 class GroceryRepository {
   final dio = Dio();
@@ -13,10 +14,9 @@ class GroceryRepository {
       });
 
       // get token
-      // final token = StoreManager().getAccessToken;
+      final token = await StoreManager().getAccessToken.toString();
+      print('token------------------->$token');
 
-      const token =
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MTQ2NjA4LCJpYXQiOjE3Mzc2MTA2MDgsImp0aSI6IjcyNWYyNzhhYmE5MjQyOTU5OTNhOWYzNmQ4M2VhNGE5IiwidXNlcl9pZCI6MX0.cQvNtygE7CC7Vvcsyxpzr3YdeiVSIbKMw4ZMZuGw9nQ';
       // Set headers
       Options options = Options(
         headers: {

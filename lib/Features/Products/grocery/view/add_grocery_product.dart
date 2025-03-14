@@ -116,7 +116,9 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
       "price": double.parse(priceController.text.trim()).toStringAsFixed(2),
 
       "discount":
-          double.parse(discountController.text.trim()).toStringAsFixed(2),
+          double.tryParse(discountController.text.trim())?.toStringAsFixed(2) ??
+              0.0,
+
       "description": descriptionController.text.trim(),
       "weight_measurement": selectedMeasurment,
       "Available": isProductInStock,
