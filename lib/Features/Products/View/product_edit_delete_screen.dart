@@ -7,6 +7,8 @@ import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../fashion/view_model/fashionproduct_view_model.dart';
+
 class ProductEditDeleteScreen extends StatelessWidget {
   final List<FoodItemModel> products;
   const ProductEditDeleteScreen({super.key, required this.products});
@@ -16,7 +18,7 @@ class ProductEditDeleteScreen extends StatelessWidget {
     //final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final productProvider =
-        Provider.of<ProductViewModel>(context, listen: false);
+        Provider.of<FashionProductViewModel>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(

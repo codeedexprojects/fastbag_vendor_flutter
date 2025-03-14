@@ -25,6 +25,7 @@ class AddSubCategoryScreen extends StatefulWidget {
 
 class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
   var nameController = TextEditingController();
+  var subCategoryController=TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
   bool _switchValue = false;
@@ -106,7 +107,7 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
                     validator: customValidatornoSpaceError),
                 FbCategoryFormField(
                     label: "Describe Sub Category",
-                    controller: nameController,
+                    controller: subCategoryController,
                     validator: customValidatornoSpaceError),
                 FbCategoryFilePicker(
                   onFilePicked: (file) => _onFilePicked(file),
