@@ -15,8 +15,6 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_scr
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
-import 'list_groceey_products_screen.dart';
-
 class GroceryCategoryScreen extends StatefulWidget {
   const GroceryCategoryScreen({super.key});
 
@@ -263,13 +261,13 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                                 image: data
                                     .subCategories[index].sub_category_image,
                                 onTap: () {
-                                  navigate(
-                                    context: context,
-                                    screen: ListGroceryProducts(
-                                      subCategory: data.subCategories[index],
-                                      subCategories: data.subCategories,
-                                    ),
-                                  );
+                                  // navigate(
+                                  //   context: context,
+                                  //   screen: ListGroceryProducts(
+                                  //     subCategory: data.subCategories[index],
+                                  //     subCategories: data.subCategories,
+                                  //   ),
+                                  // );
                                 },
                               );
                             },
