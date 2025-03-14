@@ -9,6 +9,7 @@ class FashiondetailViewModel extends ChangeNotifier{
   FashionProductRepository _getfashiondetail=FashionProductRepository();
   FashionDetail? fashionDetail;
 
+
   getfashiondata(productId) async{
     await _getfashiondetail.fetchfashionDetail(productId).then((v){
       fashionDetail=v;

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
@@ -130,8 +131,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                     .imageUrl ??
                                                 '',
                                             placeholder: (context, url) =>
-                                                Image.asset(
-                                                    'assets/profileicon/shop.png'),
+                                                Image.asset(PlaceholderImage.placeholderimage),
                                             fit: BoxFit.cover,
                                             errorWidget:
                                                 (context, url, error) =>
