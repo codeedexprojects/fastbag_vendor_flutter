@@ -3,7 +3,6 @@ import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';

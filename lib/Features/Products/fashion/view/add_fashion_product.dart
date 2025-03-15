@@ -131,10 +131,14 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               controller: descriptionController,
               keyboard: TextInputType.text,
             ),
-            SelectField(
-                label: 'Select Gender',
-                controller: genderController,
-                items: ['Male', 'Female']),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
+              child: SelectField(
+                  label: 'Select Gender',
+                  controller: genderController,
+                  items: ['Male', 'Female']),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * .07, vertical: screenHeight * .01),
@@ -143,21 +147,28 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                 onFilesPicked: _onFilePicked,
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: SelectField(
-                      label: 'Category',
-                      controller: categoryController,
-                      items: ['Men', 'Women']),
-                ),
-                Expanded(
-                  child: SelectField(
-                      label: 'Sub Category',
-                      controller: subcategoryController,
-                      items: ['Shirts', 'Pants']),
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SelectField(
+                        label: 'Category',
+                        controller: categoryController,
+                        items: ['Men', 'Women']),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: SelectField(
+                        label: 'Sub Category',
+                        controller: subcategoryController,
+                        items: ['Shirts', 'Pants']),
+                  ),
+                ],
+              ),
             ),
             ProductnameField(
               label: 'Stock Unit',
