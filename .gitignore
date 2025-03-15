@@ -22,7 +22,6 @@ ios/Pods/
 ios/Podfile.lock
 
 # Android
-android/app/
 android/.gradle/
 android/app/debug/
 android/app/profile/
