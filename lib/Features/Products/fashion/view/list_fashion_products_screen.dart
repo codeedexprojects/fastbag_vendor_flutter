@@ -138,7 +138,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                     Icon(Icons.error),
                                           )
                                         : Image.asset(
-                                            'assets/profileicon/shop.png'),
+                                            PlaceholderImage.placeholderimage),
                                   ),
                                   title: Text(productProvider
                                           .fashionProducts[index]?.name ??
