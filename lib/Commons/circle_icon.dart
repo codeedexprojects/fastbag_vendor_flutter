@@ -85,7 +85,9 @@ subCategoryCard(
 
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: NetworkImage(image),
+              image: image.isEmpty
+                  ? const AssetImage('assets/Images/grocery.jpeg')
+                  : NetworkImage(image),
             ),
           ),
         ),

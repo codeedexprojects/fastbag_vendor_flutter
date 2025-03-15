@@ -25,13 +25,6 @@ class GroceryRepository {
         // Server returned a response (status code other than 2xx)
         throw e.response?.data ??
             'Failed to fetch categories. Please try again.';
-      } else if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout) {
-        throw 'Connection timed out. Please check your internet and try again.';
-      } else if (e.type == DioExceptionType.connectionError) {
-        throw 'Network error. Please check your internet connection.';
-      } else {
-        throw 'Something went wrong. Please try again.';
       }
     } catch (e) {
       print("Error: $e");
@@ -41,14 +34,48 @@ class GroceryRepository {
 
   Future fetchGrocerySubCategory() async {
     try {
-      String? token = await StoreManager().getAccessToken();
+      // String? token = await StoreManager().getAccessToken();
+      // // Set headers
+      // Options options = Options(
+      //   headers: {
+      //     "Authorization": "Bearer $token", // Add token to header
+      //   },
+      // );
+      Response response =
+          await dio.get("${baseUrl}grocery/gro-Subcategories/list/");
+      print(response.data);
+      return response.data;
+    } on DioException catch (e) {
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw e.response?.data ??
+            'Failed to fetch Sub categories. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+// Fetch Product List
+
+  fetchProducts(subCategoryId) async {
+    try {
+      final vendorId = await StoreManager().getVendorId();
+      // final vendorId = 18;
+      final token = await StoreManager().getAccessToken();
       // Set headers
       Options options = Options(
         headers: {
-          "Authorization": "Bearer $token", // Add token to header
+          "Authorization": "Bearer $token",
         },
       );
-      Response response = await dio.get("${baseUrl}grocery/gro-Subcategories/list/",
+
+      Response response = await dio.get(
+          '${baseUrl}grocery/products/$vendorId/$subCategoryId/',
           options: options);
       return response.data;
     } on DioException catch (e) {
@@ -57,16 +84,7 @@ class GroceryRepository {
 
       // Handle different Dio error types
       if (e.response != null) {
-        // Server returned a response (status code other than 2xx)
-        throw e.response?.data ??
-            'Failed to fetch Sub categories. Please try again.';
-      } else if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout) {
-        throw 'Connection timed out. Please check your internet and try again.';
-      } else if (e.type == DioExceptionType.connectionError) {
-        throw 'Network error. Please check your internet connection.';
-      } else {
-        throw 'Something went wrong. Please try again.';
+        throw e.response?.data ?? 'Failed to fetch Products. Please try again.';
       }
     } catch (e) {
       print("Error: $e");
@@ -76,7 +94,11 @@ class GroceryRepository {
 
   addProduct(data) async {
     try {
+      final vendorId = await StoreManager().getVendorId();
+
       final formData = FormData.fromMap({
+        "vendor": vendorId,
+
         ...data,
         "weights": jsonEncode(data["weights"]), // Encode weights as JSON
       });

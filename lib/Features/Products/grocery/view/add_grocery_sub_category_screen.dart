@@ -7,8 +7,6 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_categor
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_product_category_dropdown.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_category_view_model.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';

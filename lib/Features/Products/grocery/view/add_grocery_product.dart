@@ -10,15 +10,19 @@ import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_products_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_category_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class AddGroceryProduct extends StatefulWidget {
-  const AddGroceryProduct({super.key});
+  final GroceryCategoryModel category;
+  final GrocerySubCategoryModel subCategory;
+
+  const AddGroceryProduct(
+      {super.key, required this.category, required this.subCategory});
 
   @override
   State<AddGroceryProduct> createState() => _AddGroceryProductState();
@@ -41,6 +45,8 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
   List<Map<String, dynamic>> variantFields = []; // Corrected declaration
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
+  late TextEditingController categoryController;
+  late TextEditingController subCategoryController;
   var priceController = TextEditingController();
   var discountController = TextEditingController();
   var discountedPriceController = TextEditingController();
@@ -108,8 +114,8 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
 
     final data = {
       "vendor": 18,
-      "category": 14,
-      "sub_category": 2,
+      "category": widget.category.id,
+      "sub_category": widget.subCategory.id,
       "name": nameController.text.trim(),
       "wholesale_price": double.tryParse(wholesalePriceController.text.trim())
           ?.toStringAsFixed(2),
@@ -153,6 +159,15 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
         await groceryViewModel.addProduct(context, data);
       }
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    categoryController = TextEditingController(text: widget.category.name);
+    subCategoryController =
+        TextEditingController(text: widget.subCategory.name);
   }
 
   @override
@@ -204,32 +219,20 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: FbCustomDropdown(
-                      value: selectedCategory,
-                      hintText: "Category",
-                      items: categories,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedCategory = newValue;
-                        });
-                      },
-                    ),
-                  ),
+                      child: FbCategoryFormField(
+                    label: 'Category',
+                    controller: categoryController,
+                    readOnly: true,
+                  )),
                   SizedBox(
                     width: width * 0.03,
                   ),
                   Expanded(
-                    child: FbCustomDropdown(
-                      value: selectedSubCategory,
-                      hintText: "Sub Category",
-                      items: subCategories,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedSubCategory = newValue;
-                        });
-                      },
-                    ),
-                  ),
+                      child: FbCategoryFormField(
+                    label: 'Sub Category',
+                    controller: subCategoryController,
+                    readOnly: true,
+                  )),
                 ],
               ),
               FbCategoryFormField(

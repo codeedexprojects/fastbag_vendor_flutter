@@ -26,9 +26,28 @@ class GrocerySubCategoryModel {
       category: json['category'],
       categoryName: json['category_name'],
       name: json['name'],
-      subcategoryImage: json['subcategory_image'], 
+      subcategoryImage: json['subcategory_image'],
       enableSubcategory: json['enable_subcategory'],
       createdAt: json['created_at'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "vendor": vendor,
+      "category": category,
+      "category_name": categoryName,
+      "name": name,
+      "subcategory_image": subcategoryImage,
+      "enable_subcategory": enableSubcategory,
+      "created_at": createdAt,
+    };
+  }
+
+  static List<GrocerySubCategoryModel> listFromJson(List<dynamic> jsonList) {
+    return jsonList
+        .map((json) => GrocerySubCategoryModel.fromJson(json))
+        .toList();
   }
 }

@@ -1,15 +1,12 @@
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
-import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:flutter/material.dart';
-
 
 class AllGroceryCategoriesScreen extends StatelessWidget {
   final List<GroceryCategoryModel> categories;
-  final List<SubCategoryModel> subCategories;
+  final List<GrocerySubCategoryModel> subCategories;
   const AllGroceryCategoriesScreen(
       {super.key, required this.categories, required this.subCategories});
 
@@ -67,19 +64,19 @@ class AllGroceryCategoriesScreen extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              List<SubCategoryModel> filteredSubCategories =
-                                  subCategories
-                                      .where((subCat) =>
-                                          subCat.categoryId ==
-                                          categories[index].id)
-                                      .toList();
-                              navigate(
-                                  context: context,
-                                  screen: AllGrocerySubCategoryScreen(
-                                    subCategories: filteredSubCategories,
-                                    categories: categories,
-                                    isOperable: true,
-                                  ));
+                              // List<SubCategoryModel> filteredSubCategories =
+                              //     subCategories
+                              //         .where((subCat) =>
+                              //             subCat.categoryId ==
+                              //             categories[index].id)
+                              //         .toList();
+                              // navigate(
+                              //     context: context,
+                              //     screen: AllGrocerySubCategoryScreen(
+                              //       subCategories: filteredSubCategories,
+                              //       categories: categories,
+                              //       isOperable: true,
+                              //     ));
                             },
                             child: CircleAvatar(
                               radius: screenWidth * .1,
