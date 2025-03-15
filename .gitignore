@@ -23,6 +23,7 @@ ios/Podfile.lock
 
 # Android
 android/
+android/app/.cxx/Debug/4c2a645e/arm64-v8a/.cmake/api/v1/reply/codemodel-v2-cf991912448db2ac1dec.json
 android/app/.cxx
 android/.gradle/
 android/app/debug/
