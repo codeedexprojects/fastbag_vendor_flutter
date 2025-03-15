@@ -8,73 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
 
-class GroceryRepository {
+class GroceryCtegoryRepository {
   final Dio _dio = Dio();
 
-  Future<List<GroceryCategoryModel>?> groceryCategories(
-      BuildContext context) async {
-    try {
-      SVProgressHUD.show();
-      var dio = Dio();
-      var response = await dio.request(
-        '${baseUrl}vendors/categories/filter/?store_type_name=Grocery',
-        options: Options(
-          method: 'GET',
-        ),
-      );
-      if (response.statusCode == 200) {
-        SVProgressHUD.dismiss();
-        List jsonList = response.data;
-        List<GroceryCategoryModel> groceryCategories = jsonList
-            .map((json) => GroceryCategoryModel.fromJson(json))
-            .toList();
-        return groceryCategories;
-      }
-    } on DioException catch (e) {
-      SVProgressHUD.dismiss();
-      print("error ${e.response}");
-    } catch (e) {
-      SVProgressHUD.dismiss();
-    }
-  }
-
-  Future<dynamic> grocerySubCategory(BuildContext context) async {
-    try {
-      // Create FormData for file uploads
-      SVProgressHUD.show();
-
-      String token = await StoreManager().getAccessToken() as String;
-      // Add the authorization header with the token
-      _dio.options.headers = {"Authorization": "Bearer $token"};
-
-      // Perform the POST request
-      Response response = await _dio.get(
-        "${baseUrl}grocery/gro-Subcategories/",
-      );
-
-      // Handle the response
-      if (response.statusCode == 200) {
-        SVProgressHUD.dismiss();
-        print("\n\nsub category fetched successful: ${response.data}");
-        List<dynamic> res = response.data;
-        return res;
-      } else if (response.statusCode == 401) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("OOPs something happened in Sub category get")),
-        );
-        SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
-      } else {
-        SVProgressHUD.dismiss();
-        print("sub category fetching failed: ${response.data}");
-      }
-    } catch (e) {
-      SVProgressHUD.dismiss();
-      print("Error: $e");
-    }
-  }
-
+ 
   Future<dynamic> addGrocerySubCategory(
       BuildContext context, SubCategoryModel model) async {
     try {

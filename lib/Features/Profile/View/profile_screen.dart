@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: Text("Yoonus",
                         style: nunito(
                             fontSize: screenWidth * 0.05,
-                            fontBold: FontWeight.w700)),
+                            fontWeight: FontWeight.w700)),
                     subtitle: Text(
                       "Oorakam",
                       style: nunito(fontSize: screenWidth * 0.04),

@@ -1,15 +1,12 @@
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/edit_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/edit_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 
 class GrocerySubCategoryEditList extends StatelessWidget {
-  final List<SubCategoryModel> subCategories;
+  final List<GrocerySubCategoryModel> subCategories;
   final List<GroceryCategoryModel> categories;
   const GrocerySubCategoryEditList(
       {super.key, required this.subCategories, required this.categories});
@@ -56,20 +53,19 @@ class GrocerySubCategoryEditList extends StatelessWidget {
                         backgroundColor:
                             Colors.grey[200], // Optional: Background color
                         child: ClipOval(
-                          child: Image.network(
-                            subCategories[index].sub_category_image,
-                            fit: BoxFit
-                                .cover, // Ensures the image fills the circle
-                            width:
-                                64, // Diameter of the CircleAvatar (radius * 2)
-                            height:
-                                64, // Diameter of the CircleAvatar (radius * 2)
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error,
-                                  color: Colors
-                                      .red); // Optional: Handle loading errors
-                            },
-                          ),
+                          child: subCategories[index].subcategoryImage == null
+                              ? Image.asset('assets/Images/grocery.jpeg')
+                              : Image.network(
+                                  subCategories[index].subcategoryImage ?? '',
+                                  fit: BoxFit.cover,
+                                  width: 64,
+                                  height: 64,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.error,
+                                        color: Colors
+                                            .red); // Optional: Handle loading errors
+                                  },
+                                ),
                         ),
                       ),
                       title: Text(subCategories[index].name),

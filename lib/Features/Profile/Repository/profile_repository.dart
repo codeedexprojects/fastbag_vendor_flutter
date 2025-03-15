@@ -3,11 +3,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
-import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Model/update_shop_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Model/vendor_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Profile/View/update_waiting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
@@ -364,7 +362,7 @@ class ProfileRepository {
         "city": model.city,
         "state": model.state,
         "pincode": model.pincode,
-        "store_type":model.store_type,
+        "store_type": model.store_type,
         "fssai_no": model.fssai_no,
         "bussiness_location": model.bussiness_location,
         "business_landmark": model.business_landmark,
@@ -422,5 +420,3 @@ class ProfileRepository {
     }
   }
 }
-
-
