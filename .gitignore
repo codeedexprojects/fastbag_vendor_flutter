@@ -1,122 +1,39 @@
-## Flutter/Dart/Pub related
-#.dart_tool/
-#.packages
-#pubspec.lock
-#.flutter-plugins-dependencies
-#.flutter-plugins
-#
-## Build outputs
-#build/
-#*.apk
-#*.ipa
-#*.app
-#*.app.dSYM
-#*.dSYM
-#
-## iOS
-#ios/Flutter/Flutter.framework
-#ios/Flutter/Flutter.podspec
-#ios/Flutter/Flutter.podspec.json
-#ios/.symlinks/
-#ios/Pods/
-#ios/Podfile.lock
-#
-## Android
-#android/.gradle/
-#android/app/debug/
-#android/app/profile/
-#android/app/release/
-#android/local.properties
-#
-## Mac
-#*.DS_Store
-#
-## Linux
-#*~
-#
-## VS Code settings
-#.vscode/
-#
-## IntelliJ IDEA
-#.idea/
-#*.iml
-#
-## JetBrains project files
-#*.ipr
-#*.iws
-#*.idea/
-#
-## Temporary files
-#*.tmp
-#*.swp
-#*.swo
-#
-## Other
-#*.log
-#*.dat
-#*.csv
-#*.ts
-#*.jar
-#
-## Custom local files
-#*.env
 # Flutter/Dart/Pub related
 .dart_tool/
 .packages
 pubspec.lock
-.flutter-plugins
 .flutter-plugins-dependencies
+.flutter-plugins
 
 # Build outputs
 build/
 *.apk
-*.aab
 *.ipa
 *.app
-*.dSYM
 *.app.dSYM
+*.dSYM
 
 # iOS
-ios/Flutter/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Flutter.podspec.json
 ios/.symlinks/
 ios/Pods/
 ios/Podfile.lock
-ios/.generated/
-ios/DerivedData/
-ios/.dart_tool/
-*.xcworkspace
 
 # Android
+android/app/.cxx
 android/.gradle/
 android/app/debug/
 android/app/profile/
 android/app/release/
 android/local.properties
-android/.idea/
 
-# macOS
-macos/Flutter/ephemeral/
-macos/Pods/
-macos/.symlinks/
-macos/Podfile.lock
-macos/build/
-macos/.dart_tool/
+# Mac
+*.DS_Store
 
 # Linux
-linux/build/
-linux/.dart_tool/
-linux/.cmake/
 *~
-
-# Windows
-windows/build/
-windows/.vs/
-windows/Flutter/ephemeral/
-windows/.dart_tool/
-
-# Web
-web/.dart_tool/
-web/build/
 
 # VS Code settings
 .vscode/
@@ -134,17 +51,13 @@ web/build/
 *.tmp
 *.swp
 *.swo
-*.swn
 
-# Logs and caches
+# Other
 *.log
 *.dat
 *.csv
 *.ts
 *.jar
-*.lock
 
-# Custom local files & secrets
+# Custom local files
 *.env
-.env.local
-.env.*
