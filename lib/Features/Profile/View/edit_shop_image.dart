@@ -5,6 +5,7 @@ import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_shop_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,7 @@ class _EditShopImageState extends State<EditShopImage> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
+    var editShopProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
 
     void onFormSubmit() {
       if (_selectedImage != null) {

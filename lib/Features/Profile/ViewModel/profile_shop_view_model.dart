@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Model/profile_shop_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Repository/profile_repository.dart';
@@ -32,4 +34,15 @@ class ProfileShopViewModel extends ChangeNotifier{
       }
     });
   }
+
+  updateShopLogo(
+      { required BuildContext context,required File logoFile}) async {
+    await _profileShopRepository.updateShopLogo(context,logoFile).then((data) {
+      if (data.runtimeType == ProfileShopModel) {
+        _shop = data;
+        notifyListeners();
+      }
+    });
+  }
+
 }
