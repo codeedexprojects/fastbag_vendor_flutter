@@ -40,7 +40,6 @@ void main() async {
       ChangeNotifierProvider(create: (_)=>FashiondetailViewModel()),
       ChangeNotifierProvider(create: (_)=>FashionProductViewModel()),
       ChangeNotifierProvider(create: (_)=>GroceryViewModel()),
-
       ChangeNotifierProvider(create: (_)=>ProfileShopViewModel()),
 
     ],

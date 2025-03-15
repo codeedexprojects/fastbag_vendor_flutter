@@ -34,11 +34,9 @@ class _EditShopImageState extends State<EditShopImage> {
     var editShopProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
 
     void onFormSubmit() {
-      if (_selectedImage != null) {
-        vendorProvider.updateShopImage(
-            vendorId: vendorProvider.vendor!.id,
-            context: context,
-            shopImage: _selectedImage!);
+      if(_selectedImage!=null){
+        editShopProvider.updateShopImage(
+            context: context, shopImage: _selectedImage!);
       }
     }
 

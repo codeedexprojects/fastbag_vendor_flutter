@@ -27,23 +27,22 @@ class _EditShopLogoState extends State<EditShopLogo> {
     });
   }
 
-  
-
-
   @override
   Widget build(BuildContext context) {
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
-    final logoProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
+    final logoProvider =
+        Provider.of<ProfileShopViewModel>(context, listen: false);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
     void onFormSubmit() {
-      if(_selectedImage!=null){
+      if (_selectedImage != null) {
         // vendorProvider.updateShopLogo(vendorId: vendorProvider.vendor!.id, context: context, logoFile: _selectedImage!);
-       logoProvider.updateShopLogo(context: context, logoFile: _selectedImage!);
-
+        logoProvider.updateShopLogo(
+            context: context, logoFile: _selectedImage!);
       }
     }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -62,7 +61,7 @@ class _EditShopLogoState extends State<EditShopLogo> {
             child: const Icon(Icons.arrow_back_ios_new)),
       ),
       body: Padding(
-        padding:  EdgeInsets.all(screenWidth*0.05),
+        padding: EdgeInsets.all(screenWidth * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -73,7 +72,9 @@ class _EditShopLogoState extends State<EditShopLogo> {
                   fontweight: FontWeight.w400,
                   color: Colors.black),
             ),
-            SizedBox(height: screenHeight*.01,),
+            SizedBox(
+              height: screenHeight * .01,
+            ),
             Text(
               "Update your shop logo",
               style: mainFont(
@@ -81,19 +82,23 @@ class _EditShopLogoState extends State<EditShopLogo> {
                   fontweight: FontWeight.normal,
                   color: OrderColor.textColor),
             ),
-            SizedBox(height: screenHeight*.02,),
+            SizedBox(
+              height: screenHeight * .02,
+            ),
             FbCategoryFilePicker(
               onFilePicked: (file) => _onFilePicked(file),
               fileCategory: "Shop Logo",
             ),
-            SizedBox(height: screenHeight*.03,),
+            SizedBox(
+              height: screenHeight * .03,
+            ),
             FbButton(
-                height: screenHeight*0.07,
-                onClick: onFormSubmit, label: "Update Shop Logo")
+                height: screenHeight * 0.07,
+                onClick: onFormSubmit,
+                label: "Update Shop Logo")
           ],
         ),
       ),
-   
     );
   }
 }

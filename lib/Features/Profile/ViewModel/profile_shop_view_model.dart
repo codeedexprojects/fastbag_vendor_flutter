@@ -45,4 +45,34 @@ class ProfileShopViewModel extends ChangeNotifier{
     });
   }
 
+  updateShopImage(
+      { required BuildContext context,required File shopImage}) async {
+    await _profileShopRepository.updateShopImage(context,shopImage).then((data) {
+      if (data.runtimeType == ProfileShopModel) {
+        _shop = data;
+        notifyListeners();
+      }
+    });
+  }
+
+  updateShopDescription(
+      { required BuildContext context,required String Description}) async {
+    await _profileShopRepository.updateShopDescription(context,Description).then((data) {
+      if (data.runtimeType == ProfileShopModel) {
+        _shop = data;
+        notifyListeners();
+      }
+    });
+  }
+
+  updateShopTime(
+      { required BuildContext context,required String openTime,required String closingTime}) async {
+    await _profileShopRepository.updateShopTime(context,openTime,closingTime).then((data) {
+      if (data.runtimeType == ProfileShopModel) {
+        _shop = data;
+        notifyListeners();
+      }
+    });
+  }
+
 }

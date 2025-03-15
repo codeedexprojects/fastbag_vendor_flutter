@@ -5,6 +5,7 @@ import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/Fb_Text_Form_Field.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_shop_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,10 +26,12 @@ class _EditShopDescriptionState extends State<EditShopDescription> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
+    final descriptionProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
 
     void onFormSubmit() {
       if(descriptionController.text.isNotEmpty){
-        vendorProvider.updateShopDescription(vendorId: vendorProvider.vendor!.id, context: context, description: descriptionController.text);
+        // vendorProvider.updateShopDescription(vendorId: vendorProvider.vendor!.id, context: context, description: descriptionController.text);
+        descriptionProvider.updateShopDescription(context: context, Description: descriptionController.text);
       }
     }
     return Scaffold(

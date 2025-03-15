@@ -7,6 +7,7 @@ import 'package:fastbag_vendor_flutter/Extentions/time_conversion.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/fb_time_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_shop_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,17 +29,18 @@ class _EditShopTimingsState extends State<EditShopTimings> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
+    final timeProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
 
     void onFormSubmit(){
-      
-
       if(_selectedTimeRange.isNotEmpty){
         List<String> times = _selectedTimeRange.split(' - ');
         print(times[1]);
 
       String opening_time=convertTo24Hour(times[0]);
       String closing_time=convertTo24Hour(times[1]);
-        vendorProvider.updateShopTiming(vendorId: vendorProvider.vendor!.id, context: context, openTime: opening_time,closeTime: closing_time);
+        // vendorProvider.updateShopTiming(vendorId: vendorProvider.vendor!.id, context: context, openTime: opening_time,closeTime: closing_time);
+        timeProvider.updateShopTime(context: context, openTime: opening_time, closingTime: closing_time);
+
       }
     }
     return Scaffold(
