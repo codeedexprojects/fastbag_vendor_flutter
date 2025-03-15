@@ -1,10 +1,15 @@
 import 'dart:io';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_categories_name.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_subcategories_name.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_category_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/productname_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/select_field.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
@@ -27,6 +32,9 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   var discountPriceController = TextEditingController();
   var categoryController = TextEditingController();
   var subcategoryController = TextEditingController();
+  int? selectedCategoryId;
+  int? selectedSubCategoryId;
+
   List<File>? _selectedImages;
   XFile? pickedImage;
   bool _inStock = false;
@@ -97,6 +105,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final _viewModel = Provider.of<FashionCategoryViewModel>(context);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -146,16 +155,46 @@ class _AddFashionProductState extends State<AddFashionProduct> {
             Row(
               children: [
                 Expanded(
-                  child: SelectField(
-                      label: 'Category',
-                      controller: categoryController,
-                      items: ['Men', 'Women']),
+                  child: ProductnameField(
+                    readOnly: true,
+                    onTap: () async {
+                      _viewModel.categoryRequestModel =
+                          await (Navigator.push<CategoryRequestModel>(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => ListCategoriesName())));
+                      if (_viewModel.categoryRequestModel?.id != null) {
+                        categoryController.text =
+                            _viewModel.categoryRequestModel?.name ?? "";
+                        selectedCategoryId =
+                            _viewModel.categoryRequestModel?.id ?? 0;
+                      }
+                    },
+                    label: 'Category',
+                    controller: categoryController,
+                    keyboard: TextInputType.text,
+                  ),
                 ),
                 Expanded(
-                  child: SelectField(
-                      label: 'Sub Category',
-                      controller: subcategoryController,
-                      items: ['Shirts', 'Pants']),
+                  child: ProductnameField(
+                    readOnly: true,
+                    onTap: () async {
+                      _viewModel.categoryRequestModel =
+                          await (Navigator.push<CategoryRequestModel>(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => ListSubcategoriesName())));
+                      if (_viewModel.categoryRequestModel?.id != null) {
+                        subcategoryController.text =
+                            _viewModel.categoryRequestModel?.name ?? "";
+                        selectedSubCategoryId =
+                            _viewModel.categoryRequestModel?.id ?? 0;
+                      }
+                    },
+                    label: 'Sub Category',
+                    controller: subcategoryController,
+                    keyboard: TextInputType.text,
+                  ),
                 ),
               ],
             ),

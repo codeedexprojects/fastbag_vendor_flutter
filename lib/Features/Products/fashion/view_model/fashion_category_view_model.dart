@@ -4,6 +4,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_mode
 import 'package:fastbag_vendor_flutter/Features/Products/Repository/category_repository.dart';
 import 'package:flutter/material.dart';
 
+import '../model/category_request_model.dart';
 import '../model/fashion_category_model.dart';
 import '../model/fashion_sub_category_model.dart';
 import '../repository/fashion_category_repository.dart';
@@ -46,4 +47,6 @@ class FashionCategoryViewModel extends ChangeNotifier {
   //     required FashionSubCategoryModel subCategories}) async {
   //   await _categoryRepository.fashionProductSubCategoryEdit(context, subCategories);
   // }
+
+  CategoryRequestModel? categoryRequestModel;
 }
