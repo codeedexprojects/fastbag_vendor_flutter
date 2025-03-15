@@ -8,8 +8,8 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
-import '../../View/widgets/fb_products_file_picker.dart';
-import '../../View/widgets/fb_toggle_switch.dart';
+import '../../food/View/widgets/fb_products_file_picker.dart';
+import '../../food/View/widgets/fb_toggle_switch.dart';
 
 class AddFashionProduct extends StatefulWidget {
   const AddFashionProduct({super.key});

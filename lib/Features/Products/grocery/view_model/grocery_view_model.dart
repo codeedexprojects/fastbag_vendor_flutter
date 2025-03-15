@@ -1,8 +1,8 @@
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/repository/grocery_category_repository.dart';
 import 'package:flutter/material.dart';
+
+import '../../food/Model/sub_category_model.dart';
 
 class GroceryViewModel extends ChangeNotifier {
   final GroceryRepository _groceryRepository = GroceryRepository();

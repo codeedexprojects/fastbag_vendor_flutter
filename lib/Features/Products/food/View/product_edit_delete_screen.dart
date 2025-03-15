@@ -1,13 +1,12 @@
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/edit_product_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../fashion/view_model/fashionproduct_view_model.dart';
+import '../../fashion/view_model/fashionproduct_view_model.dart';
+import '../Model/food_item_model.dart';
+import '../ViewModel/product_view_model.dart';
+import 'edit_product_screen.dart';
 
 class ProductEditDeleteScreen extends StatelessWidget {
   final List<FoodItemModel> products;

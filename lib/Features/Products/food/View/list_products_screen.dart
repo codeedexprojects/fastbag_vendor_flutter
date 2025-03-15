@@ -1,11 +1,11 @@
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/add_product_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/Model/sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/add_product_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/product_detail_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/product_edit_delete_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

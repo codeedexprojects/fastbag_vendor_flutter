@@ -1,20 +1,15 @@
 import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_categories_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view_model/grocery_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
+import '../../food/Model/serach_item.dart';
 import 'list_groceey_products_screen.dart';
 
 class GroceryCategoryScreen extends StatefulWidget {

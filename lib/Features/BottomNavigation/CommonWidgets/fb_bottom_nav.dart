@@ -3,9 +3,10 @@ import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/grocery_ca
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Dashboard/view/dashboard_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Orders/View/order_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/profile_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../../Products/food/View/category_screen.dart';
 
 class FbBottomNav extends StatefulWidget {
   const FbBottomNav({super.key});

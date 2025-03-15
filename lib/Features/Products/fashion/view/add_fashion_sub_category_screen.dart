@@ -1,18 +1,18 @@
 import 'dart:io';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_product_category_dropdown.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Authentication/Model/category_model.dart';
+import '../../food/Model/sub_category_model.dart';
+import '../../food/View/widgets/fb_category_file_picker.dart';
+import '../../food/View/widgets/fb_product_category_dropdown.dart';
+import '../../food/View/widgets/fb_toggle_switch.dart';
+import '../../food/ViewModel/category_view_model.dart';
 import '../model/fashion_category_model.dart';
 
 class FashionAddSubCategoryScreen extends StatefulWidget {

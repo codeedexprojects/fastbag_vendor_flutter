@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/food_detail_class.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_detail_class.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_item_model.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +11,7 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../food/Model/food_item_model.dart';
 import '../view_model/fashiondetail_view_model.dart';
 
 class FashionProductRepository {

@@ -1,6 +1,5 @@
-import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:flutter/material.dart';
-
+import '../../food/Model/food_item_model.dart';
 import '../model/fashion_item_model.dart';
 import '../repository/fashion_product_repository.dart';
 

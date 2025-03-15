@@ -6,11 +6,12 @@ import 'package:fastbag_vendor_flutter/Features/Authentication/Model/category_mo
 import 'package:fastbag_vendor_flutter/Features/Authentication/Repository/auth_repository.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/fb_category_dropdown.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/fb_file_picker.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Model/update_shop_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../Products/food/View/widgets/fb_category_form_field.dart';
 
 class UpdateShopDetails extends StatefulWidget {
   const UpdateShopDetails({super.key});

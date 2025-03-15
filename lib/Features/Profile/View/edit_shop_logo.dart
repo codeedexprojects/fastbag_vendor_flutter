@@ -2,12 +2,11 @@ import 'dart:io';
 
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
-import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/fb_file_picker.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../Products/food/View/widgets/fb_category_file_picker.dart';
 
 class EditShopLogo extends StatefulWidget {
   const EditShopLogo({super.key});
@@ -25,9 +24,6 @@ class _EditShopLogoState extends State<EditShopLogo> {
     });
   }
 
-  
-
-
   @override
   Widget build(BuildContext context) {
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
@@ -35,10 +31,14 @@ class _EditShopLogoState extends State<EditShopLogo> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     void onFormSubmit() {
-      if(_selectedImage!=null){
-        vendorProvider.updateShopLogo(vendorId: vendorProvider.vendor!.id, context: context, logoFile: _selectedImage!);
+      if (_selectedImage != null) {
+        vendorProvider.updateShopLogo(
+            vendorId: vendorProvider.vendor!.id,
+            context: context,
+            logoFile: _selectedImage!);
       }
     }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -72,7 +72,9 @@ class _EditShopLogoState extends State<EditShopLogo> {
                     color: Colors.black),
               ),
             ),
-            SizedBox(height: screenHeight*.01,),
+            SizedBox(
+              height: screenHeight * .01,
+            ),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: screenWidth * .07,
@@ -90,7 +92,7 @@ class _EditShopLogoState extends State<EditShopLogo> {
               fileCategory: "Shop Logo",
             ),
             Padding(
-               padding: EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: screenWidth * .07,
                 vertical: screenHeight * .01,
               ),
@@ -99,7 +101,6 @@ class _EditShopLogoState extends State<EditShopLogo> {
           ],
         ),
       ),
-   
     );
   }
 }

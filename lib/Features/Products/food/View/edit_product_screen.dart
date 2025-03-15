@@ -1,16 +1,13 @@
 import 'dart:io';
-import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/category_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/Model/food_item_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/widgets/fb_category_form_field.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/widgets/fb_products_file_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/widgets/fb_toggle_switch.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_products_file_picker.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 
 class EditProductScreen extends StatefulWidget {
   final FoodItemModel product;

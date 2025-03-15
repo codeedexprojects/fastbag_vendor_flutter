@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../../Commons/colors.dart';
-import '../../../Commons/fonts.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int productId;
@@ -23,14 +22,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   void initState() {
-    final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
-    _viewModel.getfooddata(widget.productId);
+    final _viewModel = Provider.of<ProductViewModel>(context, listen: false);
+    _viewModel.getProductDetail(widget.productId);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _viewModel = Provider.of<FoodViewModel>(context);
+    final _viewModel = Provider.of<ProductViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: FbColors.backgroundcolor,

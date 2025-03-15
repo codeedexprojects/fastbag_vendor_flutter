@@ -1,19 +1,12 @@
 import 'dart:io';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
-import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/Fb_Text_Form_Field.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_product_category_dropdown.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_products_file_picker.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
-import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
-import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/Model/food_item_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/Model/sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/widgets/fb_category_form_field.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/widgets/fb_products_file_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/widgets/fb_toggle_switch.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

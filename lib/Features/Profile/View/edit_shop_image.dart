@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../Products/food/View/widgets/fb_category_file_picker.dart';
 
 class EditShopImage extends StatefulWidget {
   const EditShopImage({super.key});

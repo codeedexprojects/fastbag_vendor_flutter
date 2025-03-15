@@ -1,9 +1,9 @@
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/Model/category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/Model/sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/food/View/all_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 
 class AllCategoriesScreen extends StatelessWidget {
