@@ -22,16 +22,12 @@ ios/Pods/
 ios/Podfile.lock
 
 # Android
-#android/app/
-#android/app/.cxx/Debug/4c2a645e/arm64-v8a/.cmake/api/v1/reply/
-#android/app/.cxx
-#android/.gradle/
-#android/app/release/
-#android/local.properties
-#android/app/build/
-#android/app/src/debug/
-#android/app/src/profile/
-#android/app/src/release/
+android/app/
+android/.gradle/
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/local.properties
 
 # Mac
 *.DS_Store
