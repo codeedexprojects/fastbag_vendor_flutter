@@ -105,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: Text(profileShopProvider.shop?.ownerName ?? "name",
                         style: nunito(
                             fontSize: screenWidth * 0.05,
-                            fontBold: FontWeight.w700)),
+                            fontWeight: FontWeight.w700)),
                     subtitle: Text(
                       profileShopProvider.shop?.businessLocation ?? 'location',
                       style: nunito(fontSize: screenWidth * 0.04),

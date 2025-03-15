@@ -1,21 +1,15 @@
 import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_categories_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/view_model/grocery_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
-import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
-import 'list_groceey_products_screen.dart';
+import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
 class GroceryCategoryScreen extends StatefulWidget {
   const GroceryCategoryScreen({super.key});
@@ -35,12 +29,11 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch categories and subcategories asynchronously using provider
-    var viewModel =
+    // Fetch categories and subcategories
+    final groceryViewModel =
         Provider.of<GroceryViewModel>(context, listen: false);
-    viewModel.getGroceryCategory(context: context);
-    print("fetch Catgpry");
-    viewModel.getGrocerySubCategory(context: context);
+    groceryViewModel.fetchGroceryCategory(context);
+    groceryViewModel.fetchGrocerySubCategory(context);
   }
 
   void _filterSearch(String query) {
@@ -59,23 +52,21 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     }
   }
 
-  void _onSubmitted(SerachItem item) {
-    var _viewModel = Provider.of<GroceryViewModel>(context, listen: false);
+  void _onSubmitted(SerachItem item, GroceryViewModel groceryViewModel) {
     // Handle search submission
-    print('Search submitted: $item');
     if (item.type == "category") {
       navigate(
           context: context,
           screen: AllGroceryCategoriesScreen(
               categories: [item.model],
-              subCategories: _viewModel.subCategories));
+              subCategories: groceryViewModel.subCategories));
     } else {
       navigate(
           context: context,
           screen: AllGrocerySubCategoryScreen(
-              subCategories: [item.model],
-              categories: _viewModel.categories,
-              isOperable: false));
+            subCategories: [item.model],
+            categories: groceryViewModel.categories,
+          ));
     }
     setState(() {
       filteredList = []; // Optionally clear search results after submission
@@ -84,16 +75,16 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var categoryProvider = Provider.of<GroceryViewModel>(context);
+    final groceryViewModel = Provider.of<GroceryViewModel>(context);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
     // Ensure categories and subcategories are loaded
-    if (categoryProvider.categories.isNotEmpty ||
-        categoryProvider.subCategories.isNotEmpty) {
+    if (groceryViewModel.categories.isNotEmpty ||
+        groceryViewModel.subCategories.isNotEmpty) {
       // Combine category and subcategory names once data is available
-      List<SerachItem> categoryItems = categoryProvider.categories.isNotEmpty
-          ? categoryProvider.categories
+      List<SerachItem> categoryItems = groceryViewModel.categories.isNotEmpty
+          ? groceryViewModel.categories
               .map<SerachItem>((category) => SerachItem(
                   id: category.id ?? 0,
                   name: category.name ?? "",
@@ -102,8 +93,8 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
               .toList()
           : [];
       List<SerachItem> subCategoryItems =
-          categoryProvider.subCategories.isNotEmpty
-              ? categoryProvider.subCategories
+          groceryViewModel.subCategories.isNotEmpty
+              ? groceryViewModel.subCategories
                   .map<SerachItem>((subCategory) => SerachItem(
                       id: subCategory.id,
                       name: subCategory.name,
@@ -118,7 +109,6 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     final gap = SizedBox(height: screenWidth * 0.02);
 
     return Scaffold(
-      //resizeToAvoidBottomInset: true,
       body: GestureDetector(
         onTap: () {
           // Dismiss keyboard and suggestions when tapping outside
@@ -127,8 +117,9 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
             filteredList = []; // Reset suggestions when tapping outside
           });
         },
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
+          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -145,8 +136,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                 ),
               ),
               if (filteredList.isEmpty)
-                Expanded(
-                    child: Column(
+                Column(
                   children: [
                     if (searchController.text.isNotEmpty)
                       Padding(
@@ -155,140 +145,25 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                         child: const Text("No results"),
                       ),
                     gap,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Select Categories",
-                          style: mainFont(
-                              fontsize: 18,
-                              fontweight: FontWeight.w600,
-                              color: FbColors.greendark),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            navigate(
-                                context: context,
-                                screen: AllGroceryCategoriesScreen(
-                                  categories: categoryProvider.categories,
-                                  subCategories: categoryProvider.subCategories,
-                                ));
-                          },
-                          child: const Text(
-                            "View All",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
-                      ],
-                    ),
-                    //  category  List  Horzontal
-                    SizedBox(
-                      height: screenHeight * .17,
-                      child: Consumer<GroceryViewModel>(
-                        builder: (context, data, _) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: data.categories.length,
-                            itemBuilder: (context, index) {
-                              return categoryCard(
-                                text: data.categories[index].name,
-                                onTap: () {
-                                  navigate(
-                                    context: context,
-                                    screen: AllGrocerySubCategoryScreen(
-                                      subCategories: data.subCategories,
-                                      categories: data.categories,
-                                      isOperable: true,
-                                    ),
-                                  );
-                                },
-                                radius: screenWidth * .115,
-                                image: NetworkImage(
-                                  data.categories[index].categoryImage ?? "",
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Select Sub Categories",
-                          style: mainFont(
-                              fontsize: 18,
-                              fontweight: FontWeight.w600,
-                              color: FbColors.greendark),
-                        ),
-                        if (categoryProvider.subCategories.isNotEmpty)
-                          TextButton(
-                            onPressed: () {
-                              navigate(
-                                context: context,
-                                screen: AllGrocerySubCategoryScreen(
-                                  subCategories: categoryProvider.subCategories,
-                                  categories: categoryProvider.categories,
-                                  isOperable: false,
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              "View All",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.underline),
-                            ),
-                          )
-                      ],
-                    ),
-                    Expanded(
-                      child: Consumer<GroceryViewModel>(
-                        builder: (context, data, _) {
-                          return GridView.builder(
-                            padding: const EdgeInsets.all(5),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    childAspectRatio: .57,
-                                    crossAxisSpacing: 14),
-                            itemCount: data.subCategories.length,
-                            itemBuilder: (context, index) {
-                              return subCategoryCard(
-                                height: screenWidth * 0.33,
-                                text: data.subCategories[index].name,
-                                image: data
-                                    .subCategories[index].sub_category_image,
-                                onTap: () {
-                                  navigate(
-                                    context: context,
-                                    screen: ListGroceryProducts(
-                                      subCategory: data.subCategories[index],
-                                      subCategories: data.subCategories,
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                    // Horizontal List of Categories
+                    categoriesSection(
+                        screenHeight, screenWidth, groceryViewModel),
+                    // Grid View List of Sub Categories
+                    subCategoriesSection(
+                        screenHeight, screenWidth, groceryViewModel),
                   ],
-                ))
+                )
               else
                 ListView.builder(
                   shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: filteredList.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(filteredList[index].name),
                       onTap: () {
                         searchController.text = filteredList[index].name;
-                        _onSubmitted(filteredList[index]);
+                        _onSubmitted(filteredList[index], groceryViewModel);
                       },
                     );
                   },
@@ -297,6 +172,126 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget categoriesSection(double screenHeight, double screenWidth,
+      GroceryViewModel groceryViewModel) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Select Categories",
+              style: mainFont(
+                  fontsize: 18,
+                  fontweight: FontWeight.w600,
+                  color: FbColors.greendark),
+            ),
+            TextButton(
+              onPressed: () {
+                navigate(
+                    context: context,
+                    screen: AllGroceryCategoriesScreen(
+                      categories: groceryViewModel.categories,
+                      subCategories: groceryViewModel.subCategories,
+                    ));
+              },
+              child: const Text(
+                "View All",
+                style: TextStyle(
+                    color: Colors.grey, decoration: TextDecoration.underline),
+              ),
+            ),
+          ],
+        ),
+        // Category List Horizontal
+        SizedBox(
+          height: screenHeight * .17,
+          child: Consumer<GroceryViewModel>(
+            builder: (context, data, _) {
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: data.categories.length,
+                itemBuilder: (context, index) {
+                  return categoryCard(
+                    text: data.categories[index].name,
+                    onTap: () {
+                      // Handle category tap
+                    },
+                    radius: screenWidth * .115,
+                    image: NetworkImage(
+                      data.categories[index].categoryImage ?? "",
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget subCategoriesSection(double screenHeight, double screenWidth,
+      GroceryViewModel groceryViewModel) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Select Sub Categories",
+              style: mainFont(
+                  fontsize: 18,
+                  fontweight: FontWeight.w600,
+                  color: FbColors.greendark),
+            ),
+            if (groceryViewModel.subCategories.isNotEmpty)
+              TextButton(
+                onPressed: () {
+                  navigate(
+                      context: context,
+                      screen: AllGrocerySubCategoryScreen(
+                        subCategories: groceryViewModel.subCategories,
+                        categories: groceryViewModel.categories,
+                      ));
+                },
+                child: const Text(
+                  "View All",
+                  style: TextStyle(
+                      color: Colors.grey, decoration: TextDecoration.underline),
+                ),
+              )
+          ],
+        ),
+        SizedBox(
+          height: screenHeight * 0.5, // Constrain height for GridView
+          child: Consumer<GroceryViewModel>(
+            builder: (context, data, _) {
+              return GridView.builder(
+                padding: const EdgeInsets.all(5),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: .57,
+                    crossAxisSpacing: 14),
+                itemCount: data.subCategories.length,
+                itemBuilder: (context, index) {
+                  return subCategoryCard(
+                    height: screenWidth * 0.33,
+                    text: data.subCategories[index].name,
+                    image: data.subCategories[index].subcategoryImage ?? '',
+                    onTap: () {
+                      // Handle subcategory tap
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
