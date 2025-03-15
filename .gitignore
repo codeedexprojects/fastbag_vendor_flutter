@@ -60,3 +60,8 @@ android/local.properties
 
 # Custom local files
 *.env
+
+android/app/build/
+android/app/src/debug/
+android/app/src/profile/
+android/app/src/release/
