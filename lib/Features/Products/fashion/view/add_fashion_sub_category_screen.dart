@@ -13,17 +13,17 @@ import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../grocery/model/grocery_catgeory_model.dart';
+import '../model/fashion_category_model.dart';
 
-class AddSubCategoryScreen extends StatefulWidget {
-  final List<CategoryModel> categories;
-  const AddSubCategoryScreen({super.key, required this.categories});
+class FashionAddSubCategoryScreen extends StatefulWidget {
+  final List<FashionCategoryModel?> categories;
+  const FashionAddSubCategoryScreen({super.key, required this.categories});
 
   @override
-  State<AddSubCategoryScreen> createState() => _AddSubCategoryScreenState();
+  State<FashionAddSubCategoryScreen> createState() => _AddSubCategoryScreenState();
 }
 
-class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
+class _AddSubCategoryScreenState extends State<FashionAddSubCategoryScreen> {
   var nameController = TextEditingController();
   var subCategoryController=TextEditingController();
   File? _selectedImage;
