@@ -1,5 +1,6 @@
 class ImagesConstants{
   static const money='assets/Images/money.png';
+  static const food='assets/Images/food.png';
 }
 
 
