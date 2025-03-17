@@ -45,7 +45,8 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
     super.initState();
     getControllers();
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
-    final shopViewProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
+    final shopViewProvider =
+        Provider.of<ProfileShopViewModel>(context, listen: false);
     shopViewProvider.getShopProfile(context: context);
     // AuthRepository().getStoreCategories(context).then((data) {
     //   setState(() {
@@ -69,62 +70,64 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
     });
   }
 
-  getControllers(){
-    final shopViewProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
-    nameController.text=shopViewProvider.shop?.ownerName ?? '';
-    locationController.text=shopViewProvider.shop?.businessLocation ?? '';
-    landmarkController.text=shopViewProvider.shop?.businessLandmark ?? '';
-    addressController.text=shopViewProvider.shop?.address ?? '';
-    cityController.text=shopViewProvider.shop?.city ?? '';
-    stateController.text=shopViewProvider.shop?.state ?? '';
-    pincodeController.text=shopViewProvider.shop?.pincode ?? '';
-    fssaeController.text=shopViewProvider.shop?.fssaiNo ?? '';
-    numberController.text=shopViewProvider.shop?.contactNumber ?? '';
-    sinceController.text=shopViewProvider.shop?.since ?? '';
+  getControllers() {
+    final shopViewProvider =
+        Provider.of<ProfileShopViewModel>(context, listen: false);
+    nameController.text = shopViewProvider.shop?.ownerName ?? '';
+    locationController.text = shopViewProvider.shop?.businessLocation ?? '';
+    landmarkController.text = shopViewProvider.shop?.businessLandmark ?? '';
+    addressController.text = shopViewProvider.shop?.address ?? '';
+    cityController.text = shopViewProvider.shop?.city ?? '';
+    stateController.text = shopViewProvider.shop?.state ?? '';
+    pincodeController.text = shopViewProvider.shop?.pincode ?? '';
+    fssaeController.text = shopViewProvider.shop?.fssaiNo ?? '';
+    numberController.text = shopViewProvider.shop?.contactNumber ?? '';
+    sinceController.text = shopViewProvider.shop?.since ?? '';
   }
+
   @override
   Widget build(BuildContext context) {
-    var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
-    final detailsProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
+    var shopViewProvider = Provider.of<ProfileShopViewModel>(context);
+    final _viewModel = Provider.of<ProfileViewModel>(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
     void onFormSubmit() {
       UpdateShopModel model = UpdateShopModel(
           license: _selectedLicense,
-          store_id: vendorProvider.vendor?.store_id ?? '',
+          store_id: shopViewProvider.shop?.storeId ?? '',
           business_name: nameController.text.isNotEmpty
               ? nameController.text
-          :vendorProvider.vendor?.business_name ?? '',
+              : shopViewProvider.shop?.businessName ?? '',
           contact_number: numberController.text.isEmpty
-              ? vendorProvider.vendor?.contact_number ?? 0
-              : int.parse(numberController.text),
+              ? shopViewProvider.shop?.contactNumber ?? ''
+              : numberController.text,
           address: addressController.text.isEmpty
-              ? vendorProvider.vendor?.address ?? ''
+              ? shopViewProvider.shop?.address ?? ''
               : addressController.text,
           city: cityController.text.isEmpty
-              ? vendorProvider.vendor?.city ?? ''
+              ? shopViewProvider.shop?.city ?? ''
               : cityController.text,
           state: stateController.text.isEmpty
-              ? vendorProvider.vendor?.state ?? ''
+              ? shopViewProvider.shop?.state ?? ''
               : stateController.text,
           pincode: pincodeController.text.isEmpty
-              ? vendorProvider.vendor?.pincode ?? 0
-              : int.parse(pincodeController.text),
-          store_type: selectedCategory != null ? selectedCategory?.id ?? 0 : vendorProvider.vendor?.store_type ?? 0,
+              ? shopViewProvider.shop?.pincode ?? ''
+              : pincodeController.text,
+          store_type: selectedCategory != null
+              ? selectedCategory?.id ?? 0
+              : shopViewProvider.shop?.storeType ?? 0,
           fssai_no: fssaeController.text.isEmpty
-              ? vendorProvider.vendor?.fssai_no ?? 0
-              : int.parse(fssaeController.text),
+              ? shopViewProvider.shop?.fssaiNo ?? ''
+              : fssaeController.text,
           fssai_certicate: _selectedCertificate,
           bussiness_location: locationController.text.isEmpty
-              ? vendorProvider.vendor?.bussiness_location ?? ''
+              ? shopViewProvider.shop?.businessLocation ?? ''
               : locationController.text,
           business_landmark: landmarkController.text.isEmpty
-              ? vendorProvider.vendor?.business_landmark ?? ''
+              ? shopViewProvider.shop?.businessLandmark ?? ''
               : landmarkController.text);
-
-      vendorProvider.updateShopDetails(
-          vendorId: vendorProvider.vendor?.id ?? 0, context: context, model: model);
+      _viewModel.updateShopDetails(context: context, model: model);
     }
 
     return Scaffold(
@@ -149,7 +152,7 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
           key: formKey,
           child: Consumer<ProfileViewModel>(builder: (context, data, _) {
             return Padding(
-              padding:  EdgeInsets.all(screenWidth*0.03),
+              padding: EdgeInsets.all(screenWidth * 0.03),
               child: Column(
                 children: [
                   FbCategoryFormField(
@@ -157,75 +160,97 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
                       label: "SHOP NAME",
                       controller: nameController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       hint: data.vendor?.bussiness_location,
                       label: "LOCATION",
                       controller: locationController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       hint: data.vendor?.business_landmark,
                       label: "LANDMARK",
                       controller: landmarkController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       hint: data.vendor?.address,
                       label: "ADDRESS",
                       controller: addressController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       hint: data.vendor?.city,
                       label: "CITY",
                       controller: cityController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       hint: data.vendor?.state,
                       label: "STATE",
                       controller: stateController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       hint: data.vendor?.pincode.toString(),
                       label: "PINCODE",
                       controller: pincodeController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       hint: data.vendor?.fssai_no.toString(),
                       label: "FSSAI NO",
                       controller: fssaeController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       hint: data.vendor?.contact_number.toString(),
                       label: "CONTACT NUMBER",
                       controller: numberController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
                   SizedBox(
-                    height: screenHeight*0.27,
+                    height: screenHeight * 0.015,
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.27,
                     child: FbFilePicker(
                       onFilePicked: (file) => _onCertificatePicked(file),
                       fileCategory: "FSSAI CIRTIFICATE",
                       borderColor: Colors.grey,
                     ),
                   ),
-                  SizedBox(height: screenHeight*0.02,),
                   SizedBox(
-                    height: screenHeight*0.27,
+                    height: screenHeight * 0.02,
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.27,
                     child: FbFilePicker(
                       onFilePicked: (file) => _onLicensePicked(file),
                       fileCategory: "LICENSE",
                       borderColor: Colors.grey,
                     ),
                   ),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryDropdown(
-                    hint: vendorProvider.vendor?.store_type_name ?? '',
+                    hint: shopViewProvider.shop?.ownerName ?? '',
                     categories: categories,
                     selectedCategory: selectedCategory,
                     onChanged: (CategoryModel? category) {
@@ -236,16 +261,21 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
                       print('Selected Category: ${category?.name}');
                     },
                   ),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbCategoryFormField(
                       //hint: data.vendor!.,
                       label: "SINCE",
                       controller: sinceController,
                       validator: customValidatornoSpaceError),
-                  SizedBox(height: screenHeight*0.015,),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
                   FbButton(
-                    height: screenHeight*0.07,
-                      onClick: onFormSubmit, label: "UPDATE"),
+                      height: screenHeight * 0.07,
+                      onClick: onFormSubmit,
+                      label: "UPDATE"),
                 ],
               ),
             );
