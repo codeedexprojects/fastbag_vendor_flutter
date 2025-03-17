@@ -46,15 +46,15 @@ class _UpdateSettingsState extends State<UpdateSettings> {
         // };
 
         Map<String, dynamic> updatesMap = {
-          "ownerName": nameController.text.isNotEmpty
+          "owner_name": nameController.text.isNotEmpty
               ? nameController.text
-              : updateProvider.shop?.ownerName,
+              : updateProvider.shop!.ownerName ,
           "email": addressController.text.isNotEmpty
               ? addressController.text
-              : updateProvider.shop?.email,
-          "contactNumber": phoneController.text.isNotEmpty
+              : updateProvider.shop!.email,
+          "contact_number": phoneController.text.isNotEmpty
               ? phoneController.text
-              : updateProvider.shop?.contactNumber,
+              : updateProvider.shop!.contactNumber,
         };
 
         // vendorProvider.updateSettingsDetails(vendorId:vendorProvider.vendor!.id , context: context, settingsMap: updateMap);

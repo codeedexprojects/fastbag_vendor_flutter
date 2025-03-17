@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Model/profile_shop_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/Model/update_shop_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Repository/profile_repository.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../Repository/profile_shop_repository.dart';
+import '../View/widgets/update_status_dialog.dart';
 
 class ProfileShopViewModel extends ChangeNotifier{
   final ProfileShopRepository _profileShopRepository=ProfileShopRepository();
@@ -72,6 +75,31 @@ class ProfileShopViewModel extends ChangeNotifier{
         _shop = data;
         notifyListeners();
       }
+    });
+  }
+
+  updateShopDetailsFunction(
+      {
+        required BuildContext context,
+        required UpdateShopModel model
+      }) async {
+    await _profileShopRepository
+        .updateShopDetails(model, context,)
+        .then((data) {
+      if (data.runtimeType == ProfileShopModel) {
+        _shop = data;
+        notifyListeners();
+      }
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        barrierDismissible: true, // Allow dismissing by tapping outside
+        builder: (BuildContext context) => const UpdateStatusDialog(
+          title: "Shop Details Updated",
+          description: "Note : Some details may needs admin approval , will updated once approved !",
+        ),
+
+      );
     });
   }
 
