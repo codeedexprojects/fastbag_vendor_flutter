@@ -3,12 +3,12 @@ import 'dart:io';
 
 class UpdateShopModel {
   final String business_name;
-  final int contact_number;
+  final String contact_number;
   final String address;
   final String city;
   final String state;
-  final int pincode;
-  final int fssai_no;
+  final String pincode;
+  final String fssai_no;
   final File? fssai_certicate;
   final String bussiness_location;
   final String business_landmark;
