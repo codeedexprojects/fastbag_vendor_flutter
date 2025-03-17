@@ -1,10 +1,14 @@
 import 'dart:io';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/addproduct_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashionproduct_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/productname_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/select_field.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
@@ -27,9 +31,15 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   var discountPriceController = TextEditingController();
   var categoryController = TextEditingController();
   var subcategoryController = TextEditingController();
+  var materialController=TextEditingController();
   List<File>? _selectedImages;
+  var _formKey = GlobalKey<FormState>();
   XFile? pickedImage;
   bool _inStock = false;
+  List<Map<String, dynamic>> variants = [];
+
+  List<Map<String, dynamic>> variantFields = [];
+
 
   void _onFilePicked(List<File> files) {
     setState(() {
@@ -39,7 +49,22 @@ class _AddFashionProductState extends State<AddFashionProduct> {
 
   ////////////////////////////////////////////
 
-  final List<Map<String, dynamic>> variants = [];
+  void saveProduct(){
+    var  productProvider=Provider.of<FashionProductViewModel>(context,listen: false);
+    if(_formKey.currentState!.validate()){
+      AddFashionProductModel model=AddFashionProductModel(
+        name: nameController.text.trim(),
+        description: discountPriceController.text.trim(),
+        gender: genderController.text,
+        material: materialController.text.trim(),
+        price: priceController.text.trim(),
+        offerPrice: discountPriceController.text.trim(),
+        isActive: _inStock,
+
+      );
+      productProvider.addFashionProduct(context: context, model: model);
+    }
+  }
 
   void addVariant() {
     setState(() {
@@ -118,123 +143,127 @@ class _AddFashionProductState extends State<AddFashionProduct> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProductnameField(
-              label: 'Product Name',
-              controller: nameController,
-              keyboard: TextInputType.text,
-            ),
-            ProductnameField(
-              label: 'Describe the Product',
-              controller: descriptionController,
-              keyboard: TextInputType.text,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
-              child: SelectField(
-                  label: 'Select Gender',
-                  controller: genderController,
-                  items: ['Male', 'Female']),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
-              child: FbProductsFilePicker(
-                fileCategory: "Product",
-                onFilesPicked: _onFilePicked,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ProductnameField(
+                label: 'Product Name',
+                controller: nameController,
+                keyboard: TextInputType.text,
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SelectField(
-                        label: 'Category',
-                        controller: categoryController,
-                        items: ['Men', 'Women']),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Expanded(
-                    child: SelectField(
-                        label: 'Sub Category',
-                        controller: subcategoryController,
-                        items: ['Shirts', 'Pants']),
-                  ),
-                ],
+              ProductnameField(
+                label: 'Describe the Product',
+                controller: descriptionController,
+                keyboard: TextInputType.text,
               ),
-            ),
-            ProductnameField(
-              label: 'Stock Unit',
-              controller: stockUnitController,
-              keyboard: TextInputType.number,
-            ),
-            ProductnameField(
-              label: 'Product Price (N)',
-              controller: priceController,
-              keyboard: TextInputType.number,
-            ),
-            ProductnameField(
-              label: 'Discount Price (Optional)',
-              controller: discountPriceController,
-              keyboard: TextInputType.number,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
-              child: Row(
-                children: [
-                  Text('Add Varient',
-                      style: normalFont4(
-                          fontsize: 18,
-                          fontweight: FontWeight.w400,
-                          color: Colors.blue)),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  GestureDetector(
-                    onTap: addVariant,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: Colors.blue,
-                          size: 18,
-                        ),
-                        SizedBox(width: 5),
-                      ],
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * .07, vertical: screenHeight * .01),
+                child: SelectField(
+                    label: 'Select Gender',
+                    controller: genderController,
+                    items: ['Male', 'Female']),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * .07, vertical: screenHeight * .01),
+                child: FbProductsFilePicker(
+                  fileCategory: "Product",
+                  onFilesPicked: _onFilePicked,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * .07, vertical: screenHeight * .01),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SelectField(
+                          label: 'Category',
+                          controller: categoryController,
+                          items: ['Men', 'Women']),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: SelectField(
+                          label: 'Sub Category',
+                          controller: subcategoryController,
+                          items: ['Shirts', 'Pants']),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            for (int i = 0; i < variants.length; i++) _buildVariantSection(i),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
-              child: FbToggleSwitch(
-                title: 'Mark Product in stock',
-                initialValue: _inStock,
-                onToggleChanged: (value) {
-                  setState(() {
-                    _inStock = value;
-                  });
-                },
+              ProductnameField(
+                label: 'Material',
+                controller: materialController,
+                keyboard: TextInputType.text,
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * .07, vertical: screenHeight * .01),
-              child: FbButton(onClick: () {}, label: 'Add to Product'),
-            ),
-            SizedBox(height: 10),
-          ],
+
+              ProductnameField(
+                label: 'Product Price (N)',
+                controller: priceController,
+                keyboard: TextInputType.number,
+              ),
+              ProductnameField(
+                label: 'Discount Price (Optional)',
+                controller: discountPriceController,
+                keyboard: TextInputType.number,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * .07, vertical: screenHeight * .01),
+                child: Row(
+                  children: [
+                    Text('Add Varient',
+                        style: normalFont4(
+                            fontsize: 18,
+                            fontweight: FontWeight.w400,
+                            color: Colors.blue)),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    GestureDetector(
+                      onTap: addVariant,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: Colors.blue,
+                            size: 18,
+                          ),
+                          SizedBox(width: 5),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              for (int i = 0; i < variants.length; i++) _buildVariantSection(i),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * .07, vertical: screenHeight * .01),
+                child: FbToggleSwitch(
+                  title: 'Mark Product in stock',
+                  initialValue: _inStock,
+                  onToggleChanged: (value) {
+                    setState(() {
+                      _inStock = value;
+                    });
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * .07, vertical: screenHeight * .01),
+                child: FbButton(onClick: saveProduct, label: 'Add to Product'),
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );

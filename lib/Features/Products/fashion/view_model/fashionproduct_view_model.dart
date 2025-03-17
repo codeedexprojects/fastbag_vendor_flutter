@@ -1,4 +1,6 @@
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/addproduct_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/add_fashion_product.dart';
 import 'package:flutter/material.dart';
 
 import '../model/fashion_item_model.dart';
@@ -21,6 +23,15 @@ class FashionProductViewModel extends ChangeNotifier {
     });
   }
 
+  Future<void> addFashionProduct(
+      {required BuildContext context,
+        required AddFashionProductModel model}) async {
+    var res=await _productRepository.addFastionProduct(context,model);
+    notifyListeners();
+    if(res != null){
+      print(res);
+    }
+  }
   // Future<List<FashionItemModel>> getProductCategories({required BuildContext context,required int subCategoryId}) async {
   //   var res = await _productRepository.fashiongetAllProducts(context);
   //   if(res != null){
@@ -35,13 +46,13 @@ class FashionProductViewModel extends ChangeNotifier {
   //   return _fashionProducts;
   // }
 
-  Future<void> addFoodItem(
-      {required BuildContext context, required FoodItemModel model}) async {
-    var res = await _productRepository.fashionAddProductItem(context, model);
-    if (res != null) {
-      print(res);
-    }
-  }
+  // Future<void> addFoodItem(
+  //     {required BuildContext context, required FoodItemModel model}) async {
+  //   var res = await _productRepository.fashionAddProductItem(context, model);
+  //   if (res != null) {
+  //     print(res);
+  //   }
+  // }
 
   Future<void> deleteFoodItem(
       {required BuildContext context, required int productId}) async {
