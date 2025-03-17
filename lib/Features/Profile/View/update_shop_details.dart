@@ -44,14 +44,15 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
   void initState() {
     super.initState();
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
-    AuthRepository().getStoreCategories(context).then((data) {
-      setState(() {
-        print(data[0].name);
-        print(data[1].name);
-        print(data[2].name);
-        categories = data;
-      });
-    });
+    AuthRepository().getStoreCategories(context);
+    // AuthRepository().getStoreCategories(context).then((data) {
+    //   setState(() {
+    //     print(data[0].name);
+    //     print(data[1].name);
+    //     print(data[2].name);
+    //     categories = data;
+    //   });
+    // });
   }
 
   void _onCertificatePicked(File? file) {
@@ -77,19 +78,19 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
       UpdateShopModel model = UpdateShopModel(
           license: _selectedLicense,
           store_id: vendorProvider.vendor?.store_id ?? '',
-          business_name: nameController.text == ""
-              ? vendorProvider.vendor?.business_name ?? ''
-              : nameController.text,
+          business_name: nameController.text.isNotEmpty
+              ? nameController.text
+          :vendorProvider.vendor?.business_name ?? '',
           contact_number: numberController.text.isEmpty
               ? vendorProvider.vendor?.contact_number ?? 0
               : int.parse(nameController.text),
-          address: addressController.text == ""
+          address: addressController.text.isEmpty
               ? vendorProvider.vendor?.address ?? ''
               : addressController.text,
-          city: cityController.text == ""
+          city: cityController.text.isEmpty
               ? vendorProvider.vendor?.city ?? ''
               : cityController.text,
-          state: stateController.text == ""
+          state: stateController.text.isEmpty
               ? vendorProvider.vendor?.state ?? ''
               : stateController.text,
           pincode: pincodeController.text.isEmpty
@@ -100,10 +101,10 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
               ? vendorProvider.vendor?.fssai_no ?? 0
               : int.parse(fssaeController.text),
           fssai_certicate: _selectedCertificate,
-          bussiness_location: locationController.text == ""
+          bussiness_location: locationController.text.isEmpty
               ? vendorProvider.vendor?.bussiness_location ?? ''
               : locationController.text,
-          business_landmark: landmarkController.text == ""
+          business_landmark: landmarkController.text.isEmpty
               ? vendorProvider.vendor?.business_landmark ?? ''
               : landmarkController.text);
 
