@@ -43,8 +43,10 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
   @override
   void initState() {
     super.initState();
+    getControllers();
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
-    AuthRepository().getStoreCategories(context);
+    final shopViewProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
+    shopViewProvider.getShopProfile(context: context);
     // AuthRepository().getStoreCategories(context).then((data) {
     //   setState(() {
     //     print(data[0].name);
@@ -67,6 +69,19 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
     });
   }
 
+  getControllers(){
+    final shopViewProvider=Provider.of<ProfileShopViewModel>(context,listen: false);
+    nameController.text=shopViewProvider.shop?.ownerName ?? '';
+    locationController.text=shopViewProvider.shop?.businessLocation ?? '';
+    landmarkController.text=shopViewProvider.shop?.businessLandmark ?? '';
+    addressController.text=shopViewProvider.shop?.address ?? '';
+    cityController.text=shopViewProvider.shop?.city ?? '';
+    stateController.text=shopViewProvider.shop?.state ?? '';
+    pincodeController.text=shopViewProvider.shop?.pincode ?? '';
+    fssaeController.text=shopViewProvider.shop?.fssaiNo ?? '';
+    numberController.text=shopViewProvider.shop?.contactNumber ?? '';
+    sinceController.text=shopViewProvider.shop?.since ?? '';
+  }
   @override
   Widget build(BuildContext context) {
     var vendorProvider = Provider.of<ProfileViewModel>(context, listen: false);
@@ -83,7 +98,7 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
           :vendorProvider.vendor?.business_name ?? '',
           contact_number: numberController.text.isEmpty
               ? vendorProvider.vendor?.contact_number ?? 0
-              : int.parse(nameController.text),
+              : int.parse(numberController.text),
           address: addressController.text.isEmpty
               ? vendorProvider.vendor?.address ?? ''
               : addressController.text,
