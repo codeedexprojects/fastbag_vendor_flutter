@@ -16,6 +16,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../model/fashion_category_model.dart';
 import '../model/fashion_sub_category_model.dart';
 import 'add_fashion_sub_category_screen.dart';
+import 'edit_fashion_sub_category_screen.dart';
 import 'list_fashion_products_screen.dart';
 
 class FashionAllSubCategoryScreen extends StatelessWidget {
@@ -147,9 +148,8 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                   onClick: () {
                     // navigate(
                     //     context: context,
-                    //     screen: FashionSubCategoryEditList(
-                    //       subCategories: subCategories,
-                    //       categories: categories,
+                    //     screen: FashionEditSubCategoryScreen(
+                    //        category: categories, subCategory:subCategories , categories: [],
                     //     ));
                   },
                   icon: const FaIcon(

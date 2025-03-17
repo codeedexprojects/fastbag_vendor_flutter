@@ -6,29 +6,32 @@ class AddFashionProductModel {
   String? description;
   String? gender;
   String? wholesalePrice;
-  String? price;
+  double? price;
   String? offerPrice;
-  String? discount;
+  double? discount;
   List<ColorsS>? colors;
   String? material;
   bool? isActive;
+  late List<dynamic> variants;
 
   AddFashionProductModel(
-      {this.vendor,
-        this.categoryId,
-        this.subcategoryId,
-        this.name,
-        this.description,
-        this.gender,
-        this.wholesalePrice,
-        this.price,
-        this.offerPrice,
-        this.discount,
-        this.colors,
-        this.material,
-        this.isActive});
+      { this.vendor,
+        required this.categoryId,
+        required this.subcategoryId,
+        required this.name,
+        required this.description,
+        required this.gender,
+         this.wholesalePrice,
+        required this.price,
+         this.offerPrice,
+        required this.discount,
+         this.colors,
+        required this.material,
+        required this.variants,
+        required this.isActive});
 
-  AddFashionProductModel.fromJson(Map<String, dynamic> json) {
+  AddFashionProductModel.fromJson(Map<String, dynamic> json, ) {
+    variants=json['varients'];
     vendor = json['vendor'];
     categoryId = json['category_id'];
     subcategoryId = json['subcategory_id'];

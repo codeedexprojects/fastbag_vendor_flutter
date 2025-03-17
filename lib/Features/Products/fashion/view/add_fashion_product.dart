@@ -49,18 +49,41 @@ class _AddFashionProductState extends State<AddFashionProduct> {
 
   ////////////////////////////////////////////
 
-  void saveProduct(){
-    var  productProvider=Provider.of<FashionProductViewModel>(context,listen: false);
-    if(_formKey.currentState!.validate()){
-      AddFashionProductModel model=AddFashionProductModel(
-        name: nameController.text.trim(),
-        description: discountPriceController.text.trim(),
-        gender: genderController.text,
-        material: materialController.text.trim(),
-        price: priceController.text.trim(),
-        offerPrice: discountPriceController.text.trim(),
-        isActive: _inStock,
+  void saveProduct() {
+    var productProvider = Provider.of<FashionProductViewModel>(context, listen: false);
+    
 
+    // Convert variants to ColorsS list
+    for(var varient in variantFields){
+      String name = varient["color_name"].text.trim();
+      File? imageFile = varient["color_image"];
+      String imagePath = imageFile?.path ?? "";
+      String price = varient['price'].text.trim();
+      String size=varient["size"].selection.toString();
+      String stock= varient['stock'];
+      if(name.isNotEmpty&&imagePath.isNotEmpty){
+        variants.add({
+          name:{
+            "size":size,
+            "price":price,
+            "stock":int.tryParse(stock)
+          }
+        });
+      }
+    }
+
+    int? categoryId = int.tryParse(categoryController.selection.toString());
+    int? subcategoryId = int.tryParse(subcategoryController.selection.toString());
+    if (_formKey.currentState!.validate()) {
+      AddFashionProductModel model = AddFashionProductModel(
+        name: nameController.text.trim(),
+        description: descriptionController.text.trim(),
+        gender: genderController.selection.toString(),
+        material: materialController.text.trim(),
+        price: double.tryParse(priceController.text) ?? 0.0,
+        discount: double.tryParse(discountPriceController.text) ?? 0.0,
+        isActive: _inStock,
+        variants: variants, categoryId: categoryId, subcategoryId: subcategoryId,
       );
       productProvider.addFashionProduct(context: context, model: model);
     }
@@ -68,7 +91,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
 
   void addVariant() {
     setState(() {
-      variants.add({"color_name": "", "color_image": null, "sizes": []});
+      variantFields.add({"color_name": TextEditingController, "color_image": [], "sizes":[]});
     });
   }
 
@@ -81,7 +104,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   void addSize(int variantIndex) {
     setState(() {
       variants[variantIndex]["sizes"]
-          .add({"size": "", "price": "", "stock": ""});
+          .add({"size": "", "price": "", "stock": 0});
     });
   }
 
@@ -164,7 +187,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                 child: SelectField(
                     label: 'Select Gender',
                     controller: genderController,
-                    items: ['Male', 'Female']),
+                    items: ['M', 'F','U','K']),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -242,7 +265,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                   ],
                 ),
               ),
-              for (int i = 0; i < variants.length; i++) _buildVariantSection(i),
+              for (int i = 0; i < variantFields.length; i++) _buildVariantSection(i),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: screenWidth * .07, vertical: screenHeight * .01),
