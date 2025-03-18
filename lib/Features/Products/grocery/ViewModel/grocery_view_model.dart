@@ -12,6 +12,12 @@ class GroceryViewModel extends ChangeNotifier {
   List<GrocerySubCategoryModel> subCategories = [];
   List<GroceryProductsModel> subCategoryProducts = [];
 
+  // Getter to return subcategories based on a selected category ID
+
+  List<GrocerySubCategoryModel> subCategoriesByCategory(int categoryId) {
+    return subCategories.where((sub) => sub.category == categoryId).toList();
+  }
+
   get filteredList => [];
 
   final _groceryRepo = GroceryRepository();
@@ -65,6 +71,7 @@ class GroceryViewModel extends ChangeNotifier {
       subCategoryProducts = (response as List)
           .map((json) => GroceryProductsModel.fromJson(json))
           .toList();
+      notifyListeners();
     } catch (e) {
       print(e);
       showFlushbar(
@@ -76,12 +83,43 @@ class GroceryViewModel extends ChangeNotifier {
     }
   }
 
+  // Add Sub Category
+
+  addSubCategory(
+    BuildContext context,
+    data,
+  ) async {
+    SVProgressHUD.show();
+    try {
+      await _groceryRepo.addSubCategory(data);
+      Navigator.pop(context);
+      await showFlushbar(
+          context: context,
+          color: FbColors.buttonColor,
+          icon: Icons.check,
+          message: 'Sub Category Added Successfully');
+    } catch (e) {
+      print(e);
+      showFlushbar(
+          context: context,
+          color: Colors.red,
+          icon: Icons.error_outline,
+          message: e.toString());
+    } finally {
+      SVProgressHUD.dismiss();
+    }
+  }
+
+  // Add Product
   addProduct(
-      BuildContext context, data, ) async {
+    BuildContext context,
+    data,
+  ) async {
     SVProgressHUD.show();
     try {
       await _groceryRepo.addProduct(data);
-      showFlushbar(
+      Navigator.pop(context);
+      await showFlushbar(
           context: context,
           color: FbColors.buttonColor,
           icon: Icons.check,
