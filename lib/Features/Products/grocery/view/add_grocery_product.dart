@@ -18,11 +18,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class AddGroceryProduct extends StatefulWidget {
-  final GroceryCategoryModel category;
   final GrocerySubCategoryModel subCategory;
 
-  const AddGroceryProduct(
-      {super.key, required this.category, required this.subCategory});
+  const AddGroceryProduct({super.key, required this.subCategory});
 
   @override
   State<AddGroceryProduct> createState() => _AddGroceryProductState();
@@ -30,8 +28,6 @@ class AddGroceryProduct extends StatefulWidget {
 
 class _AddGroceryProductState extends State<AddGroceryProduct> {
   final _formkey = GlobalKey<FormState>();
-  String? selectedCategory;
-  String? selectedSubCategory;
   String? selectedColor;
   String? selectWight;
   String? selectedMeasurment;
@@ -45,18 +41,13 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
   List<Map<String, dynamic>> variantFields = []; // Corrected declaration
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
-  late TextEditingController categoryController;
-  late TextEditingController subCategoryController;
   var priceController = TextEditingController();
   var discountController = TextEditingController();
   var discountedPriceController = TextEditingController();
   var wholesalePriceController = TextEditingController();
   var weightController = TextEditingController();
-
-  List<String> categories = ["Electronics", "Clothing", "Groceries"];
-  List<String> subCategories = ["Phones", "Laptops", "Accessories"];
-
-  void _onFilePicked(List<File> files) {}
+  late GroceryCategoryModel selectedCategory;
+  late GrocerySubCategoryModel selectedSubCategory;
 
   final List<String> itemMeasurements = [
     'kg',
@@ -113,8 +104,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
     );
 
     final data = {
-      "vendor": 18,
-      "category": widget.category.id,
+      "category": selectedCategory.id,
       "sub_category": widget.subCategory.id,
       "name": nameController.text.trim(),
       "wholesale_price": double.tryParse(wholesalePriceController.text.trim())
@@ -165,13 +155,18 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    categoryController = TextEditingController(text: widget.category.name);
-    subCategoryController =
-        TextEditingController(text: widget.subCategory.name);
+    final groceryViewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
+    setState(() {
+      selectedCategory = groceryViewModel.categories
+          .firstWhere((cat) => cat.id == widget.subCategory.category);
+      selectedSubCategory = widget.subCategory;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final groceryViewModel = Provider.of<GroceryViewModel>(context);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final gap = SizedBox(height: width * 0.03);
@@ -219,20 +214,61 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                      child: FbCategoryFormField(
-                    label: 'Category',
-                    controller: categoryController,
-                    readOnly: true,
-                  )),
-                  SizedBox(
-                    width: width * 0.03,
+                    child: DropdownButton<String>(
+                      value: selectedCategory.id
+                          .toString(), // Convert int to String
+                      hint: const Text('Select Category'),
+                      items: groceryViewModel.categories
+                          .map((cat) => DropdownMenuItem(
+                                value:
+                                    cat.id.toString(), // Convert int to String
+                                child: Text(cat.name ?? 'no name found'),
+                              ))
+                          .toList(),
+                      onChanged: (String? newId) {
+                        if (newId != null) {
+                          final newCategory = groceryViewModel.categories
+                              .firstWhere((cat) =>
+                                  cat.id.toString() ==
+                                  newId); // Convert for matching
+
+                          final newSubCategory = groceryViewModel.subCategories
+                              .where((sub) => sub.category == newCategory.id)
+                              .firstOrNull;
+
+                          setState(() {
+                            selectedCategory = newCategory;
+                            selectedSubCategory = newSubCategory!;
+                          });
+                        }
+                      },
+                    ),
                   ),
+                  SizedBox(width: width * 0.03),
                   Expanded(
-                      child: FbCategoryFormField(
-                    label: 'Sub Category',
-                    controller: subCategoryController,
-                    readOnly: true,
-                  )),
+                    child: FbCustomDropdown(
+                      value: selectedSubCategory.name,
+                      // Filter subcategories by selected category
+                      items: groceryViewModel.subCategories
+                          .where((sub) => sub.category == selectedCategory.id)
+                          .map((sub) => sub.name)
+                          .whereType<String>()
+                          .toList(),
+                      hintText: 'Select Sub Category',
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedSubCategory =
+                                groceryViewModel.subCategories.firstWhere(
+                              (sub) =>
+                                  sub.name == newValue &&
+                                  sub.category == selectedCategory.id,
+                            );
+                          });
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
               FbCategoryFormField(

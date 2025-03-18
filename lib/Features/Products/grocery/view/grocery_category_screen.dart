@@ -2,7 +2,7 @@ import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_categories_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/all_grocery_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +19,10 @@ class GroceryCategoryScreen extends StatefulWidget {
 }
 
 class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
-  late List<SerachItem> combinedList =
-      []; // Combined list of categories and subcategories
+  int selectedCategoryId = 1;
+  late List<SerachItem> combinedList = [];
   List<SerachItem> filteredList = []; // Filtered list for search suggestions
-  final TextEditingController searchController =
-      TextEditingController(); // SearchBar controller
+  final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
 
   @override
@@ -52,26 +51,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     }
   }
 
-  void _onSubmitted(SerachItem item, GroceryViewModel groceryViewModel) {
-    // Handle search submission
-    if (item.type == "category") {
-      navigate(
-          context: context,
-          screen: AllGroceryCategoriesScreen(
-              categories: [item.model],
-              subCategories: groceryViewModel.subCategories));
-    } else {
-      navigate(
-          context: context,
-          screen: AllGrocerySubCategoryScreen(
-            subCategories: [item.model],
-            categories: groceryViewModel.categories,
-          ));
-    }
-    setState(() {
-      filteredList = []; // Optionally clear search results after submission
-    });
-  }
+  void _onSubmitted(SerachItem item, GroceryViewModel groceryViewModel) {}
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +85,9 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
       combinedList = [...categoryItems, ...subCategoryItems];
       print("Combined List: $combinedList"); // Debugging output
     }
-
-    final gap = SizedBox(height: screenWidth * 0.02);
+    gap(value) {
+      return SizedBox(height: screenWidth * value);
+    }
 
     return Scaffold(
       body: GestureDetector(
@@ -117,9 +98,8 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
             filteredList = []; // Reset suggestions when tapping outside
           });
         },
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -135,39 +115,54 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                   onChanged: _filterSearch,
                 ),
               ),
-              if (filteredList.isEmpty)
-                Column(
-                  children: [
-                    if (searchController.text.isNotEmpty)
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: screenWidth * 0.07),
-                        child: const Text("No results"),
-                      ),
-                    gap,
-                    // Horizontal List of Categories
-                    categoriesSection(
-                        screenHeight, screenWidth, groceryViewModel),
-                    // Grid View List of Sub Categories
-                    subCategoriesSection(
-                        screenHeight, screenWidth, groceryViewModel),
-                  ],
-                )
-              else
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: filteredList.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(filteredList[index].name),
-                      onTap: () {
-                        searchController.text = filteredList[index].name;
-                        _onSubmitted(filteredList[index], groceryViewModel);
+              gap(0.04),
+              Text(
+                "Select Categories",
+                style: mainFont(
+                    fontsize: 18,
+                    fontweight: FontWeight.w600,
+                    color: FbColors.greendark),
+              ),
+              gap(0.04),
+
+              // Category List Horizontal
+              Expanded(
+                child: Consumer<GroceryViewModel>(
+                  builder: (context, data, _) {
+                    if (data.categories.isEmpty) {
+                      return Center(
+                          child: Text('No Categories Added', style: nunito()));
+                    }
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(0),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3, childAspectRatio: 0.7),
+                      itemCount: data.categories.length,
+                      itemBuilder: (context, index) {
+                        return categoryCard(
+                          text: data.categories[index].name,
+                          onTap: () {
+                            final List<GrocerySubCategoryModel>
+                                filteredSubCategory =
+                                data.subCategoriesByCategory(
+                                    data.categories[index].id as int);
+                            navigate(
+                                context: context,
+                                screen: AllGrocerySubCategoryScreen(
+                                  subCategories: filteredSubCategory,
+                                ));
+                          },
+                          radius: screenWidth * .115,
+                          image: NetworkImage(
+                            data.categories[index].categoryImage ?? "",
+                          ),
+                        );
                       },
                     );
                   },
                 ),
+              ),
             ],
           ),
         ),
@@ -175,123 +170,69 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     );
   }
 
-  Widget categoriesSection(double screenHeight, double screenWidth,
-      GroceryViewModel groceryViewModel) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Select Categories",
-              style: mainFont(
-                  fontsize: 18,
-                  fontweight: FontWeight.w600,
-                  color: FbColors.greendark),
-            ),
-            TextButton(
-              onPressed: () {
-                navigate(
-                    context: context,
-                    screen: AllGroceryCategoriesScreen(
-                      categories: groceryViewModel.categories,
-                      subCategories: groceryViewModel.subCategories,
-                    ));
-              },
-              child: const Text(
-                "View All",
-                style: TextStyle(
-                    color: Colors.grey, decoration: TextDecoration.underline),
-              ),
-            ),
-          ],
-        ),
-        // Category List Horizontal
-        SizedBox(
-          height: screenHeight * .17,
-          child: Consumer<GroceryViewModel>(
-            builder: (context, data, _) {
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: data.categories.length,
-                itemBuilder: (context, index) {
-                  return categoryCard(
-                    text: data.categories[index].name,
-                    onTap: () {
-                      // Handle category tap
-                    },
-                    radius: screenWidth * .115,
-                    image: NetworkImage(
-                      data.categories[index].categoryImage ?? "",
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget subCategoriesSection(double screenHeight, double screenWidth,
+  //     GroceryViewModel groceryViewModel) {
+  //   List<GrocerySubCategoryModel> filteredSubCategories =
+  //       groceryViewModel.subCategoriesByCategory(selectedCategoryId);
 
-  Widget subCategoriesSection(double screenHeight, double screenWidth,
-      GroceryViewModel groceryViewModel) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Select Sub Categories",
-              style: mainFont(
-                  fontsize: 18,
-                  fontweight: FontWeight.w600,
-                  color: FbColors.greendark),
-            ),
-            if (groceryViewModel.subCategories.isNotEmpty)
-              TextButton(
-                onPressed: () {
-                  navigate(
-                      context: context,
-                      screen: AllGrocerySubCategoryScreen(
-                        subCategories: groceryViewModel.subCategories,
-                        categories: groceryViewModel.categories,
-                      ));
-                },
-                child: const Text(
-                  "View All",
-                  style: TextStyle(
-                      color: Colors.grey, decoration: TextDecoration.underline),
-                ),
-              )
-          ],
-        ),
-        SizedBox(
-          height: screenHeight * 0.5, // Constrain height for GridView
-          child: Consumer<GroceryViewModel>(
-            builder: (context, data, _) {
-              return GridView.builder(
-                padding: const EdgeInsets.all(5),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: .57,
-                    crossAxisSpacing: 14),
-                itemCount: data.subCategories.length,
-                itemBuilder: (context, index) {
-                  return subCategoryCard(
-                    height: screenWidth * 0.33,
-                    text: data.subCategories[index].name,
-                    image: data.subCategories[index].subcategoryImage ?? '',
-                    onTap: () {
-                      // Handle subcategory tap
-                    },
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
+  //   return Column(
+  //     children: [
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text(
+  //             "Select Sub Categories",
+  //             style: mainFont(
+  //                 fontsize: 18,
+  //                 fontweight: FontWeight.w600,
+  //                 color: FbColors.greendark),
+  //           ),
+  //           if (filteredSubCategories.isNotEmpty)
+  //             TextButton(
+  //               onPressed: () {
+  //                 navigate(
+  //                     context: context,
+  //                     screen: const AllGrocerySubCategoryScreen());
+  //               },
+  //               child: const Text(
+  //                 "View All",
+  //                 style: TextStyle(
+  //                     color: Colors.grey, decoration: TextDecoration.underline),
+  //               ),
+  //             )
+  //         ],
+  //       ),
+  //       SizedBox(
+  //           height: screenHeight * 0.5, // Constrain height for GridView
+  //           child: filteredSubCategories.isEmpty
+  //               ? Center(
+  //                   child: Text('No Sub Categories Added', style: nunito()))
+  //               : GridView.builder(
+  //                   padding: const EdgeInsets.all(5),
+  //                   gridDelegate:
+  //                       const SliverGridDelegateWithFixedCrossAxisCount(
+  //                           crossAxisCount: 3,
+  //                           childAspectRatio: .57,
+  //                           crossAxisSpacing: 14),
+  //                   itemCount: filteredSubCategories.length,
+  //                   itemBuilder: (context, index) {
+  //                     return subCategoryCard(
+  //                       height: screenWidth * 0.33,
+  //                       text: filteredSubCategories[index].name,
+  //                       image:
+  //                           filteredSubCategories[index].subcategoryImage ?? '',
+  //                       onTap: () {
+  //                         navigate(
+  //                             context: context,
+  //                             screen: ListGroceryProducts(
+  //                                 subCategory: filteredSubCategories[index],
+  //                                 category:
+  //                                     groceryViewModel.categories[index]));
+  //                       },
+  //                     );
+  //                   },
+  //                 )),
+  //     ],
+  //   );
+  // }
 }

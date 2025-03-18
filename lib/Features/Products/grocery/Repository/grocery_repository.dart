@@ -92,6 +92,55 @@ class GroceryRepository {
     }
   }
 
+  // Add Sub Category
+  addSubCategory(data) async {
+    try {
+      final vendorId = await StoreManager().getVendorId();
+
+      final formData = FormData.fromMap({
+        "vendor_id": vendorId,
+        ...data,
+      });
+
+      // get token
+      final token = await StoreManager().getAccessToken();
+
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "multipart/form-data",
+        },
+      );
+      Response response = await dio.post('${baseUrl}grocery/gro-Subcategories/',
+          data: formData, options: options);
+      print('Status code ----> ${response.statusCode}');
+      print("response ------>${response.data}");
+
+      return response;
+    } on DioException catch (e) {
+      print(e.response?.data);
+
+      if (e.response != null) {
+        final responseData = e.response!.data;
+
+        if (responseData is Map<String, dynamic> && responseData.isNotEmpty) {
+          for (var value in responseData.values) {
+            if (value is List && value.isNotEmpty) {
+              throw value.first.toString(); // Show only the first error
+            }
+          }
+        }
+      }
+
+      throw "Network error: ${e.message}";
+    } catch (e) {
+      print(e.toString());
+      throw "Unexpected error occurred. Please try again.";
+    }
+  }
+
+// Add Product
   addProduct(data) async {
     try {
       final vendorId = await StoreManager().getVendorId();
