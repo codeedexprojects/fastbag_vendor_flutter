@@ -233,12 +233,12 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                                   newId); // Convert for matching
 
                           final newSubCategory = groceryViewModel.subCategories
-                              .where((sub) => sub.category == newCategory.id)
-                              .firstOrNull;
+                              .firstWhere(
+                                  (sub) => sub.category == newCategory.id);
 
                           setState(() {
                             selectedCategory = newCategory;
-                            selectedSubCategory = newSubCategory!;
+                            selectedSubCategory = newSubCategory;
                           });
                         }
                       },
@@ -246,24 +246,25 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                   ),
                   SizedBox(width: width * 0.03),
                   Expanded(
-                    child: FbCustomDropdown(
-                      value: selectedSubCategory.name,
-                      // Filter subcategories by selected category
+                    child: DropdownButton<String>(
+                      value: selectedSubCategory.id
+                          .toString(), // Use ID instead of name
+                      hint: const Text(
+                          'Select Sub Category'), // Use proper hint widget
                       items: groceryViewModel.subCategories
                           .where((sub) => sub.category == selectedCategory.id)
-                          .map((sub) => sub.name)
-                          .whereType<String>()
+                          .map((sub) => DropdownMenuItem<String>(
+                                value: sub.id.toString(), // Store ID as value
+                                child: Text(sub.name ?? 'Unnamed Subcategory'),
+                              ))
                           .toList(),
-                      hintText: 'Select Sub Category',
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
+                      onChanged: (String? newId) {
+                        if (newId != null) {
+                          final newSub = groceryViewModel.subCategories
+                              .firstWhere((sub) => sub.id.toString() == newId);
+
                           setState(() {
-                            selectedSubCategory =
-                                groceryViewModel.subCategories.firstWhere(
-                              (sub) =>
-                                  sub.name == newValue &&
-                                  sub.category == selectedCategory.id,
-                            );
+                            selectedSubCategory = newSub;
                           });
                         }
                       },
