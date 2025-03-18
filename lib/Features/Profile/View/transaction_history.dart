@@ -35,7 +35,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(CupertinoIcons.back)),
+            child: Icon(CupertinoIcons.back,size: width*0.09,)),
       ),
       body: SingleChildScrollView(
         child: Padding(
