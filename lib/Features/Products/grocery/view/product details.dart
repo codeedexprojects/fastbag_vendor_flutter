@@ -19,11 +19,15 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  Weight? selectedWeight;
+  double selectedPrice = 0.0;
   @override
-  void initState() {
-    super.initState();
-
-  }
+  // void initState() {
+  //   super.initState();
+  //   if (widget.product.weights.isNotEmpty) {
+  //     selectedWeight = widget.product.weights.first;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +65,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                    shrinkWrap: true,
                      scrollDirection: Axis.horizontal,
                      itemBuilder: (context, index) {
-                       final image = widget.product.images.first;
+                       final image = widget.product.images[index];
                        return  Container(
                          height: height*0.09,
                          width: width*0.19,
@@ -112,21 +116,37 @@ class _ProductDetailsState extends State<ProductDetails> {
                         scrollDirection: Axis.horizontal,
                         itemCount: widget.product.weights.length,
                         itemBuilder: (context, index) {
-                          final weights=widget.product.weights.first;
-                        return Container(
-                          height: height*0.06,
-                          width: width*0.25,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(width*0.03),
-                              border: Border.all(
-                                  color: OrderColor.red
-                              )
-                          ),
-                          child: Center(
-                            child: Text(weights.weight,style: GoogleFonts.nunito(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            )),
+                          final weight=widget.product.weights[index];
+                          bool isSelected = weight == selectedWeight;
+                          // int SelctedWeightIndex=0;
+                          // double price = widget.product.price; // Assume base price per unit
+                          // String selectedWeight = widget.product.weights[SelctedWeightIndex].weight ; // Default selected weight
+                          // double selectedPrice = price * selectedWeight; // Calculate price
+                        return GestureDetector(
+                          onTap: () {
+                           setState(() {
+                             selectedWeight = weight;
+                             selectedPrice=weight.price;
+
+                           });
+                          },
+                          child: Container(
+                            height: height*0.06,
+                            width: width*0.25,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(width*0.03),
+                                border: Border.all(
+                                  color: isSelected ? Colors.green : Colors.red,
+                                  width: isSelected ? 2 : 1,
+                                )
+                            ),
+                            child: Center(
+                              child: Text(weight.weight,style: GoogleFonts.nunito(
+                                color: isSelected ? Colors.green : Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              )),
+                            ),
                           ),
                         );
                       },),
@@ -139,7 +159,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         ),),
-                        Text(widget.product.priceForSelectedWeight.toString(),style: GoogleFonts.nunito(
+                        Text('₹${selectedPrice.toStringAsFixed(2)}'.toString(),style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         )),
@@ -153,7 +173,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         ),),
-                        Text(widget.product.price.toString(),style: GoogleFonts.nunito(
+                        Text( selectedWeight?.price.toString() ?? '₹0.00',style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         )),
