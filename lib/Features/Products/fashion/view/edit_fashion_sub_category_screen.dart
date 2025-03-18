@@ -17,16 +17,18 @@ import 'package:provider/provider.dart';
 
 import '../model/fashion_category_model.dart';
 import '../model/fashion_sub_category_model.dart';
+import '../view_model/fashion_category_view_model.dart';
 
 class FashionEditSubCategoryScreen extends StatefulWidget {
   final List<FashionCategoryModel?> categories;
   final FashionCategoryModel? category;
   final FashionSubCategoryModel subCategory;
+
   FashionEditSubCategoryScreen(
       {super.key,
-      required this.categories,
+       required this.categories,
       required this.category,
-      required this.subCategory});
+       required this.subCategory});
 
   @override
   State<FashionEditSubCategoryScreen> createState() => _FashionEditSubCategoryScreenState();
@@ -60,23 +62,32 @@ class _FashionEditSubCategoryScreenState extends State<FashionEditSubCategoryScr
 
   void _onSubmitForm() async {
     final categoryViewModel =
-        Provider.of<FashionSubCategoryModel>(context, listen: false);
+        Provider.of<FashionCategoryViewModel>(context, listen: false);
     if (nameController.text.isNotEmpty ||
         _selectedImage != null ||
         widget.category?.name != selectedCategory!.name ||
         widget.subCategory.enableSubcategory != _switchValue) {
       FashionSubCategoryModel category = FashionSubCategoryModel(
-          id: widget.subCategory.id,
-          category: widget.subCategory.category,
-          enableSubcategory: _switchValue!,
-          name: nameController.text.isEmpty
-              ? widget.subCategory.name
-              : nameController.text,
-          subcategoryImage: _selectedImage?.path ?? "",
-          vendor: widget.subCategory.vendor);
 
-      // await categoryViewModel.editProductSubCategory(
-      //     subCategories: category, context: context);
+          // category: widget.subCategory.category,
+          // enableSubcategory: _switchValue!,
+          // name: nameController.text.isEmpty
+          //     ? widget.subCategory.name
+          //     : nameController.text,
+          // subcategoryImage: _selectedImage?.path ?? "",
+          // vendor: widget.subCategory.vendor
+          category: selectedCategory!.id,
+          enableSubcategory: _switchValue,
+          name: nameController.text.isEmpty
+            ? widget.subCategory.name
+            : nameController.text,
+          subcategoryImage: _selectedImage?.path ?? "",
+          categoryName: selectedCategory!.storeTypeName,
+
+      );
+
+      await categoryViewModel?.editProductSubCategory(
+          subCategories: category, context: context, subcategoryId: widget.subCategory?.id??0);
 
       setState(() {
         nameController.clear();

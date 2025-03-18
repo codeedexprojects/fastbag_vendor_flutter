@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'dart:ui' as ui;
 
 import '../../Dashboard/view/dashboard_screen.dart';
+import '../../Products/fashion/view/fashion_subcategory_edit_list.dart';
 
 class FbBottomDialog extends StatefulWidget {
   final String text;
@@ -109,10 +110,9 @@ class _FbBottomDialogState extends State<FbBottomDialog>
                       widget.type == FbBottomDialogType.editSubCategory)
                     FbButton(
                         onClick: () {
-                          _controller.reverse().then((_) => navigate(
-                              context: context,
-                              screen: DashboardScreen(),
-                              type: NavigationType.pushAndRemoveUntil));
+                          _controller.reverse().then((_) =>
+                              Navigator.pop(context)
+                          );
                         },
                         label: "View"),
                   if (widget.type ==

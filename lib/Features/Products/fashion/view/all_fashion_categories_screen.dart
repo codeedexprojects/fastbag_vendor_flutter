@@ -9,7 +9,7 @@ import '../model/fashion_sub_category_model.dart';
 import 'all_fashion_sub_category_screen.dart';
 
 class FashionAllCategoriesScreen extends StatelessWidget {
-  final List<FashionCategoryModel?> categories;
+  final List<FashionCategoryModel> categories;
   final List<FashionSubCategoryModel> subCategories;
    FashionAllCategoriesScreen(
       {super.key, required this.categories, required this.subCategories});

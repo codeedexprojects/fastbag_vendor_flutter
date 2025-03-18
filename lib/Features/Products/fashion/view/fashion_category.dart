@@ -74,8 +74,8 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
           context: context,
           screen: FashionAllSubCategoryScreen(
               subCategories: [item.model],
-              categories: categoryProvider.categories,
-              isOperable: false));
+              categories: categoryProvider.categories, isOperable: true,
+              ));
     }
     setState(() {
       filteredList = []; // Optionally clear search results after submission
@@ -232,7 +232,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                     screen: FashionAllSubCategoryScreen(
                                       subCategories: categoryProvider.subCategories,
                                       categories: categoryProvider.categories,
-                                      isOperable: false,
+                                      isOperable: true,
                                     ),
                                   );
                                 },

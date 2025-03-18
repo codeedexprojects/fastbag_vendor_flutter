@@ -12,9 +12,9 @@ class FashionCategoryViewModel extends ChangeNotifier {
 
   FashionCategoryRepository _categoryRepository = FashionCategoryRepository();
 
-  List<FashionCategoryModel?> _categories = [
+  List<FashionCategoryModel> _categories = [
   ];
-  List<FashionCategoryModel?> get categories => _categories;
+  List<FashionCategoryModel> get categories => _categories;
 
   List<FashionSubCategoryModel> _subCategories = [
   ];
@@ -35,15 +35,15 @@ class FashionCategoryViewModel extends ChangeNotifier {
    }
 
 
-  // Future<void> addProductSubCategory(
-  //     {required BuildContext context,
-  //     required FashionSubCategoryModel subCategories}) async {
-  //   await _categoryRepository.fashionProductSubCategoryPost(context, subCategories);
-  // }
+  Future<void> addProductSubCategory(
+      {required BuildContext context,
+      required FashionSubCategoryModel subCategories}) async {
+    await _categoryRepository.fashionProductSubCategoryPost(context, subCategories);
+  }
   //
-  // Future<void> editProductSubCategory(
-  //     {required BuildContext context,
-  //     required FashionSubCategoryModel subCategories}) async {
-  //   await _categoryRepository.fashionProductSubCategoryEdit(context, subCategories);
-  // }
+  Future<void> editProductSubCategory(
+      {required BuildContext context,
+      required FashionSubCategoryModel subCategories,required int subcategoryId}) async {
+    await _categoryRepository.fashionProductSubCategoryEdit(context, subCategories,subcategoryId);
+  }
 }

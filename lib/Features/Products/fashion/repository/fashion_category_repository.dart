@@ -75,151 +75,154 @@ class FashionCategoryRepository {
     }
   }
 
-  // Future<dynamic> fashionProductSubCategoryPost(
-  //     BuildContext context, FashionSubCategoryModel model) async {
-  //   print("inside");
-  //   print("${baseUrl}food/subcategories/");
-  //   try {
-  //     print("inside try");
-  //
-  //     FormData formData = FormData.fromMap({
-  //       "category": model.categoryId,
-  //       "enable_subcategory": model.is_enabled,
-  //       "name": model.name,
-  //       "subcategory_image": await MultipartFile.fromFile(
-  //         model.sub_category_image,
-  //         filename: basename(model.sub_category_image),
-  //       ),
-  //       "vendor": model.vendor
-  //     });
-  //
-  //     // Create FormData for file uploads
-  //     SVProgressHUD.show();
-  //
-  //     String token = await StoreManager().getAccessToken() as String;
-  //     // Add the authorization header with the token
-  //     _dio.options.headers = {"Authorization": "Bearer $token"};
-  //     print(token);
-  //
-  //     // Perform the POST request
-  //     Response response = await _dio.post(
-  //       "${baseUrl}food/subcategories/",
-  //       data: formData,
-  //       options: Options(
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       ),
-  //     );
-  //
-  //     print(response.statusCode);
-  //
-  //     // Handle the response
-  //     if (response.statusCode == 201) {
-  //       SVProgressHUD.dismiss();
-  //       print("sub category added successful: ${response.data}");
-  //       showDialog(
-  //         context: context,
-  //         barrierDismissible: true, // Allow dismissing by tapping outside
-  //         builder: (BuildContext context) => const FbBottomDialog(
-  //           text: "Sub Category Added",
-  //           descrription:
-  //               "Your Category has been added to the list and is visible to customers",
-  //           type: FbBottomDialogType.addSubCategory,
-  //         ),
-  //       );
-  //     } else if (response.statusCode == 401) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text("OOPs something happened")),
-  //       );
-  //       SVProgressHUD.dismiss();
-  //       print("Bad data: ${response.data}");
-  //     } else {
-  //       SVProgressHUD.dismiss();
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text("OOPs something happened")),
-  //       );
-  //     }
-  //   } on DioException catch (e) {
-  //     print(e.response?.data);
-  //     SVProgressHUD.dismiss();
-  //     // ScaffoldMessenger.of(context).showSnackBar(
-  //     //   SnackBar(content: Text("OOPs something happened , Error: $e")),
-  //     // );
-  //     print("Error: $e");
-  //   }
-  // }
+  Future<dynamic> fashionProductSubCategoryPost(
+      BuildContext context, FashionSubCategoryModel model) async {
+    try {
+      print("inside try");
+      final prefs = await SharedPreferences.getInstance();
+      var vendorId = prefs.getInt(FbLocalStorage.vendorId);
+      print(vendorId);
+      FormData formData = FormData.fromMap({
+        "category": model.category,
+        "enable_subcategory": model.enableSubcategory,
+        "name": model.name,
+        "subcategory_image": await MultipartFile.fromFile(
+          model.subcategoryImage.toString(),
+          filename: basename(model.subcategoryImage.toString()),
+        ),
+        "vendor_id": vendorId,
+        "description":model.description
+      });
 
-  // Future<dynamic> fashionProductSubCategoryEdit(
-  //     BuildContext context, FashionSubCategoryModel model) async {
-  //   print("inside");
-  //   print("${baseUrl}food/subcategories/${model.id}/");
-  //   try {
-  //     print("inside try");
-  //
-  //     FormData formData = FormData.fromMap({
-  //       "enable_subcategory": model.is_enabled,
-  //       "name": model.name,
-  //       if (model.sub_category_image.isNotEmpty)
-  //         "subcategory_image": await MultipartFile.fromFile(
-  //           model.sub_category_image,
-  //           filename: basename(model.sub_category_image),
-  //         ),
-  //     });
-  //
-  //     // Create FormData for file uploads
-  //     SVProgressHUD.show();
-  //
-  //     String token = await StoreManager().getAccessToken() as String;
-  //     // Add the authorization header with the token
-  //     _dio.options.headers = {"Authorization": "Bearer $token"};
-  //     print(token);
-  //
-  //     // Perform the POST request
-  //     Response response = await _dio.patch(
-  //       "${baseUrl}food/subcategories/${model.id}/",
-  //       data: formData,
-  //       options: Options(
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       ),
-  //     );
-  //
-  //     print(response.statusCode);
-  //
-  //     // Handle the response
-  //     if (response.statusCode == 200) {
-  //       SVProgressHUD.dismiss();
-  //       print("sub category updated successful: ${response.data}");
-  //       showDialog(
-  //         context: context,
-  //         barrierDismissible: true, // Allow dismissing by tapping outside
-  //         builder: (BuildContext context) => const FbBottomDialog(
-  //           text: "Sub Category Updated",
-  //           descrription:
-  //               "Your Category has been updated to the list and is visible to customers",
-  //           type: FbBottomDialogType.editSubCategory,
-  //         ),
-  //       );
-  //     } else if (response.statusCode == 401) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text("OOPs something happened")),
-  //       );
-  //       SVProgressHUD.dismiss();
-  //       print("Bad data: ${response.data}");
-  //     } else {
-  //       SVProgressHUD.dismiss();
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text("OOPs something happened")),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     SVProgressHUD.dismiss();
-  //     // ScaffoldMessenger.of(context).showSnackBar(
-  //     //   SnackBar(content: Text("OOPs something happened , Error: $e")),
-  //     // );
-  //     print("Error: $e");
-  //   }
-  // }
+      // Create FormData for file uploads
+      SVProgressHUD.show();
+
+
+      var tokenId = prefs.getString('access_token');
+
+
+      var headers = {'Authorization': 'Bearer $tokenId'};
+
+      // Perform the POST request
+      Response response = await _dio.post(
+        "${baseUrl}fashion/clothing-subcategories/",
+        data: formData,
+        options: Options(
+          headers: headers
+        ),
+      );
+
+      print(response.statusCode);
+
+      // Handle the response
+      if (response.statusCode == 201) {
+        SVProgressHUD.dismiss();
+        print("sub category added successful: ${response.data}");
+        showDialog(
+          context: context,
+          barrierDismissible: true, // Allow dismissing by tapping outside
+          builder: (BuildContext context) => const FbBottomDialog(
+            text: "Sub Category Added",
+            descrription:
+                "Your Category has been added to the list and is visible to customers",
+            type: FbBottomDialogType.addSubCategory,
+          ),
+        );
+      } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("OOPs something happened")),
+        );
+        SVProgressHUD.dismiss();
+        print("Bad data: ${response.data}");
+      } else {
+        SVProgressHUD.dismiss();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("OOPs something happened")),
+        );
+      }
+    } on DioException catch (e) {
+      print(e.response?.data);
+      SVProgressHUD.dismiss();
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("OOPs something happened , Error: $e")),
+      // );
+      print("Error: $e");
+    }
+  }
+
+  Future<dynamic> fashionProductSubCategoryEdit(
+      BuildContext context, FashionSubCategoryModel model,int subcategoryId) async {
+    print("inside");
+
+    try {
+      print(subcategoryId);
+      print("inside try");
+      final prefs = await SharedPreferences.getInstance();
+      var vendorId = prefs.getInt(FbLocalStorage.vendorId);
+      FormData formData = FormData.fromMap({
+        "category": model.category,
+        "enable_subcategory": model.enableSubcategory,
+        "name": model.name,
+        "subcategory_image": await MultipartFile.fromFile(
+          model.subcategoryImage.toString(),
+          filename: basename(model.subcategoryImage.toString()),
+        ),
+        "vendor_id": vendorId,
+        "description":model.description
+      });
+      // Create FormData for file uploads
+      SVProgressHUD.show();
+
+      var tokenId = prefs.getString('access_token');
+
+
+      var headers = {'Authorization': 'Bearer $tokenId'};
+
+
+      // Perform the POST request
+      Response response = await _dio.patch(
+        "${baseUrl}fashion/clothing-subcategories/$subcategoryId/",
+        data: formData,
+        options: Options(
+          headers: headers,
+        ),
+      );
+
+      print(response.statusCode);
+
+      // Handle the response
+      if (response.statusCode == 200) {
+        SVProgressHUD.dismiss();
+        print("sub category updated successful: ${response.data}");
+        showDialog(
+          context: context,
+          barrierDismissible: true, // Allow dismissing by tapping outside
+          builder: (BuildContext context) => const FbBottomDialog(
+            text: "Sub Category Updated",
+            descrription:
+                "Your Category has been updated to the list and is visible to customers",
+            type: FbBottomDialogType.editSubCategory,
+          ),
+        );
+      } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("OOPs something happened")),
+        );
+        SVProgressHUD.dismiss();
+        print("Bad data: ${response.data}");
+      } else {
+        SVProgressHUD.dismiss();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("OOPs something happened")),
+        );
+      }
+    }  on DioException catch (e) {
+      print(e.response?.data);
+      SVProgressHUD.dismiss();
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("OOPs something happened , Error: $e")),
+      // );
+      print("Error: $e");
+    }
+  }
 }
