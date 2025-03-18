@@ -106,13 +106,15 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   }
 
   void submitVariants() async {
-    var productProvider = Provider.of<FashionProductViewModel>(context, listen: false);
+    var productProvider =
+        Provider.of<FashionProductViewModel>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
     var tokenId = prefs.getString('access_token');
     var vendor = prefs.getInt(FbLocalStorage.vendorId);
 
     List<MultipartFile> imageFiles = await Future.wait(
-      selectedImages.map((file) async => await MultipartFile.fromFile(file.path)),
+      selectedImages
+          .map((file) async => await MultipartFile.fromFile(file.path)),
     );
 
     final List<Map<String, dynamic>> formattedData = await Future.wait(
@@ -122,26 +124,28 @@ class _AddFashionProductState extends State<AddFashionProduct> {
           "color_image": variant["color_image"] != null
               ? await MultipartFile.fromFile(variant["color_image"].path)
               : null,
-          "sizes": variant["sizes"].map((size) => {
-            "size": size["size"].text,
-            "price": size["price"].text,
-            "stock": size["stock"].text,
-            "offer_price": size["offer_price"].text
-          }).toList(),
+          "sizes": variant["sizes"]
+              .map((size) => {
+                    "size": size["size"].text,
+                    "price": size["price"].text,
+                    "stock": size["stock"].text,
+                    "offer_price": size["offer_price"].text
+                  })
+              .toList(),
         };
       }),
     );
 
     // Prepare API request data
     var data = FormData.fromMap({
-      'image_files': imageFiles, // Attach images
+      'image_files': imageFiles,
       "vendor": vendor,
       "category_id": selectedCategoryId,
       "subcategory_id": selectedSubCategoryId,
       "name": nameController.text,
       "description": descriptionController.text,
       "gender": genderController.text,
-      "colors": formattedData, // ✅ No jsonEncode() here!
+      "colors": formattedData,
       "material": materialController.text,
       "is_active": _inStock,
       "wholesale_price": wholeSalePriceController.text,
@@ -153,8 +157,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       model: data,
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
