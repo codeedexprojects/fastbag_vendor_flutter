@@ -6,9 +6,6 @@ class AddFashionProductModel {
   String? description;
   String? gender;
   String? wholesalePrice;
-  String? price;
-  String? offerPrice;
-  String? discount;
   List<Map<String, dynamic>>? colors; // Dynamic list without a separate class
   String? material;
   bool? isActive;
@@ -21,9 +18,6 @@ class AddFashionProductModel {
     this.description,
     this.gender,
     this.wholesalePrice,
-    this.price,
-    this.offerPrice,
-    this.discount,
     this.colors,
     this.material,
     this.isActive,
@@ -37,9 +31,6 @@ class AddFashionProductModel {
         description = json['description'],
         gender = json['gender'],
         wholesalePrice = json['wholesale_price'],
-        price = json['price'],
-        offerPrice = json['offer_price'],
-        discount = json['discount'],
         colors = (json['colors'] as List?)?.map((e) => Map<String, dynamic>.from(e)).toList(),
         material = json['material'],
         isActive = json['is_active'];
@@ -52,10 +43,7 @@ class AddFashionProductModel {
     'description': description,
     'gender': gender,
     'wholesale_price': wholesalePrice,
-    'price': price,
-    'offer_price': offerPrice,
-    'discount': discount,
-    'colors': colors, // No need for `.map()` since it's already a list of maps
+    'colors': colors,
     'material': material,
     'is_active': isActive,
   };
