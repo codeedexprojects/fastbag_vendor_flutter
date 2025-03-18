@@ -2,6 +2,7 @@ import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/product%20details.dart';
 import 'package:flutter/material.dart';
 
 class AllGroceryCategoriesScreen extends StatelessWidget {
@@ -15,6 +16,10 @@ class AllGroceryCategoriesScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetails(),));
+          },),
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(

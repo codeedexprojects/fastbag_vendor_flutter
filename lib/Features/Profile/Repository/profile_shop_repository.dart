@@ -2,22 +2,21 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
-import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
-import 'package:fastbag_vendor_flutter/Features/Profile/Model/update_shop_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Profile/Model/vendor_model.dart';
-import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileRepository {
-  final Dio _dio = Dio();
+import '../../../Commons/base_url.dart';
+import '../../../Extentions/store_manager.dart';
+import '../Model/profile_shop_model.dart';
+import '../Model/update_shop_model.dart';
 
-  Future<dynamic> getProfile(BuildContext context) async {
+class ProfileShopRepository{
+  final Dio _dio=Dio();
+  Future<dynamic> getShopProfile( BuildContext context) async {
     SVProgressHUD.show();
-    String vendorId = StoreManager().getVendorId() as String;
+    int? vendorId=await StoreManager().getVendorId();
 
     // Log the URL to ensure it is correctly formatted
     final url = '${baseUrl}vendors/vendors/$vendorId';
@@ -42,7 +41,7 @@ class ProfileRepository {
       if (response.statusCode == 200) {
         print("Response received successfully!");
         print(response.data);
-        return VendorModel.fromMap(response.data);
+        return ProfileShopModel.fromJson(response.data);
       } else {
         print("Error: ${response.statusMessage}");
       }
@@ -67,13 +66,14 @@ class ProfileRepository {
     }
   }
 
-  Future<dynamic> postSettings(
-      int id, BuildContext context, Map<String, dynamic> settingsMap) async {
-    print(settingsMap);
+
+  Future<dynamic> updateShopProfile( BuildContext context,Map<String, dynamic> updatesMap) async {
     SVProgressHUD.show();
+    print(updatesMap);
+    int? vendorId=await StoreManager().getVendorId();
 
     // Log the URL to ensure it is correctly formatted
-    final url = '${baseUrl}vendors/vendors/$id/';
+    final url = '${baseUrl}vendors/vendors/$vendorId';
     print('Requesting URL: $url');
 
     try {
@@ -84,7 +84,7 @@ class ProfileRepository {
       // Simplified GET request
       var response = await _dio.patch(
         url,
-        data: jsonEncode(settingsMap),
+        data: jsonEncode(updatesMap),
         options: Options(
           responseType: ResponseType.json,
           headers: {
@@ -96,7 +96,7 @@ class ProfileRepository {
       if (response.statusCode == 200) {
         print("Response received successfully!");
         print(response.data);
-        return VendorModel.fromMap(response.data);
+        return ProfileShopModel.fromJson(response.data);
       } else {
         print("Error: ${response.statusMessage}");
       }
@@ -121,13 +121,14 @@ class ProfileRepository {
     }
   }
 
-  Future<dynamic> postShopLogo(
-      int id, BuildContext context, File logoFile) async {
+
+  Future<dynamic> updateShopLogo(BuildContext context, File logoFile) async {
+    int? vendorId=await StoreManager().getVendorId();
     print(logoFile.path);
     SVProgressHUD.show();
 
     // Log the URL to ensure it is correctly formatted
-    final url = '${baseUrl}vendors/vendors/$id/';
+    final url = '${baseUrl}vendors/vendors/$vendorId/';
     print('Requesting URL: $url');
 
     FormData formData = FormData.fromMap({
@@ -157,7 +158,7 @@ class ProfileRepository {
       if (response.statusCode == 200) {
         print("Response received successfully!");
         print(response.data);
-        return VendorModel.fromMap(response.data);
+        return ProfileShopModel.fromJson(response.data);
       } else {
         print("Error: ${response.statusMessage}");
       }
@@ -182,67 +183,14 @@ class ProfileRepository {
     }
   }
 
-  Future<dynamic> postShopDescriptiom(
-      int id, BuildContext context, String description) async {
-    print(description);
-    SVProgressHUD.show();
 
-    // Log the URL to ensure it is correctly formatted
-    final url = '${baseUrl}vendors/vendors/$id/';
-    print('Requesting URL: $url');
-
-    try {
-      String token = await StoreManager().getAccessToken() as String;
-      // Add the authorization header with the token
-      _dio.options.headers = {"Authorization": "Bearer $token"};
-      print(token);
-      // Simplified GET request
-      var response = await _dio.patch(
-        url,
-        data: {"store_description": description},
-        options: Options(
-          responseType: ResponseType.json,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        print("Response received successfully!");
-        print(response.data);
-        return VendorModel.fromMap(response.data);
-      } else {
-        print("Error: ${response.statusMessage}");
-      }
-    } on DioException catch (dioError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                "OOPs something happened , check your connection or try again later")),
-      );
-      print("DioException occurred: ${dioError.type}");
-      print("DioException message: ${dioError.message}");
-      if (dioError.response != null) {
-        print("DioException data: ${dioError.response?.data}");
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Unexpected error")),
-      );
-      print("Unexpected error: $e");
-    } finally {
-      SVProgressHUD.dismiss();
-    }
-  }
-
-  Future<dynamic> postShopImage(
-      int id, BuildContext context, File shopImage) async {
+  Future<dynamic> updateShopImage(BuildContext context, File shopImage) async {
+    int? vendorId=await StoreManager().getVendorId();
     print(shopImage.path);
     SVProgressHUD.show();
 
     // Log the URL to ensure it is correctly formatted
-    final url = '${baseUrl}vendors/vendors/$id/';
+    final url = '${baseUrl}vendors/vendors/$vendorId/';
     print('Requesting URL: $url');
 
     FormData formData = FormData.fromMap({
@@ -272,7 +220,7 @@ class ProfileRepository {
       if (response.statusCode == 200) {
         print("Response received successfully!");
         print(response.data);
-        return VendorModel.fromMap(response.data);
+        return ProfileShopModel.fromJson(response.data);
       } else {
         print("Error: ${response.statusMessage}");
       }
@@ -297,13 +245,13 @@ class ProfileRepository {
     }
   }
 
-  Future<dynamic> postShopTiming(
-      int id, BuildContext context, String openTime, String closeTime) async {
-    print(openTime);
+  Future<dynamic> updateShopDescription(BuildContext context, String Description) async {
+    int? vendorId=await StoreManager().getVendorId();
+    print(Description);
     SVProgressHUD.show();
 
     // Log the URL to ensure it is correctly formatted
-    final url = '${baseUrl}vendors/vendors/$id/';
+    final url = '${baseUrl}vendors/vendors/$vendorId/';
     print('Requesting URL: $url');
 
     try {
@@ -314,11 +262,11 @@ class ProfileRepository {
       // Simplified GET request
       var response = await _dio.patch(
         url,
-        data: {"opening_time": openTime, "closing_time": closeTime},
+        data:{'store_description':Description},
         options: Options(
           responseType: ResponseType.json,
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         ),
       );
@@ -326,7 +274,7 @@ class ProfileRepository {
       if (response.statusCode == 200) {
         print("Response received successfully!");
         print(response.data);
-        return VendorModel.fromMap(response.data);
+        return ProfileShopModel.fromJson(response.data);
       } else {
         print("Error: ${response.statusMessage}");
       }
@@ -351,11 +299,64 @@ class ProfileRepository {
     }
   }
 
-  Future<dynamic> postShopDetails(
+  Future<dynamic> updateShopTime(BuildContext context, String openTime,String closingTime) async {
+    int? vendorId=await StoreManager().getVendorId();
+    print(openTime);
+    SVProgressHUD.show();
+
+    // Log the URL to ensure it is correctly formatted
+    final url = '${baseUrl}vendors/vendors/$vendorId/';
+    print('Requesting URL: $url');
+
+    try {
+      String token = await StoreManager().getAccessToken() as String;
+      // Add the authorization header with the token
+      _dio.options.headers = {"Authorization": "Bearer $token"};
+      print(token);
+      // Simplified GET request
+      var response = await _dio.patch(
+        url,
+        data:{'opening_time':openTime,'closing_time':closingTime},
+        options: Options(
+          responseType: ResponseType.json,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print("Response received successfully!");
+        print(response.data);
+        return ProfileShopModel.fromJson(response.data);
+      } else {
+        print("Error: ${response.statusMessage}");
+      }
+    } on DioException catch (dioError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                "OOPs something happened , check your connection or try again later")),
+      );
+      print("DioException occurred: ${dioError.type}");
+      print("DioException message: ${dioError.message}");
+      if (dioError.response != null) {
+        print("DioException data: ${dioError.response?.data}");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Unexpected error")),
+      );
+      print("Unexpected error: $e");
+    } finally {
+      SVProgressHUD.dismiss();
+    }
+  }
+
+  Future<dynamic> updateShopDetails(
       UpdateShopModel model, BuildContext context) async {
     print("inside");
-    final prefs = await SharedPreferences.getInstance();
-    int? vendorId = prefs.getInt(FbLocalStorage.vendorId);
+    int? vendorId=await StoreManager().getVendorId();
     try {
       print("inside try");
       // Create FormData for file uploads
@@ -396,7 +397,6 @@ class ProfileRepository {
         options: Options(
           headers: {
             "Content-Type": "multipart/form-data",
-            "Authorization" : "Bearer ${await StoreManager().getAccessToken()}"
           },
         ),
       );
@@ -406,7 +406,7 @@ class ProfileRepository {
         SVProgressHUD.dismiss();
         print("Registration successful: ${response.data}");
 
-        return VendorModel.fromMap(response.data);
+        return ProfileShopModel.fromJson(response.data);
       } else if (response.statusCode == 400) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OOPs something happened")),
@@ -417,9 +417,8 @@ class ProfileRepository {
         SVProgressHUD.dismiss();
         print("Registration failed: ${response.data}");
       }
-    } on DioException catch (e) {
+    } catch (e) {
       SVProgressHUD.dismiss();
-      print("error of updye shop details ${e.response?.data}");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("OOPs something happened , Error: $e")),
       );
