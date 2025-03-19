@@ -3,6 +3,7 @@ import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/add_product_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/product%20details.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
@@ -92,13 +93,13 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  navigate(
-                                      context: context,
-                                      screen: ProductDetailScreen(
-                                        productId: productProvider
-                                                .foodProducts[index].id ??
-                                            0,
-                                      ));
+                                  // navigate(
+                                  //     context: context,
+                                  //     screen: ProductDetailScreen(
+                                  //       productId: productProvider
+                                  //               .foodProducts[index].id ??
+                                  //           0,
+                                  //     ));
                                 },
                                 child: ListTile(
                                   leading: Container(
@@ -170,10 +171,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                     horizontal: screenWidth / 15, vertical: 5),
                 child: FbButton(
                   onClick: () {
-                    navigate(
-                        context: context,
-                        screen: ProductEditDeleteScreen(
-                            products: productProvider.foodProducts));
+                    // navigate(
+                    //     context: context,
+                    //     screen: ProductDetailScreen(
+                    //         products: productProvider.foodProducts, ));
                   },
                   label: "Edit",
                   icon: const FaIcon(

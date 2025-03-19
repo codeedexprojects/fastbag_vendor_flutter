@@ -1,20 +1,21 @@
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/edit_sub_category_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GrocerySubCategoryEditList extends StatelessWidget {
-  final List<GrocerySubCategoryModel> subCategories;
-  final List<GroceryCategoryModel> categories;
-  const GrocerySubCategoryEditList(
-      {super.key, required this.subCategories, required this.categories});
+  const GrocerySubCategoryEditList({super.key});
 
   @override
   Widget build(BuildContext context) {
     //final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final groceryViewModel = Provider.of<GroceryViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -29,19 +30,19 @@ class GrocerySubCategoryEditList extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: ListView.builder(
-            itemCount: subCategories.length,
+            itemCount: groceryViewModel.subCategories.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.all(screenWidth * .02),
                 child: InkWell(
                   onTap: () {
-                    navigate(
-                        context: context,
-                        screen: EditGrocerySubCategoryScreen(
-                          categories: categories,
-                          category: categories[0],
-                          subCategory: subCategories[index],
-                        ));
+                    // navigate(
+                    //     context: context,
+                    //     screen: EditGrocerySubCategoryScreen(
+                    //       categories: categories,
+                    //       category: categories[0],
+                    //       subCategory: subCategories[index],
+                    //     ));
                   },
                   child: Container(
                     padding: EdgeInsets.all(screenWidth * .02),
@@ -53,10 +54,14 @@ class GrocerySubCategoryEditList extends StatelessWidget {
                         backgroundColor:
                             Colors.grey[200], // Optional: Background color
                         child: ClipOval(
-                          child: subCategories[index].subcategoryImage == null
+                          child: groceryViewModel
+                                      .subCategories[index].subcategoryImage ==
+                                  null
                               ? Image.asset('assets/Images/grocery.jpeg')
                               : Image.network(
-                                  subCategories[index].subcategoryImage ?? '',
+                                  groceryViewModel.subCategories[index]
+                                          .subcategoryImage ??
+                                      '',
                                   fit: BoxFit.cover,
                                   width: 64,
                                   height: 64,
@@ -68,7 +73,7 @@ class GrocerySubCategoryEditList extends StatelessWidget {
                                 ),
                         ),
                       ),
-                      title: Text(subCategories[index].name),
+                      title: Text(groceryViewModel.subCategories[index].name),
                       trailing: const Icon(Icons.edit),
                     ),
                   ),

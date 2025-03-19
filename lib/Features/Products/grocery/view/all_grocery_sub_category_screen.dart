@@ -12,13 +12,10 @@ import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/list_groce
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import '../model/grocery_catgeory_model.dart';
 
 class AllGrocerySubCategoryScreen extends StatefulWidget {
-  final List<GroceryCategoryModel> categories;
   final List<GrocerySubCategoryModel> subCategories;
-  const AllGrocerySubCategoryScreen(
-      {super.key, required this.subCategories, required this.categories});
+  const AllGrocerySubCategoryScreen({super.key, required this.subCategories});
 
   @override
   State<AllGrocerySubCategoryScreen> createState() =>
@@ -30,9 +27,7 @@ class _AllGrocerySubCategoryScreenState
   @override
   Widget build(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
-    final FocusNode searchFocusNode = FocusNode();
     final groceryViewModel = Provider.of<GroceryViewModel>(context);
-
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     gap(value) {
@@ -50,7 +45,6 @@ class _AllGrocerySubCategoryScreenState
               height: screenWidth * 0.15,
               child: TextField(
                 controller: searchController,
-                focusNode: searchFocusNode,
                 decoration: searchBarDecoration(
                   hint: 'Search here',
                 ),
@@ -69,7 +63,7 @@ class _AllGrocerySubCategoryScreenState
             widget.subCategories.isNotEmpty
                 ? Expanded(
                     child: GridView.builder(
-                    padding: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(0),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
@@ -86,8 +80,8 @@ class _AllGrocerySubCategoryScreenState
                           navigate(
                             context: context,
                             screen: ListGroceryProducts(
-                              category: widget.categories[index],
-                              subCategory: widget.subCategories[index],
+                              subCategory:
+                                  groceryViewModel.subCategories[index],
                             ),
                           );
                         },
@@ -109,11 +103,9 @@ class _AllGrocerySubCategoryScreenState
                   onClick: () {
                     navigate(
                         context: context,
-                        screen: AddGrocerySubCategoryScreen(
-                          categories: widget.categories,
-                        ));
+                        screen: const AddGrocerySubCategoryScreen());
                   },
-                  label: "+ Add Category"),
+                  label: "+ Add Sub Category"),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -122,10 +114,7 @@ class _AllGrocerySubCategoryScreenState
                 onClick: () {
                   navigate(
                       context: context,
-                      screen: GrocerySubCategoryEditList(
-                        subCategories: widget.subCategories,
-                        categories: widget.categories,
-                      ));
+                      screen: const GrocerySubCategoryEditList());
                 },
                 icon: const FaIcon(
                   FontAwesomeIcons.penToSquare,
@@ -137,6 +126,7 @@ class _AllGrocerySubCategoryScreenState
                 borderColor: Colors.blue,
               ),
             ),
+            gap(.02),
           ],
         ),
       ),

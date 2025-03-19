@@ -61,7 +61,9 @@ categoryCard({required radius, required image, required onTap, required text}) {
         const SizedBox(height: 8),
         Text(
           text,
+          textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
+          maxLines: 2,
           style: nunito(fontSize: 14, fontWeight: FontWeight.w700),
         ),
       ],
