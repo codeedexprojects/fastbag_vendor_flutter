@@ -47,6 +47,7 @@ dependencies:
   cached_network_image: ^3.4.1
   font_awesome_flutter: ^10.8.0
   image_picker: ^1.1.2
+  another_flushbar: ^1.12.30
 
 dev_dependencies:
   flutter_test:

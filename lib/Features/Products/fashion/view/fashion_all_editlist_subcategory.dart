@@ -5,39 +5,20 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.da
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/edit_sub_category_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../model/fashion_category_model.dart';
 import '../model/fashion_sub_category_model.dart';
-import '../view_model/fashion_category_view_model.dart';
 import 'edit_fashion_sub_category_screen.dart';
 
-class FashionSubCategoryEditList extends StatefulWidget {
-  // final List<FashionSubCategoryModel> subCategories;
-  // final List<FashionCategoryModel> categories;
+class FashionAllSubCategoryEditList extends StatelessWidget {
+  final List<FashionSubCategoryModel> subCategories;
+  final List<FashionCategoryModel> categories;
 
-  final int? categoryId;
-
-  const FashionSubCategoryEditList({super.key, required this.categoryId});
-
-  @override
-  State<FashionSubCategoryEditList> createState() =>
-      _FashionSubCategoryEditListState();
-}
-
-class _FashionSubCategoryEditListState
-    extends State<FashionSubCategoryEditList> {
-  void initState() {
-    final categoryProvider =
-        Provider.of<FashionCategoryViewModel>(context, listen: false);
-    categoryProvider.getFashionCategorybySubCategories(
-        categoryId: widget?.categoryId ?? 0);
-    super.initState();
-  }
+  const FashionAllSubCategoryEditList(
+      {super.key, required this.subCategories, required this.categories});
 
   @override
   Widget build(BuildContext context) {
-    final categoryProvider = Provider.of<FashionCategoryViewModel>(context);
     //final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -54,7 +35,7 @@ class _FashionSubCategoryEditListState
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: ListView.builder(
-            itemCount: categoryProvider.selectsubCategory.length,
+            itemCount: subCategories.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.all(screenWidth * .02),
@@ -63,9 +44,9 @@ class _FashionSubCategoryEditListState
                     navigate(
                         context: context,
                         screen: FashionEditSubCategoryScreen(
-                          categories: categoryProvider.categories,
-                          category: categoryProvider.categories[0],
-                          subCategory: categoryProvider.subCategories[index],
+                          categories: categories,
+                          category: categories[0],
+                          subCategory: subCategories[index],
                         ));
                   },
                   child: Container(
@@ -79,9 +60,7 @@ class _FashionSubCategoryEditListState
                             Colors.grey[200], // Optional: Background color
                         child: ClipOval(
                           child: Image.network(
-                            categoryProvider
-                                .selectsubCategory[index].subcategoryImage
-                                .toString(),
+                            subCategories[index].subcategoryImage.toString(),
                             fit: BoxFit
                                 .cover, // Ensures the image fills the circle
                             width:
@@ -96,8 +75,7 @@ class _FashionSubCategoryEditListState
                           ),
                         ),
                       ),
-                      title: Text(categoryProvider.selectsubCategory[index].name
-                          .toString()),
+                      title: Text(subCategories[index].name.toString()),
                       trailing: const Icon(Icons.edit),
                     ),
                   ),

@@ -1,746 +1,505 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
+import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/fb_drop_down.dart';
+import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
+import 'package:fastbag_vendor_flutter/Commons/validators.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_products_file_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../Commons/localvariables.dart';
-import '../../../Authentication/View/Widgets/fb_file_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class AddGroceryProduct extends StatefulWidget {
-  const AddGroceryProduct({super.key});
+  final GrocerySubCategoryModel subCategory;
+
+  const AddGroceryProduct({super.key, required this.subCategory});
 
   @override
   State<AddGroceryProduct> createState() => _AddGroceryProductState();
 }
 
 class _AddGroceryProductState extends State<AddGroceryProduct> {
-  String? selectedCategory;
-  String? selectedSubCategory;
+  final _formkey = GlobalKey<FormState>();
   String? selectedColor;
   String? selectWight;
-  String? selectKg;
+  String? selectedMeasurment;
   String? selectPrice;
   String? selectQuantity;
-  bool OfferProduct = false;
-  bool PopularProduct = false;
-  bool markProduct = false;
+  List<File> selectedImages = [];
+  bool isOfferProduct = false;
+  bool isPopularProduct = false;
+  bool isProductInStock = false;
+  bool hasValidatedOnce = false;
+  List<Map<String, dynamic>> variantFields = []; // Corrected declaration
+  var nameController = TextEditingController();
+  var descriptionController = TextEditingController();
+  var priceController = TextEditingController();
+  var discountController = TextEditingController();
+  var discountedPriceController = TextEditingController();
+  var wholesalePriceController = TextEditingController();
+  var weightController = TextEditingController();
+  late GroceryCategoryModel selectedCategory;
+  late GrocerySubCategoryModel selectedSubCategory;
 
-  List<String> categories = ["Electronics", "Clothing", "Groceries"];
-  List<String> subCategories = ["Phones", "Laptops", "Accessories"];
-  List<String> colors = ["Red", "yellow", "green"];
-  List<String> weight = ["67", "43", "88"];
-  List<String> kg = ["g", "kg", "mm"];
-  List<String> price = ["500", "100", "10000"];
-  List<String> Quantity = ["500", "100", "10000"];
+  final List<String> itemMeasurements = [
+    'kg',
+    'g',
+    'ml',
+    'L',
+    'Pack',
+    'Box',
+    'Piece'
+  ];
+
+  void addVariant() {
+    setState(() {
+      variantFields.add({
+        'weightController': TextEditingController(),
+        'priceController': TextEditingController(),
+        'selectedQuantity': null, // Track selected quantity here
+        'selectedVariantMeasurment': null,
+        'stockStatus': false,
+      });
+    });
+  }
+
+  void removeVariant(int index) {
+    setState(() {
+      variantFields.removeAt(index);
+    });
+  }
+
+  void _updateDiscountedPrice(value) {
+    final price = double.tryParse(priceController.text) ?? 0.0;
+    final discount = double.tryParse(discountController.text) ?? 0.0;
+
+    setState(() {
+      if (price > 0 && discount > 0) {
+        final discountedPrice = price - ((discount / 100) * price);
+        discountedPriceController.text = discountedPrice.toStringAsFixed(2);
+      } else {
+        discountedPriceController.clear();
+      }
+    });
+  }
+
+  onAddProductClicked() async {
+    final groceryViewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
+
+    hasValidatedOnce = true;
+
+    // Convert selected images into multipart files
+    List<MultipartFile> imageFiles = await Future.wait(
+      selectedImages
+          .map((file) async => await MultipartFile.fromFile(file.path)),
+    );
+
+    final data = {
+      "category": selectedCategory.id,
+      "sub_category": widget.subCategory.id,
+      "name": nameController.text.trim(),
+      "wholesale_price": double.tryParse(wholesalePriceController.text.trim())
+          ?.toStringAsFixed(2),
+      "price": double.tryParse(priceController.text.trim())?.toStringAsFixed(2),
+
+      "discount":
+          double.tryParse(discountController.text.trim())?.toStringAsFixed(2) ??
+              0.0,
+
+      "description": descriptionController.text.trim(),
+      "weight_measurement": selectedMeasurment,
+      "Available": isProductInStock,
+      "is_offer_product": isOfferProduct,
+      "is_popular_product": isPopularProduct,
+      "weights": [
+        for (var variant in variantFields)
+          if (variant['weightController']!.text.isNotEmpty &&
+              variant['priceController']!.text.isNotEmpty &&
+              variant['selectedQuantity'] != null)
+            {
+              "weight":
+                  "${(variant['weightController']!.text)}${variant['selectedVariantMeasurment']}",
+              "price": double.tryParse(variant['priceController']!.text.trim())
+                  ?.toStringAsFixed(2),
+              "quantity": int.parse(variant['selectedQuantity']),
+              "is_in_stock": variant['stockStatus'],
+            }
+      ],
+      "images": imageFiles, // Sending images as MultipartFile
+    };
+
+    if (_formkey.currentState!.validate()) {
+      if (selectedImages.isEmpty) {
+        showFlushbar(
+          context: context,
+          color: Colors.red,
+          icon: Icons.image,
+          message: 'Select at least one Image',
+        );
+      } else {
+        await groceryViewModel.addProduct(context, data);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final groceryViewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
+    setState(() {
+      selectedCategory = groceryViewModel.categories
+          .firstWhere((cat) => cat.id == widget.subCategory.category);
+      selectedSubCategory = widget.subCategory;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery.of(context).size.height;
-    width = MediaQuery.of(context).size.width;
+    final groceryViewModel = Provider.of<GroceryViewModel>(context);
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final gap = SizedBox(height: width * 0.03);
     return Scaffold(
       backgroundColor: OrderColor.backGroundColor,
       appBar: AppBar(
         backgroundColor: OrderColor.backGroundColor,
-        leading: Icon(Icons.arrow_back_ios_new_rounded),
+        leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: const Icon(Icons.arrow_back_ios_new_rounded)),
         centerTitle: true,
-        title: Text('Add product',style: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),),
+        title: Text(
+          'Add product',
+          style: poppins(
+            fontSize: 19,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
-      body: Padding(
-        padding:  EdgeInsets.all(width*0.03),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: width / 17),
+        child: Form(
+          key: _formkey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              TextFormField(
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                    hintText: 'ProductName',
-                    hintStyle: GoogleFonts.nunito(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: OrderColor.textColor
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor.withOpacity(0.17)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    )),
-              ),
-              SizedBox(height: height*0.013),
-              TextFormField(
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                    hintText: 'DescribeTheProduct',
-                    hintStyle: GoogleFonts.nunito(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: OrderColor.textColor
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor.withOpacity(0.17)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    )),
-              ),
-              SizedBox(height: height*0.013),
-              SizedBox(
-                height: height*0.3,
-                child: FbFilePicker(
-                  onFilePicked: (File? file) {
-                    if (file != null) {
-                      print("Selected file: ${file.path}");
-                    } else {
-                      print("No file selected");
-                    }
-                  },
-                  fileCategory: "product",
-                  borderColor:OrderColor.borderColor.withOpacity(0.17),
-                ),
-              ),
-              SizedBox(height: height*0.013),
+              gap,
+              FbCategoryFormField(
+                  label: 'Product Name',
+                  controller: nameController,
+                  validator: customValidatornoSpaceError),
+              FbCategoryFormField(
+                  label: 'Describe the Product',
+                  controller: descriptionController,
+                  validator: customValidatornoSpaceError),
+              FbProductsFilePicker(
+                  fileCategory: 'Product',
+                  onFilesPicked: (List<File> files) {
+                    setState(() {
+                      selectedImages = files;
+                    });
+                  }),
+              SizedBox(height: height * 0.013),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: selectedCategory,
-                      decoration: InputDecoration(
-                        hintText: "Category",
-                        hintStyle: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: OrderColor.textColor
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(width*0.015),
-                          borderSide: BorderSide(
-                            color: OrderColor.borderColor.withOpacity(0.17)
-                          )
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                      ),
-                      items: categories.map((String category) {
-                        return DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(category),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedCategory = newValue;
-                        });
+                    child: DropdownButton<String>(
+                      value: selectedCategory.id
+                          .toString(), // Convert int to String
+                      hint: const Text('Select Category'),
+                      items: groceryViewModel.categories
+                          .map((cat) => DropdownMenuItem(
+                                value:
+                                    cat.id.toString(), // Convert int to String
+                                child: Text(cat.name ?? 'no name found'),
+                              ))
+                          .toList(),
+                      onChanged: (String? newId) {
+                        if (newId != null) {
+                          final newCategory = groceryViewModel.categories
+                              .firstWhere((cat) =>
+                                  cat.id.toString() ==
+                                  newId); // Convert for matching
+
+                          final newSubCategory = groceryViewModel.subCategories
+                              .firstWhere(
+                                  (sub) => sub.category == newCategory.id);
+
+                          setState(() {
+                            selectedCategory = newCategory;
+                            selectedSubCategory = newSubCategory;
+                          });
+                        }
                       },
                     ),
                   ),
-                  SizedBox(width: width*0.03),
+                  SizedBox(width: width * 0.03),
                   Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: selectedSubCategory,
-                      decoration: InputDecoration(
-                        hintText: "Sub Category",
-                        hintStyle: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          color: OrderColor.textColor
-                        ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            borderSide: BorderSide(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                      ),
-                      items: subCategories.map((String subcategory) {
-                        return DropdownMenuItem<String>(
-                          value: subcategory,
-                          child: Text(subcategory),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedSubCategory = newValue;
-                        });
+                    child: DropdownButton<String>(
+                      value: selectedSubCategory.id
+                          .toString(), // Use ID instead of name
+                      hint: const Text(
+                          'Select Sub Category'), // Use proper hint widget
+                      items: groceryViewModel.subCategories
+                          .where((sub) => sub.category == selectedCategory.id)
+                          .map((sub) => DropdownMenuItem<String>(
+                                value: sub.id.toString(), // Store ID as value
+                                child: Text(sub.name ?? 'Unnamed Subcategory'),
+                              ))
+                          .toList(),
+                      onChanged: (String? newId) {
+                        if (newId != null) {
+                          final newSub = groceryViewModel.subCategories
+                              .firstWhere((sub) => sub.id.toString() == newId);
+
+                          setState(() {
+                            selectedSubCategory = newSub;
+                          });
+                        }
                       },
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: height*0.013),
-              TextFormField(
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                    hintText: 'WholesalePrice',
-                    hintStyle: GoogleFonts.nunito(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: OrderColor.textColor
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor.withOpacity(0.17)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    )),
+              FbCategoryFormField(
+                  label: 'Wholesale Price',
+                  controller: wholesalePriceController,
+                  keyboard:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    LengthLimitingTextInputFormatter(8)
+                  ],
+                  validator: priceValidator),
+              FbCategoryFormField(
+                  label: 'Product Price',
+                  controller: priceController,
+                  keyboard:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    LengthLimitingTextInputFormatter(8)
+                  ],
+                  onChanged: _updateDiscountedPrice,
+                  validator: priceValidator),
+              FbCategoryFormField(
+                label: 'Discount Price (%)',
+                controller: discountController,
+                onChanged: _updateDiscountedPrice,
+                validator: discountValidator,
+                keyboard: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                  LengthLimitingTextInputFormatter(4)
+                ],
               ),
-              SizedBox(height: height*0.013),
-              TextFormField(
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                    hintText: 'Product Price(IN)',
-                    hintStyle: GoogleFonts.nunito(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: OrderColor.textColor
+              if (discountController.text.isNotEmpty &&
+                  priceController.text.isNotEmpty &&
+                  (double.tryParse(discountedPriceController.text) ?? 0) > 0)
+                Row(
+                  children: [
+                    const Text('Discounted Price  ='),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: FbCategoryFormField(
+                        label: 'Discounted Price',
+                        controller: discountedPriceController,
+                        readOnly: true,
+                        validator: discountValidator,
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor.withOpacity(0.17)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    )),
-              ),
-              SizedBox(height: height*0.013),
-              TextFormField(
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                    hintText: 'DiscountPrice(Optional)',
-                    hintStyle: GoogleFonts.nunito(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: OrderColor.textColor
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor.withOpacity(0.17)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width * 0.015),
-                      borderSide:
-                      BorderSide(color: OrderColor.borderColor),
-                    )),
-              ),
-              SizedBox(height: height*0.013),
-              DropdownButtonFormField<String>(
-                value: selectedCategory,
-                decoration: InputDecoration(
-                  hintText: "Weight Measurement",
-                  hintStyle: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.black
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width*0.015),
-                      borderSide: BorderSide(
-                          color: OrderColor.borderColor.withOpacity(0.17)
-                      )
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width*0.015),
-                      borderSide: BorderSide(
-                          color: OrderColor.borderColor.withOpacity(0.17)
-                      )
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(width*0.015),
-                      borderSide: BorderSide(
-                          color: OrderColor.borderColor.withOpacity(0.17)
-                      )
-                  ),
+                  ],
                 ),
-                items: categories.map((String category) {
-                  return DropdownMenuItem<String>(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
+              FbCustomDropdown(
+                value: selectedMeasurment,
+                hintText: "Weight Measurement",
+                items: itemMeasurements,
                 onChanged: (String? newValue) {
                   setState(() {
-                    selectedCategory = newValue;
+                    selectedMeasurment = newValue;
                   });
                 },
               ),
-              SizedBox(height: height*0.013),
-              Row(
-               children: [
-                 Container(
-                   height: height*0.076,
-                   width: width*0.94,
-                   decoration: BoxDecoration(
-                       borderRadius: BorderRadius.circular(width*0.015),
-                       border: Border.all(
-                           color: OrderColor.borderColor.withOpacity(0.17)
-                       )
-                   ),
-                   child: Padding(
-                     padding: const EdgeInsets.all(8.0),
-                     child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         Text('OfferProduct'),
-                         Switch(
-                           activeColor: OrderColor.white, // Thumb color when ON
-                           activeTrackColor: OrderColor.blue, // Track color when ON
-                           inactiveThumbColor: OrderColor.white, // Thumb color when OFF
-                           inactiveTrackColor: OrderColor.borderColor.withOpacity(0.3),
-                           trackOutlineColor: WidgetStateColor.transparent ,
-                           value: OfferProduct,
-                           onChanged: (value) {
-                             setState(() {
-                               OfferProduct = value;
-                             });
-                           },
-                         ),
-                       ],
-                     ),
-                   )
-                 ),
-               ],
+              FbToggleSwitch(
+                title: 'Offer Product',
+                initialValue: isOfferProduct,
+                onToggleChanged: (value) {
+                  setState(() {
+                    isOfferProduct = value;
+                  });
+                },
               ),
-              SizedBox(height: height*0.013),
-              Row(
-               children: [
-                 Container(
-                   height: height*0.076,
-                   width: width*0.94,
-                   decoration: BoxDecoration(
-                       borderRadius: BorderRadius.circular(width*0.015),
-                       border: Border.all(
-                           color: OrderColor.borderColor.withOpacity(0.17)
-                       )
-                   ),
-                   child: Padding(
-                     padding: const EdgeInsets.all(8.0),
-                     child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         Text('Popular Product'),
-                         Switch(
-                           activeColor: OrderColor.white, // Thumb color when ON
-                           activeTrackColor: OrderColor.blue, // Track color when ON
-                           inactiveThumbColor: OrderColor.white, // Thumb color when OFF
-                           inactiveTrackColor: OrderColor.borderColor.withOpacity(0.3),
-                           trackOutlineColor: WidgetStateColor.transparent ,
-                           value: PopularProduct,
-                           onChanged: (value) {
-                             setState(() {
-                               PopularProduct = value;
-                             });
-                           },
-                         ),
-                       ],
-                     ),
-                   )
-                 ),
-               ],
+              FbToggleSwitch(
+                title: 'Popular Product',
+                initialValue: isPopularProduct,
+                onToggleChanged: (value) {
+                  setState(() {
+                    isPopularProduct = value;
+                  });
+                },
               ),
-              SizedBox(height: height*0.015),
               Padding(
-                padding:  EdgeInsets.only(
-                  left: width*0.02,
-                  right: width*0.03,
+                padding: EdgeInsets.symmetric(
+                  vertical: width * 0.04,
+                  horizontal: width * 0.03,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Select weight Variant',style: GoogleFonts.nunito(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.black
-                    ),),
-                    Row(
-                      children: [
-                        Icon(Icons.add,color: OrderColor.black,size: width*0.05,),
-                        Text('New Rule',style: GoogleFonts.nunito(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: OrderColor.black
-                        ))
-                      ],
+                    Text('Select Weight Variant',
+                        style:
+                            nunito(fontSize: 17, fontWeight: FontWeight.w600)),
+                    GestureDetector(
+                      onTap: () {
+                        addVariant();
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: OrderColor.black,
+                            size: width * 0.05,
+                          ),
+                          const SizedBox(
+                            width: 1,
+                          ),
+                          Text('New Rule', style: nunito())
+                        ],
+                      ),
                     )
                   ],
                 ),
               ),
-              SizedBox(height: height*0.015),
-              SingleChildScrollView(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        value: selectWight,
-                        decoration: InputDecoration(
-                          hintText: "Weight",
-                          hintStyle: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: OrderColor.textColor
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                        ),
-                        items: weight.map((String weight) {
-                          return DropdownMenuItem<String>(
-                            value: weight,
-                            child: Text(weight),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectWight = newValue;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(width: width*0.02),
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        value: selectKg,
-                        decoration: InputDecoration(
-                          hintText: "Kg",
-                          hintStyle: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: OrderColor.textColor
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                        ),
-                        items: kg.map((String kg) {
-                          return DropdownMenuItem<String>(
-                            value: kg,
-                            child: Text(kg),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectKg = newValue;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(width: width*0.02),
-                    Expanded(
-                      child: Container(
-                        height: height*0.076,
-                        width: width*1,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width*0.015),
-                            border: Border.all(
-                                color: OrderColor.borderColor.withOpacity(0.17)
-                            )
-                        ),
-                        child: Center(
-                          child: Text('${selectWight}  ${selectKg}'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              genaratevariantFields(),
+              FbToggleSwitch(
+                title: 'Mark Product Is Available',
+                initialValue: isProductInStock,
+                onToggleChanged: (value) {
+                  setState(() {
+                    isProductInStock = value;
+                  });
+                },
               ),
-              SizedBox(height: height*0.013),
               Padding(
-                padding:  EdgeInsets.only(
-                  right: width*0.01,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        value: selectedColor,
-                        decoration: InputDecoration(
-                          hintText: "Price",
-                          hintStyle: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: OrderColor.textColor
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                        ),
-                        items: price.map((String price) {
-                          return DropdownMenuItem<String>(
-                            value: price,
-                            child: Text(price),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectPrice = newValue;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(width: width*0.03),
-                    Container(
-                      height: height*0.076,
-                      width: width*0.4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(width*0.015),
-                        border: Border.all(
-                          color: OrderColor.borderColor.withOpacity(0.17)
-                        )
-                      ),
-                      child: Center(
-                        child: Text('$selectPrice'),
-                      ),
-                    ),
-                    SizedBox(width: width*0.03),
-                    Icon(Icons.cancel_outlined,color: OrderColor.borderColor.withOpacity(0.3),)
-                  ],
-                ),
+                padding: EdgeInsets.symmetric(vertical: width * .04),
+                child: FbButton(
+                    onClick: onAddProductClicked, label: 'Add to Product'),
               ),
-              SizedBox(height: height*0.013),
-              Padding(
-                padding:  EdgeInsets.only(
-                  right: width*0.01,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        value: selectedColor,
-                        decoration: InputDecoration(
-                          hintText: "Quantity",
-                          hintStyle: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: OrderColor.textColor
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width*0.015),
-                              borderSide: BorderSide(
-                                  color: OrderColor.borderColor.withOpacity(0.17)
-                              )
-                          ),
-                        ),
-                        items: Quantity.map((String quantity) {
-                          return DropdownMenuItem<String>(
-                            value: quantity,
-                            child: Text(quantity),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectQuantity = newValue;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(width: width*0.03),
-                    Container(
-                      height: height*0.076,
-                      width: width*0.4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(width*0.015),
-                        border: Border.all(
-                          color: OrderColor.borderColor.withOpacity(0.17)
-                        )
-                      ),
-                      child: Center(
-                        child: Text('$selectQuantity'),
-                      ),
-                    ),
-                    SizedBox(width: width*0.03),
-                    Icon(Icons.cancel_outlined,color: OrderColor.borderColor.withOpacity(0.3),)
-                  ],
-                ),
-              ),
-              SizedBox(height: height*0.013),
-              Row(
-                children: [
-                  Container(
-                      height: height*0.076,
-                      width: width*0.94,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width*0.015),
-                          border: Border.all(
-                              color: OrderColor.borderColor.withOpacity(0.17)
-                          )
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Mark Product in stock'),
-                            Switch(
-                              activeColor: OrderColor.white, // Thumb color when ON
-                              activeTrackColor: OrderColor.blue, // Track color when ON
-                              inactiveThumbColor: OrderColor.white, // Thumb color when OFF
-                              inactiveTrackColor: OrderColor.borderColor.withOpacity(0.3),
-                              trackOutlineColor: WidgetStateColor.transparent ,
-                              value: markProduct,
-                              onChanged: (value) {
-                                setState(() {
-                                  markProduct = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      )
-                  ),
-                ],
-              ),
-              SizedBox(height: height*0.03),
-              Container(
-                height: height*0.07,
-                width: width*0.94,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width*0.017),
-                  color: OrderColor.green
-                ),
-                child: Center(
-                  child: Text('Add to Product',style: GoogleFonts.nunito(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: OrderColor.white
-                  ),),
-                ),
-              ),
-              SizedBox(height: height*0.015),
             ],
           ),
         ),
       ),
     );
+  }
+
+  genaratevariantFields() {
+    return Column(
+        children: List.generate(variantFields.length, (index) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: FbCategoryFormField(
+                    keyboard:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    label: 'Weight',
+                    controller: variantFields[index]['weightController'],
+                    validator: customValidatornoSpaceError),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: FbCustomDropdown(
+                  value: variantFields[index]['selectedVariantMeasurment'],
+                  items: itemMeasurements,
+                  hintText: "Kg",
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      variantFields[index]['selectedVariantMeasurment'] =
+                          newValue;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                  child: FbCategoryFormField(
+                      keyboard:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d*\.?\d*')),
+                        LengthLimitingTextInputFormatter(8)
+                      ],
+                      label: 'Price',
+                      controller: variantFields[index]['priceController'],
+                      validator: priceValidator)),
+              const SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: FbCustomDropdown(
+                  value: variantFields[index]['selectedQuantity'],
+                  hintText: "Quantity",
+                  items: List.generate(10, (index) => (index + 1).toString()),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      variantFields[index]['selectedQuantity'] = newValue;
+                    });
+                  },
+                ),
+              )
+            ],
+          ),
+          FbToggleSwitch(
+            title: 'Mark Product In Stock',
+            initialValue: variantFields[index]['stockStatus'],
+            onToggleChanged: (value) {
+              setState(() {
+                variantFields[index]['stockStatus'] = value;
+              });
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+                onTap: () => removeVariant(index),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Text(
+                      'Remove',
+                      style: TextStyle(color: Colors.red),
+                    )
+                  ],
+                )),
+          ),
+        ],
+      );
+    }));
   }
 }

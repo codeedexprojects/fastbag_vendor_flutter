@@ -6,12 +6,14 @@ import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_categoryby_subcategory.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/fashion_categoryby_subcategory.dart';
 import '../model/fashion_sub_category_model.dart';
 
 class FashionCategoryRepository {
@@ -223,6 +225,40 @@ class FashionCategoryRepository {
       //   SnackBar(content: Text("OOPs something happened , Error: $e")),
       // );
       print("Error: $e");
+    }
+  }
+  Future<List<CategoryBySubCategoryModel>?> fashionpCategorybySubCategoryGet(int categoryId) async {
+
+    try{
+      SVProgressHUD.show();
+      final prefs=await SharedPreferences.getInstance();
+      var tokenId=prefs.getString('access_token');
+      var headers = {
+        'Authorization': 'Bearer $tokenId',
+        "Content-Type": "application/json",
+      };
+      print("dhjhidih $categoryId");
+      var response = await _dio.request(
+        '${baseUrl}fashion/subcategories/by-category/$categoryId/',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+      if (response.statusCode == 200) {
+        List jsonList=response.data;
+        List<CategoryBySubCategoryModel>
+        jsonResponce=
+        jsonList.map((v)=>CategoryBySubCategoryModel.fromJson(v)).toList();
+        print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
+        SVProgressHUD.dismiss();
+        return jsonResponce;
+      }
+      else {
+        print(response.statusMessage);
+      }}on DioException catch (e) {
+
+      print("error ${e.response?.data}");
     }
   }
 }

@@ -2,6 +2,8 @@ import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_categoryby_subcategory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -11,11 +13,11 @@ import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-
 import '../model/fashion_serach_item.dart';
 import '../view_model/fashion_category_view_model.dart';
 import 'all_fashion_categories_screen.dart';
 import 'all_fashion_sub_category_screen.dart';
+import 'fashion_categoryby_subcategory.dart';
 import 'list_fashion_products_screen.dart';
 
 class FashionCategoryScreen extends StatefulWidget {
@@ -26,20 +28,24 @@ class FashionCategoryScreen extends StatefulWidget {
 }
 
 class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
-  late List<FashionSerachItem> combinedList = []; // Combined list of categories and subcategories
-  List<FashionSerachItem> filteredList = []; // Filtered list for search suggestions
+  late List<FashionSerachItem> combinedList =
+      []; // Combined list of categories and subcategories
+  List<FashionSerachItem> filteredList =
+      []; // Filtered list for search suggestions
   final TextEditingController searchController =
-  TextEditingController(); // SearchBar controller
+      TextEditingController(); // SearchBar controller
   final FocusNode searchFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     // Fetch categories and subcategories asynchronously using provider
+
     var categoryProvider =
-    Provider.of<FashionCategoryViewModel>(context, listen: false);
+        Provider.of<FashionCategoryViewModel>(context, listen: false);
     categoryProvider.getfashionProductCategories();
     categoryProvider.getFashionProductSubCategories();
+    // categoryProvider.getFashionCategorybySubCategories(categoryId: );
   }
 
   void _filterSearch(String query) {
@@ -60,7 +66,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
 
   void _onSubmitted(FashionSerachItem item) {
     var categoryProvider =
-    Provider.of<FashionCategoryViewModel>(context, listen: false);
+        Provider.of<FashionCategoryViewModel>(context, listen: false);
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
@@ -73,9 +79,10 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
       navigate(
           context: context,
           screen: FashionAllSubCategoryScreen(
-              subCategories: [item.model],
-              categories: categoryProvider.categories, isOperable: true,
-              ));
+            subCategories: [item.model],
+            categories: categoryProvider.categories,
+            isOperable: true,
+          ));
     }
     setState(() {
       filteredList = []; // Optionally clear search results after submission
@@ -92,25 +99,26 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
     if (categoryProvider.categories.isNotEmpty ||
         categoryProvider.subCategories.isNotEmpty) {
       // Combine category and subcategory names once data is available
-      List<FashionSerachItem> categoryItems = categoryProvider.categories.isNotEmpty
+      List<FashionSerachItem> categoryItems = categoryProvider
+              .categories.isNotEmpty
           ? categoryProvider.categories
-          .map<FashionSerachItem>((category) => FashionSerachItem(
-          id: category?.id??0,
-          name: category?.name??'',
-          type: "category",
-          model: category))
-          .toList()
+              .map<FashionSerachItem>((category) => FashionSerachItem(
+                  id: category?.id ?? 0,
+                  name: category?.name ?? '',
+                  type: "category",
+                  model: category))
+              .toList()
           : [];
       List<FashionSerachItem> subCategoryItems =
-      categoryProvider.subCategories.isNotEmpty
-          ? categoryProvider.subCategories
-          .map<FashionSerachItem>((subCategory) => FashionSerachItem(
-          id: subCategory?.id??0,
-          name: subCategory?.name??'',
-          type: "sub_category",
-          model: subCategory))
-          .toList()
-          : [];
+          categoryProvider.subCategories.isNotEmpty
+              ? categoryProvider.subCategories
+                  .map<FashionSerachItem>((subCategory) => FashionSerachItem(
+                      id: subCategory?.id ?? 0,
+                      name: subCategory?.name ?? '',
+                      type: "sub_category",
+                      model: subCategory))
+                  .toList()
+              : [];
       combinedList = [...categoryItems, ...subCategoryItems];
       print("Combined List: $combinedList"); // Debugging output
     }
@@ -147,138 +155,145 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
               if (filteredList.isEmpty)
                 Expanded(
                     child: Column(
-                      children: [
-                        if (searchController.text.isNotEmpty)
-                          Padding(
-                            padding:
+                  children: [
+                    if (searchController.text.isNotEmpty)
+                      Padding(
+                        padding:
                             EdgeInsets.symmetric(vertical: screenWidth * 0.07),
-                            child: const Text("No results"),
-                          ),
-                        gap,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Select Categories",
-                              style: mainFont(
-                                  fontsize: 18,
-                                  fontweight: FontWeight.w600,
-                                  color: FbColors.greendark),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                navigate(
-                                    context: context,
-                                    screen: FashionAllCategoriesScreen(
-                                      categories: categoryProvider.categories,
-                                      subCategories: categoryProvider.subCategories,
-                                    ));
-                              },
-                              child: const Text(
-                                "View All",
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ),
-                          ],
+                        child: const Text("No results"),
+                      ),
+                    gap,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Select Categories",
+                          style: mainFont(
+                              fontsize: 18,
+                              fontweight: FontWeight.w600,
+                              color: FbColors.greendark),
                         ),
-                        //  category  List  Horzontal
-                        SizedBox(
-                          height: screenHeight * .17,
-                          child: Consumer<FashionCategoryViewModel>(
-                            builder: (context, data, _) {
-                              return ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: data.categories.length,
-                                itemBuilder: (context, index) {
-                                  return categoryCard(
-                                    text: data.categories[index]?.name,
-                                    onTap: () {
-                                      navigate(
-                                        context: context,
-                                        screen: FashionAllSubCategoryScreen(
-                                          subCategories: data.subCategories,
-                                          categories: data.categories,
-                                          isOperable: true,
-                                        ),
-                                      );
-                                    },
-                                    radius: screenWidth * .115,
-                                    image: NetworkImage(
-                                      data.categories[index]?.categoryImage??'',
-                                    ),
-                                  );
+                        TextButton(
+                          onPressed: () {
+                            navigate(
+                                context: context,
+                                screen: FashionAllCategoriesScreen(
+                                  categories: categoryProvider.categories,
+                                  subCategories: categoryProvider.subCategories,
+                                ));
+                          },
+                          child: const Text(
+                            "View All",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
+                      ],
+                    ),
+                    //  category  List  Horzontal
+                    SizedBox(
+                      height: screenHeight * .17,
+                      child: Consumer<FashionCategoryViewModel>(
+                        builder: (context, data, _) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: data.categories.length,
+                            itemBuilder: (context, index) {
+                              return categoryCard(
+                                text: data.categories[index]?.name,
+                                onTap: () {
+                                  navigate(
+                                      context: context,
+                                      screen: FashionCategorybySubcategory(
+                                        isOperable: true,
+                                        categoryId:
+                                            data.categories[index]?.id ?? 0,
+                                      ));
+
+                                  //   FashionAllSubCategoryScreen(
+                                  //     subCategories: data.subCategories,
+                                  //     categories: data.categories,
+                                  //     isOperable: true,
+                                  //   ),
+                                  // );
                                 },
+                                radius: screenWidth * .115,
+                                image: NetworkImage(
+                                  data.categories[index]?.categoryImage ?? '',
+                                ),
                               );
                             },
-                          ),
+                          );
+                        },
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Select Sub Categories",
+                          style: mainFont(
+                              fontsize: 18,
+                              fontweight: FontWeight.w600,
+                              color: FbColors.greendark),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Select Sub Categories",
-                              style: mainFont(
-                                  fontsize: 18,
-                                  fontweight: FontWeight.w600,
-                                  color: FbColors.greendark),
-                            ),
-                            if (categoryProvider.subCategories.isNotEmpty)
-                              TextButton(
-                                onPressed: () {
-                                  navigate(
-                                    context: context,
-                                    screen: FashionAllSubCategoryScreen(
-                                      subCategories: categoryProvider.subCategories,
-                                      categories: categoryProvider.categories,
-                                      isOperable: true,
-                                    ),
-                                  );
-                                },
-                                child: const Text(
-                                  "View All",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      decoration: TextDecoration.underline),
+                        if (categoryProvider.subCategories.isNotEmpty)
+                          TextButton(
+                            onPressed: () {
+                              navigate(
+                                context: context,
+                                screen: FashionAllSubCategoryScreen(
+                                  subCategories: categoryProvider.subCategories,
+                                  categories: categoryProvider.categories,
+                                  isOperable: true,
                                 ),
-                              )
-                          ],
-                        ),
-                        Expanded(
-                          child: Consumer<FashionCategoryViewModel>(
-                            builder: (context, data, _) {
-                              return GridView.builder(
-                                padding: const EdgeInsets.all(5),
-                                gridDelegate:
+                              );
+                            },
+                            child: const Text(
+                              "View All",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          )
+                      ],
+                    ),
+                    Expanded(
+                      child: Consumer<FashionCategoryViewModel>(
+                        builder: (context, data, _) {
+                          return GridView.builder(
+                            padding: const EdgeInsets.all(5),
+                            gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3,
                                     childAspectRatio: .57,
                                     crossAxisSpacing: 14),
-                                itemCount: data.subCategories.length,
-                                itemBuilder: (context, index) {
-                                  return subCategoryCard(
-                                    height: screenWidth * 0.33,
-                                    text: data?.subCategories[index]?.name??'',
-                                    image: data
-                                        .subCategories[index]?.subcategoryImage??'',
-                                    onTap: () {
-                                      navigate(
-                                        context: context,
-                                        screen: FashionListProductsScreen(
-                                          subCategory: data.subCategories[index],
-                                          subCategories: data.subCategories,
-                                        ),
-                                      );
-                                    },
+                            itemCount: data.subCategories.length,
+                            itemBuilder: (context, index) {
+                              return subCategoryCard(
+                                height: screenWidth * 0.33,
+                                text: data?.subCategories[index]?.name ?? '',
+                                image: data.subCategories[index]
+                                        ?.subcategoryImage ??
+                                    '',
+                                onTap: () {
+                                  navigate(
+                                    context: context,
+                                    screen: FashionListProductsScreen(
+                                      subCategory: data.subCategories[index],
+                                      subCategories: data.subCategories,
+                                    ),
                                   );
                                 },
                               );
                             },
-                          ),
-                        ),
-                      ],
-                    ))
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ))
               else
                 ListView.builder(
                   shrinkWrap: true,

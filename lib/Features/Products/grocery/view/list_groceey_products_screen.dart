@@ -1,44 +1,43 @@
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/add_product_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/add_grocery_product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ListGroceryProducts extends StatefulWidget {
-  final SubCategoryModel subCategory;
-  final List<SubCategoryModel> subCategories;
+  final GrocerySubCategoryModel subCategory;
+
   const ListGroceryProducts(
-      {super.key, required this.subCategory, required this.subCategories});
+      {super.key, required this.subCategory, });
 
   @override
   State<ListGroceryProducts> createState() => _ListGroceryProductsState();
 }
 
 class _ListGroceryProductsState extends State<ListGroceryProducts> {
-  Map<int, bool> isExpandedMap = {}; // Track expanded state per item
-
   @override
   void initState() {
     super.initState();
-    final productProvider =
-        Provider.of<ProductViewModel>(context, listen: false);
-    productProvider.getProductCategories(
-        context: context, subCategoryId: widget.subCategory.id as int);
+    final groceryViewModel =
+        Provider.of<GroceryViewModel>(context, listen: false);
+    groceryViewModel.fetchProductList(context, widget.subCategory.id);
   }
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    final productProvider =
-        Provider.of<ProductViewModel>(context, listen: false);
+    final groceryViewModel = Provider.of<GroceryViewModel>(context);
+    gap(value) {
+      return SizedBox(height: screenWidth * value);
+    }
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(247, 253, 247, 1),
@@ -49,6 +48,7 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
           children: [
             SizedBox(height: screenHeight * 0.08),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
                   height: screenWidth * 0.15,
@@ -59,34 +59,35 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                 const Icon(Icons.more_vert)
               ],
             ),
-            Consumer<ProductViewModel>(builder: (context, data, _) {
-              return productProvider.foodProducts.isEmpty
-                  ? SizedBox(
-                      height: screenHeight * .6,
+            Consumer<GroceryViewModel>(builder: (context, groceryViewModel, _) {
+              final products = groceryViewModel.subCategoryProducts;
+              return products.isEmpty
+                  ? Expanded(
                       child: Center(
-                          child: SizedBox(
-                        height: screenWidth * .45,
-                        width: screenWidth * .5,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/no_product.svg',
-                              width: screenWidth * .45, // Set desired width
-                              height: screenWidth * .3, // Set desired height
-                            ),
-                            SizedBox(
-                              height: screenHeight * .004,
-                            ),
-                            const Text("Nothing to show yet. Created"),
-                            const Text("Product list will appear here")
-                          ],
-                        ),
-                      )))
-                  : SizedBox(
-                      height: screenHeight * .6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/no_product.svg',
+                            width: screenWidth * .45, // Set desired width
+                            height: screenWidth * .3, // Set desired height
+                          ),
+                          SizedBox(
+                            height: screenHeight * .004,
+                          ),
+                          const Text("Nothing to show yet. Created"),
+                          const Text("Product list will appear here")
+                        ],
+                      ),
+                    ))
+                  : Expanded(
                       child: ListView.builder(
-                        itemCount: productProvider.foodProducts.length,
+                        itemCount: products.length,
                         itemBuilder: (context, index) {
+                          print(
+                              '-----------------> lenth ------------> ${products.length}');
+                          print(
+                              '-----------------> products ------------> ${products[index].name}');
                           return Column(
                             children: [
                               GestureDetector(
@@ -94,10 +95,7 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                                   navigate(
                                       context: context,
                                       screen: ProductDetailScreen(
-                                        productId: productProvider
-                                                .foodProducts[index].id ??
-                                            0,
-                                      ));
+                                          productId: products[index].id));
                                 },
                                 child: ListTile(
                                   leading: Container(
@@ -105,43 +103,34 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                                     width: screenHeight * .06,
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                        image: NetworkImage(productProvider
-                                            .foodProducts[index].image_urls[0]),
+                                        image: products[index].images.isNotEmpty
+                                            ? NetworkImage(
+                                                products[index].images[0].image)
+                                            : const AssetImage(
+                                                'assets/Images/grocery.jpeg'),
+                                        fit: BoxFit.cover,
                                       ),
                                       border: Border.all(
                                           color: Colors.grey, width: 0.2),
                                     ),
                                   ),
-                                  title: Text(
-                                      productProvider.foodProducts[index].name),
-                                  subtitle: Text(productProvider
-                                      .foodProducts[index].price),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Switch(
-                                        activeColor: Colors.green,
-                                        inactiveThumbColor: Colors.white,
-                                        materialTapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                        value: false,
-                                        onChanged: (value) {
-                                          // Handle switch toggle logic
-                                        },
-                                      ),
-                                    ],
+                                  title: Text(products[index].name),
+                                  subtitle:
+                                      Text(products[index].price.toString()),
+                                  trailing: Switch(
+                                    value: false,
+                                    activeColor: Colors.green,
+                                    inactiveThumbColor: Colors.white,
+                                    inactiveTrackColor: Colors.grey[300],
+                                    trackOutlineColor:
+                                        const WidgetStatePropertyAll(
+                                            Colors.transparent),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    onChanged: (value) {
+                                      // Handle switch toggle logic
+                                    },
                                   ),
-                                  // trailing: Switch(
-                                  //             activeColor: Colors.green,
-                                  //             inactiveThumbColor: Colors.white,
-                                  //             materialTapTargetSize:
-                                  //                 MaterialTapTargetSize
-                                  //                     .shrinkWrap,
-                                  //             value: false,
-                                  //             onChanged: (value) {
-                                  //               // Handle switch toggle logic
-                                  //             },
-                                  //           ),
                                 ),
                               ),
                             ],
@@ -150,7 +139,6 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                       ),
                     );
             }),
-            const Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth / 15, vertical: 5),
@@ -158,8 +146,8 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                   onClick: () {
                     navigate(
                         context: context,
-                        screen: AddProductScreen(
-                          subCategories: widget.subCategories,
+                        screen: AddGroceryProduct(
+                          
                           subCategory: widget.subCategory,
                         ));
                   },
@@ -170,10 +158,10 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                   horizontal: screenWidth / 15, vertical: 5),
               child: FbButton(
                 onClick: () {
-                  navigate(
-                      context: context,
-                      screen: ProductEditDeleteScreen(
-                          products: productProvider.foodProducts));
+                  // navigate(
+                  //     context: context,
+                  //     screen: ProductEditDeleteScreen(
+                  //         products: groceryViewModel.subCategoryProducts));
                 },
                 label: "Export",
                 icon: const FaIcon(
@@ -185,7 +173,7 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                 borderColor: Colors.green,
               ),
             ),
-            SizedBox(height: screenHeight * .02),
+            gap(.02),
           ],
         ),
       ),

@@ -3,14 +3,13 @@ import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_product_category_dropdown.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/view_model/grocery_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_category_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,7 @@ import '../model/grocery_catgeory_model.dart';
 class EditGrocerySubCategoryScreen extends StatefulWidget {
   final List<GroceryCategoryModel> categories;
   final GroceryCategoryModel category;
-  final SubCategoryModel subCategory;
+  final GrocerySubCategoryModel subCategory;
   const EditGrocerySubCategoryScreen(
       {super.key,
       required this.categories,
@@ -29,10 +28,12 @@ class EditGrocerySubCategoryScreen extends StatefulWidget {
       required this.subCategory});
 
   @override
-  State<EditGrocerySubCategoryScreen> createState() => _EditGrocerySubCategoryScreenState();
+  State<EditGrocerySubCategoryScreen> createState() =>
+      _EditGrocerySubCategoryScreenState();
 }
 
-class _EditGrocerySubCategoryScreenState extends State<EditGrocerySubCategoryScreen> {
+class _EditGrocerySubCategoryScreenState
+    extends State<EditGrocerySubCategoryScreen> {
   var nameController = TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
@@ -45,7 +46,7 @@ class _EditGrocerySubCategoryScreenState extends State<EditGrocerySubCategoryScr
       setState(() {
         vendorId = data;
         selectedCategory = widget.category;
-        _switchValue = widget.subCategory.is_enabled;
+        _switchValue = widget.subCategory.enableSubcategory;
       });
     });
     super.initState();
@@ -59,14 +60,14 @@ class _EditGrocerySubCategoryScreenState extends State<EditGrocerySubCategoryScr
 
   void _onSubmitForm() async {
     final viewModel =
-        Provider.of<GroceryViewModel>(context, listen: false);
+        Provider.of<GroceryCategoryViewModel>(context, listen: false);
     if (nameController.text.isNotEmpty ||
         _selectedImage != null ||
         widget.category.name != selectedCategory!.name ||
-        widget.subCategory.is_enabled != _switchValue) {
+        widget.subCategory.enableSubcategory != _switchValue) {
       SubCategoryModel category = SubCategoryModel(
           id: widget.subCategory.id,
-          categoryId: widget.subCategory.categoryId,
+          categoryId: widget.subCategory.category,
           is_enabled: _switchValue!,
           name: nameController.text.isEmpty
               ? widget.subCategory.name

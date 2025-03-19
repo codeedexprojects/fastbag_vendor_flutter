@@ -95,8 +95,8 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                           ],
                         ),
                       )))
-                  : SizedBox(
-                      height: screenHeight * .6,
+                  : Expanded(
+                      // height: screenHeight * .6,
                       child: ListView.builder(
                         itemCount: productProvider.fashionProducts.length,
                         itemBuilder: (context, index) {
@@ -131,7 +131,8 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                     .imageUrl ??
                                                 '',
                                             placeholder: (context, url) =>
-                                                Image.asset(PlaceholderImage.placeholderimage),
+                                                Image.asset(PlaceholderImage
+                                                    .placeholderimage),
                                             fit: BoxFit.cover,
                                             errorWidget:
                                                 (context, url, error) =>
@@ -180,7 +181,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                       ),
                     );
             }),
-            const Spacer(),
+            Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth / 15, vertical: 5),

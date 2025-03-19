@@ -26,21 +26,22 @@ class FashionEditSubCategoryScreen extends StatefulWidget {
 
   FashionEditSubCategoryScreen(
       {super.key,
-       required this.categories,
+      required this.categories,
       required this.category,
-       required this.subCategory});
+      required this.subCategory});
 
   @override
-  State<FashionEditSubCategoryScreen> createState() => _FashionEditSubCategoryScreenState();
+  State<FashionEditSubCategoryScreen> createState() =>
+      _FashionEditSubCategoryScreenState();
 }
 
-class _FashionEditSubCategoryScreenState extends State<FashionEditSubCategoryScreen> {
+class _FashionEditSubCategoryScreenState
+    extends State<FashionEditSubCategoryScreen> {
   var nameController = TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
   bool? _switchValue;
   FashionCategoryModel? selectedCategory;
-
 
   @override
   void initState() {
@@ -68,26 +69,26 @@ class _FashionEditSubCategoryScreenState extends State<FashionEditSubCategoryScr
         widget.category?.name != selectedCategory!.name ||
         widget.subCategory.enableSubcategory != _switchValue) {
       FashionSubCategoryModel category = FashionSubCategoryModel(
-
-          // category: widget.subCategory.category,
-          // enableSubcategory: _switchValue!,
-          // name: nameController.text.isEmpty
-          //     ? widget.subCategory.name
-          //     : nameController.text,
-          // subcategoryImage: _selectedImage?.path ?? "",
-          // vendor: widget.subCategory.vendor
-          category: selectedCategory!.id,
-          enableSubcategory: _switchValue,
-          name: nameController.text.isEmpty
+        // category: widget.subCategory.category,
+        // enableSubcategory: _switchValue!,
+        // name: nameController.text.isEmpty
+        //     ? widget.subCategory.name
+        //     : nameController.text,
+        // subcategoryImage: _selectedImage?.path ?? "",
+        // vendor: widget.subCategory.vendor
+        category: selectedCategory!.id,
+        enableSubcategory: _switchValue,
+        name: nameController.text.isEmpty
             ? widget.subCategory.name
             : nameController.text,
-          subcategoryImage: _selectedImage?.path ?? "",
-          categoryName: selectedCategory!.storeTypeName,
-
+        subcategoryImage: _selectedImage?.path ?? "",
+        categoryName: selectedCategory!.storeTypeName,
       );
 
       await categoryViewModel?.editProductSubCategory(
-          subCategories: category, context: context, subcategoryId: widget.subCategory?.id??0);
+          subCategories: category,
+          context: context,
+          subcategoryId: widget.subCategory?.id ?? 0);
 
       setState(() {
         nameController.clear();
@@ -109,7 +110,7 @@ class _FashionEditSubCategoryScreenState extends State<FashionEditSubCategoryScr
 
   @override
   Widget build(BuildContext context) {
-    //final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -129,38 +130,45 @@ class _FashionEditSubCategoryScreenState extends State<FashionEditSubCategoryScr
               color: Colors.black),
         ),
       ),
-      body: Column(
-        children: [
-          FbCategoryFormField(
-              label: "Category Name",
-              hint: widget.subCategory.name,
-              controller: nameController,
-              validator: customValidatornoSpaceError),
-          FbCategoryFilePicker(
-            onFilePicked: (file) => _onFilePicked(file),
-            fileCategory: "Category",
-          ),
-          FbProductCategoryDropdown(
-            categories: widget.categories,
-            selectedCategory: selectedCategory,
-            onChanged: (dynamic category) {
-              setState(() {
-                selectedCategory = category; // Update the selected category
-              });
-              print('Selected Category: ${category?.name}');
-            },
-          ),
-          FbToggleSwitch(
-            title: 'Mark Category in stock',
-            initialValue: _switchValue!,
-            onToggleChanged: (value) {
-              setState(() {
-                _switchValue = value;
-              });
-            },
-          ),
-          FbButton(onClick: _onSubmitForm, label: "Update Sub Category")
-        ],
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.07, vertical: screenHeight * 0.01),
+        child: Column(
+          children: [
+            FbCategoryFormField(
+                label: "Category Name",
+                hint: widget.subCategory.name,
+                controller: nameController,
+                validator: customValidatornoSpaceError),
+            FbCategoryFilePicker(
+              onFilePicked: (file) => _onFilePicked(file),
+              fileCategory: "Category",
+            ),
+            FbProductCategoryDropdown(
+              categories: widget.categories,
+              selectedCategory: selectedCategory,
+              onChanged: (dynamic category) {
+                setState(() {
+                  selectedCategory = category; // Update the selected category
+                });
+                print('Selected Category: ${category?.name}');
+              },
+            ),
+            FbToggleSwitch(
+              title: 'Mark Category in stock',
+              initialValue: _switchValue!,
+              onToggleChanged: (value) {
+                setState(() {
+                  _switchValue = value;
+                });
+              },
+            ),
+            SizedBox(
+              height: screenHeight * .04,
+            ),
+            FbButton(onClick: _onSubmitForm, label: "Update Sub Category")
+          ],
+        ),
       ),
     );
   }

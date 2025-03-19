@@ -12,7 +12,7 @@ class ProfileViewModel extends ChangeNotifier {
 
   getVendorProfile(
       {required int vendorId, required BuildContext context}) async {
-    await profileRepository.getProfile(vendorId, context).then((data) {
+    await profileRepository.getProfile( context).then((data) {
       if (data.runtimeType == VendorModel) {
         _vendor = data;
         notifyListeners();
@@ -133,12 +133,12 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   updateShopDetails(
-      {required int vendorId,
+      {
       required BuildContext context,
       required UpdateShopModel model
       }) async {
     await profileRepository
-        .postShopDetails(model, context, vendorId)
+        .postShopDetails(model, context)
         .then((data) {
       if (data.runtimeType == VendorModel) {
         _vendor = data;
