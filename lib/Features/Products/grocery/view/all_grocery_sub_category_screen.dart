@@ -5,17 +5,18 @@ import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/add_grocery_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/grocery_sub_category_edit_list.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/list_groceey_products_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class AllGrocerySubCategoryScreen extends StatefulWidget {
-  final List<GrocerySubCategoryModel> subCategories;
-  const AllGrocerySubCategoryScreen({super.key, required this.subCategories});
+  final GroceryCategoryModel category;
+  const AllGrocerySubCategoryScreen({super.key, required this.category});
 
   @override
   State<AllGrocerySubCategoryScreen> createState() =>
@@ -60,7 +61,7 @@ class _AllGrocerySubCategoryScreenState
                   color: FbColors.greendark),
             ),
             gap(0.04),
-            widget.subCategories.isNotEmpty
+            groceryViewModel.filteredSubCategories.isNotEmpty
                 ? Expanded(
                     child: GridView.builder(
                     padding: const EdgeInsets.all(0),
@@ -69,19 +70,24 @@ class _AllGrocerySubCategoryScreenState
                             crossAxisCount: 3,
                             childAspectRatio: 0.57,
                             crossAxisSpacing: 14),
-                    itemCount: widget.subCategories.length,
+                    itemCount: groceryViewModel.filteredSubCategories.length,
                     itemBuilder: (context, index) {
                       return subCategoryCard(
                         height: screenWidth * 0.33,
-                        text: widget.subCategories[index].name,
-                        image:
-                            widget.subCategories[index].subcategoryImage ?? '',
+                        text:
+                            groceryViewModel.filteredSubCategories[index].name,
+                        image: groceryViewModel.filteredSubCategories[index]
+                                .subcategoryImage ??
+                            '',
                         onTap: () {
+                          print(
+                              '----------------------->${groceryViewModel.filteredSubCategories[index].name}');
+
                           navigate(
                             context: context,
                             screen: ListGroceryProducts(
                               subCategory:
-                                  groceryViewModel.subCategories[index],
+                                  groceryViewModel.filteredSubCategories[index],
                             ),
                           );
                         },
@@ -90,12 +96,25 @@ class _AllGrocerySubCategoryScreenState
                   ))
                 : Expanded(
                     child: Center(
-                      child: Text(
-                        "Start adding your sub category now",
-                        style: nunito(),
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/no_product.svg',
+                          width: screenWidth * .45, // Set desired width
+                          height: screenWidth * .3, // Set desired height
+                        ),
+                        SizedBox(
+                          height: screenHeight * .004,
+                        ),
+                        Text("Nothing to show yet. Created", style: nunito()),
+                        Text(
+                          "Sub Category list will appear here",
+                          style: nunito(),
+                        )
+                      ],
                     ),
-                  ),
+                  )),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth / 15, vertical: 5),
@@ -103,29 +122,35 @@ class _AllGrocerySubCategoryScreenState
                   onClick: () {
                     navigate(
                         context: context,
-                        screen: const AddGrocerySubCategoryScreen());
+                        screen: AddGrocerySubCategoryScreen(
+                          category: widget.category,
+                        ));
                   },
                   label: "+ Add Sub Category"),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth / 15, vertical: 5),
-              child: FbButton(
-                onClick: () {
-                  navigate(
-                      context: context,
-                      screen: const GrocerySubCategoryEditList());
-                },
-                icon: const FaIcon(
-                  FontAwesomeIcons.penToSquare,
-                  size: 20,
+            if (groceryViewModel.filteredSubCategories.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth / 15, vertical: 5),
+                child: FbButton(
+                  onClick: () {
+                    navigate(
+                        context: context,
+                        screen: GrocerySubCategoryEditList(
+                          subCategories: groceryViewModel.filteredSubCategories,
+                          category: widget.category,
+                        ));
+                  },
+                  icon: const FaIcon(
+                    FontAwesomeIcons.penToSquare,
+                    size: 20,
+                  ),
+                  label: "Edit",
+                  color: Colors.white,
+                  textColor: Colors.blue,
+                  borderColor: Colors.blue,
                 ),
-                label: "Edit",
-                color: Colors.white,
-                textColor: Colors.blue,
-                borderColor: Colors.blue,
               ),
-            ),
             gap(.02),
           ],
         ),

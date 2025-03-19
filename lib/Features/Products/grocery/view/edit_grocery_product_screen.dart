@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_drop_down.dart';
-import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
@@ -13,6 +12,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_product
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_products_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/list_category.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/list_sub_by_category.dart';
@@ -20,16 +20,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class AddGroceryProduct extends StatefulWidget {
-  final GrocerySubCategoryModel subCategory;
+class EditGroceryProductScreen extends StatefulWidget {
+  final GroceryProductsModel product;
 
-  const AddGroceryProduct({super.key, required this.subCategory});
+  const EditGroceryProductScreen({super.key, required this.product});
 
   @override
-  State<AddGroceryProduct> createState() => _AddGroceryProductState();
+  State<EditGroceryProductScreen> createState() =>
+      _EditGroceryProductScreenState();
 }
 
-class _AddGroceryProductState extends State<AddGroceryProduct> {
+class _EditGroceryProductScreenState extends State<EditGroceryProductScreen> {
   final _formkey = GlobalKey<FormState>();
   String? selectedColor;
   String? selectWight;
@@ -44,13 +45,14 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
   List<Map<String, dynamic>> variantFields = []; // Corrected declaration
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
+  var categoryController = TextEditingController();
+  var subCategoryController = TextEditingController();
+
   var priceController = TextEditingController();
   var discountController = TextEditingController();
   var discountedPriceController = TextEditingController();
   var wholesalePriceController = TextEditingController();
   var weightController = TextEditingController();
-  var categoryController = TextEditingController();
-  var subCategoryController = TextEditingController();
   late GroceryCategoryModel selectedCategory;
   GrocerySubCategoryModel? selectedSubCategory;
 
@@ -69,7 +71,8 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
       variantFields.add({
         'weightController': TextEditingController(),
         'priceController': TextEditingController(),
-        'quantityController': TextEditingController(),
+        'quantityController':
+            TextEditingController(), // Track selected quantity here
         'selectedVariantMeasurment': null,
         'stockStatus': false,
       });
@@ -100,8 +103,6 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
     final groceryViewModel =
         Provider.of<GroceryViewModel>(context, listen: false);
 
-    hasValidatedOnce = true;
-
     // Convert selected images into multipart files
     List<MultipartFile> imageFiles = await Future.wait(
       selectedImages
@@ -110,7 +111,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
 
     final data = {
       "category": selectedCategory.id,
-      "sub_category": widget.subCategory.id,
+      "sub_category": selectedSubCategory?.id,
       "name": nameController.text.trim(),
       "wholesale_price": double.tryParse(wholesalePriceController.text.trim())
           ?.toStringAsFixed(2),
@@ -135,24 +136,16 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                   "${(variant['weightController']!.text)}${variant['selectedVariantMeasurment']}",
               "price": double.tryParse(variant['priceController']!.text.trim())
                   ?.toStringAsFixed(2),
-              "quantity": int.parse(variant['quantityController']!.text.trim()),
+              "quantity": int.parse(variant['quantityController']),
               "is_in_stock": variant['stockStatus'],
             }
       ]),
       "images": imageFiles, // Sending images as MultipartFile
     };
-
+    print("------------------------------------->$data");
+    print("------------------------------------->${widget.product.id}");
     if (_formkey.currentState!.validate()) {
-      if (selectedImages.isEmpty) {
-        showFlushbar(
-          context: context,
-          color: Colors.red,
-          icon: Icons.image,
-          message: 'Select at least one Image',
-        );
-      } else {
-        await groceryViewModel.addProduct(context, data);
-      }
+      await groceryViewModel.editProduct(context, widget.product.id, data);
     }
   }
 
@@ -162,14 +155,43 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
     super.initState();
     final groceryViewModel =
         Provider.of<GroceryViewModel>(context, listen: false);
-    if (groceryViewModel.categories.isNotEmpty) {
-      selectedCategory = groceryViewModel.categories
-          .firstWhere((cat) => cat.id == widget.subCategory.category);
-      selectedSubCategory = widget.subCategory;
 
-      categoryController = TextEditingController(text: selectedCategory.name);
-      subCategoryController =
-          TextEditingController(text: selectedSubCategory?.name);
+    // Initialize form fields with product data
+    nameController.text = widget.product.name;
+    descriptionController.text = widget.product.description;
+    priceController.text = widget.product.price.toString();
+    discountController.text = widget.product.discount.toString();
+    wholesalePriceController.text = widget.product.wholesalePrice.toString();
+    selectedMeasurment = widget.product.weightMeasurement;
+    isOfferProduct = widget.product.isOfferProduct;
+    isPopularProduct = widget.product.isPopularProduct;
+    isProductInStock = widget.product.available;
+
+    // Initialize category and subcategory
+    selectedCategory = groceryViewModel.categories
+        .firstWhere((cat) => cat.id == widget.product.category);
+    selectedSubCategory = groceryViewModel.allSubCategories
+        .firstWhere((sub) => sub.id == widget.product.subCategory);
+
+    categoryController.text = selectedCategory.name ?? '';
+    subCategoryController.text = selectedSubCategory!.name;
+
+    // Initialize  weights
+    // Initialize weight variants (if they exist)
+    if (widget.product.weights.isNotEmpty) {
+      variantFields = widget.product.weights.map((weight) {
+        return {
+          'weightController': TextEditingController(
+              text: weight.weight.split(RegExp(r'(?<=\d)(?=\D)'))[0]),
+          'priceController':
+              TextEditingController(text: weight.price.toString()),
+          'selectedVariantMeasurment': weight.weight
+              .replaceAll(RegExp(r'[\d.]'), ''), // Extract measurement unit
+          'quantityController':
+              TextEditingController(text: weight.quantity.toString()),
+          'stockStatus': weight.isInStock,
+        };
+      }).toList();
     }
   }
 
@@ -188,7 +210,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
             child: const Icon(Icons.arrow_back_ios_new_rounded)),
         centerTitle: true,
         title: Text(
-          'Add product',
+          'Edit product',
           style: poppins(
             fontSize: 19,
             fontWeight: FontWeight.w600,
@@ -244,6 +266,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                       label: 'Category',
                       controller: categoryController,
                       keyboard: TextInputType.number,
+                      validator: customValidatornoSpaceError,
                     ),
                   ),
                   const SizedBox(
@@ -272,6 +295,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                       label: 'Sub Category',
                       controller: subCategoryController,
                       keyboard: TextInputType.number,
+                      validator: customValidatornoSpaceError,
                     ),
                   ),
                 ],
@@ -317,9 +341,11 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                     const SizedBox(width: 15),
                     Expanded(
                       child: FbCategoryFormField(
-                          label: 'Discounted Price',
-                          controller: discountedPriceController,
-                          readOnly: true),
+                        label: 'Discounted Price',
+                        controller: discountedPriceController,
+                        readOnly: true,
+                        validator: discountValidator,
+                      ),
                     ),
                   ],
                 ),
@@ -396,7 +422,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: width * .04),
                 child: FbButton(
-                    onClick: onAddProductClicked, label: 'Add to Product'),
+                    onClick: onAddProductClicked, label: 'Update Product'),
               ),
             ],
           ),
