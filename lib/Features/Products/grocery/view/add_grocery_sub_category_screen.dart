@@ -1,18 +1,20 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
-import 'package:fastbag_vendor_flutter/Commons/fb_drop_down.dart';
 import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/list_category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddGrocerySubCategoryScreen extends StatefulWidget {
-  const AddGrocerySubCategoryScreen({super.key});
+  final GroceryCategoryModel category;
+  const AddGrocerySubCategoryScreen({super.key, required this.category});
 
   @override
   State<AddGrocerySubCategoryScreen> createState() =>
@@ -22,15 +24,18 @@ class AddGrocerySubCategoryScreen extends StatefulWidget {
 class _AddGrocerySubCategoryScreenState
     extends State<AddGrocerySubCategoryScreen> {
   var nameController = TextEditingController();
+  var categoryController = TextEditingController();
+
+  GroceryCategoryModel? selectedCategory;
+
   File? selectedImage;
   bool enableSubcategory = false;
-  int? selectedCategoryId;
-  String? selectedCategoryName;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+    categoryController.text = widget.category.name ?? '';
   }
 
   void _onFilePicked(File? file) {
@@ -47,18 +52,19 @@ class _AddGrocerySubCategoryScreenState
             color: Colors.red,
             icon: Icons.error_outline,
             message: 'You must select an image for category');
+      } else {
+        MultipartFile imageFile =
+            await MultipartFile.fromFile(selectedImage!.path);
+
+        final data = {
+          'category': selectedCategory?.id,
+          'name': nameController.text.trim(),
+          'subcategory_image': imageFile,
+          'enable_subcategory': enableSubcategory,
+        };
+
+        await groceryViewModel.addSubCategory(context, data);
       }
-      MultipartFile imageFile =
-          await MultipartFile.fromFile(selectedImage!.path);
-
-      final data = {
-        'category': selectedCategoryId,
-        'name': nameController.text.trim(),
-        'subcategory_image': imageFile,
-        'enable_subcategory': enableSubcategory,
-      };
-
-      await groceryViewModel.addSubCategory(context, data);
     }
   }
 
@@ -96,20 +102,27 @@ class _AddGrocerySubCategoryScreenState
                   onFilePicked: (file) => _onFilePicked(file),
                   fileCategory: "Category",
                 ),
-                FbCustomDropdown(
-                    value: selectedCategoryName,
-                    items: groceryViewModel.categories
-                        .map((category) => category.name)
-                        .whereType<String>()
-                        .toList(),
-                    hintText: 'Select Category',
-                    onChanged: (value) {
+                FbCategoryFormField(
+                  onTap: () async {
+                    final selectedCat = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ListCategoriesName(),
+                      ),
+                    );
+
+                    if (selectedCat != null) {
                       setState(() {
-                        selectedCategoryId = groceryViewModel.categories
-                            .firstWhere((category) => category.name == value)
-                            .id;
+                        selectedCategory = selectedCat;
+                        categoryController.text = selectedCat.name;
                       });
-                    }),
+                    }
+                  },
+                  readOnly: true,
+                  label: 'Category',
+                  controller: categoryController,
+                  keyboard: TextInputType.number,
+                ),
                 FbToggleSwitch(
                   title: 'Mark Category in stock',
                   initialValue: enableSubcategory,

@@ -1,4 +1,5 @@
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
@@ -6,6 +7,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/groce
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/add_grocery_product.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/grocery_product_edit_delete_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,8 +16,10 @@ import 'package:provider/provider.dart';
 class ListGroceryProducts extends StatefulWidget {
   final GrocerySubCategoryModel subCategory;
 
-  const ListGroceryProducts(
-      {super.key, required this.subCategory, });
+  const ListGroceryProducts({
+    super.key,
+    required this.subCategory,
+  });
 
   @override
   State<ListGroceryProducts> createState() => _ListGroceryProductsState();
@@ -75,8 +79,8 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                           SizedBox(
                             height: screenHeight * .004,
                           ),
-                          const Text("Nothing to show yet. Created"),
-                          const Text("Product list will appear here")
+                          Text("Nothing to show yet. Created", style: nunito()),
+                          Text("Product list will appear here", style: nunito())
                         ],
                       ),
                     ))
@@ -118,7 +122,7 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                                   subtitle:
                                       Text(products[index].price.toString()),
                                   trailing: Switch(
-                                    value: false,
+                                    value: products[index].available,
                                     activeColor: Colors.green,
                                     inactiveThumbColor: Colors.white,
                                     inactiveTrackColor: Colors.grey[300],
@@ -128,7 +132,10 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
                                     onChanged: (value) {
-                                      // Handle switch toggle logic
+                                      groceryViewModel.updateProductAvailable(
+                                          context,
+                                          products[index].id,
+                                          !products[index].available);
                                     },
                                   ),
                                 ),
@@ -144,35 +151,36 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                   horizontal: screenWidth / 15, vertical: 5),
               child: FbButton(
                   onClick: () {
+                    print('----------------------->${widget.subCategory.name}');
+
                     navigate(
                         context: context,
                         screen: AddGroceryProduct(
-                          
                           subCategory: widget.subCategory,
                         ));
                   },
                   label: "+ Add Product"),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth / 15, vertical: 5),
-              child: FbButton(
-                onClick: () {
-                  // navigate(
-                  //     context: context,
-                  //     screen: ProductEditDeleteScreen(
-                  //         products: groceryViewModel.subCategoryProducts));
-                },
-                label: "Export",
-                icon: const FaIcon(
-                  FontAwesomeIcons.arrowUpFromBracket,
-                  size: 17,
+            if (groceryViewModel.subCategoryProducts.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth / 15, vertical: 5),
+                child: FbButton(
+                  onClick: () {
+                    navigate(
+                        context: context,
+                        screen: const GroceryProductEditDeleteScreen());
+                  },
+                  label: "Edit",
+                  icon: const FaIcon(
+                    FontAwesomeIcons.penToSquare,
+                    size: 20,
+                  ),
+                  color: Colors.white,
+                  textColor: Colors.blue,
+                  borderColor: Colors.blue,
                 ),
-                color: Colors.white,
-                textColor: Colors.green,
-                borderColor: Colors.green,
               ),
-            ),
             gap(.02),
           ],
         ),

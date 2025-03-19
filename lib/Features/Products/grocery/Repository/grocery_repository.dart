@@ -117,7 +117,7 @@ class GroceryRepository {
       print('Status code ----> ${response.statusCode}');
       print("response ------>${response.data}");
 
-      return response;
+      return response.data;
     } on DioException catch (e) {
       print(e.response?.data);
 
@@ -140,16 +140,84 @@ class GroceryRepository {
     }
   }
 
-// Add Product
+  // Edit Sub Category
+  editSubCategory(int subCategoryId, data) async {
+    try {
+      // final token = await StoreManager().getAccessToken();
+      final token =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o';
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+      final fromData = FormData.fromMap(data);
+
+      Response response = await dio.patch(
+          '${baseUrl}grocery/gro-Subcategories/$subCategoryId/',
+          data: fromData,
+          options: options);
+
+      return response.data;
+    } on DioException catch (e) {
+      print("DioError: ${e.response?.statusCode}");
+
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw 'Failed to Update. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+  // Delete Sub Category
+  deleteSubCategory(int subCategoryId) async {
+    try {
+      // final token = await StoreManager().getAccessToken();
+      final token =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o';
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      Response response = await dio.delete(
+          '${baseUrl}grocery/gro-Subcategories/$subCategoryId/',
+          options: options);
+
+      return response;
+    } on DioException catch (e) {
+      print("DioError: ${e.response?.statusCode}");
+
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw 'Failed to Delete. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+  // Add Product
   addProduct(data) async {
     try {
       final vendorId = await StoreManager().getVendorId();
 
       final formData = FormData.fromMap({
         "vendor": vendorId,
-
         ...data,
-        "weights": jsonEncode(data["weights"]), // Encode weights as JSON
       });
 
       // get token
@@ -167,7 +235,7 @@ class GroceryRepository {
       print('Status code ----> ${response.statusCode}');
       print("response ------>${response.data}");
 
-      return response;
+      return response.data;
     } on DioException catch (e) {
       print(e.response?.data);
 
@@ -187,6 +255,115 @@ class GroceryRepository {
     } catch (e) {
       print(e.toString());
       throw "Unexpected error occurred. Please try again.";
+    }
+  }
+
+  // Edit Product
+  editProduct(productId, data) async {
+    try {
+      // final token = await StoreManager().getAccessToken();
+      final token =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o';
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+      print('data--------------------->  $data');
+      final fromData = FormData.fromMap(data);
+
+      Response response = await dio.patch(
+          '${baseUrl}grocery/products/$productId/',
+          data: fromData,
+          options: options);
+
+      return response.data;
+    } on DioException catch (e) {
+      print("DioError: ${e.response?.statusCode}");
+
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw 'Failed to Update. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+  // Enable Disable Product
+  enableDisableProduct(productId, bool isProductEnabled) async {
+    try {
+      // final token = await StoreManager().getAccessToken();
+      final token =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o';
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+      final fromData = FormData.fromMap({"Available": isProductEnabled});
+
+      Response response = await dio.patch(
+          '${baseUrl}grocery/products/$productId/',
+          data: fromData,
+          options: options);
+      return response.data;
+    } on DioException catch (e) {
+      print("DioError: ${e.response?.statusCode}");
+
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw 'Failed to Update. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+  // Delete Sub Category
+  deleteProduct(int productId) async {
+    try {
+      final token = await StoreManager().getAccessToken();
+      if (token ==
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o') {
+        print('=--------------->Tocken Matches');
+      } else {
+        print('=--------------->Tocken Nooooooot      Matches');
+      }
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      Response response = await dio
+          .delete('${baseUrl}grocery/products/$productId/', options: options);
+
+      return response;
+    } on DioException catch (e) {
+      print("DioError: ${e.response?.statusCode}");
+
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw 'Failed to Delete. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
     }
   }
 }

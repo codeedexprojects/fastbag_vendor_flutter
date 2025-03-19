@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GrocerySubCategoryEditList extends StatelessWidget {
-  const GrocerySubCategoryEditList({super.key});
+  final GroceryCategoryModel category;
+  final List<GrocerySubCategoryModel> subCategories;
+  const GrocerySubCategoryEditList(
+      {super.key, required this.category, required this.subCategories});
 
   @override
   Widget build(BuildContext context) {
@@ -30,52 +33,62 @@ class GrocerySubCategoryEditList extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: ListView.builder(
-            itemCount: groceryViewModel.subCategories.length,
+            itemCount: subCategories.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.all(screenWidth * .02),
-                child: InkWell(
-                  onTap: () {
-                    // navigate(
-                    //     context: context,
-                    //     screen: EditGrocerySubCategoryScreen(
-                    //       categories: categories,
-                    //       category: categories[0],
-                    //       subCategory: subCategories[index],
-                    //     ));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(screenWidth * .02),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 0.5)),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 32,
-                        backgroundColor:
-                            Colors.grey[200], // Optional: Background color
-                        child: ClipOval(
-                          child: groceryViewModel
-                                      .subCategories[index].subcategoryImage ==
-                                  null
-                              ? Image.asset('assets/Images/grocery.jpeg')
-                              : Image.network(
-                                  groceryViewModel.subCategories[index]
-                                          .subcategoryImage ??
-                                      '',
-                                  fit: BoxFit.cover,
-                                  width: 64,
-                                  height: 64,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.error,
-                                        color: Colors
-                                            .red); // Optional: Handle loading errors
-                                  },
-                                ),
-                        ),
+                child: Container(
+                  padding: EdgeInsets.all(screenWidth * .02),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 0.5)),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 32,
+                      backgroundColor:
+                          Colors.grey[200], // Optional: Background color
+                      child: ClipOval(
+                        child: subCategories[index].subcategoryImage == null
+                            ? Image.asset('assets/Images/grocery.jpeg')
+                            : Image.network(
+                                subCategories[index].subcategoryImage ?? '',
+                                fit: BoxFit.cover,
+                                width: 64,
+                                height: 64,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.error,
+                                      color: Colors
+                                          .red); // Optional: Handle loading errors
+                                },
+                              ),
                       ),
-                      title: Text(groceryViewModel.subCategories[index].name),
-                      trailing: const Icon(Icons.edit),
                     ),
+                    title: Text(subCategories[index].name),
+                    trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                      GestureDetector(
+                        onTap: () {
+                          navigate(
+                              context: context,
+                              screen: EditGrocerySubCategoryScreen(
+                                category: category,
+                                subCategory: subCategories[index],
+                              ));
+                        },
+                        child: const Icon(Icons.edit),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          groceryViewModel.deleteSubCategory(
+                              context, subCategories[index].id);
+                        },
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      )
+                    ]),
                   ),
                 ),
               );

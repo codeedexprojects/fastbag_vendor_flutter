@@ -8,7 +8,7 @@ import 'dart:ui' as ui;
 class FashionFbBottomDialog extends StatefulWidget {
   final String text;
   final String descrription;
-  final FbBottomDialogType type;
+  final FashionFbBottomDialogType type;
   final VoidCallback ontap;
   const FashionFbBottomDialog(
       {super.key,
@@ -104,8 +104,8 @@ class _FbBottomDialogState extends State<FashionFbBottomDialog>
                           color: Colors.black),
                     ),
                   ),
-                  if (widget.type == FbBottomDialogType.addSubCategory ||
-                      widget.type == FbBottomDialogType.editSubCategory)
+                  if (widget.type == FashionFbBottomDialogType.addSubCategory ||
+                      widget.type == FashionFbBottomDialogType.editSubCategory)
                     GestureDetector(
                       onTap: widget.ontap,
                       child: FbButton(
@@ -117,7 +117,7 @@ class _FbBottomDialogState extends State<FashionFbBottomDialog>
                           label: "View"),
                     ),
                   if (widget.type ==
-                      FbBottomDialogType.editSubCategoryNotPossible)
+                      FashionFbBottomDialogType.editSubCategoryNotPossible)
                     FbButton(
                         color: Colors.white,
                         borderColor: Colors.green,
@@ -128,8 +128,8 @@ class _FbBottomDialogState extends State<FashionFbBottomDialog>
                               .then((_) => Navigator.pop(context));
                         },
                         label: "Cancel"),
-                  if (widget.type == FbBottomDialogType.addSubCategory ||
-                      widget.type == FbBottomDialogType.editSubCategory)
+                  if (widget.type == FashionFbBottomDialogType.addSubCategory ||
+                      widget.type == FashionFbBottomDialogType.editSubCategory)
                     FbButton(
                         onClick: () {
                           _controller
@@ -139,7 +139,7 @@ class _FbBottomDialogState extends State<FashionFbBottomDialog>
                         color: Colors.white,
                         borderColor: Colors.green,
                         textColor: Colors.green,
-                        label: widget.type == FbBottomDialogType.editSubCategory
+                        label: widget.type == FashionFbBottomDialogType.editSubCategory
                             ? "Update again"
                             : "Add more sub category")
                 ],
@@ -152,7 +152,7 @@ class _FbBottomDialogState extends State<FashionFbBottomDialog>
   }
 }
 
-enum FbBottomDialogType {
+enum FashionFbBottomDialogType {
   addSubCategory,
   editSubCategory,
   editSubCategoryNotPossible,
