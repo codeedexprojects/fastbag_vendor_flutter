@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 class FbCategoryFormField extends StatefulWidget {
   final String label;
   final String? hint;
+  final VoidCallback? onTap;
   final TextInputType? keyboard;
   final TextEditingController controller;
   final TextInputAction? textInputAction;
@@ -16,6 +17,7 @@ class FbCategoryFormField extends StatefulWidget {
   const FbCategoryFormField(
       {super.key,
       required this.label,
+      this.onTap,
       this.keyboard,
       required this.controller,
       this.validator,
@@ -75,6 +77,7 @@ class _FbCategoryFormFieldState extends State<FbCategoryFormField> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
+        onTap: widget.onTap,
         readOnly: widget.readOnly,
         controller: widget.controller,
         onChanged: widget.onChanged,

@@ -61,7 +61,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
 
     // Ensure categories and subcategories are loaded
     if (groceryViewModel.categories.isNotEmpty ||
-        groceryViewModel.subCategories.isNotEmpty) {
+        groceryViewModel.allSubCategories.isNotEmpty) {
       // Combine category and subcategory names once data is available
       List<SerachItem> categoryItems = groceryViewModel.categories.isNotEmpty
           ? groceryViewModel.categories
@@ -73,8 +73,8 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
               .toList()
           : [];
       List<SerachItem> subCategoryItems =
-          groceryViewModel.subCategories.isNotEmpty
-              ? groceryViewModel.subCategories
+          groceryViewModel.allSubCategories.isNotEmpty
+              ? groceryViewModel.allSubCategories
                   .map<SerachItem>((subCategory) => SerachItem(
                       id: subCategory.id,
                       name: subCategory.name,
@@ -143,14 +143,12 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                         return categoryCard(
                           text: data.categories[index].name,
                           onTap: () {
-                            final List<GrocerySubCategoryModel>
-                                filteredSubCategory =
-                                data.subCategoriesByCategory(
-                                    data.categories[index].id as int);
+                            data.subCategoriesByCategory(
+                                data.categories[index].id as int);
                             navigate(
                                 context: context,
                                 screen: AllGrocerySubCategoryScreen(
-                                  subCategories: filteredSubCategory,
+                                  category: data.categories[index],
                                 ));
                           },
                           radius: screenWidth * .115,

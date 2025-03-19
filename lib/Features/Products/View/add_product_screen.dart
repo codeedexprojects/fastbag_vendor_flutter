@@ -289,7 +289,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             child: TextButton(
                               onPressed: () => removeVariant(index),
                               child: Text("Remove",
-                                  style: TextStyle(color: Colors.red)),
+                                  style: const TextStyle(color: Colors.red)),
                             ),
                           ),
                         ],
