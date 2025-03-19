@@ -62,8 +62,9 @@ class _FashionCategorybySubcategoryState
             Navigator.of(context).pop();
           },
         ),
-        title: Text(
-          "All Sub Categories",
+        title: Text(categoryProvider.selectsubCategory.isEmpty?
+          " Sub Categories":
+         categoryProvider.selectsubCategory.first.categoryName??'',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,

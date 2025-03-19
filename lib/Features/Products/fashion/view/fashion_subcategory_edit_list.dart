@@ -42,10 +42,11 @@ class _FashionSubCategoryEditListState
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Edit Sub Categories",
+        title: Text(categoryProvider.selectsubCategory.isEmpty?
+          "Edit Sub Categories"
+          :'${categoryProvider.selectsubCategory.first.categoryName??''} Edit SubCategories',
           style: mainFont(
-              fontsize: screenWidth * 0.05,
+              fontsize: screenWidth * 0.04,
               fontweight: FontWeight.w500,
               color: Colors.black),
         ),
