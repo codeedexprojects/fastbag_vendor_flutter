@@ -3,39 +3,53 @@ import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/sub_category_edit_list.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_categoryby_subcategory.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_subcategory_edit_list.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/sub_fashion_category_edit_list.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_category_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../model/fashion_category_model.dart';
 import '../model/fashion_sub_category_model.dart';
 import 'add_fashion_sub_category_screen.dart';
 import 'edit_fashion_sub_category_screen.dart';
-import 'fashion_all_editlist_subcategory.dart';
 import 'list_fashion_products_screen.dart';
 
-class FashionAllSubCategoryScreen extends StatelessWidget {
-  final List<FashionCategoryModel> categories;
-  final List<FashionSubCategoryModel> subCategories;
+class FashionCategorybySubcategory extends StatefulWidget {
+  final int? categoryId;
 
   final bool isOperable;
 
-  const FashionAllSubCategoryScreen({
+  FashionCategorybySubcategory({
     super.key,
-    required this.subCategories,
-    required this.categories,
     required this.isOperable,
+    required this.categoryId,
+    // this.selectSubCategory
   });
+
+  @override
+  State<FashionCategorybySubcategory> createState() =>
+      _FashionCategorybySubcategoryState();
+}
+
+class _FashionCategorybySubcategoryState
+    extends State<FashionCategorybySubcategory> {
+  @override
+  void initState() {
+    final categoryProvider =
+        Provider.of<FashionCategoryViewModel>(context, listen: false);
+    categoryProvider.getFashionCategorybySubCategories(
+        categoryId: widget?.categoryId ?? 0);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("subcategories :- $subCategories");
+    final categoryProvider = Provider.of<FashionCategoryViewModel>(context);
+
+    print("subcategories :- ${categoryProvider.selectsubCategory}");
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -48,8 +62,9 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        title: Text(
-          "All Sub Categories",
+        title: Text(categoryProvider.selectsubCategory.isEmpty?
+          " Sub Categories":
+         categoryProvider.selectsubCategory.first.categoryName??'',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -89,9 +104,11 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
               height: screenHeight * .02,
             ),
             Text(
-              subCategories.isNotEmpty
-                  ? "Select Sub Categories"
-                  : "No Sub Categories added",
+              //
+              // categoryProvider.selectsubCategory.isEmpty
+              //     ?
+              "Select Sub Categories",
+              //     : "No Sub Categories added",
               style: mainFont(
                   fontsize: 18,
                   fontweight: FontWeight.w600,
@@ -100,7 +117,7 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
             SizedBox(
               height: screenHeight * .02,
             ),
-            subCategories.isNotEmpty
+            categoryProvider.selectsubCategory.isNotEmpty
                 ? Expanded(
                     child: GridView.builder(
                     padding: const EdgeInsets.all(5),
@@ -109,18 +126,22 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                             crossAxisCount: 3,
                             childAspectRatio: 0.57,
                             crossAxisSpacing: 14),
-                    itemCount: subCategories.length,
+                    itemCount: categoryProvider.selectsubCategory.length,
                     itemBuilder: (context, index) {
                       return subCategoryCard(
                         height: screenWidth * 0.33,
-                        text: subCategories[index]?.name ?? '',
-                        image: subCategories[index]?.subcategoryImage ?? '',
+                        text: categoryProvider.selectsubCategory[index]?.name ??
+                            '',
+                        image: categoryProvider
+                                .selectsubCategory[index]?.subcategoryImage ??
+                            '',
                         onTap: () {
                           navigate(
                             context: context,
                             screen: FashionListProductsScreen(
-                              subCategory: subCategories[index],
-                              subCategories: subCategories,
+                              subCategory:
+                                  categoryProvider.subCategories[index],
+                              subCategories: categoryProvider.subCategories,
                             ),
                           );
                         },
@@ -130,7 +151,7 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                 : const Center(
                     child: Text("Start adding your sub category now"),
                   ),
-            if (isOperable)
+            if (widget.isOperable)
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: screenWidth / 15, vertical: 5),
@@ -139,12 +160,13 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                       navigate(
                           context: context,
                           screen: FashionAddSubCategoryScreen(
-                            categories: categories,
+                            categories: categoryProvider.categories,
                           ));
                     },
                     label: "+ Add Category"),
               ),
-            if (isOperable && subCategories.isNotEmpty)
+            if (widget.isOperable &&
+                categoryProvider.selectsubCategory.isNotEmpty)
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: screenWidth / 15, vertical: 5),
@@ -152,9 +174,9 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                   onClick: () {
                     navigate(
                         context: context,
-                        screen: FashionAllSubCategoryEditList(
-                            subCategories: subCategories,
-                            categories: categories));
+                        screen: FashionSubCategoryEditList(
+                          categoryId: widget.categoryId,
+                        ));
                   },
                   icon: const FaIcon(
                     FontAwesomeIcons.penToSquare,

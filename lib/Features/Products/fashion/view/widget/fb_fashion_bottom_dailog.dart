@@ -5,24 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui' as ui;
 
-import '../../Dashboard/view/dashboard_screen.dart';
-import '../../Products/fashion/view/fashion_subcategory_edit_list.dart';
-
-class FbBottomDialog extends StatefulWidget {
+class FashionFbBottomDialog extends StatefulWidget {
   final String text;
   final String descrription;
-  final FbBottomDialogType type;
-  const FbBottomDialog(
+  final FashionFbBottomDialogType type;
+  final VoidCallback ontap;
+  const FashionFbBottomDialog(
       {super.key,
-      required this.text,
-      required this.descrription,
-      required this.type});
+        required this.text,
+        required this.descrription,
+        required this.type, required this.ontap});
 
   @override
-  State<FbBottomDialog> createState() => _FbBottomDialogState();
+  State<FashionFbBottomDialog> createState() => _FbBottomDialogState();
 }
 
-class _FbBottomDialogState extends State<FbBottomDialog>
+class _FbBottomDialogState extends State<FashionFbBottomDialog>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -106,17 +104,20 @@ class _FbBottomDialogState extends State<FbBottomDialog>
                           color: Colors.black),
                     ),
                   ),
-                  if (widget.type == FbBottomDialogType.addSubCategory ||
-                      widget.type == FbBottomDialogType.editSubCategory)
-                    FbButton(
-                        onClick: () {
-                          _controller.reverse().then((_) =>
-                              Navigator.pop(context)
-                          );
-                        },
-                        label: "View"),
+                  if (widget.type == FashionFbBottomDialogType.addSubCategory ||
+                      widget.type == FashionFbBottomDialogType.editSubCategory)
+                    GestureDetector(
+                      onTap: widget.ontap,
+                      child: FbButton(
+                          onClick: () {
+                            // _controller.reverse().then((_) =>
+                            //     Navigator.pop(context)
+                            // );
+                          },
+                          label: "View"),
+                    ),
                   if (widget.type ==
-                      FbBottomDialogType.editSubCategoryNotPossible)
+                      FashionFbBottomDialogType.editSubCategoryNotPossible)
                     FbButton(
                         color: Colors.white,
                         borderColor: Colors.green,
@@ -127,8 +128,8 @@ class _FbBottomDialogState extends State<FbBottomDialog>
                               .then((_) => Navigator.pop(context));
                         },
                         label: "Cancel"),
-                  if (widget.type == FbBottomDialogType.addSubCategory ||
-                      widget.type == FbBottomDialogType.editSubCategory)
+                  if (widget.type == FashionFbBottomDialogType.addSubCategory ||
+                      widget.type == FashionFbBottomDialogType.editSubCategory)
                     FbButton(
                         onClick: () {
                           _controller
@@ -138,7 +139,7 @@ class _FbBottomDialogState extends State<FbBottomDialog>
                         color: Colors.white,
                         borderColor: Colors.green,
                         textColor: Colors.green,
-                        label: widget.type == FbBottomDialogType.editSubCategory
+                        label: widget.type == FashionFbBottomDialogType.editSubCategory
                             ? "Update again"
                             : "Add more sub category")
                 ],
@@ -151,7 +152,7 @@ class _FbBottomDialogState extends State<FbBottomDialog>
   }
 }
 
-enum FbBottomDialogType {
+enum FashionFbBottomDialogType {
   addSubCategory,
   editSubCategory,
   editSubCategoryNotPossible,
