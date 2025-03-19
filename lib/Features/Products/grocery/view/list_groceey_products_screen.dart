@@ -35,7 +35,6 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    final groceryViewModel = Provider.of<GroceryViewModel>(context);
     gap(value) {
       return SizedBox(height: screenWidth * value);
     }

@@ -11,6 +11,8 @@ class GroceryViewModel extends ChangeNotifier {
   List<GroceryCategoryModel> categories = [];
   List<GrocerySubCategoryModel> subCategories = [];
   List<GroceryProductsModel> subCategoryProducts = [];
+  Weight? selectedWeight;
+  int selectedQuantity = 1;
 
   // Getter to return subcategories based on a selected category ID
 
@@ -134,5 +136,12 @@ class GroceryViewModel extends ChangeNotifier {
     } finally {
       SVProgressHUD.dismiss();
     }
+  }
+
+
+  void selectWeight(Weight weight) {
+    selectedWeight = weight;
+    selectedQuantity = weight.quantity; // Assuming quantity exists inside weight
+    notifyListeners();
   }
 }

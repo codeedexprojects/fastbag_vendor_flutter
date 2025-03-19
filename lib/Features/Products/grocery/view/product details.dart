@@ -12,7 +12,7 @@ import '../model/grocery_products_model.dart';
 
 class ProductDetails extends StatefulWidget {
   final GroceryProductsModel product;
-  const ProductDetails({super.key, required this.product});
+  const ProductDetails({super.key, required this.product,});
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -21,13 +21,14 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   Weight? selectedWeight;
   double selectedPrice = 0.0;
+  double totalPrice=0;
   @override
-  // void initState() {
-  //   super.initState();
-  //   if (widget.product.weights.isNotEmpty) {
-  //     selectedWeight = widget.product.weights.first;
-  //   }
-  // }
+  void initState() {
+    super.initState();
+    if (widget.product.weights.isNotEmpty) {
+      selectedPrice = widget.product.price; // Set default weight
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,15 +119,24 @@ class _ProductDetailsState extends State<ProductDetails> {
                         itemBuilder: (context, index) {
                           final weight=widget.product.weights[index];
                           bool isSelected = weight == selectedWeight;
-                          // int SelctedWeightIndex=0;
-                          // double price = widget.product.price; // Assume base price per unit
-                          // String selectedWeight = widget.product.weights[SelctedWeightIndex].weight ; // Default selected weight
-                          // double selectedPrice = price * selectedWeight; // Calculate price
+                          int SelctedWeightIndex=0;
+
                         return GestureDetector(
                           onTap: () {
                            setState(() {
-                             selectedWeight = weight;
-                             selectedPrice=weight.price;
+                             final groceryViewModel = Provider.of<GroceryViewModel>(context, listen: false);
+                             groceryViewModel.selectWeight(widget.product.weights[index]);
+                             // selectedWeight = weight;
+                             // selectedPrice=weight.price;
+                             selectedWeight = weight; // Update the selected weight
+
+                             // Ensure weight is converted to a number correctly
+                             int weightValue = int.tryParse(weight.weight.replaceAll(RegExp(r'[^0-9]'), '')) ?? 1;
+
+                             // Calculate the price
+                             selectedPrice = widget.product.price * weightValue;// Calculate price
+
+                             totalPrice = selectedPrice * weight.quantity;
 
                            });
                           },
@@ -159,7 +169,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         ),),
-                        Text('₹${selectedPrice.toStringAsFixed(2)}'.toString(),style: GoogleFonts.nunito(
+                        Text('₹${selectedPrice.toString()}',style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         )),
@@ -169,11 +179,26 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.product.categoryName,style: GoogleFonts.nunito(
+                        Text('Quantity',style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         ),),
-                        Text( selectedWeight?.price.toString() ?? '₹0.00',style: GoogleFonts.nunito(
+                        Text(
+                            selectedWeight?.quantity.toString() ?? '0',style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        )),
+                      ],
+                    ),
+                    SizedBox(height: height*0.015,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(widget.product.name,style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),),
+                        Text( totalPrice.toString()  ,style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         )),
@@ -183,7 +208,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Category',style: GoogleFonts.nunito(
+                        Text(widget.product.categoryName,style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                         ),),
