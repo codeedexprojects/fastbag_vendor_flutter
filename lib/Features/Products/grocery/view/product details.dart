@@ -20,6 +20,7 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   Weight? selectedWeight;
+  String? selectedImage;
   double selectedPrice = 0.0;
   double totalPrice=0;
   @override
@@ -27,6 +28,9 @@ class _ProductDetailsState extends State<ProductDetails> {
     super.initState();
     if (widget.product.weights.isNotEmpty) {
       selectedPrice = widget.product.price; // Set default weight
+    }
+    if (widget.product.images.isNotEmpty) {
+      selectedImage = widget.product.images.first.image; // Set the first image as default
     }
   }
 
@@ -38,26 +42,42 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Scaffold(
      body: Center(
        child: Padding(
-         padding:  EdgeInsets.all(width*0.03),
+         padding:  EdgeInsets.all(width*0.04),
          child: SingleChildScrollView(
            child: Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
              children: [
-               widget.product.images.isNotEmpty?
-                 SizedBox(
-                   width: width*1,
-                   child: ListView.builder(
-                     physics: NeverScrollableScrollPhysics(),
-                     shrinkWrap: true,
-                     itemCount: 1,
-                     itemBuilder: (context, index) {
-                       final image = widget.product.images.first;
-                     return Image.network(
-                         image.image,
-                         fit: BoxFit.fill,
-                       height: height*0.4, // Adjust height as needed
-                       );
-                   },),
-                 ):Image(image: AssetImage(ImagesConstants.food)),
+                   Container(
+             height: height * 0.4, // Adjust height as needed
+             width: width,
+             decoration: BoxDecoration(
+               borderRadius: BorderRadius.circular(width * 0.03),
+               image: selectedImage != null
+                   ? DecorationImage(
+                 image: NetworkImage(selectedImage!),
+                 fit: BoxFit.cover,
+               )
+                   : DecorationImage(
+                 image: AssetImage(ImagesConstants.food),
+                 fit: BoxFit.cover,
+               ),
+             ),
+                   ),
+                 // SizedBox(
+                 //   width: width*1,
+                 //   child: ListView.builder(
+                 //     physics: NeverScrollableScrollPhysics(),
+                 //     shrinkWrap: true,
+                 //     itemCount: 1,
+                 //     itemBuilder: (context, index) {
+                 //       final image = widget.product.images[index];
+                 //     return Image.network(
+                 //         image.image,
+                 //         fit: BoxFit.fill,
+                 //       height: height*0.4, // Adjust height as needed
+                 //       );
+                 //   },),
+                 // ):Image(image: AssetImage(ImagesConstants.food)),
                SizedBox(height: height*0.04,),
                widget.product.images.isNotEmpty?
                SizedBox(
@@ -67,12 +87,22 @@ class _ProductDetailsState extends State<ProductDetails> {
                      scrollDirection: Axis.horizontal,
                      itemBuilder: (context, index) {
                        final image = widget.product.images[index];
-                       return  Container(
-                         height: height*0.09,
-                         width: width*0.19,
-                         decoration: BoxDecoration(
-                             image: DecorationImage(image: NetworkImage(image.image),fit: BoxFit.fill),
-                             borderRadius: BorderRadius.circular(width*0.03)
+                       return  GestureDetector(
+                         onTap: () {
+                           setState(() {
+                             selectedImage = image.image;
+                           });
+                         },
+                         child: Container(
+                           height: height*0.09,
+                           width: width*0.19,
+                           decoration: BoxDecoration(
+                               image: DecorationImage(image: NetworkImage(image.image),fit: BoxFit.fill),
+                               borderRadius: BorderRadius.circular(width*0.03),
+                             border: Border.all(
+                               color: selectedImage == image.image ? Colors.green : Colors.transparent,
+                             )
+                           ),
                          ),
                        );
                      },
@@ -101,19 +131,61 @@ class _ProductDetailsState extends State<ProductDetails> {
                      itemCount: 4),
                ),
               Padding(
-                padding:  EdgeInsets.all(width*0.03),
+                padding:  EdgeInsets.all(width*0.01),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: height*0.015,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(widget.product.name,style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),),
+                        Text( totalPrice.toString()  ,style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        )),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(widget.product.categoryName,style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.w300,
+                          color: OrderColor.textColor,
+                          fontSize: 16,
+                        ),),
+                        Row(
+                          children: [
+                            Icon(Icons.star_rate_rounded,color: Colors.orangeAccent,),
+                            Text('4.8(100+ reviews)',style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.w300,
+                              color: OrderColor.textColor,
+                              fontSize: 14,
+                            )),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: height*0.001,),
                     Text('Available Weights',style: GoogleFonts.nunito(
                       fontWeight: FontWeight.w600,
-                      fontSize: 18,
+                      color: OrderColor.textColor,
+                      fontSize: 15,
                     ),),
-                    SizedBox(height: height*0.02,),
+                    SizedBox(height: height*0.001,),
+                    Text('Available Stocks:${widget.product.available}',style: GoogleFonts.nunito(
+                      fontWeight: FontWeight.w400,
+                      color: OrderColor.red,
+                      fontSize: 12,
+                    ),),
+                    SizedBox(height: height*0.01,),
                     widget.product.weights.isNotEmpty?
                     SizedBox(
                       height: height*0.05,
-                      child: ListView.builder(
+                      child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: widget.product.weights.length,
                         itemBuilder: (context, index) {
@@ -159,23 +231,22 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                           ),
                         );
-                      },),
+                      }, separatorBuilder: (BuildContext context, int index) { return SizedBox(width: width*0.02,); },),
                     ):Text('no weights'),
-                    SizedBox(height: height*0.015,),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Price :',style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                        ),),
-                        Text('₹${selectedPrice.toString()}',style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                        )),
-                      ],
-                    ),
-                    SizedBox(height: height*0.015,),
+                    // Row(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Text('Price :',style: GoogleFonts.nunito(
+                    //       fontWeight: FontWeight.w600,
+                    //       fontSize: 18,
+                    //     ),),
+                    //     Text('₹${selectedPrice.toString()}',style: GoogleFonts.nunito(
+                    //       fontWeight: FontWeight.w600,
+                    //       fontSize: 18,
+                    //     )),
+                    //   ],
+                    // ),
+                    SizedBox(height: height*0.01,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -188,40 +259,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         )),
-                      ],
-                    ),
-                    SizedBox(height: height*0.015,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(widget.product.name,style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                        ),),
-                        Text( totalPrice.toString()  ,style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                        )),
-                      ],
-                    ),
-                    SizedBox(height: height*0.007,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(widget.product.categoryName,style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),),
-                        Row(
-                          children: [
-                            Icon(Icons.star_rate_rounded,color: Colors.orangeAccent,),
-                            Text('4.8(100+ reviews)',style: GoogleFonts.nunito(
-                              fontWeight: FontWeight.w600,
-                              color: OrderColor.textColor,
-                              fontSize: 14,
-                            )),
-                          ],
-                        ),
                       ],
                     ),
                     Divider(color: OrderColor.borderColor.withOpacity(0.3),),
