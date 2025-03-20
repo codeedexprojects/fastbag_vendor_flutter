@@ -32,29 +32,24 @@ class _FbToggleSwitchState extends State<FbToggleSwitch> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 0.2),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade300),
       ),
-
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Color.fromRGBO(240, 240, 240, 1), width: 0.2),
-        ),
-        child: ListTile(
-          title: Text(widget.title),
-          trailing: Switch(
-            activeColor: Colors.green,
-            inactiveThumbColor: Colors.white,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            value: _value,
-            onChanged: (value) {
-              setState(() {
-                _value = value;
-              });
-              widget.onToggleChanged(value);
-            },
-          ),
-
-
+      child: ListTile(
+        title: Text(widget.title),
+        trailing: Switch(
+          activeColor: Colors.green,
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: Colors.grey[300],
+          trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          value: _value,
+          onChanged: (value) {
+            setState(() {
+              _value = value;
+            });
+            widget.onToggleChanged(value);
+          },
         ),
       ),
     );

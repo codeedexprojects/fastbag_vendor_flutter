@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
@@ -33,6 +34,7 @@ class EditShopDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         title: Text(
           "Edit Shop Details",
@@ -54,9 +56,9 @@ class EditShopDetailsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              editItem(name: "Edit Shop Logo", tap: () {
+              editItem(name: "Edit Shop Logo" , tap: () {
                 navigate(context: context, screen: const EditShopLogo());
-              }),
+              },),
               editItem(name: "Edit Shop Images", tap: () {
                 navigate(context: context, screen: const EditShopImage());
               }),

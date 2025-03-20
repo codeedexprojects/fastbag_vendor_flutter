@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'dart:ui' as ui;
 
 import '../../Dashboard/view/dashboard_screen.dart';
+import '../../Products/fashion/view/fashion_subcategory_edit_list.dart';
 
 class FbBottomDialog extends StatefulWidget {
   final String text;

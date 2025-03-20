@@ -29,7 +29,7 @@ class _ListSubcategoriesNameState extends State<ListSubcategoriesName> {
         title: Text(
           "Sub Categories",
           style: nunito(
-              color: Colors.black, fontSize: 16, fontBold: FontWeight.w500),
+              color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
       body: Column(

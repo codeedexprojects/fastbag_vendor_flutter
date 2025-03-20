@@ -9,6 +9,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_mode
 import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/sub_category_edit_list.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_subcategory_edit_list.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/sub_fashion_category_edit_list.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,18 +18,21 @@ import '../model/fashion_category_model.dart';
 import '../model/fashion_sub_category_model.dart';
 import 'add_fashion_sub_category_screen.dart';
 import 'edit_fashion_sub_category_screen.dart';
+import 'fashion_all_editlist_subcategory.dart';
 import 'list_fashion_products_screen.dart';
 
 class FashionAllSubCategoryScreen extends StatelessWidget {
-  final List<FashionCategoryModel?> categories;
-  final List<FashionSubCategoryModel?> subCategories;
-  final bool isOperable;
-  const FashionAllSubCategoryScreen(
-      {super.key,
-      required this.subCategories,
-      required this.categories,
-      required this.isOperable});
+  final List<FashionCategoryModel> categories;
+  final List<FashionSubCategoryModel> subCategories;
 
+  final bool isOperable;
+
+  const FashionAllSubCategoryScreen({
+    super.key,
+    required this.subCategories,
+    required this.categories,
+    required this.isOperable,
+  });
   @override
   Widget build(BuildContext context) {
     print("subcategories :- $subCategories");
@@ -109,8 +113,8 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return subCategoryCard(
                         height: screenWidth * 0.33,
-                        text: subCategories[index]?.name??'',
-                        image: subCategories[index]?.subcategoryImage??'',
+                        text: subCategories[index]?.name ?? '',
+                        image: subCategories[index]?.subcategoryImage ?? '',
                         onTap: () {
                           navigate(
                             context: context,
@@ -146,11 +150,11 @@ class FashionAllSubCategoryScreen extends StatelessWidget {
                     horizontal: screenWidth / 15, vertical: 5),
                 child: FbButton(
                   onClick: () {
-                    // navigate(
-                    //     context: context,
-                    //     screen: FashionEditSubCategoryScreen(
-                    //        category: categories, subCategory:subCategories , categories: [],
-                    //     ));
+                    navigate(
+                        context: context,
+                        screen: FashionAllSubCategoryEditList(
+                            subCategories: subCategories,
+                            categories: categories));
                   },
                   icon: const FaIcon(
                     FontAwesomeIcons.penToSquare,

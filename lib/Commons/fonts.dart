@@ -2,9 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 TextStyle nunito(
-    {double? fontSize, FontWeight fontBold = FontWeight.w500, Color? color}) {
+    {double? fontSize, FontWeight fontWeight = FontWeight.w500, Color? color}) {
   return GoogleFonts.nunito(
-      fontSize: fontSize, fontWeight: fontBold, color: color);
+      fontSize: fontSize, fontWeight: fontWeight, color: color);
+}
+
+TextStyle poppins(
+    {double? fontSize, FontWeight fontWeight = FontWeight.w500, Color? color}) {
+  return GoogleFonts.poppins(
+      fontSize: fontSize, fontWeight: fontWeight, color: color);
+}
+
+TextStyle inter(
+    {double? fontSize, FontWeight fontWeight = FontWeight.w500, Color? color}) {
+  return GoogleFonts.inter(
+      fontSize: fontSize, fontWeight: fontWeight, color: color);
 }
 
 TextStyle mainFont(

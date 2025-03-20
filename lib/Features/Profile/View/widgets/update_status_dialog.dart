@@ -1,6 +1,7 @@
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
+import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui' as ui;
@@ -105,7 +106,7 @@ class _UpdateStatusDialogState extends State<UpdateStatusDialog>
                       onClick: () {
                         _controller.reverse().then((_) => navigate(
                             context: context,
-                            screen: DashboardScreen(),
+                            screen: FbBottomNav(),
                             type: NavigationType.pushAndRemoveUntil));
                       },
                       label: "Ok"),
