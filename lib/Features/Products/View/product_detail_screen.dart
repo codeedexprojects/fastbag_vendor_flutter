@@ -215,28 +215,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
 
 
-
-              _viewModel.foodDetail?.variants != null
-                  ? SizedBox(
-                height: height,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    var variant = _viewModel.foodDetail!.variants![index]; // Get variant map
-                    String variantName = variant.keys;
-                    var details = variant[variantName];
-
-                    return ListTile(
-                      title: Text(variantName),
-                      // title: Text(variant.half.toString()),
-                      subtitle: Text("Price: ₹${variant.half?.price} | Quantity: ${variant.half?.quantity}" ),
-                      trailing: Text( "stock Status: ${variant.half?.stockStatus}"),
-                    );
-                  },
-                ),
-              )
-                  : Text('no varients'),// Show nothing if variants are null,
+              //
+              // _viewModel.foodDetail?.variants != null
+              //     ? SizedBox(
+              //   height: height,
+              //   child: ListView.builder(
+              //     shrinkWrap: true,
+              //     itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
+              //     itemBuilder: (context, index) {
+              //       var variant = _viewModel.foodDetail!.variants[index]; // Get variant map
+              //       String variantName = variant.keys;
+              //       var details = variant[variantName];
+              //
+              //       return ListTile(
+              //         title: Text(variantName),
+              //         // title: Text(variant.half.toString()),
+              //         subtitle: Text("Price: ₹${variant.half?.price} | Quantity: ${variant.half?.quantity}" ),
+              //         trailing: Text( "stock Status: ${variant.half?.stockStatus}"),
+              //       );
+              //     },
+              //   ),
+              // )
+              //     : Text('no varients'),// Show nothing if variants are null,
               ],
               ),
             ),
