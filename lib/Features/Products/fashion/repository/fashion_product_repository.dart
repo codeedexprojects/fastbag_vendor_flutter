@@ -293,8 +293,7 @@ class FashionProductRepository {
     }
   }
 
-  Future<dynamic> addFastionProduct(
-      BuildContext context, AddFashionProductModel model) async {
+  Future<dynamic> addFastionProduct(BuildContext context, model) async {
     try {
       SVProgressHUD.show();
       var dio = Dio();
@@ -302,32 +301,38 @@ class FashionProductRepository {
       var tokenId = prefs.getString('access_token');
       var vendor = prefs.getInt(FbLocalStorage.vendorId);
       var headers = {'Authorization': 'Bearer $tokenId'};
-      Map<String, dynamic> data = {
-        "vendor": vendor,
-        "category_id": model.categoryId,
-        "subcategory_id": model.subcategoryId,
-        "name": model.name,
-        "description": model.description,
-        "gender": model.gender,
-        "discount": model.discount,
-        "colors": model.colors,
-        "material": 'cotton',
-        "is_active": model.isActive,
-        'price': '100'
-      };
-      print("data ${data}");
+      // var data = FormData.fromMap({
+      //   // 'image_files': imageFiles,
+      //   "vendor": vendor,
+      //   ...model,
+      //   "colors": jsonEncode(model["colors"])
+      // });
+      // Map<String, dynamic> data = {
+      //   "vendor": vendor,
+      //   "category_id": model.categoryId,
+      //   "subcategory_id": model.subcategoryId,
+      //   "name": model.name,
+      //   "description": model.description,
+      //   "gender": model.gender,
+      //   "colors": model.colors,
+      //   "material": model.material,
+      //   "is_active": model.isActive,
+      // };
+      // print("data ${data}");
 
-      print("model ${model.colors}");
+      // print("model ${model.colors}");
+      print("siqfijfbiuf ${model}");
       var response = await dio.request(
         '${baseUrl}fashion/clothing/',
         options: Options(
           method: 'POST',
           headers: headers,
         ),
-        data: data,
+        data: model,
       );
       print(response.statusCode);
       if (response.statusCode == 201) {
+        SVProgressHUD.dismiss();
         print("product added successful: ${response.data}");
         showDialog(
           context: context,
@@ -340,6 +345,7 @@ class FashionProductRepository {
           ),
         );
       } else if (response.statusCode == 401) {
+        SVProgressHUD.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OOPs something happened")),
         );
@@ -357,6 +363,9 @@ class FashionProductRepository {
       //   SnackBar(content: Text("OOPs something happened , Error: $e")),
       // );
       print("Error: ${e.response}");
+    } catch (e) {
+      print("erro $e");
+      SVProgressHUD.dismiss();
     }
   }
 }
