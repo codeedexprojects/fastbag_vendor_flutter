@@ -11,7 +11,7 @@ import '../../../Commons/fonts.dart';
 class ProductDetailScreen extends StatefulWidget {
   final int productId;
 
-  const ProductDetailScreen({Key? key, required this.productId, required List<FoodItemModel> products})
+  const ProductDetailScreen({Key? key, required this.productId})
       : super(key: key);
 
   @override
@@ -68,7 +68,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Image.asset(
                           'assets/Images/image_5-removebg-preview.png'),
-                      errorWidget: (context, url, error) => Icon(Icons.downloading),
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.downloading),
                     ),
                   ),
                 ),
@@ -125,7 +126,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ],
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -203,22 +203,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           width: 60,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-
             boxShadow: [
               BoxShadow(
-                color:Color.fromRGBO(0, 0, 0, 0.25),
-                blurRadius:  _isSelected == index ?20.0: 0,
-      
+                color: Color.fromRGBO(0, 0, 0, 0.25),
+                blurRadius: _isSelected == index ? 20.0 : 0,
               ),
             ],
             border: Border.all(
               color: Color.fromRGBO(94, 177, 78, 1),
-              width:
-              _isSelected == index ? 1 : 0,
+              width: _isSelected == index ? 1 : 0,
             ),
           ),
           child: ClipRRect(
-             borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10),
             child: Image.network(
               path,
               fit: BoxFit.cover,
