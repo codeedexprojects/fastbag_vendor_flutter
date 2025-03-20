@@ -110,9 +110,9 @@ class _FbBottomDialogState extends State<FbBottomDialog>
                       widget.type == FbBottomDialogType.editSubCategory)
                     FbButton(
                         onClick: () {
-                          _controller.reverse().then((_) =>
-                              Navigator.pop(context)
-                          );
+                          _controller
+                              .reverse()
+                              .then((_) => Navigator.pop(context));
                         },
                         label: "View"),
                   if (widget.type ==

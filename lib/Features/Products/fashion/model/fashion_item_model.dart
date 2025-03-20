@@ -156,7 +156,7 @@ class Colors {
 
 class Sizes {
   String? size;
-  String? price;
+ dynamic? price;
   int? stock;
 
   Sizes({this.size, this.price, this.stock});
