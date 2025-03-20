@@ -96,16 +96,16 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                     return Column(
                       children: [
                         GestureDetector(
-                          // onTap: () {
-                          //   navigate(
-                          //       context: context,
-                          //       screen: ProductDetailScreen(
-                          //           productId: products[index].id));
-                          // },
+                          onTap: () {
+                            navigate(
+                                context: context,
+                                screen: ProductDetailScreen(
+                                    productId: products[index].id));
+                          },
                           child: ListTile(
-                            onTap: () {
-                              navigate(context: context, screen: ProductDetails(product: products[index],));
-                            },
+                            // onTap: () {
+                            //   navigate(context: context, screen: ProductDetails(product: products[index],));
+                            // },
                             leading: Container(
                               height: screenHeight * .05,
                               width: screenHeight * .06,

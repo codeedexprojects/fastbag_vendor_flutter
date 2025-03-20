@@ -1,11 +1,13 @@
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/images.dart';
 import 'package:fastbag_vendor_flutter/Commons/localvariables.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_products_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../ViewModel/product_view_model.dart';
 import '../ViewModel/grocery_view_model.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -34,9 +36,17 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<GroceryViewModel>(context);
+    final productProvider =
+    Provider.of<ProductViewModel>(context, listen: false);
     height=MediaQuery.of(context).size.height;
     width=MediaQuery.of(context).size.width;
     return Scaffold(
+      // floatingActionButton: FloatingActionButton(
+      //     onPressed: () {
+      //       Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailScreen(productId:  productProvider
+      //           .foodProducts[index].id ??
+      //       0, ),))
+      //     },),
      body: Center(
        child: Padding(
          padding:  EdgeInsets.all(width*0.03),
