@@ -6,7 +6,6 @@ import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/groce
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/add_grocery_product.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/product%20details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -95,8 +94,8 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                                 onTap: () {
                                   navigate(
                                       context: context,
-                                      screen: ProductDetails(product: products[index],
-                                         ));
+                                      screen: ProductDetailScreen(
+                                          productId: products[index].id));
                                 },
                                 child: ListTile(
                                   leading: Container(
