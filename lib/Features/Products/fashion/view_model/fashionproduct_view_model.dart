@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/addproduct_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/color_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/add_fashion_product.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,8 @@ class FashionProductViewModel extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  ColorPickerModel? colorPicker;
 
   Future<void> addFashionProduct(
       {required BuildContext context,

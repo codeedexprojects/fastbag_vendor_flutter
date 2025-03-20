@@ -30,7 +30,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     super.initState();
     // Fetch categories and subcategories
     final groceryViewModel =
-        Provider.of<GroceryViewModel>(context, listen: false);
+    Provider.of<GroceryViewModel>(context, listen: false);
     groceryViewModel.fetchGroceryCategory(context);
     groceryViewModel.fetchGrocerySubCategory(context);
   }
@@ -65,23 +65,23 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
       // Combine category and subcategory names once data is available
       List<SerachItem> categoryItems = groceryViewModel.categories.isNotEmpty
           ? groceryViewModel.categories
-              .map<SerachItem>((category) => SerachItem(
-                  id: category.id ?? 0,
-                  name: category.name ?? "",
-                  type: "category",
-                  model: category))
-              .toList()
+          .map<SerachItem>((category) => SerachItem(
+          id: category.id ?? 0,
+          name: category.name ?? "",
+          type: "category",
+          model: category))
+          .toList()
           : [];
       List<SerachItem> subCategoryItems =
-          groceryViewModel.allSubCategories.isNotEmpty
-              ? groceryViewModel.allSubCategories
-                  .map<SerachItem>((subCategory) => SerachItem(
-                      id: subCategory.id,
-                      name: subCategory.name,
-                      type: "sub_category",
-                      model: subCategory))
-                  .toList()
-              : [];
+      groceryViewModel.allSubCategories.isNotEmpty
+          ? groceryViewModel.allSubCategories
+          .map<SerachItem>((subCategory) => SerachItem(
+          id: subCategory.id,
+          name: subCategory.name,
+          type: "sub_category",
+          model: subCategory))
+          .toList()
+          : [];
       combinedList = [...categoryItems, ...subCategoryItems];
       print("Combined List: $combinedList"); // Debugging output
     }
@@ -136,8 +136,8 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                     return GridView.builder(
                       padding: const EdgeInsets.all(0),
                       gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3, childAspectRatio: 0.7),
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, childAspectRatio: 0.7),
                       itemCount: data.categories.length,
                       itemBuilder: (context, index) {
                         return categoryCard(
@@ -168,69 +168,69 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     );
   }
 
-  // Widget subCategoriesSection(double screenHeight, double screenWidth,
-  //     GroceryViewModel groceryViewModel) {
-  //   List<GrocerySubCategoryModel> filteredSubCategories =
-  //       groceryViewModel.subCategoriesByCategory(selectedCategoryId);
+// Widget subCategoriesSection(double screenHeight, double screenWidth,
+//     GroceryViewModel groceryViewModel) {
+//   List<GrocerySubCategoryModel> filteredSubCategories =
+//       groceryViewModel.subCategoriesByCategory(selectedCategoryId);
 
-  //   return Column(
-  //     children: [
-  //       Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: [
-  //           Text(
-  //             "Select Sub Categories",
-  //             style: mainFont(
-  //                 fontsize: 18,
-  //                 fontweight: FontWeight.w600,
-  //                 color: FbColors.greendark),
-  //           ),
-  //           if (filteredSubCategories.isNotEmpty)
-  //             TextButton(
-  //               onPressed: () {
-  //                 navigate(
-  //                     context: context,
-  //                     screen: const AllGrocerySubCategoryScreen());
-  //               },
-  //               child: const Text(
-  //                 "View All",
-  //                 style: TextStyle(
-  //                     color: Colors.grey, decoration: TextDecoration.underline),
-  //               ),
-  //             )
-  //         ],
-  //       ),
-  //       SizedBox(
-  //           height: screenHeight * 0.5, // Constrain height for GridView
-  //           child: filteredSubCategories.isEmpty
-  //               ? Center(
-  //                   child: Text('No Sub Categories Added', style: nunito()))
-  //               : GridView.builder(
-  //                   padding: const EdgeInsets.all(5),
-  //                   gridDelegate:
-  //                       const SliverGridDelegateWithFixedCrossAxisCount(
-  //                           crossAxisCount: 3,
-  //                           childAspectRatio: .57,
-  //                           crossAxisSpacing: 14),
-  //                   itemCount: filteredSubCategories.length,
-  //                   itemBuilder: (context, index) {
-  //                     return subCategoryCard(
-  //                       height: screenWidth * 0.33,
-  //                       text: filteredSubCategories[index].name,
-  //                       image:
-  //                           filteredSubCategories[index].subcategoryImage ?? '',
-  //                       onTap: () {
-  //                         navigate(
-  //                             context: context,
-  //                             screen: ListGroceryProducts(
-  //                                 subCategory: filteredSubCategories[index],
-  //                                 category:
-  //                                     groceryViewModel.categories[index]));
-  //                       },
-  //                     );
-  //                   },
-  //                 )),
-  //     ],
-  //   );
-  // }
+//   return Column(
+//     children: [
+//       Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Text(
+//             "Select Sub Categories",
+//             style: mainFont(
+//                 fontsize: 18,
+//                 fontweight: FontWeight.w600,
+//                 color: FbColors.greendark),
+//           ),
+//           if (filteredSubCategories.isNotEmpty)
+//             TextButton(
+//               onPressed: () {
+//                 navigate(
+//                     context: context,
+//                     screen: const AllGrocerySubCategoryScreen());
+//               },
+//               child: const Text(
+//                 "View All",
+//                 style: TextStyle(
+//                     color: Colors.grey, decoration: TextDecoration.underline),
+//               ),
+//             )
+//         ],
+//       ),
+//       SizedBox(
+//           height: screenHeight * 0.5, // Constrain height for GridView
+//           child: filteredSubCategories.isEmpty
+//               ? Center(
+//                   child: Text('No Sub Categories Added', style: nunito()))
+//               : GridView.builder(
+//                   padding: const EdgeInsets.all(5),
+//                   gridDelegate:
+//                       const SliverGridDelegateWithFixedCrossAxisCount(
+//                           crossAxisCount: 3,
+//                           childAspectRatio: .57,
+//                           crossAxisSpacing: 14),
+//                   itemCount: filteredSubCategories.length,
+//                   itemBuilder: (context, index) {
+//                     return subCategoryCard(
+//                       height: screenWidth * 0.33,
+//                       text: filteredSubCategories[index].name,
+//                       image:
+//                           filteredSubCategories[index].subcategoryImage ?? '',
+//                       onTap: () {
+//                         navigate(
+//                             context: context,
+//                             screen: ListGroceryProducts(
+//                                 subCategory: filteredSubCategories[index],
+//                                 category:
+//                                     groceryViewModel.categories[index]));
+//                       },
+//                     );
+//                   },
+//                 )),
+//     ],
+//   );
+// }
 }
