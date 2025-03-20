@@ -31,7 +31,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
   String? prize;
   int? Stock;
   bool _prizeInitialized = false;
-  bool _stockInitialized = false;
+
 
   @override
   void initState() {
@@ -57,7 +57,6 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
       Stock = initialSize?.stock ??
           _viewModel.fashionDetail!.colors?.first.sizes?.first.stock;
       _prizeInitialized = true;
-      _stockInitialized = true;
     }
 
     return Scaffold(
@@ -84,28 +83,25 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 11),
                 child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(360)),
-                    child: Container(
-                        decoration: BoxDecoration(shape: BoxShape.circle),
-                        height: 336.22,
-                        width: 336,
-                        child: (productProvider.fashionDetail?.images != null &&
-                                productProvider
-                                    .fashionDetail!.images!.isNotEmpty)
-                            ? CachedNetworkImage(
-                                imageUrl: imageIndex ??
-                                    _viewModel
-                                        .fashionDetail?.images?.first.image ??
-                                    "",
-                                fit: BoxFit.fill,
-                                placeholder: (context, url) => Image.asset(
-                                    PlaceholderImage.placeholderimage),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.downloading),
-                              )
-                            : Image.asset(PlaceholderImage.placeholderimage)),
-                  ),
+                  child: Container(
+                      decoration: BoxDecoration(shape: BoxShape.circle),
+                      height: 336.22,
+                      width: 336,
+                      child: (productProvider.fashionDetail?.images != null &&
+                              productProvider
+                                  .fashionDetail!.images!.isNotEmpty)
+                          ? CachedNetworkImage(
+                              imageUrl: imageIndex ??
+                                  _viewModel
+                                      .fashionDetail?.images?.first.image ??
+                                  "",
+                              fit: BoxFit.fill,
+                              placeholder: (context, url) => Image.asset(
+                                  PlaceholderImage.placeholderimage),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.downloading),
+                            )
+                          : Image.asset(PlaceholderImage.placeholderimage)),
                 ),
               ),
               SizedBox(

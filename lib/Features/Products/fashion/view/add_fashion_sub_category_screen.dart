@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/fashion_category_model.dart';
+import '../model/fashion_sub_category_model.dart';
+import '../view_model/fashion_category_view_model.dart';
 
 class FashionAddSubCategoryScreen extends StatefulWidget {
   final List<FashionCategoryModel?> categories;
@@ -30,7 +32,7 @@ class _AddSubCategoryScreenState extends State<FashionAddSubCategoryScreen> {
   int vendorId = 0;
   bool _switchValue = false;
   var _formKey = GlobalKey<FormState>();
-  CategoryModel? selectedCategory;
+  FashionCategoryModel? selectedCategory;
 
   @override
   void initState() {
@@ -50,33 +52,48 @@ class _AddSubCategoryScreenState extends State<FashionAddSubCategoryScreen> {
 
   void _onSubmitForm() async {
     final categoryViewModel =
-        Provider.of<CategoryViewModel>(context, listen: false);
+    Provider.of<FashionCategoryViewModel>(context, listen: false);
+
     if (_formKey.currentState!.validate()) {
-      if (_selectedImage == null) {
+      if (selectedCategory == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("You must select an image for category")),
+          const SnackBar(content: Text("Please select a category.")),
         );
         return;
       }
-      SubCategoryModel category = SubCategoryModel(
-          id: 0,
-          categoryId: selectedCategory!.id,
-          is_enabled: _switchValue,
-          name: nameController.text,
-          sub_category_image: _selectedImage?.path ?? "",
-          vendor: vendorId);
+
+      if (_selectedImage == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("You must select an image for category")),
+        );
+        return;
+      }
+
+      FashionSubCategoryModel category = FashionSubCategoryModel(
+        category: selectedCategory!.id,
+        enableSubcategory: _switchValue,
+        name: nameController.text.trim(),
+        subcategoryImage: _selectedImage?.path ?? "",
+        categoryName: selectedCategory!.storeTypeName,
+          description: subCategoryController.text.trim()
+      );
 
       await categoryViewModel.addProductSubCategory(
-          subCategories: category, context: context);
+        context: context,
+        subCategories: category,
+      );
 
       setState(() {
         nameController.clear();
+        subCategoryController.clear();
         _selectedImage = null;
-        _switchValue = false;
+        _switchValue = true;
+        selectedCategory = null;
       });
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
