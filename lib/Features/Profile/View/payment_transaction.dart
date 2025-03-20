@@ -23,6 +23,7 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
     return Scaffold(
       backgroundColor: OrderColor.backGroundColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: OrderColor.backGroundColor,
         centerTitle: true,
         title: Text(
@@ -32,7 +33,11 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
               fontWeight: FontWeight.w600,
               color: OrderColor.black),
         ),
-        leading: Icon(CupertinoIcons.back),
+        leading: GestureDetector(
+          onTap:  () {
+            Navigator.pop(context);
+          },
+            child: Icon(CupertinoIcons.back,weight: width*0.099,)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -127,12 +132,11 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => TransactionHistory(),
                         ),
-                        (route) => false,
                       );
                     },
                     child: Text(

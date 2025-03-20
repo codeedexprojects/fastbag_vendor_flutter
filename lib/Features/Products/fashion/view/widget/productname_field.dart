@@ -9,6 +9,8 @@ class ProductnameField extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final bool noPadding;
+  final bool readOnly;
+  final Function()? onTap;
 
   const ProductnameField(
       {super.key,
@@ -17,7 +19,9 @@ class ProductnameField extends StatefulWidget {
       required this.controller,
       this.validator,
       this.noPadding = false,
-      this.hint});
+      this.hint,
+      this.onTap,
+      this.readOnly = false});
 
   @override
   State<ProductnameField> createState() => _ProductnameFieldState();
@@ -77,6 +81,8 @@ class _ProductnameFieldState extends State<ProductnameField> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextFormField(
+              readOnly: widget.readOnly,
+              onTap: widget.onTap,
               controller: widget.controller,
               keyboardType: widget.keyboard,
               focusNode: _focusNode,

@@ -28,6 +28,7 @@
 
 import 'dart:ffi';
 
+import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StoreManager {
@@ -50,7 +51,7 @@ class StoreManager {
 
   Future<int?> getVendorId() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('vendorId');
+    return prefs.getInt(FbLocalStorage.vendorId);
   }
 
   // Get access token
