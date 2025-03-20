@@ -28,8 +28,6 @@ class FashionProductRepository {
       // var tokenId = prefs.getString('access_token');
       var vendorId = prefs.getInt('vendor_id');
 
-      // var headers = {'Authorization': 'Bearer $tokenId'};
-
       var response = await _dio.request(
         '${baseUrl}fashion/products/subcategory/$subcategoryId/vendor/$vendorId/',
         // 'fashion/clothing/?category=$categoryId&subcategory=$subcategoryId&vendor=$vendorId',
@@ -299,7 +297,9 @@ class FashionProductRepository {
       var dio = Dio();
       final prefs = await SharedPreferences.getInstance();
       var tokenId = prefs.getString('access_token');
+      print("object $tokenId");
       var vendor = prefs.getInt(FbLocalStorage.vendorId);
+      print("vendor $vendor");
       var headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $tokenId'
@@ -372,3 +372,4 @@ class FashionProductRepository {
     }
   }
 }
+
