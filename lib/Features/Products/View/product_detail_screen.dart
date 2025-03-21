@@ -24,7 +24,7 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? imageIndex;
   String? varientIndex;
-  var selectedVariant = "";
+  var selectedVariant ;
   var selectedVariantDetails;
   List varients=[];
   int _isSelected = 0;
@@ -173,39 +173,60 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fontWeight: FontWeight.w400,
                       color: OrderColor.textColor)),
               SizedBox(height: height*0.01,),
-              SizedBox(
-                height: height*0.08,
-                child: ListView.separated(
-                  itemCount: _viewModel.foodDetail?.variants?.length?? 3,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                   var variant=_viewModel.foodDetail?.variants?[index];
-                   print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
-                   print(variant);
-                    return  GestureDetector(
-                      onTap: () {
-                        // selectedVariant=variant?.half!.stockStatus;
-                        // selectedVariantDetails=variant?[index] ;
+
+
+                  SizedBox(
+                    height: height * 0.08,
+                    child: ListView.separated(
+                      itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        var variant = _viewModel.foodDetail?.variants?[index];
+
+                        if (variant != null ) {
+                          String variantName = variant[index]; // Extract "Half", "Full", "Quater"
+                          var details = variant[variantName]; // Extract price, quantity, stock_status
+
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedVariant = variantName; // Store variant name
+                                selectedVariantDetails = details; // Store details map
+                              });
+                            },
+                            child: Container(
+                              height: height * 0.07,
+                              width: width * 0.3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(width * 0.03),
+                                border: Border.all(
+                                  color: selectedVariant == variantName ? Colors.green : Colors.grey,
+                                ),
+                                color: selectedVariant == variantName ? Colors.green[100] : Colors.white,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  variantName, // Show "Half", "Full", "Quater"
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: selectedVariant == variantName ? Colors.green : Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return SizedBox.shrink(); // Hide if variant is null
+                        }
                       },
-                      child: Container(
-                        height: height*0.07,
-                        width: width*0.3,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width*0.03),
-                            border: Border.all(
-                                color: OrderColor.green
-                            )
-                        ),
-                        child: Center(child:Text('${variant?.half?.stockStatus ?? 0}')  ),
-                      ),
-                    );
-                  }, separatorBuilder: (BuildContext context, int index) { return SizedBox(width: width*0.03,); },
-                ),
-              ),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: width * 0.03);
+                      },
+                    ),
+                  ),
 
-
-              Padding(
+                  Padding(
                 padding:  EdgeInsets.all(width*0.02),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
