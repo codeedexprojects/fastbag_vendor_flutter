@@ -34,8 +34,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
     super.initState();
-
-
   }
 
   @override
@@ -44,6 +42,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     width=MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<FoodViewModel>(context);
     return Scaffold(
+      backgroundColor: OrderColor.white,
       appBar: AppBar(
         backgroundColor: OrderColor.white,
         centerTitle: true,
@@ -169,74 +168,70 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: OrderColor.textColor)),
-              SizedBox(
-                height: height*0.08,
-                child: ListView.separated(
-                  // itemCount: _viewModel.foodDetail?.variants?.length?? 3,
-                  shrinkWrap: true,
-// <<<<<<< HEAD
-                  itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    var variant = _viewModel.foodDetail?.variants?[index]; // Get variant map
-                    // String variantName = variant.half.;
-                    // var details = variant[variantName];
+              SizedBox(height: height*0.01,),
+                  SizedBox(
+                    height: height * 0.08,
+                    child: ListView.separated(
+                      itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        var variant = _viewModel.foodDetail?.variants?[index];
+                        return GestureDetector(
+                          onTap: () {
+                          },
+                          child: Container(
+                            height: height * 0.07,
+                            width: width * 0.3,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(width * 0.03),
+                              border: Border.all(color: OrderColor.green),
+                            ),
+                            child: Center(
+                              child: Text("${variant?.full?.price ?? 0}"),
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: width * 0.03);
+                      },
+                    ),
+                  ),
 
-                    return ListTile(
-                      title: Text(''),
-                      // title: Text(variant.half.toString()),
-                      subtitle: Text("Price: ₹${variant?.half?.price} | Quantity: ${variant?.half?.quantity}" ),
-                      trailing: Text( "stock Status: ${variant?.half?.stockStatus}"),
+
+                  Padding(
+                padding:  EdgeInsets.all(width*0.02),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+// <<<<<<< HEAD
+//                   children: [
+//                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
 // =======
-//                   scrollDirection: Axis.horizontal,
-//                   itemBuilder: (BuildContext context, int index) {
-//                     var variant=_viewModel.foodDetail?.variants?[index];
-//                     return  GestureDetector(
-//                       onTap: () {
-//                         selectedVariant=variant as String ;
-//                         selectedVariantDetails=selectedVariant[index] ;
-//                       },
-//                       child: Container(
-//                         height: height*0.07,
-//                         width: width*0.3,
-//                         decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(width*0.03),
-//                             border: Border.all(
-//                                 color: OrderColor.green
-//                             )
-//                         ),
-//                         child: Center(child:Text(selectedVariant)  ),
-//                       ),
-// >>>>>>> 8b81dd14d7216bb385f38933b51dba8eb0a515b5
-                    );
-                  }, separatorBuilder: (BuildContext context, int index) { return SizedBox(width: width*0.03,); },
+
+                  children: [
+                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
+//>>>>>>> 23e9d131b1e9a068e932975d5dea75215c00ad44
+                     fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   ),) ,
+                   SizedBox(height: height*0.01,),
+                   Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
+                   fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   )) ,
+                    SizedBox(height: height*0.01,),
+                   Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
+                     fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   )) ,
+                  ],
                 ),
+              )
+              ],
               ),
-              // Padding(
-              //   padding:  EdgeInsets.all(width*0.02),
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //      Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
-              //        fontSize: 15,
-              //        fontWeight: FontWeight.w400,
-              //      ),) ,
-              //      SizedBox(height: height*0.01,),
-              //      Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
-              //      fontSize: 15,
-              //        fontWeight: FontWeight.w400,
-              //      )) ,
-              //       SizedBox(height: height*0.01,),
-              //      Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
-              //        fontSize: 15,
-              //        fontWeight: FontWeight.w400,
-              //      )) ,
-              //     ],
-              //   ),
-              // )
-              // ],
-             // ),
-            //),
+            ),
             Divider(
                 color: Colors.grey, thickness: 1, indent: 34, endIndent: 34),
             SizedBox(
@@ -265,7 +260,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ],
         ),
       ),
-    ])));
+    );
   }
 
   Widget productDifferntimage(String path, VoidCallback onTap, index) {

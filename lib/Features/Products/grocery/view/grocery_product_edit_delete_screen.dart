@@ -69,7 +69,6 @@ class GroceryProductEditDeleteScreen extends StatelessWidget {
                         children: [
                           InkWell(
                               onTap: () {
-                               
                                 navigate(
                                     context: context,
                                     screen: EditGroceryProductScreen(
