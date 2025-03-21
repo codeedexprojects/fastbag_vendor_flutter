@@ -93,13 +93,13 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  // navigate(
-                                  //     context: context,
-                                  //     screen: ProductDetailScreen(
-                                  //       productId: productProvider
-                                  //               .foodProducts[index].id ??
-                                  //           0,
-                                  //     ));
+                                  navigate(
+                                      context: context,
+                                      screen: ProductDetailScreen(
+                                        productId: productProvider
+                                                .foodProducts[index].id ??
+                                            0,
+                                      ));
                                 },
                                 child: ListTile(
                                   leading: Container(

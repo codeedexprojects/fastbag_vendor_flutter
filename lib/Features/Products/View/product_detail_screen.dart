@@ -29,6 +29,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   List varients=[];
   int _isSelected = 0;
 
+
+
   @override
   void initState() {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
@@ -44,6 +46,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     width=MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<FoodViewModel>(context);
     return Scaffold(
+      backgroundColor: OrderColor.white,
       appBar: AppBar(
         backgroundColor: OrderColor.white,
         centerTitle: true,
@@ -169,57 +172,63 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: OrderColor.textColor)),
-              // SizedBox(
-              //   height: height*0.08,
-              //   child: ListView.separated(
-              //     itemCount: _viewModel.foodDetail?.variants?.length?? 3,
-              //     shrinkWrap: true,
-              //     scrollDirection: Axis.horizontal,
-              //     itemBuilder: (BuildContext context, int index) {
-              //       var variant=_viewModel.foodDetail?.variants?[index];
-              //       return  GestureDetector(
-              //         onTap: () {
-              //           selectedVariant=variant as String ;
-              //           selectedVariantDetails=selectedVariant[index] ;
-              //         },
-              //         child: Container(
-              //           height: height*0.07,
-              //           width: width*0.3,
-              //           decoration: BoxDecoration(
-              //               borderRadius: BorderRadius.circular(width*0.03),
-              //               border: Border.all(
-              //                   color: OrderColor.green
-              //               )
-              //           ),
-              //           child: Center(child:Text(selectedVariant)  ),
-              //         ),
-              //       );
-              //     }, separatorBuilder: (BuildContext context, int index) { return SizedBox(width: width*0.03,); },
-              //   ),
-              // ),
-              // Padding(
-              //   padding:  EdgeInsets.all(width*0.02),
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //      Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
-              //        fontSize: 15,
-              //        fontWeight: FontWeight.w400,
-              //      ),) ,
-              //      SizedBox(height: height*0.01,),
-              //      Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
-              //      fontSize: 15,
-              //        fontWeight: FontWeight.w400,
-              //      )) ,
-              //       SizedBox(height: height*0.01,),
-              //      Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
-              //        fontSize: 15,
-              //        fontWeight: FontWeight.w400,
-              //      )) ,
-              //     ],
-              //   ),
-              // )
+              SizedBox(height: height*0.01,),
+              SizedBox(
+                height: height*0.08,
+                child: ListView.separated(
+                  itemCount: _viewModel.foodDetail?.variants?.length?? 3,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                   var variant=_viewModel.foodDetail?.variants?[index];
+                   print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
+                   print(variant);
+                    return  GestureDetector(
+                      onTap: () {
+                        // selectedVariant=variant?.half!.stockStatus;
+                        // selectedVariantDetails=variant?[index] ;
+                      },
+                      child: Container(
+                        height: height*0.07,
+                        width: width*0.3,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(width*0.03),
+                            border: Border.all(
+                                color: OrderColor.green
+                            )
+                        ),
+                        child: Center(child:Text('${variant?.half?.stockStatus ?? 0}')  ),
+                      ),
+                    );
+                  }, separatorBuilder: (BuildContext context, int index) { return SizedBox(width: width*0.03,); },
+                ),
+              ),
+
+
+              Padding(
+                padding:  EdgeInsets.all(width*0.02),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                  children: [
+                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
+                     fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   ),) ,
+                   SizedBox(height: height*0.01,),
+                   Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
+                   fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   )) ,
+                    SizedBox(height: height*0.01,),
+                   Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
+                     fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   )) ,
+                  ],
+                ),
+              )
               ],
               ),
             ),
