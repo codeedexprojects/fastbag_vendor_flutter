@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fastbag_vendor_flutter/Commons/images.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,11 +8,13 @@ import 'package:provider/provider.dart';
 
 import '../../../Commons/colors.dart';
 import '../../../Commons/fonts.dart';
+import '../../../Commons/localvariables.dart';
+import '../Model/food_detail_class.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int productId;
 
-  const ProductDetailScreen({Key? key, required this.productId})
+  const ProductDetailScreen({Key? key, required this.productId,})
       : super(key: key);
 
   @override
@@ -19,21 +23,32 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? imageIndex;
+  String? varientIndex;
+  var selectedVariant ;
+  var selectedVariantDetails;
+  List varients=[];
   int _isSelected = 0;
+
+
 
   @override
   void initState() {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
     super.initState();
+
+
   }
 
   @override
   Widget build(BuildContext context) {
+    height=MediaQuery.of(context).size.height;
+    width=MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<FoodViewModel>(context);
     return Scaffold(
+      backgroundColor: OrderColor.white,
       appBar: AppBar(
-        backgroundColor: FbColors.backgroundcolor,
+        backgroundColor: OrderColor.white,
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
@@ -43,23 +58,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         title: Text(
           'Product Details',
           style: mainFont(
-              fontsize: 16, fontweight: FontWeight.w600, color: FbColors.black),
+              fontsize: 18, fontweight: FontWeight.w600, color: FbColors.black),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 11),
+              padding:  EdgeInsets.all(width*0.03),
               child: Center(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(360)),
+                  borderRadius: BorderRadius.all(Radius.circular(width*0.03)),
                   child: Container(
-                    decoration: BoxDecoration(shape: BoxShape.circle),
-                    height: 336.22,
-                    width: 336,
+                    height: height * 0.4, // Adjust height as needed
+                    width: width,
                     child: CachedNetworkImage(
                       imageUrl: imageIndex ??
                           _viewModel.foodDetail?.imageUrls?.first.image ??
@@ -67,43 +81,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Image.asset(
                           'assets/Images/image_5-removebg-preview.png'),
-                      errorWidget: (context, url, error) => Icon(Icons.downloading),
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.downloading),
                     ),
                   ),
                 ),
               ),
             ),
-            SizedBox(
-              height: 24.78,
-            ),
-            Container(
-              height: 60,
-              width: 340,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _viewModel.foodDetail?.imageUrls?.length ?? 0,
-                itemBuilder: (BuildContext context, int index) {
-                  final imageUrl =
-                      _viewModel.foodDetail?.imageUrls?[index].image ?? '';
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: productDifferntimage(imageUrl, () {
-                      setState(() {
-                        imageIndex = imageUrl;
-                        _isSelected = index;
-                      });
-                    }, index),
-                  );
-                },
+            Padding(
+              padding:  EdgeInsets.all(width*0.03),
+              child: Container(
+                height: height*0.09,
+                width: width,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _viewModel.foodDetail?.imageUrls?.length ?? 0,
+                  itemBuilder: (BuildContext context, int index) {
+                    final imageUrl =
+                        _viewModel.foodDetail?.imageUrls?[index].image ?? '';
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: productDifferntimage(imageUrl, () {
+                        setState(() {
+                          imageIndex = imageUrl;
+                          _isSelected = index;
+                        });
+                      }, index),
+                    );
+                  },
+                ),
               ),
             ),
-            SizedBox(
-              height: 36,
-            ),
-            Container(
-              height: 62,
-              width: 335,
+            Padding(
+              padding:  EdgeInsets.all(width*0.03),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,7 +128,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             color: FbColors.black),
                       ),
                       Text(
-                        '₹${_viewModel.foodDetail?.price ?? '₹00'}',
+                        '₹${_viewModel.foodDetail?.price ?? '00'}',
                         style: normalFont5(
                             fontsize: 20,
                             fontweight: FontWeight.w400,
@@ -124,7 +136,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ],
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -152,12 +163,150 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ],
                       )
                     ],
-                  )
-                ],
+                  ),
+                  Text('Available variants',style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: OrderColor.textColor)),
+              SizedBox(height: height*0.01,),
+                  Text('Available stocks:${_viewModel.foodDetail?.isAvailable}',style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: OrderColor.red)),
+                  SizedBox(height: height*0.01,),
+                  SizedBox(
+                    height: height * 0.08,
+                    child: ListView.separated(
+                      itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        var variant = _viewModel.foodDetail?.variants?[index];
+
+                        String selectedVariantName = "";
+                        int selectedPrice = 0;
+                        String selectedStockStatus = "";
+
+                        if (variant?.quater != null) {
+                          selectedVariantName = "Quater";
+                          selectedPrice = variant?.quater?.price ?? 0;
+                          selectedStockStatus = variant?.quater?.stockStatus ?? "N/A";
+                        } else if (variant?.half != null) {
+                          selectedVariantName = "Half";
+                          selectedPrice = variant?.half?.price ?? 0;
+                          selectedStockStatus = variant?.half?.stockStatus ?? "N/A";
+                        } else if (variant?.full != null) {
+                          selectedVariantName = "Full";
+                          selectedPrice = variant?.full?.price ?? 0;
+                          selectedStockStatus = variant?.full?.stockStatus ?? "N/A";
+                        }
+
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedVariantName = selectedVariantName;
+                              selectedPrice = selectedPrice;
+                              selectedStockStatus = selectedStockStatus;
+                            });
+                            print(
+
+                                "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkSelected Variant: $selectedVariantName, Price: $selectedPrice");
+                          },
+                          child: Container(
+                            height: height * 0.07,
+                            width: width * 0.3,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(width * 0.03),
+                              border: Border.all(color: Colors.green),
+                            ),
+                            child: Center(
+                              child: Text(selectedVariantName),
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: width * 0.03);
+                      },
+                    ),
+                  ),
+                  // SizedBox(
+                  //   height: height * 0.08,
+                  //   child: ListView.separated(
+                  //     itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
+                  //     shrinkWrap: true,
+                  //     scrollDirection: Axis.horizontal,
+                  //     itemBuilder: (BuildContext context, int index) {
+                  //       var variant = _viewModel.foodDetail?.variants?[index];
+                  //
+                  //       if (variant != null ) {
+                  //         String variantName = variant[index]; // Extract "Half", "Full", "Quater"
+                  //         var details = variant[variantName]; // Extract price, quantity, stock_status
+                  //
+                  //         return GestureDetector(
+                  //           onTap: () {
+                  //             setState(() {
+                  //               selectedVariant = variantName; // Store variant name
+                  //               selectedVariantDetails = details; // Store details map
+                  //             });
+                  //           },
+                  //           child: Container(
+                  //             height: height * 0.07,
+                  //             width: width * 0.3,
+                  //             decoration: BoxDecoration(
+                  //               borderRadius: BorderRadius.circular(width * 0.03),
+                  //               border: Border.all(
+                  //                 color: selectedVariant == variantName ? Colors.green : Colors.grey,
+                  //               ),
+                  //               color: selectedVariant == variantName ? Colors.green[100] : Colors.white,
+                  //             ),
+                  //             child: Center(
+                  //               child: Text(
+                  //                 variantName, // Show "Half", "Full", "Quater"
+                  //                 style: TextStyle(
+                  //                   fontWeight: FontWeight.bold,
+                  //                   color: selectedVariant == variantName ? Colors.green : Colors.black,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         );
+                  //       } else {
+                  //         return SizedBox.shrink(); // Hide if variant is null
+                  //       }
+                  //     },
+                  //     separatorBuilder: (BuildContext context, int index) {
+                  //       return SizedBox(width: width * 0.03);
+                  //     },
+                  //   ),
+                  // ),
+
+                  Padding(
+                padding:  EdgeInsets.all(width*0.02),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                  children: [
+                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
+                     fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   ),) ,
+                   SizedBox(height: height*0.01,),
+                   Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
+                   fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   )) ,
+                    SizedBox(height: height*0.01,),
+                   Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
+                     fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   )) ,
+                  ],
+                ),
+              )
+              ],
               ),
-            ),
-            SizedBox(
-              height: 17,
             ),
             Divider(
                 color: Colors.grey, thickness: 1, indent: 34, endIndent: 34),
@@ -165,27 +314,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               height: 14,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Container(
-                width: 335,
-                // color: Colors.black,
-                child: Column(
-                  children: [
-                    Text(
-                      textAlign: TextAlign.start,
-                      _viewModel.foodDetail?.description ??
-                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
-                      style: normalFont4(
-                          fontsize: 16,
-                          fontweight: FontWeight.w400,
-                          color: FbColors.black),
-                    ),
-                    // Align(alignment:Alignment.centerLeft,
-                    //   child: GestureDetector(
-                    //       child: Text('Read More',style: normalFont4(fontsize: 14, fontweight: FontWeight.w700, color: FbColors.black),)),
-                    // )
-                  ],
-                ),
+              padding: const EdgeInsets.only(left: 15, right: 10),
+              child: Column(
+                children: [
+                  Text(
+                    textAlign: TextAlign.start,
+                    _viewModel.foodDetail?.description ??
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
+                    style: normalFont4(
+                        fontsize: 16,
+                        fontweight: FontWeight.w400,
+                        color: OrderColor.textColor),
+                  ),
+                  // Align(alignment:Alignment.centerLeft,
+                  //   child: GestureDetector(
+                  //       child: Text('Read More',style: normalFont4(fontsize: 14, fontweight: FontWeight.w700, color: FbColors.black),)),
+                  // )
+                ],
               ),
             ),
           ],
@@ -202,22 +347,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           width: 60,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-
             boxShadow: [
               BoxShadow(
-                color:Color.fromRGBO(0, 0, 0, 0.25),
-                blurRadius:  _isSelected == index ?20.0: 0,
-      
+                color: Color.fromRGBO(0, 0, 0, 0.25),
+                blurRadius: _isSelected == index ? 20.0 : 0,
               ),
             ],
             border: Border.all(
               color: Color.fromRGBO(94, 177, 78, 1),
-              width:
-              _isSelected == index ? 1 : 0,
+              width: _isSelected == index ? 1 : 0,
             ),
           ),
           child: ClipRRect(
-             borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10),
             child: Image.network(
               path,
               fit: BoxFit.cover,

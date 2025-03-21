@@ -64,58 +64,58 @@ class _AllGrocerySubCategoryScreenState
             gap(0.04),
             groceryViewModel.filteredSubCategories.isNotEmpty
                 ? Expanded(
-                    child: GridView.builder(
-                    padding: const EdgeInsets.all(0),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 0.57,
-                            crossAxisSpacing: 14),
-                    itemCount: groceryViewModel.filteredSubCategories.length,
-                    itemBuilder: (context, index) {
-                      return subCategoryCard(
-                        height: screenWidth * 0.33,
-                        text:
-                            groceryViewModel.filteredSubCategories[index].name,
-                        image: groceryViewModel.filteredSubCategories[index]
-                                .subcategoryImage ??
-                            '',
-                        onTap: () {
-                          print(
-                              '----------------------->${groceryViewModel.filteredSubCategories[index].name}');
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(0),
+                  gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 0.57,
+                      crossAxisSpacing: 14),
+                  itemCount: groceryViewModel.filteredSubCategories.length,
+                  itemBuilder: (context, index) {
+                    return subCategoryCard(
+                      height: screenWidth * 0.33,
+                      text:
+                      groceryViewModel.filteredSubCategories[index].name,
+                      image: groceryViewModel.filteredSubCategories[index]
+                          .subcategoryImage ??
+                          '',
+                      onTap: () {
+                        print(
+                            '----------------------->${groceryViewModel.filteredSubCategories[index].name}');
 
-                          navigate(
-                            context: context,
-                            screen: ListGroceryProducts(
-                              subCategory:
-                                  groceryViewModel.filteredSubCategories[index],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ))
+                        navigate(
+                          context: context,
+                          screen: ListGroceryProducts(
+                            subCategory:
+                            groceryViewModel.filteredSubCategories[index],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ))
                 : Expanded(
-                    child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/no_product.svg',
-                          width: screenWidth * .45, // Set desired width
-                          height: screenWidth * .3, // Set desired height
-                        ),
-                        SizedBox(
-                          height: screenHeight * .004,
-                        ),
-                        Text("Nothing to show yet. Created", style: nunito()),
-                        Text(
-                          "Sub Category list will appear here",
-                          style: nunito(),
-                        )
-                      ],
-                    ),
-                  )),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/no_product.svg',
+                        width: screenWidth * .45, // Set desired width
+                        height: screenWidth * .3, // Set desired height
+                      ),
+                      SizedBox(
+                        height: screenHeight * .004,
+                      ),
+                      Text("Nothing to show yet. Created", style: nunito()),
+                      Text(
+                        "Sub Category list will appear here",
+                        style: nunito(),
+                      )
+                    ],
+                  ),
+                )),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth / 15, vertical: 5),
