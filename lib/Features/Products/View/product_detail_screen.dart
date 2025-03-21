@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fastbag_vendor_flutter/Commons/images.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,11 +8,13 @@ import 'package:provider/provider.dart';
 
 import '../../../Commons/colors.dart';
 import '../../../Commons/fonts.dart';
+import '../../../Commons/localvariables.dart';
+import '../Model/food_detail_class.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int productId;
 
-  const ProductDetailScreen({Key? key, required this.productId})
+  const ProductDetailScreen({Key? key, required this.productId,})
       : super(key: key);
 
   @override
@@ -19,6 +23,10 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? imageIndex;
+  String? varientIndex;
+  var selectedVariant = "";
+  var selectedVariantDetails;
+  List varients=[];
   int _isSelected = 0;
 
   @override
@@ -26,14 +34,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
     super.initState();
+
+
   }
 
   @override
   Widget build(BuildContext context) {
+    height=MediaQuery.of(context).size.height;
+    width=MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<FoodViewModel>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: FbColors.backgroundcolor,
+        backgroundColor: OrderColor.white,
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
@@ -49,10 +61,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 11),
+              padding:  EdgeInsets.all(width*0.03),
               child: Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(360)),
@@ -67,7 +79,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Image.asset(
                           'assets/Images/image_5-removebg-preview.png'),
-                      errorWidget: (context, url, error) => Icon(Icons.downloading),
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.downloading),
                     ),
                   ),
                 ),
@@ -100,10 +113,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             SizedBox(
               height: 36,
             ),
-            Container(
-              height: 62,
-              width: 335,
+            Padding(
+              padding:  EdgeInsets.all(width*0.03),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,7 +129,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             color: FbColors.black),
                       ),
                       Text(
-                        '₹${_viewModel.foodDetail?.price ?? '₹00'}',
+                        '₹${_viewModel.foodDetail?.price ?? '00'}',
                         style: normalFont5(
                             fontsize: 20,
                             fontweight: FontWeight.w400,
@@ -124,7 +137,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ],
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -152,12 +164,64 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ],
                       )
                     ],
-                  )
-                ],
+                  ),
+                  Text('Available variants',style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: OrderColor.textColor)),
+              SizedBox(
+                height: height*0.08,
+                child: ListView.separated(
+                  itemCount: _viewModel.foodDetail?.variants?.length?? 3,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    var variant=_viewModel.foodDetail?.variants?[index];
+                    return  GestureDetector(
+                      onTap: () {
+                        selectedVariant=variant as String ;
+                        selectedVariantDetails=selectedVariant[index] ;
+                      },
+                      child: Container(
+                        height: height*0.07,
+                        width: width*0.3,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(width*0.03),
+                            border: Border.all(
+                                color: OrderColor.green
+                            )
+                        ),
+                        child: Center(child:Text(selectedVariant)  ),
+                      ),
+                    );
+                  }, separatorBuilder: (BuildContext context, int index) { return SizedBox(width: width*0.03,); },
+                ),
               ),
-            ),
-            SizedBox(
-              height: 17,
+              Padding(
+                padding:  EdgeInsets.all(width*0.02),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                   Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
+                     fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   ),) ,
+                   SizedBox(height: height*0.01,),
+                   Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
+                   fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   )) ,
+                    SizedBox(height: height*0.01,),
+                   Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
+                     fontSize: 15,
+                     fontWeight: FontWeight.w400,
+                   )) ,
+                  ],
+                ),
+              )
+              ],
+              ),
             ),
             Divider(
                 color: Colors.grey, thickness: 1, indent: 34, endIndent: 34),
@@ -165,27 +229,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               height: 14,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Container(
-                width: 335,
-                // color: Colors.black,
-                child: Column(
-                  children: [
-                    Text(
-                      textAlign: TextAlign.start,
-                      _viewModel.foodDetail?.description ??
-                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
-                      style: normalFont4(
-                          fontsize: 16,
-                          fontweight: FontWeight.w400,
-                          color: FbColors.black),
-                    ),
-                    // Align(alignment:Alignment.centerLeft,
-                    //   child: GestureDetector(
-                    //       child: Text('Read More',style: normalFont4(fontsize: 14, fontweight: FontWeight.w700, color: FbColors.black),)),
-                    // )
-                  ],
-                ),
+              padding: const EdgeInsets.only(left: 15, right: 10),
+              child: Column(
+                children: [
+                  Text(
+                    textAlign: TextAlign.start,
+                    _viewModel.foodDetail?.description ??
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
+                    style: normalFont4(
+                        fontsize: 16,
+                        fontweight: FontWeight.w400,
+                        color: OrderColor.textColor),
+                  ),
+                  // Align(alignment:Alignment.centerLeft,
+                  //   child: GestureDetector(
+                  //       child: Text('Read More',style: normalFont4(fontsize: 14, fontweight: FontWeight.w700, color: FbColors.black),)),
+                  // )
+                ],
               ),
             ),
           ],
@@ -202,22 +262,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           width: 60,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-
             boxShadow: [
               BoxShadow(
-                color:Color.fromRGBO(0, 0, 0, 0.25),
-                blurRadius:  _isSelected == index ?20.0: 0,
-      
+                color: Color.fromRGBO(0, 0, 0, 0.25),
+                blurRadius: _isSelected == index ? 20.0 : 0,
               ),
             ],
             border: Border.all(
               color: Color.fromRGBO(94, 177, 78, 1),
-              width:
-              _isSelected == index ? 1 : 0,
+              width: _isSelected == index ? 1 : 0,
             ),
           ),
           child: ClipRRect(
-             borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10),
             child: Image.network(
               path,
               fit: BoxFit.cover,
