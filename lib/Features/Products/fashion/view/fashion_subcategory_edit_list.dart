@@ -4,41 +4,49 @@ import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/f
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/edit_sub_category_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../grocery/model/grocery_catgeory_model.dart';
+import '../model/fashion_category_model.dart';
+import '../model/fashion_sub_category_model.dart';
+import '../view_model/fashion_category_view_model.dart';
+import 'edit_fashion_sub_category_screen.dart';
 
-class SubCategoryEditList extends StatefulWidget {
-  // final List<SubCategoryModel> subCategories;
-  // final List<CategoryModel> categories;
+class FashionSubCategoryEditList extends StatefulWidget {
+  // final List<FashionSubCategoryModel> subCategories;
+  // final List<FashionCategoryModel> categories;
+
   final int? categoryId;
-  const SubCategoryEditList(
-      {super.key,  this.categoryId});
+
+  const FashionSubCategoryEditList({super.key, required this.categoryId});
 
   @override
-  State<SubCategoryEditList> createState() => _SubCategoryEditListState();
+  State<FashionSubCategoryEditList> createState() =>
+      _FashionSubCategoryEditListState();
 }
 
-class _SubCategoryEditListState extends State<SubCategoryEditList> {
-  @override
+class _FashionSubCategoryEditListState
+    extends State<FashionSubCategoryEditList> {
   void initState() {
-    final categoryProvider=Provider.of<CategoryViewModel>(context,listen: false);
-    categoryProvider.getFoodCategorybySubCategories(categoryId: widget?.categoryId??0);
+    final categoryProvider =
+        Provider.of<FashionCategoryViewModel>(context, listen: false);
+    categoryProvider.getFashionCategorybySubCategories(
+        categoryId: widget?.categoryId ?? 0);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    final categoryProvider = Provider.of<CategoryViewModel>(context);
+    final categoryProvider = Provider.of<FashionCategoryViewModel>(context);
     //final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(categoryProvider.selectsubCategories.isEmpty? "Edit Sub Categories"
-          :"${categoryProvider.selectsubCategories.first.categoryName??""}Edit Sub Categories",
+        title: Text(categoryProvider.selectsubCategory.isEmpty?
+          "Edit Sub Categories"
+          :'${categoryProvider.selectsubCategory.first.categoryName??''} Edit SubCategories',
           style: mainFont(
-              fontsize: screenWidth * 0.05,
+              fontsize: screenWidth * 0.04,
               fontweight: FontWeight.w500,
               color: Colors.black),
         ),
@@ -47,7 +55,7 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: ListView.builder(
-            itemCount: categoryProvider.selectsubCategories.length,
+            itemCount: categoryProvider.selectsubCategory.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.all(screenWidth * .02),
@@ -55,7 +63,7 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                   onTap: () {
                     navigate(
                         context: context,
-                        screen: EditSubCategoryScreen(
+                        screen: FashionEditSubCategoryScreen(
                           categories: categoryProvider.categories,
                           category: categoryProvider.categories[0],
                           subCategory: categoryProvider.subCategories[index],
@@ -72,7 +80,9 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                             Colors.grey[200], // Optional: Background color
                         child: ClipOval(
                           child: Image.network(
-                            categoryProvider.selectsubCategories[index].subcategoryImage??'',
+                            categoryProvider
+                                .selectsubCategory[index].subcategoryImage
+                                .toString(),
                             fit: BoxFit
                                 .cover, // Ensures the image fills the circle
                             width:
@@ -87,7 +97,8 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                           ),
                         ),
                       ),
-                      title: Text(categoryProvider.selectsubCategories[index].name??''),
+                      title: Text(categoryProvider.selectsubCategory[index].name
+                          .toString()),
                       trailing: const Icon(Icons.edit),
                     ),
                   ),

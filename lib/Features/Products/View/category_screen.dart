@@ -1,6 +1,7 @@
 import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/View/food_categoryby_subcategory.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -159,22 +160,22 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
                               fontweight: FontWeight.w600,
                               color: FbColors.greendark),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            navigate(
-                                context: context,
-                                screen: AllCategoriesScreen(
-                                  categories: categoryProvider.categories,
-                                  subCategories: categoryProvider.subCategories,
-                                ));
-                          },
-                          child: const Text(
-                            "View All",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
+                        // TextButton(
+                        //   onPressed: () {
+                        //     navigate(
+                        //         context: context,
+                        //         screen: AllCategoriesScreen(
+                        //           categories: categoryProvider.categories,
+                        //           subCategories: categoryProvider.subCategories,
+                        //         ));
+                        //   },
+                        //   child: const Text(
+                        //     "View All",
+                        //     style: TextStyle(
+                        //         color: Colors.grey,
+                        //         decoration: TextDecoration.underline),
+                        //   ),
+                        // ),
                       ],
                     ),
                     //  category  List  Horzontal
@@ -182,8 +183,7 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
                       height: screenHeight * .17,
                       child: Consumer<CategoryViewModel>(
                         builder: (context, data, _) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
+                          return GridView.builder(
                             itemCount: data.categories.length,
                             itemBuilder: (context, index) {
                               return categoryCard(
@@ -191,11 +191,13 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
                                 onTap: () {
                                   navigate(
                                     context: context,
-                                    screen: AllSubCategoryScreen(
-                                      subCategories: data.subCategories,
-                                      categories: data.categories,
-                                      isOperable: true,
-                                    ),
+                                    screen:
+                                    FoodCategorybySubcategory(isOperable: true, categoryId:  data.categories[index]?.id ?? 0)
+                                    // AllSubCategoryScreen(
+                                    //   subCategories: data.subCategories,
+                                    //   categories: data.categories,
+                                    //   isOperable: true,
+                                    // ),
                                   );
                                 },
                                 radius: screenWidth * .115,
@@ -203,74 +205,77 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
                                   data.categories[index].category_image,
                                 ),
                               );
-                            },
+                            }, padding: EdgeInsets.only(top: screenHeight * .015),
+                              gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3, childAspectRatio: 0.7),
                           );
                         },
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Select Sub Categories",
-                          style: mainFont(
-                              fontsize: 18,
-                              fontweight: FontWeight.w600,
-                              color: FbColors.greendark),
-                        ),
-                        if (categoryProvider.subCategories.isNotEmpty)
-                          TextButton(
-                            onPressed: () {
-                              navigate(
-                                context: context,
-                                screen: AllSubCategoryScreen(
-                                  subCategories: categoryProvider.subCategories,
-                                  categories: categoryProvider.categories,
-                                  isOperable: false,
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              "View All",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.underline),
-                            ),
-                          )
-                      ],
-                    ),
-                    Expanded(
-                      child: Consumer<CategoryViewModel>(
-                        builder: (context, data, _) {
-                          return GridView.builder(
-                            padding: const EdgeInsets.all(5),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    childAspectRatio: .57,
-                                    crossAxisSpacing: 14),
-                            itemCount: data.subCategories.length,
-                            itemBuilder: (context, index) {
-                              return subCategoryCard(
-                                height: screenWidth * 0.33,
-                                text: data.subCategories[index].name,
-                                image: data
-                                    .subCategories[index].sub_category_image,
-                                onTap: () {
-                                  navigate(
-                                    context: context,
-                                    screen: ListProductsScreen(
-                                      subCategory: data.subCategories[index],
-                                      subCategories: data.subCategories,
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       "Select Sub Categories",
+                    //       style: mainFont(
+                    //           fontsize: 18,
+                    //           fontweight: FontWeight.w600,
+                    //           color: FbColors.greendark),
+                    //     ),
+                    //     if (categoryProvider.subCategories.isNotEmpty)
+                    //       TextButton(
+                    //         onPressed: () {
+                    //           navigate(
+                    //             context: context,
+                    //             screen: AllSubCategoryScreen(
+                    //               subCategories: categoryProvider.subCategories,
+                    //               categories: categoryProvider.categories,
+                    //               isOperable: false,
+                    //             ),
+                    //           );
+                    //         },
+                    //         child: const Text(
+                    //           "View All",
+                    //           style: TextStyle(
+                    //               color: Colors.grey,
+                    //               decoration: TextDecoration.underline),
+                    //         ),
+                    //       )
+                    //   ],
+                    // ),
+                    // Expanded(
+                    //   child: Consumer<CategoryViewModel>(
+                    //     builder: (context, data, _) {
+                    //       return GridView.builder(
+                    //         padding: const EdgeInsets.all(5),
+                    //         gridDelegate:
+                    //             const SliverGridDelegateWithFixedCrossAxisCount(
+                    //                 crossAxisCount: 3,
+                    //                 childAspectRatio: .57,
+                    //                 crossAxisSpacing: 14),
+                    //         itemCount: data.subCategories.length,
+                    //         itemBuilder: (context, index) {
+                    //           return subCategoryCard(
+                    //             height: screenWidth * 0.33,
+                    //             text: data.subCategories[index].name,
+                    //             image: data
+                    //                 .subCategories[index].sub_category_image,
+                    //             onTap: () {
+                    //               navigate(
+                    //                 context: context,
+                    //                 screen: ListProductsScreen(
+                    //                   subCategory: data.subCategories[index],
+                    //                   subCategories: data.subCategories,
+                    //                 ),
+                    //               );
+                    //             },
+                    //           );
+                    //         },
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ))
               else

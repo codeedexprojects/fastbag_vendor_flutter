@@ -3,6 +3,7 @@ import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -28,10 +29,10 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
   int _colorisSelected = 0;
   int _sizeisSelected = 0;
   String? size;
-  String? prize;
+  dynamic? prize;
   int? Stock;
   bool _prizeInitialized = false;
-  bool _stockInitialized = false;
+
 
   @override
   void initState() {
@@ -57,11 +58,11 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
       Stock = initialSize?.stock ??
           _viewModel.fashionDetail!.colors?.first.sizes?.first.stock;
       _prizeInitialized = true;
-      _stockInitialized = true;
     }
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
@@ -84,16 +85,17 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 11),
                 child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(360)),
-                    child: Container(
-                        decoration: BoxDecoration(shape: BoxShape.circle),
-                        height: 336.22,
-                        width: 336,
-                        child: (productProvider.fashionDetail?.images != null &&
-                                productProvider
-                                    .fashionDetail!.images!.isNotEmpty)
-                            ? CachedNetworkImage(
+                  child: Container(
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10)),
+                      height: 336.22,
+                      width: 336,
+                      child: (productProvider.fashionDetail?.images != null &&
+                              productProvider
+                                  .fashionDetail!.images!.isNotEmpty)
+                          ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
                                 imageUrl: imageIndex ??
                                     _viewModel
                                         .fashionDetail?.images?.first.image ??
@@ -103,9 +105,9 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                                     PlaceholderImage.placeholderimage),
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.downloading),
-                              )
-                            : Image.asset(PlaceholderImage.placeholderimage)),
-                  ),
+                              ),
+                          )
+                          : Image.asset(PlaceholderImage.placeholderimage)),
                 ),
               ),
               SizedBox(
@@ -209,13 +211,13 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                 ],
               ),
               Container(
-                height: 100,
+                height: 80,
                 child: ListView.builder(
                     itemCount: _viewModel.fashionDetail?.colors?.length ?? 0,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       final ImageUrl =
-                          "$imageUrl${_viewModel.fashionDetail?.colors?[index].colorImage ?? ''}";
+                          "${_viewModel.fashionDetail?.colors?[index].colorCode ?? ''}";
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Column(
@@ -236,37 +238,40 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                                 });
                               },
                               child: Container(
+                                height: 60,
+                                width: 60,
                                 decoration: BoxDecoration(
+                                  color: ImageUrl.toColor(),
                                     borderRadius: BorderRadius.circular(55),
                                     border: Border.all(
                                         width:
-                                            _colorisSelected == index ? 1 : 0,
+                                            _colorisSelected == index ? 2 : 0,
                                         color: FbColors.black)),
-                                child: CachedNetworkImage(
-                                  height: 70,
-                                  width: 70,
-                                  fit: BoxFit.fill,
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                    height: 50,
-                                    width: 50,
-                                    fit: BoxFit.cover,
-                                    PlaceholderImage.placeholderimage,
-                                  ),
-                                  placeholder: (context, url) => Image.asset(
-                                      fit: BoxFit.fill,
-                                      height: 50,
-                                      width: 50,
-                                      PlaceholderImage.placeholderimage),
-                                  imageUrl: ImageUrl,
-                                ),
+                                // child: CachedNetworkImage(
+                                //   height: 70,
+                                //   width: 70,
+                                //   fit: BoxFit.fill,
+                                //   errorWidget: (context, url, error) =>
+                                //       Image.asset(
+                                //     height: 50,
+                                //     width: 50,
+                                //     fit: BoxFit.cover,
+                                //     PlaceholderImage.placeholderimage,
+                                //   ),
+                                //   placeholder: (context, url) => Image.asset(
+                                //       fit: BoxFit.fill,
+                                //       height: 50,
+                                //       width: 50,
+                                //       PlaceholderImage.placeholderimage),
+                                //   imageUrl: ImageUrl,
+                                // ),
                               ),
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                                '${_viewModel.fashionDetail?.colors?[index].colorName ?? 0}')
+                            // SizedBox(
+                            //   height: 5,
+                            // ),
+                            // Text(
+                            //     '${_viewModel.fashionDetail?.colors?[index].colorName ?? 0}')
                           ],
                         ),
                       );

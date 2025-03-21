@@ -3,25 +3,21 @@ import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/add_product_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/product_fashion_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../model/fashion_categoryby_subcategory.dart';
 import '../model/fashion_sub_category_model.dart';
 import '../view_model/fashionproduct_view_model.dart';
 import 'add_fashion_product.dart';
 
 class FashionListProductsScreen extends StatefulWidget {
-  final FashionSubCategoryModel? subCategory;
+  final CategoryBySubCategoryModel? subCategory;
 
-  final List<FashionSubCategoryModel?> subCategories;
+  final List<CategoryBySubCategoryModel?> subCategories;
 
   const FashionListProductsScreen({
     super.key,
@@ -74,32 +70,37 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
             ),
             Consumer<FashionProductViewModel>(builder: (context, data, _) {
               return productProvider.fashionProducts.isEmpty
-                  ? SizedBox(
-                      height: screenHeight * .6,
-                      child: Center(
-                          child: SizedBox(
-                        height: screenWidth * .45,
-                        width: screenWidth * .5,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/no_product.svg',
-                              width: screenWidth * .45, // Set desired width
-                              height: screenWidth * .3, // Set desired height
+                  ? Expanded(
+                      child: SizedBox(
+                          height: screenHeight * .6,
+                          child: Center(
+                              child: SizedBox(
+                            height: screenWidth * .45,
+                            width: screenWidth * .5,
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/icons/no_product.svg',
+                                  width: screenWidth * .45, // Set desired width
+                                  height:
+                                      screenWidth * .3, // Set desired height
+                                ),
+                                SizedBox(
+                                  height: screenHeight * .004,
+                                ),
+                                const Text("Nothing to show yet. Created"),
+                                const Text("Product list will appear here")
+                              ],
                             ),
-                            SizedBox(
-                              height: screenHeight * .004,
-                            ),
-                            const Text("Nothing to show yet. Created"),
-                            const Text("Product list will appear here")
-                          ],
-                        ),
-                      )))
-                  : SizedBox(
-                      height: screenHeight * .6,
+                          ))),
+                    )
+                  : Expanded(
+                      child: SizedBox(
+                      height: screenHeight * .15,
                       child: ListView.builder(
                         itemCount: productProvider.fashionProducts.length,
                         itemBuilder: (context, index) {
+                          print("${productProvider.fashionProducts.length}");
                           return Column(
                             children: [
                               GestureDetector(
@@ -131,7 +132,8 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                     .imageUrl ??
                                                 '',
                                             placeholder: (context, url) =>
-                                                Image.asset(PlaceholderImage.placeholderimage),
+                                                Image.asset(PlaceholderImage
+                                                    .placeholderimage),
                                             fit: BoxFit.cover,
                                             errorWidget:
                                                 (context, url, error) =>
@@ -144,7 +146,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                           .fashionProducts[index]?.name ??
                                       ''),
                                   subtitle: Text(productProvider
-                                          .fashionProducts[index]?.price ??
+                                          .fashionProducts[index]?.wholesalePrice ??
                                       ''),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -178,9 +180,8 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                           );
                         },
                       ),
-                    );
+                    ));
             }),
-            const Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth / 15, vertical: 5),

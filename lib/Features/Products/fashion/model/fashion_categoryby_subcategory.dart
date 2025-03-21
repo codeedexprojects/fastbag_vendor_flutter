@@ -1,36 +1,35 @@
-class FashionSubCategoryModel {
+class CategoryBySubCategoryModel {
   int? id;
-  dynamic vendor;
+  String? vendor;
   int? category;
   String? categoryName;
   String? name;
+  dynamic? description;
   String? subcategoryImage;
   bool? enableSubcategory;
   String? createdAt;
-  String? description;
 
-  FashionSubCategoryModel(
+  CategoryBySubCategoryModel(
       {this.id,
         this.vendor,
         this.category,
         this.categoryName,
         this.name,
+        this.description,
         this.subcategoryImage,
         this.enableSubcategory,
-        this.createdAt,
-        this.description,
-      });
+        this.createdAt});
 
-  FashionSubCategoryModel.fromJson(Map<String, dynamic> json, ) {
+  CategoryBySubCategoryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     vendor = json['vendor'];
     category = json['category'];
     categoryName = json['category_name'];
     name = json['name'];
+    description = json['description'];
     subcategoryImage = json['subcategory_image'];
     enableSubcategory = json['enable_subcategory'];
     createdAt = json['created_at'];
-    description=json['description'];
   }
 
   Map<String, dynamic> toJson() {
@@ -40,10 +39,10 @@ class FashionSubCategoryModel {
     data['category'] = this.category;
     data['category_name'] = this.categoryName;
     data['name'] = this.name;
+    data['description'] = this.description;
     data['subcategory_image'] = this.subcategoryImage;
     data['enable_subcategory'] = this.enableSubcategory;
     data['created_at'] = this.createdAt;
-    data['description']=this.description;
     return data;
   }
 }

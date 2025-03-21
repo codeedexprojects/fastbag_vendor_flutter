@@ -43,6 +43,7 @@ void main() async {
       ChangeNotifierProvider(create: (_)=>GroceryViewModel()),
       ChangeNotifierProvider(create: (_)=>ProfileShopViewModel()),
 
+
     ],
     child: const MyApp()));
 
