@@ -53,7 +53,10 @@ class _FashionCategorybySubcategoryState
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
+        backgroundColor: const Color(0xFFF5F5F5),
+        scrolledUnderElevation: 0,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -62,9 +65,10 @@ class _FashionCategorybySubcategoryState
             Navigator.of(context).pop();
           },
         ),
-        title: Text(categoryProvider.selectsubCategory.isEmpty?
-          " Sub Categories":
-         categoryProvider.selectsubCategory.first.categoryName??'',
+        title: Text(
+          categoryProvider.selectsubCategory.isEmpty
+              ? " Sub Categories"
+              : categoryProvider.selectsubCategory.first.categoryName ?? '',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -140,8 +144,8 @@ class _FashionCategorybySubcategoryState
                             context: context,
                             screen: FashionListProductsScreen(
                               subCategory:
-                                  categoryProvider.subCategories[index],
-                              subCategories: categoryProvider.subCategories,
+                                  categoryProvider.selectsubCategory[index],
+                              subCategories: categoryProvider.selectsubCategory,
                             ),
                           );
                         },

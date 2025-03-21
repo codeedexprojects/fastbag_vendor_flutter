@@ -54,7 +54,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         title: Text(
           'Product Details',
           style: mainFont(
-              fontsize: 16, fontweight: FontWeight.w600, color: FbColors.black),
+              fontsize: 18, fontweight: FontWeight.w600, color: FbColors.black),
         ),
       ),
       body: SingleChildScrollView(
@@ -66,11 +66,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               padding:  EdgeInsets.all(width*0.03),
               child: Center(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(360)),
+                  borderRadius: BorderRadius.all(Radius.circular(width*0.03)),
                   child: Container(
-                    decoration: BoxDecoration(shape: BoxShape.circle),
-                    height: 336.22,
-                    width: 336,
+                    height: height * 0.4, // Adjust height as needed
+                    width: width,
                     child: CachedNetworkImage(
                       imageUrl: imageIndex ??
                           _viewModel.foodDetail?.imageUrls?.first.image ??
@@ -85,32 +84,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 24.78,
-            ),
-            Container(
-              height: 60,
-              width: 340,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _viewModel.foodDetail?.imageUrls?.length ?? 0,
-                itemBuilder: (BuildContext context, int index) {
-                  final imageUrl =
-                      _viewModel.foodDetail?.imageUrls?[index].image ?? '';
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: productDifferntimage(imageUrl, () {
-                      setState(() {
-                        imageIndex = imageUrl;
-                        _isSelected = index;
-                      });
-                    }, index),
-                  );
-                },
+            Padding(
+              padding:  EdgeInsets.all(width*0.03),
+              child: Container(
+                height: height*0.09,
+                width: width,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _viewModel.foodDetail?.imageUrls?.length ?? 0,
+                  itemBuilder: (BuildContext context, int index) {
+                    final imageUrl =
+                        _viewModel.foodDetail?.imageUrls?[index].image ?? '';
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: productDifferntimage(imageUrl, () {
+                        setState(() {
+                          imageIndex = imageUrl;
+                          _isSelected = index;
+                        });
+                      }, index),
+                    );
+                  },
+                ),
               ),
-            ),
-            SizedBox(
-              height: 36,
             ),
             Padding(
               padding:  EdgeInsets.all(width*0.03),
@@ -169,6 +165,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fontWeight: FontWeight.w400,
                       color: OrderColor.textColor)),
               SizedBox(height: height*0.01,),
+                  Text('Available stocks:${_viewModel.foodDetail?.isAvailable}',style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: OrderColor.red)),
+                  SizedBox(height: height*0.01,),
                   SizedBox(
                     height: height * 0.08,
                     child: ListView.separated(
@@ -177,8 +178,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
                         var variant = _viewModel.foodDetail?.variants?[index];
+
+                        String selectedVariantName = "";
+                        int selectedPrice = 0;
+                        String selectedStockStatus = "";
+
+                        if (variant?.quater != null) {
+                          selectedVariantName = "Quater";
+                          selectedPrice = variant?.quater?.price ?? 0;
+                          selectedStockStatus = variant?.quater?.stockStatus ?? "N/A";
+                        } else if (variant?.half != null) {
+                          selectedVariantName = "Half";
+                          selectedPrice = variant?.half?.price ?? 0;
+                          selectedStockStatus = variant?.half?.stockStatus ?? "N/A";
+                        } else if (variant?.full != null) {
+                          selectedVariantName = "Full";
+                          selectedPrice = variant?.full?.price ?? 0;
+                          selectedStockStatus = variant?.full?.stockStatus ?? "N/A";
+                        }
+
                         return GestureDetector(
                           onTap: () {
+                            setState(() {
+                              selectedVariantName = selectedVariantName;
+                              selectedPrice = selectedPrice;
+                              selectedStockStatus = selectedStockStatus;
+                            });
+                            print(
+
+                                "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkSelected Variant: $selectedVariantName, Price: $selectedPrice");
                           },
                           child: Container(
                             height: height * 0.07,
@@ -198,6 +226,56 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                     ),
                   ),
+                  // SizedBox(
+                  //   height: height * 0.08,
+                  //   child: ListView.separated(
+                  //     itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
+                  //     shrinkWrap: true,
+                  //     scrollDirection: Axis.horizontal,
+                  //     itemBuilder: (BuildContext context, int index) {
+                  //       var variant = _viewModel.foodDetail?.variants?[index];
+                  //
+                  //       if (variant != null ) {
+                  //         String variantName = variant[index]; // Extract "Half", "Full", "Quater"
+                  //         var details = variant[variantName]; // Extract price, quantity, stock_status
+                  //
+                  //         return GestureDetector(
+                  //           onTap: () {
+                  //             setState(() {
+                  //               selectedVariant = variantName; // Store variant name
+                  //               selectedVariantDetails = details; // Store details map
+                  //             });
+                  //           },
+                  //           child: Container(
+                  //             height: height * 0.07,
+                  //             width: width * 0.3,
+                  //             decoration: BoxDecoration(
+                  //               borderRadius: BorderRadius.circular(width * 0.03),
+                  //               border: Border.all(
+                  //                 color: selectedVariant == variantName ? Colors.green : Colors.grey,
+                  //               ),
+                  //               color: selectedVariant == variantName ? Colors.green[100] : Colors.white,
+                  //             ),
+                  //             child: Center(
+                  //               child: Text(
+                  //                 variantName, // Show "Half", "Full", "Quater"
+                  //                 style: TextStyle(
+                  //                   fontWeight: FontWeight.bold,
+                  //                   color: selectedVariant == variantName ? Colors.green : Colors.black,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         );
+                  //       } else {
+                  //         return SizedBox.shrink(); // Hide if variant is null
+                  //       }
+                  //     },
+                  //     separatorBuilder: (BuildContext context, int index) {
+                  //       return SizedBox(width: width * 0.03);
+                  //     },
+                  //   ),
+                  // ),
 
 
                   Padding(
