@@ -306,7 +306,10 @@ class FashionProductRepository {
       final prefs = await SharedPreferences.getInstance();
       var tokenId = prefs.getString('access_token');
       var vendor = prefs.getInt(FbLocalStorage.vendorId);
-      var headers = {'Authorization': 'Bearer $tokenId'};
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $tokenId'
+      };
       // var data = FormData.fromMap({
       //   // 'image_files': imageFiles,
       //   "vendor": vendor,
@@ -334,7 +337,7 @@ class FashionProductRepository {
           method: 'POST',
           headers: headers,
         ),
-        data: model,
+        data: json.encode(model),
       );
       print(response.statusCode);
       if (response.statusCode == 201) {
