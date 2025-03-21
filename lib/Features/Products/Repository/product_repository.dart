@@ -316,6 +316,7 @@ class ProductRepository {
 
     }on DioException catch (e) {
       print("error $e");
+      print(e.response);
     }
   }
 
