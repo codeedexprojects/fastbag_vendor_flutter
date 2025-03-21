@@ -14,8 +14,10 @@ import '../Model/food_detail_class.dart';
 class ProductDetailScreen extends StatefulWidget {
   final int productId;
 
-  const ProductDetailScreen({Key? key, required this.productId,})
-      : super(key: key);
+  const ProductDetailScreen({
+    Key? key,
+    required this.productId,
+  }) : super(key: key);
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -26,7 +28,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? varientIndex;
   var selectedVariant = "";
   var selectedVariantDetails;
-  List varients=[];
+  List varients = [];
   int _isSelected = 0;
 
   @override
@@ -34,16 +36,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
     super.initState();
-
-
   }
+
+  String selectedVariantName = "";
+  int selectedPrice = 0;
+  String selectedStockStatus = "";
 
   @override
   Widget build(BuildContext context) {
-    height=MediaQuery.of(context).size.height;
-    width=MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<FoodViewModel>(context);
     return Scaffold(
+      backgroundColor: OrderColor.white,
       appBar: AppBar(
         backgroundColor: OrderColor.white,
         centerTitle: true,
@@ -64,7 +69,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(360)),
@@ -114,7 +119,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               height: 36,
             ),
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -165,62 +170,110 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       )
                     ],
                   ),
-                  Text('Available variants',style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.textColor)),
-              SizedBox(
-                height: height*0.08,
-                child: ListView.separated(
-                  itemCount: _viewModel.foodDetail?.variants?.length?? 3,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                    var variant=_viewModel.foodDetail?.variants?[index];
-                    return  GestureDetector(
-                      onTap: () {
-                        selectedVariant=variant as String ;
-                        selectedVariantDetails=selectedVariant[index] ;
+                  Text('Available variants',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: OrderColor.textColor)),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
+                  SizedBox(
+                    height: height * 0.08,
+                    child: ListView.separated(
+                      itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        var variant = _viewModel.foodDetail?.variants?[index];
+
+                        String variantName = "";
+                        int price = 0;
+                        String stockStatus = "N/A";
+
+                        if (variant?.quater != null) {
+                          variantName = "Quater";
+                          price = variant?.quater?.price ?? 0;
+                          stockStatus = variant?.quater?.stockStatus ?? "N/A";
+                        } else if (variant?.half != null) {
+                          variantName = "Half";
+                          price = variant?.half?.price ?? 0;
+                          stockStatus = variant?.half?.stockStatus ?? "N/A";
+                        } else if (variant?.full != null) {
+                          variantName = "Full";
+                          price = variant?.full?.price ?? 0;
+                          stockStatus = variant?.full?.stockStatus ?? "N/A";
+                        }
+
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedVariantName = variantName;
+                              selectedPrice = price;
+                              selectedStockStatus = stockStatus;
+                            });
+                            print(
+                                "Selected Variant: $selectedVariantName, Price: $selectedPrice");
+                          },
+                          child: Container(
+                            height: height * 0.07,
+                            width: width * 0.3,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(width * 0.03),
+                              border: Border.all(color: Colors.green),
+                            ),
+                            child: Center(
+                              child: Text(variantName),
+                            ),
+                          ),
+                        );
                       },
-                      child: Container(
-                        height: height*0.07,
-                        width: width*0.3,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width*0.03),
-                            border: Border.all(
-                                color: OrderColor.green
-                            )
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: width * 0.03);
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(width * 0.02),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+// <<<<<<< HEAD
+//                   children: [
+//                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
+// =======
+
+                      children: [
+                        Text(
+                          "price: ${selectedVariantDetails?['price'] ?? 'hh'}",
+                          style: GoogleFonts.nunito(
+//>>>>>>> 23e9d131b1e9a068e932975d5dea75215c00ad44
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                        child: Center(child:Text(selectedVariant)  ),
-                      ),
-                    );
-                  }, separatorBuilder: (BuildContext context, int index) { return SizedBox(width: width*0.03,); },
-                ),
-              ),
-              Padding(
-                padding:  EdgeInsets.all(width*0.02),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                   Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
-                     fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   ),) ,
-                   SizedBox(height: height*0.01,),
-                   Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
-                   fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   )) ,
-                    SizedBox(height: height*0.01,),
-                   Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
-                     fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   )) ,
-                  ],
-                ),
-              )
-              ],
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                            "quantity: ${selectedVariantDetails?['quantity'] ?? 'hh'}",
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            )),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                            "stockStatus: ${selectedVariantDetails?['stock_status'] ?? 'hh'}",
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
             Divider(

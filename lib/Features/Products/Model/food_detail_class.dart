@@ -98,31 +98,42 @@ class FoodDetail {
 }
 
 class Variants {
-  Half? half;
+  Quater? quater;
+  Quater? half;
+  Quater? full;
 
-  Variants({this.half});
+  Variants({this.quater, this.half, this.full});
 
   Variants.fromJson(Map<String, dynamic> json) {
-    half = json['half'] != null ? new Half.fromJson(json['half']) : null;
+    quater =
+    json['Quater'] != null ? new Quater.fromJson(json['Quater']) : null;
+    half = json['Half'] != null ? new Quater.fromJson(json['Half']) : null;
+    full = json['Full'] != null ? new Quater.fromJson(json['Full']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.quater != null) {
+      data['Quater'] = this.quater!.toJson();
+    }
     if (this.half != null) {
-      data['half'] = this.half!.toJson();
+      data['Half'] = this.half!.toJson();
+    }
+    if (this.full != null) {
+      data['Full'] = this.full!.toJson();
     }
     return data;
   }
 }
 
-class Half {
-  dynamic price;
-  dynamic quantity;
+class Quater {
+  int? price;
+  int? quantity;
   String? stockStatus;
 
-  Half({this.price, this.quantity, this.stockStatus});
+  Quater({this.price, this.quantity, this.stockStatus});
 
-  Half.fromJson(Map<String, dynamic> json) {
+  Quater.fromJson(Map<String, dynamic> json) {
     price = json['price'];
     quantity = json['quantity'];
     stockStatus = json['stock_status'];
