@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_categoryby_subCategory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
@@ -18,8 +19,8 @@ import '../../../Commons/custom_inputdecoration.dart';
 import '../../../Commons/fonts.dart';
 
 class AddProductScreen extends StatefulWidget {
-  final SubCategoryModel subCategory;
-  final List<SubCategoryModel> subCategories;
+  final FoodCategoryBySubcategoryModel subCategory;
+  final List<FoodCategoryBySubcategoryModel> subCategories;
   const AddProductScreen(
       {super.key, required this.subCategory, required this.subCategories});
 
@@ -136,7 +137,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         print(variants);
         FoodItemModel model = FoodItemModel(
             vendor: widget.subCategory.vendor,
-            category: widget.subCategory.categoryId,
+            category: widget.subCategory.category as int,
             subcategory: widget.subCategory.id as int,
             name: nameController.text.trim(),
             description: descriptionController.text.trim(),

@@ -5,7 +5,7 @@ class FoodCategoryBySubcategoryModel {
   int? category;
   String? categoryName;
   bool? enableSubcategory;
-  int? vendor;
+  dynamic vendor;
   String? vendorName;
 
   FoodCategoryBySubcategoryModel(

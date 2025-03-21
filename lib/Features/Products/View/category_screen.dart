@@ -59,18 +59,18 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
-      navigate(
-          context: context,
-          screen: AllCategoriesScreen(
-              categories: [item.model],
-              subCategories: categoryProvider.subCategories));
+      // navigate(
+      //     context: context,
+      //     screen: AllCategoriesScreen(
+      //         categories: [item.model],
+      //         subCategories: categoryProvider.subCategories));
     } else {
-      navigate(
-          context: context,
-          screen: AllSubCategoryScreen(
-              subCategories: [item.model],
-              categories: categoryProvider.categories,
-              isOperable: false));
+      // navigate(
+      //     context: context,
+      //     screen: AllSubCategoryScreen(
+      //         subCategories: [item.model],
+      //         categories: categoryProvider.categories,
+      //         isOperable: false));
     }
     setState(() {
       filteredList = []; // Optionally clear search results after submission

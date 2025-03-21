@@ -139,9 +139,7 @@ class _FashionCategorybySubcategoryState
                         navigate(
                           context: context,
                           screen: ListProductsScreen(
-                            subCategory:
-                            categoryProvider.subCategories[index],
-                            subCategories: categoryProvider.subCategories,
+                             subCategorys: categoryProvider.selectsubCategories[index], subCategoriess: categoryProvider.selectsubCategories,
                           ),
                         );
                       },
