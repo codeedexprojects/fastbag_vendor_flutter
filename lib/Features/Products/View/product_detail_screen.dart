@@ -14,8 +14,10 @@ import '../Model/food_detail_class.dart';
 class ProductDetailScreen extends StatefulWidget {
   final int productId;
 
-  const ProductDetailScreen({Key? key, required this.productId,})
-      : super(key: key);
+  const ProductDetailScreen({
+    Key? key,
+    required this.productId,
+  }) : super(key: key);
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -26,7 +28,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? varientIndex;
   var selectedVariant = "";
   var selectedVariantDetails;
-  List varients=[];
+  List varients = [];
   int _isSelected = 0;
 
   @override
@@ -38,8 +40,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    height=MediaQuery.of(context).size.height;
-    width=MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<FoodViewModel>(context);
     return Scaffold(
       backgroundColor: OrderColor.white,
@@ -63,10 +65,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Center(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(width*0.03)),
+                  borderRadius: BorderRadius.all(Radius.circular(width * 0.03)),
                   child: Container(
                     height: height * 0.4, // Adjust height as needed
                     width: width,
@@ -85,9 +87,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Container(
-                height: height*0.09,
+                height: height * 0.09,
                 width: width,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -109,7 +111,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -160,16 +162,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       )
                     ],
                   ),
-                  Text('Available variants',style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.textColor)),
-              SizedBox(height: height*0.01,),
-                  Text('Available stocks:${_viewModel.foodDetail?.isAvailable}',style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.red)),
-                  SizedBox(height: height*0.01,),
+                  Text('Available variants',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: OrderColor.textColor)),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
+                  Text('Available stocks:${_viewModel.foodDetail?.isAvailable}',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: OrderColor.red)),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
                   SizedBox(
                     height: height * 0.08,
                     child: ListView.separated(
@@ -179,34 +187,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         var variant = _viewModel.foodDetail?.variants?[index];
 
-                        String selectedVariantName = "";
-                        int selectedPrice = 0;
-                        String selectedStockStatus = "";
-
-                        if (variant?.quater != null) {
-                          selectedVariantName = "Quater";
-                          selectedPrice = variant?.quater?.price ?? 0;
-                          selectedStockStatus = variant?.quater?.stockStatus ?? "N/A";
-                        } else if (variant?.half != null) {
-                          selectedVariantName = "Half";
-                          selectedPrice = variant?.half?.price ?? 0;
-                          selectedStockStatus = variant?.half?.stockStatus ?? "N/A";
-                        } else if (variant?.full != null) {
-                          selectedVariantName = "Full";
-                          selectedPrice = variant?.full?.price ?? 0;
-                          selectedStockStatus = variant?.full?.stockStatus ?? "N/A";
-                        }
-
                         return GestureDetector(
                           onTap: () {
-                            setState(() {
-                              selectedVariantName = selectedVariantName;
-                              selectedPrice = selectedPrice;
-                              selectedStockStatus = selectedStockStatus;
-                            });
-                            print(
-
-                                "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkSelected Variant: $selectedVariantName, Price: $selectedPrice");
+                            setState(() {});
                           },
                           child: Container(
                             height: height * 0.07,
@@ -216,7 +199,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               border: Border.all(color: OrderColor.green),
                             ),
                             child: Center(
-                              child: Text("${variant?.full?.price ?? 0}"),
+                              child: Text("${variant?.price}"),
                             ),
                           ),
                         );
@@ -277,37 +260,47 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   //   ),
                   // ),
 
-
                   Padding(
-                padding:  EdgeInsets.all(width*0.02),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    padding: EdgeInsets.all(width * 0.02),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
 // <<<<<<< HEAD
 //                   children: [
 //                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
 // =======
 
-                  children: [
-                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
+                      children: [
+                        Text(
+                          "price: ${selectedVariantDetails?['price'] ?? 'hh'}",
+                          style: GoogleFonts.nunito(
 //>>>>>>> 23e9d131b1e9a068e932975d5dea75215c00ad44
-                     fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   ),) ,
-                   SizedBox(height: height*0.01,),
-                   Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
-                   fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   )) ,
-                    SizedBox(height: height*0.01,),
-                   Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
-                     fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   )) ,
-                  ],
-                ),
-              )
-              ],
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                            "quantity: ${selectedVariantDetails?['quantity'] ?? 'hh'}",
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            )),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                            "stockStatus: ${selectedVariantDetails?['stock_status'] ?? 'hh'}",
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
             Divider(

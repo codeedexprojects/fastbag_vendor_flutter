@@ -204,68 +204,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
               Column(
                 children: List.generate(variantFields.length, (index) {
-// <<<<<<< HEAD
-//                   return Card(
-//                     elevation: 2,
-//                     margin: EdgeInsets.symmetric(vertical: 8),
-//                     child: Padding(
-//                       padding: EdgeInsets.all(10),
-//                       child: Column(
-//                         children: [
-//                           // Variant Name
-//                           TextFormField(
-//                             controller: variantFields[index]['nameController'],
-//                             decoration: InputDecoration(
-//                                 labelText: "Variant Name (e.g. Half, Full)"),
-//                             validator: (value) =>
-//                                 value!.isEmpty ? "Enter a variant name" : null,
-//                           ),
-//                           // Price
-//                           TextFormField(
-//                             controller: variantFields[index]['priceController'],
-//                             decoration: InputDecoration(labelText: "Price"),
-//                             keyboardType: TextInputType.number,
-//                             validator: (value) =>
-//                                 value!.isEmpty ? "Enter price" : null,
-//                           ),
-//                           // Quantity
-//                           // TextFormField(
-//                           //   controller: variantFields[index]
-//                           //       ['quantityController'],
-//                           //   decoration: InputDecoration(labelText: "Quantity"),
-//                           //   keyboardType: TextInputType.number,
-//                           //   validator: (value) =>
-//                           //       value!.isEmpty ? "Enter quantity" : null,
-//                           // ),
-//                           // Stock Status Dropdown
-//                           DropdownButtonFormField<String>(
-//                             value: variantFields[index]['stockStatus'],
-//                             decoration:
-//                                 InputDecoration(labelText: "Stock Status"),
-//                             items: ["in stock", "out of stock"].map((status) {
-//                               return DropdownMenuItem(
-//                                 value: status,
-//                                 child: Text(status),
-//                               );
-//                             }).toList(),
-//                             onChanged: (newValue) {
-//                               setState(() {
-//                                 print('value $newValue');
-//                                 variantFields[index]['stockStatus'] = newValue!;
-//                               });
-//                             },
-//                           ),
-//                           // Remove Button
-//                           Align(
-//                             alignment: Alignment.centerRight,
-//                             child: TextButton(
-//                               onPressed: () => removeVariant(index),
-//                               child: Text("Remove",
-//                                   style: const TextStyle(color: Colors.red)),
-//                             ),
-//                           ),
-//                         ],
-// =======
                   return Column(
                     children: [
                       // Variant Name
