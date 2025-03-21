@@ -21,7 +21,9 @@ import '../../View/widgets/fb_toggle_switch.dart';
 import '../view_model/fashionproduct_view_model.dart';
 
 class AddFashionProduct extends StatefulWidget {
-  const AddFashionProduct({super.key});
+  const AddFashionProduct({
+    super.key,
+  });
 
   @override
   State<AddFashionProduct> createState() => _AddFashionProductState();
@@ -111,6 +113,12 @@ class _AddFashionProductState extends State<AddFashionProduct> {
     var tokenId = prefs.getString('access_token');
     var vendor = prefs.getInt(FbLocalStorage.vendorId);
 
+
+    List<MultipartFile> imageFiles = await Future.wait(
+      selectedImages
+          .map((file) async => await MultipartFile.fromFile(file.path)),
+    );
+
     // List<MultipartFile> imageFiles = await Future.wait(
     //   selectedImages
     //       .map((file) async => await MultipartFile.fromFile(file.path)),
@@ -120,7 +128,12 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       variants.map((variant) async {
         return {
           "color_name": variant["color_name"].text,
+
+          "color_image": variant["color_image"] != null
+              ? await MultipartFile.fromFile(variant["color_image"].path)
+              : null,
           "color_code": variant["color_code"].text,
+
           "sizes": variant["sizes"]
               .map((size) => {
                     "size": size["size"].text,
@@ -163,6 +176,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: const Color(0xFFF5F5F5),
         centerTitle: true,
         leading: IconButton(
@@ -241,7 +255,9 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                           (await Navigator.push<CategoryRequestModel>(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => ListSubcategoriesName())));
+                                  builder: (_) => ListSubcategoriesName(
+                                        subcategoryId: selectedCategoryId,
+                                      ))));
                       selectedSubCategoryId =
                           productProvider.categoryRequestModel?.id;
                       subcategoryController.text =

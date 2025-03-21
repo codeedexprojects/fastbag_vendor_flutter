@@ -32,6 +32,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
         Provider.of<ProductViewModel>(context, listen: false);
     productProvider.getProductCategories(
         context: context, subCategoryId: widget.subCategory.id as int);
+
   }
 
   @override
@@ -62,128 +63,121 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
             ),
             Consumer<ProductViewModel>(builder: (context, data, _) {
               return productProvider.foodProducts.isEmpty
-                  ? SizedBox(
-                      height: screenHeight * .6,
-                      child: Center(
-                          child: SizedBox(
-                        height: screenWidth * .45,
-                        width: screenWidth * .5,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/no_product.svg',
-                              width: screenWidth * .45, // Set desired width
-                              height: screenWidth * .3, // Set desired height
-                            ),
-                            SizedBox(
-                              height: screenHeight * .004,
-                            ),
-                            const Text("Nothing to show yet. Created"),
-                            const Text("Product list will appear here")
-                          ],
-                        ),
-                      )))
-                  : SizedBox(
-                      height: screenHeight * .6,
-                      child: ListView.builder(
-                        itemCount: productProvider.foodProducts.length,
-                        itemBuilder: (context, index) {
-                          return Column(
+                  ? Expanded(
+                    child: SizedBox(
+                        height: screenHeight * .6,
+                        child: Center(
+                            child: SizedBox(
+                          height: screenWidth * .45,
+                          width: screenWidth * .5,
+                          child: Column(
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  navigate(
-                                      context: context,
-                                      screen: ProductDetailScreen(
-                                        productId: productProvider
-                                                .foodProducts[index].id ??
-                                            0,
-                                      ));
-                                },
-                                child: ListTile(
-                                  leading: Container(
-                                    height: screenHeight * .05,
-                                    width: screenHeight * .06,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(productProvider
-                                            .foodProducts[index].image_urls[0]),
+                              SvgPicture.asset(
+                                'assets/icons/no_product.svg',
+                                width: screenWidth * .45, // Set desired width
+                                height: screenWidth * .3, // Set desired height
+                              ),
+                              SizedBox(
+                                height: screenHeight * .004,
+                              ),
+                              const Text("Nothing to show yet. Created"),
+                              const Text("Product list will appear here")
+                            ],
+                          ),
+                        ))),
+                  )
+                  : Expanded(
+                    child: SizedBox(
+                        height: screenHeight * .15,
+                        child: ListView.builder(
+                          itemCount: productProvider.foodProducts.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    navigate(
+                                        context: context,
+                                        screen: ProductDetailScreen(
+                                          productId: productProvider
+                                                  .foodProducts[index].id ??
+                                              0,
+                                        ));
+                                  },
+                                  child: ListTile(
+                                    leading: Container(
+                                      height: screenHeight * .05,
+                                      width: screenHeight * .06,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: NetworkImage(productProvider
+                                              .foodProducts[index].image_urls[0]),
+                                        ),
+                                        border: Border.all(
+                                            color: Colors.grey, width: 0.2),
                                       ),
-                                      border: Border.all(
-                                          color: Colors.grey, width: 0.2),
+                                    ),
+                                    title: Text(
+                                        productProvider.foodProducts[index].name),
+                                    subtitle: Text(productProvider
+                                        .foodProducts[index].price),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Switch(
+                                          activeColor: Colors.green,
+                                          inactiveThumbColor: Colors.white,
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          value: false,
+                                          onChanged: (value) {
+                                            // Handle switch toggle logic
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  title: Text(
-                                      productProvider.foodProducts[index].name),
-                                  subtitle: Text(productProvider
-                                      .foodProducts[index].price),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Switch(
-                                        activeColor: Colors.green,
-                                        inactiveThumbColor: Colors.white,
-                                        materialTapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                        value: false,
-                                        onChanged: (value) {
-                                          // Handle switch toggle logic
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  // trailing: Switch(
-                                  //             activeColor: Colors.green,
-                                  //             inactiveThumbColor: Colors.white,
-                                  //             materialTapTargetSize:
-                                  //                 MaterialTapTargetSize
-                                  //                     .shrinkWrap,
-                                  //             value: false,
-                                  //             onChanged: (value) {
-                                  //               // Handle switch toggle logic
-                                  //             },
-                                  //           ),
                                 ),
-                              ),
-                            ],
-                          );
-                        },
+                              ],
+                            );
+                          },
+                        ),
                       ),
-                    );
+                  );
             }),
-            const Spacer(),
+           
             Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth / 15, vertical: 5),
+              padding:EdgeInsets.symmetric(horizontal: screenWidth * .07,vertical: .01),
               child: FbButton(
                   onClick: () {
                     navigate(context: context, screen: AddProductScreen(
                           subCategories: widget.subCategories,
                           subCategory: widget.subCategory,
-                        )                  
+                        )
                         );
                   },
                   label: "+ Add Product"),
             ),
+            SizedBox(height: 10,),
             Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth / 15, vertical: 5),
-                child: FbButton(
-                  onClick: () {
-                    navigate(
-                        context: context,
-                        screen: ProductEditDeleteScreen(
-                            products: productProvider.foodProducts));
-                  },
-                  label: "Edit",
-                  icon: const FaIcon(
-                    FontAwesomeIcons.penToSquare,
-                    size: 20,
-                  ),
-                  color: Colors.white,
-                  textColor: Colors.blue,
-                  borderColor: Colors.blue,
-                )),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * .07,vertical: .01),
+              child: FbButton(
+                onClick: () {
+                  navigate(
+                      context: context,
+                      screen: ProductEditDeleteScreen(
+                          products: productProvider.foodProducts));
+                },
+                label: "Edit",
+                icon: const FaIcon(
+                  FontAwesomeIcons.penToSquare,
+                  size: 20,
+                ),
+                color: Colors.white,
+                textColor: Colors.blue,
+                borderColor: Colors.blue,
+              ),
+            ),
             SizedBox(height: screenHeight * .02),
           ],
         ),

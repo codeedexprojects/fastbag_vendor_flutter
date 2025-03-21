@@ -6,9 +6,10 @@ class FashionDetail {
   String? name;
   String? description;
   String? gender;
-  String? price;
+  Null? price;
   String? discount;
-  String? offerPrice;
+  Null? offerPrice;
+  String? wholesalePrice;
   int? totalStock;
   List<Colors>? colors;
   String? material;
@@ -28,6 +29,7 @@ class FashionDetail {
         this.price,
         this.discount,
         this.offerPrice,
+        this.wholesalePrice,
         this.totalStock,
         this.colors,
         this.material,
@@ -47,6 +49,7 @@ class FashionDetail {
     price = json['price'];
     discount = json['discount'];
     offerPrice = json['offer_price'];
+    wholesalePrice = json['wholesale_price'];
     totalStock = json['total_stock'];
     if (json['colors'] != null) {
       colors = <Colors>[];
@@ -78,6 +81,7 @@ class FashionDetail {
     data['price'] = this.price;
     data['discount'] = this.discount;
     data['offer_price'] = this.offerPrice;
+    data['wholesale_price'] = this.wholesalePrice;
     data['total_stock'] = this.totalStock;
     if (this.colors != null) {
       data['colors'] = this.colors!.map((v) => v.toJson()).toList();
@@ -94,44 +98,46 @@ class FashionDetail {
 }
 
 class Colors {
-  List<Sizes>? sizes;
   String? colorName;
-  String? colorImage;
+  String? colorCode;
+  List<Sizes>? sizes;
 
-  Colors({this.sizes, this.colorName, this.colorImage});
+  Colors({this.colorName, this.colorCode, this.sizes});
 
   Colors.fromJson(Map<String, dynamic> json) {
+    colorName = json['color_name'];
+    colorCode = json['color_code'];
     if (json['sizes'] != null) {
       sizes = <Sizes>[];
       json['sizes'].forEach((v) {
         sizes!.add(new Sizes.fromJson(v));
       });
     }
-    colorName = json['color_name'];
-    colorImage = json['color_image'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['color_name'] = this.colorName;
+    data['color_code'] = this.colorCode;
     if (this.sizes != null) {
       data['sizes'] = this.sizes!.map((v) => v.toJson()).toList();
     }
-    data['color_name'] = this.colorName;
-    data['color_image'] = this.colorImage;
     return data;
   }
 }
 
 class Sizes {
   String? size;
-  dynamic? price;
+  String? price;
+  String? offerPrice;
   int? stock;
 
-  Sizes({this.size, this.price, this.stock});
+  Sizes({this.size, this.price, this.offerPrice, this.stock});
 
   Sizes.fromJson(Map<String, dynamic> json) {
     size = json['size'];
     price = json['price'];
+    offerPrice = json['offer_price'];
     stock = json['stock'];
   }
 
@@ -139,6 +145,7 @@ class Sizes {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['size'] = this.size;
     data['price'] = this.price;
+    data['offer_price'] = this.offerPrice;
     data['stock'] = this.stock;
     return data;
   }
