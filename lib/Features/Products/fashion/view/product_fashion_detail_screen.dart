@@ -28,7 +28,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
   int _colorisSelected = 0;
   int _sizeisSelected = 0;
   String? size;
-  String? prize;
+  dynamic? prize;
   int? Stock;
   bool _prizeInitialized = false;
 
