@@ -609,6 +609,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: const Color(0xFFF5F5F5),
         centerTitle: true,
         leading: IconButton(

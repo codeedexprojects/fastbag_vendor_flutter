@@ -1,5 +1,6 @@
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_categoryby_subCategory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Repository/category_repository.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,10 @@ class CategoryViewModel extends ChangeNotifier {
    
   ];
   List<SubCategoryModel> get subCategories => _subCategories;
+
+
+  List<FoodCategoryBySubcategoryModel>_selectsubCategories=[];
+  List<FoodCategoryBySubcategoryModel>get selectsubCategories=>_selectsubCategories;
 
   Future<List<CategoryModel>> getProductCategories(
       {required BuildContext context}) async {
@@ -40,6 +45,14 @@ class CategoryViewModel extends ChangeNotifier {
     }
     print("returning subcategories $_subCategories");
     return _subCategories;
+  }
+  getFoodCategorybySubCategories({required int categoryId}) async {
+    await _categoryRepository
+        .FoodCategoryBySubcategoryGet(categoryId)
+        .then((v) {
+      _selectsubCategories = v ?? [];
+      notifyListeners();
+    });
   }
 
   Future<void> addProductSubCategory(

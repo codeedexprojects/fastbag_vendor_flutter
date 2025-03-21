@@ -164,22 +164,22 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                               fontweight: FontWeight.w600,
                               color: FbColors.greendark),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            navigate(
-                                context: context,
-                                screen: FashionAllCategoriesScreen(
-                                  categories: categoryProvider.categories,
-                                  subCategories: categoryProvider.subCategories,
-                                ));
-                          },
-                          child: const Text(
-                            "View All",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
+                        // TextButton(
+                        //   onPressed: () {
+                        //     navigate(
+                        //         context: context,
+                        //         screen: FashionAllCategoriesScreen(
+                        //           categories: categoryProvider.categories,
+                        //           subCategories: categoryProvider.subCategories,
+                        //         ));
+                        //   },
+                        //   child: const Text(
+                        //     "View All",
+                        //     style: TextStyle(
+                        //         color: Colors.grey,
+                        //         decoration: TextDecoration.underline),
+                        //   ),
+                        // ),
                       ],
                     ),
                     //  category  List  Horzontal
@@ -187,8 +187,8 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                       height: screenHeight * .17,
                       child: Consumer<FashionCategoryViewModel>(
                         builder: (context, data, _) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
+                          return GridView.builder(
+
                             itemCount: data.categories.length,
                             itemBuilder: (context, index) {
                               return categoryCard(
@@ -214,75 +214,78 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                   data.categories[index]?.categoryImage ?? '',
                                 ),
                               );
-                            },
+                            },padding: EdgeInsets.only(top: screenHeight * .015),
+                              gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3, childAspectRatio: 0.7),
                           );
                         },
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Select Sub Categories",
-                          style: mainFont(
-                              fontsize: 18,
-                              fontweight: FontWeight.w600,
-                              color: FbColors.greendark),
-                        ),
-                        if (categoryProvider.subCategories.isNotEmpty)
-                          TextButton(
-                            onPressed: () {
-                              navigate(
-                                context: context,
-                                screen: FashionAllSubCategoryScreen(
-                                  subCategories: categoryProvider.subCategories,
-                                  categories: categoryProvider.categories,
-                                  isOperable: true,
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              "View All",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.underline),
-                            ),
-                          )
-                      ],
-                    ),
-                    Expanded(
-                      child: Consumer<FashionCategoryViewModel>(
-                        builder: (context, data, _) {
-                          return GridView.builder(
-                            padding: const EdgeInsets.all(5),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    childAspectRatio: .57,
-                                    crossAxisSpacing: 14),
-                            itemCount: data.subCategories.length,
-                            itemBuilder: (context, index) {
-                              return subCategoryCard(
-                                height: screenWidth * 0.33,
-                                text: data?.subCategories[index]?.name ?? '',
-                                image: data.subCategories[index]
-                                        ?.subcategoryImage ??
-                                    '',
-                                onTap: () {
-                                  navigate(
-                                    context: context,
-                                    screen: FashionListProductsScreen(
-                                      subCategory: data.subCategories[index],
-                                      subCategories: data.subCategories,
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       "Select Sub Categories",
+                    //       style: mainFont(
+                    //           fontsize: 18,
+                    //           fontweight: FontWeight.w600,
+                    //           color: FbColors.greendark),
+                    //     ),
+                    //     if (categoryProvider.subCategories.isNotEmpty)
+                    //       TextButton(
+                    //         onPressed: () {
+                    //           navigate(
+                    //             context: context,
+                    //             screen: FashionAllSubCategoryScreen(
+                    //               subCategories: categoryProvider.subCategories,
+                    //               categories: categoryProvider.categories,
+                    //               isOperable: true,
+                    //             ),
+                    //           );
+                    //         },
+                    //         child: const Text(
+                    //           "View All",
+                    //           style: TextStyle(
+                    //               color: Colors.grey,
+                    //               decoration: TextDecoration.underline),
+                    //         ),
+                    //       )
+                    //   ],
+                    // ),
+                    // Expanded(
+                    //   child: Consumer<FashionCategoryViewModel>(
+                    //     builder: (context, data, _) {
+                    //       return GridView.builder(
+                    //         padding: const EdgeInsets.all(5),
+                    //         gridDelegate:
+                    //             const SliverGridDelegateWithFixedCrossAxisCount(
+                    //                 crossAxisCount: 3,
+                    //                 childAspectRatio: .57,
+                    //                 crossAxisSpacing: 14),
+                    //         itemCount: data.subCategories.length,
+                    //         itemBuilder: (context, index) {
+                    //           return subCategoryCard(
+                    //             height: screenWidth * 0.33,
+                    //             text: data?.subCategories[index]?.name ?? '',
+                    //             image: data.subCategories[index]
+                    //                     ?.subcategoryImage ??
+                    //                 '',
+                    //             onTap: () {
+                    //               navigate(
+                    //                 context: context,
+                    //                 screen: FashionListProductsScreen(
+                    //                   subCategory: data.subCategories[index],
+                    //                   subCategories: data.subCategories,
+                    //                 ),
+                    //               );
+                    //             },
+                    //           );
+                    //         },
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ))
               else

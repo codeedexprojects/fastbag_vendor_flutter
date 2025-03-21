@@ -84,23 +84,27 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                 padding: const EdgeInsets.only(top: 11),
                 child: Center(
                   child: Container(
-                      decoration: BoxDecoration(shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10)),
                       height: 336.22,
                       width: 336,
                       child: (productProvider.fashionDetail?.images != null &&
                               productProvider
                                   .fashionDetail!.images!.isNotEmpty)
-                          ? CachedNetworkImage(
-                              imageUrl: imageIndex ??
-                                  _viewModel
-                                      .fashionDetail?.images?.first.image ??
-                                  "",
-                              fit: BoxFit.fill,
-                              placeholder: (context, url) => Image.asset(
-                                  PlaceholderImage.placeholderimage),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.downloading),
-                            )
+                          ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                                imageUrl: imageIndex ??
+                                    _viewModel
+                                        .fashionDetail?.images?.first.image ??
+                                    "",
+                                fit: BoxFit.fill,
+                                placeholder: (context, url) => Image.asset(
+                                    PlaceholderImage.placeholderimage),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.downloading),
+                              ),
+                          )
                           : Image.asset(PlaceholderImage.placeholderimage)),
                 ),
               ),

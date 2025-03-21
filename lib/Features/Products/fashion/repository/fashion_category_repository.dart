@@ -157,6 +157,7 @@ class FashionCategoryRepository {
     print("inside");
 
     try {
+      SVProgressHUD.show();
       print(subcategoryId);
       print("inside try");
       final prefs = await SharedPreferences.getInstance();
@@ -256,7 +257,8 @@ class FashionCategoryRepository {
       }
       else {
         print(response.statusMessage);
-      }}on DioException catch (e) {
+      }
+    }on DioException catch (e) {
 
       print("error ${e.response?.data}");
     }

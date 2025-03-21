@@ -74,29 +74,32 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
             ),
             Consumer<FashionProductViewModel>(builder: (context, data, _) {
               return productProvider.fashionProducts.isEmpty
-                  ? SizedBox(
-                      height: screenHeight * .6,
-                      child: Center(
-                          child: SizedBox(
-                        height: screenWidth * .45,
-                        width: screenWidth * .5,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/no_product.svg',
-                              width: screenWidth * .45, // Set desired width
-                              height: screenWidth * .3, // Set desired height
-                            ),
-                            SizedBox(
-                              height: screenHeight * .004,
-                            ),
-                            const Text("Nothing to show yet. Created"),
-                            const Text("Product list will appear here")
-                          ],
-                        ),
-                      )))
-                  : Expanded(
-                      // height: screenHeight * .6,
+                  ? Expanded(
+                    child: SizedBox(
+                        height: screenHeight * .6,
+                        child: Center(
+                            child: SizedBox(
+                          height: screenWidth * .45,
+                          width: screenWidth * .5,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/no_product.svg',
+                                width: screenWidth * .45, // Set desired width
+                                height: screenWidth * .3, // Set desired height
+                              ),
+                              SizedBox(
+                                height: screenHeight * .004,
+                              ),
+                              const Text("Nothing to show yet. Created"),
+                              const Text("Product list will appear here")
+                            ],
+                          ),
+                        ))),
+                  )
+                  :
+              Expanded(child: SizedBox(
+                      height: screenHeight * .15,
                       child: ListView.builder(
                         itemCount: productProvider.fashionProducts.length,
                         itemBuilder: (context, index) {
@@ -179,9 +182,9 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                           );
                         },
                       ),
-                    );
+                    ));
             }),
-            Spacer(),
+
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth / 15, vertical: 5),

@@ -3,29 +3,53 @@ import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/sub_category_edit_list.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_categoryby_subcategory.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_subcategory_edit_list.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/sub_fashion_category_edit_list.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_category_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
-class AllSubCategoryScreen extends StatelessWidget {
-  final List<CategoryModel> categories;
-  final List<SubCategoryModel> subCategories;
+import '../fashion/view/add_fashion_sub_category_screen.dart';
+import 'add_sub_category_screen.dart';
+import 'list_products_screen.dart';
+
+class FoodCategorybySubcategory extends StatefulWidget {
+  final int? categoryId;
+
   final bool isOperable;
-  const AllSubCategoryScreen(
-      {super.key,
-      required this.subCategories,
-      required this.categories,
-      required this.isOperable});
+
+  FoodCategorybySubcategory({
+    super.key,
+    required this.isOperable,
+    required this.categoryId,
+    // this.selectSubCategory
+  });
+
+  @override
+  State<FoodCategorybySubcategory> createState() =>
+      _FashionCategorybySubcategoryState();
+}
+
+class _FashionCategorybySubcategoryState
+    extends State<FoodCategorybySubcategory> {
+  @override
+  void initState() {
+    final categoryProvider =
+    Provider.of<CategoryViewModel>(context, listen: false);
+    categoryProvider.getFoodCategorybySubCategories(
+        categoryId: widget?.categoryId ?? 0);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print("subcategories :- $subCategories");
+    final categoryProvider = Provider.of<CategoryViewModel>(context);
+
+    print("subcategories :- ${categoryProvider.selectsubCategories}");
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -38,8 +62,9 @@ class AllSubCategoryScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        title: Text(
-          "All Sub Categories",
+        title: Text(categoryProvider.selectsubCategories.isEmpty?
+        " Sub Categories":
+        categoryProvider.selectsubCategories.first.categoryName??'',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -79,9 +104,11 @@ class AllSubCategoryScreen extends StatelessWidget {
               height: screenHeight * .02,
             ),
             Text(
-              subCategories.isNotEmpty
-                  ? "Select Sub Categories"
-                  : "No Sub Categories added",
+              //
+              // categoryProvider.selectsubCategory.isEmpty
+              //     ?
+              "Select Sub Categories",
+              //     : "No Sub Categories added",
               style: mainFont(
                   fontsize: 18,
                   fontweight: FontWeight.w600,
@@ -90,37 +117,41 @@ class AllSubCategoryScreen extends StatelessWidget {
             SizedBox(
               height: screenHeight * .02,
             ),
-            subCategories.isNotEmpty
+            categoryProvider.selectsubCategories.isNotEmpty
                 ? Expanded(
-                    child: GridView.builder(
-                    padding: const EdgeInsets.all(5),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 0.57,
-                            crossAxisSpacing: 14),
-                    itemCount: subCategories.length,
-                    itemBuilder: (context, index) {
-                      return subCategoryCard(
-                        height: screenWidth * 0.33,
-                        text: subCategories[index].name,
-                        image: subCategories[index].sub_category_image,
-                        onTap: () {
-                          navigate(
-                            context: context,
-                            screen: ListProductsScreen(
-                              subCategory: subCategories[index],
-                              subCategories: subCategories,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ))
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(5),
+                  gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 0.57,
+                      crossAxisSpacing: 14),
+                  itemCount: categoryProvider.selectsubCategories.length,
+                  itemBuilder: (context, index) {
+                    return subCategoryCard(
+                      height: screenWidth * 0.33,
+                      text: categoryProvider.selectsubCategories[index]?.name ??
+                          '',
+                      image: categoryProvider
+                          .selectsubCategories[index]?.subcategoryImage ??
+                          '',
+                      onTap: () {
+                        navigate(
+                          context: context,
+                          screen: ListProductsScreen(
+                            subCategory:
+                            categoryProvider.subCategories[index],
+                            subCategories: categoryProvider.subCategories,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ))
                 : const Center(
-                    child: Text("Start adding your sub category now"),
-                  ),
-            if (isOperable)
+              child: Text("Start adding your sub category now"),
+            ),
+            if (widget.isOperable)
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: screenWidth / 15, vertical: 5),
@@ -129,23 +160,23 @@ class AllSubCategoryScreen extends StatelessWidget {
                       navigate(
                           context: context,
                           screen: AddSubCategoryScreen(
-                            categories: categories,
+                            categories: categoryProvider.categories,
                           ));
                     },
                     label: "+ Add Category"),
               ),
-            if (isOperable && subCategories.isNotEmpty)
+            if (widget.isOperable &&
+                categoryProvider.selectsubCategories.isNotEmpty)
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: screenWidth / 15, vertical: 5),
                 child: FbButton(
                   onClick: () {
-                    // navigate(
-                    //     context: context,
-                    //     screen: SubCategoryEditList(
-                    //       subCategories: subCategories,
-                    //       categories: categories,
-                    //     ));
+                    navigate(
+                        context: context,
+                        screen: SubCategoryEditList(
+                          categoryId: widget.categoryId,
+                        ));
                   },
                   icon: const FaIcon(
                     FontAwesomeIcons.penToSquare,
