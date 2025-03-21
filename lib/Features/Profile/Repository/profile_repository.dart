@@ -3,23 +3,24 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
-import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Model/update_shop_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/Model/vendor_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Profile/View/update_waiting_screen.dart';
+import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileRepository {
   final Dio _dio = Dio();
 
-  Future<dynamic> getProfile(int id, BuildContext context) async {
+  Future<dynamic> getProfile(BuildContext context) async {
     SVProgressHUD.show();
+    String vendorId = StoreManager().getVendorId() as String;
 
     // Log the URL to ensure it is correctly formatted
-    final url = '${baseUrl}vendors/vendors/$id';
+    final url = '${baseUrl}vendors/vendors/$vendorId';
     print('Requesting URL: $url');
 
     try {
@@ -351,8 +352,10 @@ class ProfileRepository {
   }
 
   Future<dynamic> postShopDetails(
-      UpdateShopModel model, BuildContext context, int id) async {
+      UpdateShopModel model, BuildContext context) async {
     print("inside");
+    final prefs = await SharedPreferences.getInstance();
+    int? vendorId = prefs.getInt(FbLocalStorage.vendorId);
     try {
       print("inside try");
       // Create FormData for file uploads
@@ -364,7 +367,7 @@ class ProfileRepository {
         "city": model.city,
         "state": model.state,
         "pincode": model.pincode,
-        "store_type":model.store_type,
+        "store_type": model.store_type,
         "fssai_no": model.fssai_no,
         "bussiness_location": model.bussiness_location,
         "business_landmark": model.business_landmark,
@@ -384,7 +387,7 @@ class ProfileRepository {
           ),
       });
 
-      final url = '${baseUrl}vendors/vendors/$id/';
+      final url = '${baseUrl}vendors/vendors/$vendorId/';
 
       // Perform the POST request
       Response response = await _dio.patch(
@@ -393,6 +396,7 @@ class ProfileRepository {
         options: Options(
           headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization" : "Bearer ${await StoreManager().getAccessToken()}"
           },
         ),
       );
@@ -413,8 +417,9 @@ class ProfileRepository {
         SVProgressHUD.dismiss();
         print("Registration failed: ${response.data}");
       }
-    } catch (e) {
+    } on DioException catch (e) {
       SVProgressHUD.dismiss();
+      print("error of updye shop details ${e.response?.data}");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("OOPs something happened , Error: $e")),
       );
@@ -422,5 +427,3 @@ class ProfileRepository {
     }
   }
 }
-
-

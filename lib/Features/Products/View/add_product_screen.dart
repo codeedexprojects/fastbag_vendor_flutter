@@ -191,7 +191,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 controller: descriptionController,
                 validator: customValidatornoSpaceError,
               ),
-
               FbProductsFilePicker(
                 fileCategory: "Product",
                 onFilesPicked: _onFilePicked,
@@ -221,7 +220,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 validator: customValidatornoSpaceError,
               ),
               // Dynamic Variant Fields
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenHeight * .03),
                 child: Align(
@@ -290,7 +289,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             child: TextButton(
                               onPressed: () => removeVariant(index),
                               child: Text("Remove",
-                                  style: TextStyle(color: Colors.red)),
+                                  style: const TextStyle(color: Colors.red)),
                             ),
                           ),
                         ],
@@ -317,7 +316,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: screenHeight * 0.03),
               FbToggleSwitch(
                 title: 'Mark Product in stock',
                 initialValue: _inStock,

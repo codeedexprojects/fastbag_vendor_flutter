@@ -61,8 +61,10 @@ categoryCard({required radius, required image, required onTap, required text}) {
         const SizedBox(height: 8),
         Text(
           text,
+          textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
-          style: nunito(fontSize: 14, fontBold: FontWeight.w700),
+          maxLines: 2,
+          style: nunito(fontSize: 14, fontWeight: FontWeight.w700),
         ),
       ],
     ),
@@ -85,7 +87,9 @@ subCategoryCard(
 
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: NetworkImage(image),
+              image: image.isEmpty
+                  ? const AssetImage('assets/Images/grocery.jpeg')
+                  : NetworkImage(image),
             ),
           ),
         ),
@@ -94,7 +98,7 @@ subCategoryCard(
       Text(
         text,
         overflow: TextOverflow.ellipsis,
-        style: nunito(fontSize: 14, fontBold: FontWeight.w700),
+        style: nunito(fontSize: 14, fontWeight: FontWeight.w700),
       ),
     ],
   );

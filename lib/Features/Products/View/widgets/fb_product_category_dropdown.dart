@@ -27,7 +27,7 @@ class FbProductCategoryDropdown extends StatelessWidget {
             hint: Text(
               'Product Category',
               style: nunito(
-                  color: Colors.grey.shade600, fontBold: FontWeight.w300),
+                  color: Colors.grey.shade600, fontWeight: FontWeight.w300),
             ),
             value: selectedCategory,
             items: categories.map((category) {
@@ -35,7 +35,7 @@ class FbProductCategoryDropdown extends StatelessWidget {
                 value: category,
                 child: Text(
                   category.name,
-                  style: nunito(fontBold: FontWeight.w600),
+                  style: nunito(fontWeight: FontWeight.w600),
                 ),
               );
             }).toList(),

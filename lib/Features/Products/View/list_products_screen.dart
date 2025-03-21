@@ -6,6 +6,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/add_product_screen
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_detail_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/add_grocery_product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -156,35 +157,33 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                   horizontal: screenWidth / 15, vertical: 5),
               child: FbButton(
                   onClick: () {
-                    navigate(
-                        context: context,
-                        screen: AddProductScreen(
+                    navigate(context: context, screen: AddProductScreen(
                           subCategories: widget.subCategories,
                           subCategory: widget.subCategory,
-                        ));
+                        )                  
+                        );
                   },
                   label: "+ Add Product"),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth / 15, vertical: 5),
-              child: FbButton(
-                onClick: () {
-                  navigate(
-                      context: context,
-                      screen: ProductEditDeleteScreen(
-                          products: productProvider.foodProducts));
-                },
-                label: "Export",
-                icon: const FaIcon(
-                  FontAwesomeIcons.arrowUpFromBracket,
-                  size: 17,
-                ),
-                color: Colors.white,
-                textColor: Colors.green,
-                borderColor: Colors.green,
-              ),
-            ),
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth / 15, vertical: 5),
+                child: FbButton(
+                  onClick: () {
+                    navigate(
+                        context: context,
+                        screen: ProductEditDeleteScreen(
+                            products: productProvider.foodProducts));
+                  },
+                  label: "Edit",
+                  icon: const FaIcon(
+                    FontAwesomeIcons.penToSquare,
+                    size: 20,
+                  ),
+                  color: Colors.white,
+                  textColor: Colors.blue,
+                  borderColor: Colors.blue,
+                )),
             SizedBox(height: screenHeight * .02),
           ],
         ),

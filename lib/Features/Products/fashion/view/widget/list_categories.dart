@@ -29,7 +29,7 @@ class _ListCategoriesNameState extends State<ListCategoriesName> {
         title: Text(
           "Categories",
           style: nunito(
-              color: Colors.black, fontSize: 16, fontBold: FontWeight.w500),
+              color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
       body: Column(
@@ -58,7 +58,7 @@ class _ListCategoriesNameState extends State<ListCategoriesName> {
                       style: nunito(
                           color: Colors.black,
                           fontSize: 16,
-                          fontBold: FontWeight.w500),
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 );
