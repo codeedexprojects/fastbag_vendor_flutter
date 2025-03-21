@@ -1,7 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/color_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/color_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_categories.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_sub_categories.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +13,17 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
 import '../../../../storage/fb_local_storage.dart';
 import '../../View/widgets/fb_products_file_picker.dart';
 import '../../View/widgets/fb_toggle_switch.dart';
-import '../model/addproduct_model.dart';
 import '../view_model/fashionproduct_view_model.dart';
 
 class AddFashionProduct extends StatefulWidget {
-  const AddFashionProduct({super.key});
+  const AddFashionProduct({
+    super.key,
+  });
 
   @override
   State<AddFashionProduct> createState() => _AddFashionProductState();
@@ -63,7 +64,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
     setState(() {
       variants.add({
         "color_name": TextEditingController(), // ✅ Store controller
-        "color_image": null,
+        "color_code": TextEditingController(),
         "sizes": []
       });
     });
@@ -94,47 +95,59 @@ class _AddFashionProductState extends State<AddFashionProduct> {
     });
   }
 
-  Future<void> pickImage(int index) async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        variants[index]["color_image"] = File(pickedFile.path);
-      });
-    }
-  }
+  // Future<void> pickImage(int index) async {
+  //   final pickedFile =
+  //       await ImagePicker().pickImage(source: ImageSource.gallery);
+  //
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       variants[index]["color_image"] = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   void submitVariants() async {
-    var productProvider = Provider.of<FashionProductViewModel>(context, listen: false);
+    var productProvider =
+        Provider.of<FashionProductViewModel>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
     var tokenId = prefs.getString('access_token');
     var vendor = prefs.getInt(FbLocalStorage.vendorId);
 
+
     List<MultipartFile> imageFiles = await Future.wait(
-      selectedImages.map((file) async => await MultipartFile.fromFile(file.path)),
+      selectedImages
+          .map((file) async => await MultipartFile.fromFile(file.path)),
     );
+
+    // List<MultipartFile> imageFiles = await Future.wait(
+    //   selectedImages
+    //       .map((file) async => await MultipartFile.fromFile(file.path)),
+    // );
 
     final List<Map<String, dynamic>> formattedData = await Future.wait(
       variants.map((variant) async {
         return {
           "color_name": variant["color_name"].text,
+
           "color_image": variant["color_image"] != null
               ? await MultipartFile.fromFile(variant["color_image"].path)
               : null,
-          "sizes": variant["sizes"].map((size) => {
-            "size": size["size"].text,
-            "price": size["price"].text,
-            "stock": size["stock"].text,
-            "offer_price": size["offer_price"].text
-          }).toList(),
+          "color_code": variant["color_code"].text,
+
+          "sizes": variant["sizes"]
+              .map((size) => {
+                    "size": size["size"].text,
+                    "price": size["price"].text,
+                    "stock": size["stock"].text,
+                    "offer_price": size["offer_price"].text
+                  })
+              .toList(),
         };
       }),
     );
 
     // Prepare API request data
-    var data = FormData.fromMap({
-      'image_files': imageFiles, // Attach images
+    var data = {
       "vendor": vendor,
       "category_id": selectedCategoryId,
       "subcategory_id": selectedSubCategoryId,
@@ -145,7 +158,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       "material": materialController.text,
       "is_active": _inStock,
       "wholesale_price": wholeSalePriceController.text,
-    });
+    };
 
     // Call API function
     productProvider.addFashionProduct(
@@ -153,8 +166,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       model: data,
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +176,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: const Color(0xFFF5F5F5),
         centerTitle: true,
         leading: IconButton(
@@ -243,7 +255,9 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                           (await Navigator.push<CategoryRequestModel>(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => ListSubcategoriesName())));
+                                  builder: (_) => ListSubcategoriesName(
+                                        subcategoryId: selectedCategoryId,
+                                      ))));
                       selectedSubCategoryId =
                           productProvider.categoryRequestModel?.id;
                       subcategoryController.text =
@@ -271,6 +285,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               controller: wholeSalePriceController,
               keyboard: TextInputType.number,
             ),
+            for (int i = 0; i < variants.length; i++) _buildVariantSection(i),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * .07, vertical: screenHeight * .01),
@@ -300,7 +315,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                 ),
               ),
             ),
-            for (int i = 0; i < variants.length; i++) _buildVariantSection(i),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * .07, vertical: screenHeight * .01),
@@ -331,6 +345,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   }
 
   Widget _buildVariantSection(int index) {
+    var productProvider = Provider.of<FashionProductViewModel>(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Padding(
@@ -338,8 +353,24 @@ class _AddFashionProductState extends State<AddFashionProduct> {
           horizontal: screenWidth * .07, vertical: screenHeight * .01),
       child: Column(
         children: [
-          _buildTextField("Color Name", true, variants[index]["color_name"]),
-          _buildImagePicker(index),
+          _buildTextField("Color Name", true, variants[index]["color_name"],
+              () async {
+            productProvider.colorPicker =
+                (await Navigator.push<ColorPickerModel>(context,
+                    MaterialPageRoute(builder: (_) => ColorPickerScreen())));
+            print(productProvider.colorPicker?.colorName);
+            print(productProvider.colorPicker?.colorCode);
+            variants[index]["color_name"].text =
+                productProvider.colorPicker?.colorName;
+            variants[index]["color_code"].text =
+                productProvider.colorPicker?.colorCode;
+          }, true),
+          SizedBox(
+            height: 10,
+          ),
+          _buildTextField("Color Code", true, variants[index]["color_code"],
+              () async {}, true),
+          //  _buildImagePicker(index),
           for (int j = 0; j < variants[index]["sizes"].length; j++)
             _buildSizeRow(index, j),
           Row(
@@ -372,49 +403,75 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   }
 
   Widget _buildSizeRow(int variantIndex, int sizeIndex) {
-    final sizes =
-        variants[variantIndex]["sizes"] ?? []; // ✅ Ensure sizes is not null
+    final sizes = variants[variantIndex]["sizes"] ?? [];
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: SelectField(
+                        label: 'Size',
+                        controller: sizes[sizeIndex]["size"],
+                        items: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _buildTextField("Price", false,
+                          sizes[sizeIndex]["price"], () {}, false),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10), // Space between rows
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildTextField("Stock", false,
+                          sizes[sizeIndex]["stock"], () {}, false),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _buildTextField("Offer Price", false,
+                          sizes[sizeIndex]["offer_price"], () {}, false),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
 
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-                child: _buildTextField("Size", true, sizes[sizeIndex]["size"])),
-            SizedBox(width: 10),
-            Expanded(
-                child:
-                    _buildTextField("Price", false, sizes[sizeIndex]["price"])),
-            SizedBox(width: 10),
-            IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () => removeSize(variantIndex, sizeIndex),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-                child:
-                    _buildTextField("Stock", false, sizes[sizeIndex]["stock"])),
-            SizedBox(width: 10),
-            Expanded(
-                child: _buildTextField(
-                    "Offer Price", false, sizes[sizeIndex]["offer_price"])),
-            SizedBox(width: 10),
-            IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () => removeSize(variantIndex, sizeIndex),
-            ),
-          ],
-        ),
-      ],
+          const SizedBox(width: 15), // Space between inputs and delete button
+
+          // 🛑 Delete Button (Vertically Centered)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red, size: 28),
+                onPressed: () {
+                  setState(() {
+                    variants[variantIndex]["sizes"].removeAt(sizeIndex);
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildTextField(
-      String label, bool isSize, TextEditingController controller) {
+  Widget _buildTextField(String label, bool isSize,
+      TextEditingController controller, VoidCallback? onTap, bool isEnabled) {
     return TextFormField(
+      onTap: onTap,
+      readOnly: isEnabled,
       controller: controller,
       inputFormatters: [
         if (!isSize) FilteringTextInputFormatter.allow(RegExp(r'^[0-9.]+$')),
@@ -494,36 +551,36 @@ class _AddFashionProductState extends State<AddFashionProduct> {
     );
   }
 
-  Widget _buildImagePicker(int index) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Upload Color Image",
-          style: normalFont4(
-              fontsize: 14,
-              fontweight: FontWeight.w400,
-              color: Color.fromRGBO(26, 26, 26, 1)),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () => pickImage(index),
-          child: Container(
-            width: double.infinity,
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              color: const Color(0xFFF5F5F5),
-            ),
-            child: variants[index]["color_image"] != null
-                ? Image.file(
-                    variants[index]["color_image"],
-                    fit: BoxFit.cover,
-                  )
-                : const Center(child: Icon(Icons.upload_file)),
-          ),
-        ),
-      ],
-    );
-  }
+// Widget _buildImagePicker(int index) {
+//   return Column(
+//     crossAxisAlignment: CrossAxisAlignment.start,
+//     children: [
+//       Text(
+//         "Upload Color Image",
+//         style: normalFont4(
+//             fontsize: 14,
+//             fontweight: FontWeight.w400,
+//             color: Color.fromRGBO(26, 26, 26, 1)),
+//       ),
+//       const SizedBox(height: 8),
+//       GestureDetector(
+//         onTap: () => pickImage(index),
+//         child: Container(
+//           width: double.infinity,
+//           height: 100,
+//           decoration: BoxDecoration(
+//             border: Border.all(color: Colors.grey),
+//             color: const Color(0xFFF5F5F5),
+//           ),
+//           child: variants[index]["color_image"] != null
+//               ? Image.file(
+//                   variants[index]["color_image"],
+//                   fit: BoxFit.cover,
+//                 )
+//               : const Center(child: Icon(Icons.upload_file)),
+//         ),
+//       ),
+//     ],
+//   );
+// }
 }

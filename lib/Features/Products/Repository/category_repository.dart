@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_categoryby_subCategory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryRepository {
   final Dio _dio = Dio();
@@ -251,6 +255,42 @@ class CategoryRepository {
       //   SnackBar(content: Text("OOPs something happened , Error: $e")),
       // );
       print("Error: $e");
+    }
+  }
+  Future<List<FoodCategoryBySubcategoryModel>?>FoodCategoryBySubcategoryGet(int categoryId)async{
+    try{
+      SVProgressHUD.show();
+      final prefs=await SharedPreferences.getInstance();
+      var tokenId=prefs.getString('access_token');
+      // var tokenId = prefs.getString('access_token');
+      var vendorId = prefs.getInt('vendor_id');
+      print("hhhhh $vendorId");
+      var headers = {
+        'Authorization': 'Bearer $tokenId',
+        "Content-Type": "application/json",
+      };
+      print("dhjhidih $categoryId");
+      var response = await _dio.request(
+        '${baseUrl}food/subcategories/by-category/$categoryId/',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+      if (response.statusCode == 200) {
+        List jsonList=response.data;
+        List<FoodCategoryBySubcategoryModel>
+        jsonResponce=
+        jsonList.map((v)=>FoodCategoryBySubcategoryModel.fromJson(v)).toList();
+        print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
+        SVProgressHUD.dismiss();
+        return jsonResponce;
+      }
+      else {
+        print(response.statusMessage);
+      }
+    }on DioException catch (e) {
+      print("error ${e.response?.data}");
     }
   }
 }

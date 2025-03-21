@@ -65,5 +65,15 @@ DerivedData/
 *.ts
 *.jar
 
+<<<<<<< HEAD
+# Custom local files
+*.env
+
+android/app/build/
+android/app/src/debug/
+android/app/src/profile/
+android/app/src/release/
+=======
 # Custom local environment files
 *.env
+>>>>>>> 4226ca2f46a5392c2f2afe3d6f240166cf96d3c6

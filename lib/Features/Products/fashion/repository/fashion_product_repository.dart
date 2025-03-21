@@ -39,6 +39,9 @@ class FashionProductRepository {
         ),
       );
 
+      print(
+          '${baseUrl}fashion/products/subcategory/$subcategoryId/vendor/$vendorId/');
+
       if (response.statusCode == 200) {
         SVProgressHUD.dismiss();
         return FashionItemModel.fromJson(response.data);
@@ -272,6 +275,7 @@ class FashionProductRepository {
 
   Future<FashionDetail?> fetchfashionDetail(int productId) async {
     try {
+      SVProgressHUD.show();
       final prefs = await SharedPreferences.getInstance();
       var tokenId = prefs.getString('access_token');
       var headers = {'Authorization': 'Bearer $tokenId'};
@@ -286,9 +290,11 @@ class FashionProductRepository {
 
       if (response.statusCode == 200) {
         print(response.data);
+        SVProgressHUD.dismiss();
         return FashionDetail.fromJson(response.data);
       }
     } on DioException catch (e) {
+      SVProgressHUD.dismiss();
       print("error $e");
     }
   }
@@ -300,7 +306,10 @@ class FashionProductRepository {
       final prefs = await SharedPreferences.getInstance();
       var tokenId = prefs.getString('access_token');
       var vendor = prefs.getInt(FbLocalStorage.vendorId);
-      var headers = {'Authorization': 'Bearer $tokenId'};
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $tokenId'
+      };
       // var data = FormData.fromMap({
       //   // 'image_files': imageFiles,
       //   "vendor": vendor,
@@ -328,7 +337,7 @@ class FashionProductRepository {
           method: 'POST',
           headers: headers,
         ),
-        data: model,
+        data: json.encode(model),
       );
       print(response.statusCode);
       if (response.statusCode == 201) {
