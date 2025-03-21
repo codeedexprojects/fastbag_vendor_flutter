@@ -67,13 +67,13 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
               categories: [item.model],
               subCategories: categoryProvider.subCategories));
     } else {
-      navigate(
-          context: context,
-          screen: FashionAllSubCategoryScreen(
-            subCategories: [item.model],
-            categories: categoryProvider.categories,
-            isOperable: true,
-          ));
+      // navigate(
+      //     context: context,
+      //     screen: FashionAllSubCategoryScreen(
+      //       subCategories: [item.model],
+      //       categories: categoryProvider.categories,
+      //       isOperable: true,
+      //     ));
     }
     setState(() {
       filteredList = []; // Optionally clear search results after submission
@@ -188,7 +188,6 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                       child: Consumer<FashionCategoryViewModel>(
                         builder: (context, data, _) {
                           return GridView.builder(
-
                             itemCount: data.categories.length,
                             itemBuilder: (context, index) {
                               return categoryCard(
@@ -214,10 +213,11 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                                   data.categories[index]?.categoryImage ?? '',
                                 ),
                               );
-                            },padding: EdgeInsets.only(top: screenHeight * .015),
-                              gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3, childAspectRatio: 0.7),
+                            },
+                            padding: EdgeInsets.only(top: screenHeight * .015),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3, childAspectRatio: 0.7),
                           );
                         },
                       ),

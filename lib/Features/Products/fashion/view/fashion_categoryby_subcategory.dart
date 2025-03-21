@@ -65,9 +65,10 @@ class _FashionCategorybySubcategoryState
             Navigator.of(context).pop();
           },
         ),
-        title: Text(categoryProvider.selectsubCategory.isEmpty?
-          " Sub Categories":
-         categoryProvider.selectsubCategory.first.categoryName??'',
+        title: Text(
+          categoryProvider.selectsubCategory.isEmpty
+              ? " Sub Categories"
+              : categoryProvider.selectsubCategory.first.categoryName ?? '',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -143,8 +144,8 @@ class _FashionCategorybySubcategoryState
                             context: context,
                             screen: FashionListProductsScreen(
                               subCategory:
-                                  categoryProvider.subCategories[index],
-                              subCategories: categoryProvider.subCategories,
+                                  categoryProvider.selectsubCategory[index],
+                              subCategories: categoryProvider.selectsubCategory,
                             ),
                           );
                         },

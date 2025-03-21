@@ -22,7 +22,9 @@ import '../model/addproduct_model.dart';
 import '../view_model/fashionproduct_view_model.dart';
 
 class AddFashionProduct extends StatefulWidget {
-  const AddFashionProduct({super.key});
+  const AddFashionProduct({
+    super.key,
+  });
 
   @override
   State<AddFashionProduct> createState() => _AddFashionProductState();
@@ -106,13 +108,15 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   }
 
   void submitVariants() async {
-    var productProvider = Provider.of<FashionProductViewModel>(context, listen: false);
+    var productProvider =
+        Provider.of<FashionProductViewModel>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
     var tokenId = prefs.getString('access_token');
     var vendor = prefs.getInt(FbLocalStorage.vendorId);
 
     List<MultipartFile> imageFiles = await Future.wait(
-      selectedImages.map((file) async => await MultipartFile.fromFile(file.path)),
+      selectedImages
+          .map((file) async => await MultipartFile.fromFile(file.path)),
     );
 
     final List<Map<String, dynamic>> formattedData = await Future.wait(
@@ -122,12 +126,14 @@ class _AddFashionProductState extends State<AddFashionProduct> {
           "color_image": variant["color_image"] != null
               ? await MultipartFile.fromFile(variant["color_image"].path)
               : null,
-          "sizes": variant["sizes"].map((size) => {
-            "size": size["size"].text,
-            "price": size["price"].text,
-            "stock": size["stock"].text,
-            "offer_price": size["offer_price"].text
-          }).toList(),
+          "sizes": variant["sizes"]
+              .map((size) => {
+                    "size": size["size"].text,
+                    "price": size["price"].text,
+                    "stock": size["stock"].text,
+                    "offer_price": size["offer_price"].text
+                  })
+              .toList(),
         };
       }),
     );
@@ -153,8 +159,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       model: data,
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +248,9 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                           (await Navigator.push<CategoryRequestModel>(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => ListSubcategoriesName())));
+                                  builder: (_) => ListSubcategoriesName(
+                                        subcategoryId: selectedCategoryId,
+                                      ))));
                       selectedSubCategoryId =
                           productProvider.categoryRequestModel?.id;
                       subcategoryController.text =
