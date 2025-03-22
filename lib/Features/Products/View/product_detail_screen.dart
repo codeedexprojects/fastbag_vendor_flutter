@@ -269,7 +269,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             Divider(
-                color: Colors.grey, thickness: 1, indent: 34, endIndent: 34),
+                color: OrderColor.textColor.withOpacity(0.3),indent: width*0.03,endIndent: width*0.03,),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 10),
               child: Column(
