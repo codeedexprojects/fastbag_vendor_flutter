@@ -19,7 +19,7 @@ class ListProductsScreen extends StatefulWidget {
   final FoodCategoryBySubcategoryModel subCategorys;
   final List<FoodCategoryBySubcategoryModel> subCategoriess;
   const ListProductsScreen(
-      {super.key,  required this.subCategorys, required this.subCategoriess});
+      {super.key, required this.subCategorys, required this.subCategoriess});
 
   @override
   State<ListProductsScreen> createState() => _ListProductsScreenState();
@@ -34,7 +34,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
     final productProvider =
         Provider.of<ProductViewModel>(context, listen: false);
     productProvider.getProductCategories(
-        context: context, subCategoryId: widget.subCategorys.id ??0);
+        context: context, subCategoryId: widget.subCategorys.id ?? 0);
   }
 
   @override
@@ -112,11 +112,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                       height: screenHeight * .05,
                                       width: screenHeight * .06,
                                       decoration: BoxDecoration(
-
-                                          // image: DecorationImage(fit:BoxFit.fill,
-                                          //   image: NetworkImage(productProvider
-                                          //       .foodProducts[index].image_urls[0]),
-                                          // ),
+                                          image: DecorationImage(fit:BoxFit.fill,
+                                            image: NetworkImage(productProvider
+                                                .foodProducts[index].imageUrls?[0].image?? ''),
+                                          ),
                                           border: Border.all(
                                               color: Colors.grey, width: 0.2),
                                           borderRadius:
@@ -126,8 +125,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                         child: CachedNetworkImage(
                                           fit: BoxFit.fill,
                                           imageUrl: productProvider
-                                              .foodProducts[index]
-                                              .imageUrls?[0].image ?? '',
+                                                  .foodProducts[index]
+                                                  .imageUrls?[0]
+                                                  .image ??
+                                              '',
                                           placeholder: (context, url) =>
                                               Image.asset(PlaceholderImage
                                                   .placeholderimage),
@@ -135,9 +136,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                       ),
                                     ),
                                     title: Text(productProvider
-                                        .foodProducts[index].name ?? ''),
-                                    subtitle: Text('₹${productProvider
-                                        .foodProducts[index].price ?? 0}'),
+                                            .foodProducts[index].name ??
+                                        ''),
+                                    subtitle: Text(
+                                        '₹${productProvider.foodProducts[index].price ?? 0}'),
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -146,7 +148,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                           inactiveThumbColor: Colors.white,
                                           materialTapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
-                                          value: productProvider.foodProducts[index].isAvailable ?? false,
+                                          value: productProvider
+                                                  .foodProducts[index]
+                                                  .isAvailable ??
+                                              false,
                                           onChanged: (value) {
                                             // Handle switch toggle logic
                                           },

@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/ViewModel/grocery_view_model.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +25,11 @@ class _ListCategoriesNameState extends State<ListCategoriesName> {
     var groceryViewModel = Provider.of<GroceryViewModel>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         title: Text(
           "Categories",
           style: nunito(
-              color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
       body: Column(

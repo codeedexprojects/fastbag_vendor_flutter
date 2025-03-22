@@ -37,7 +37,7 @@ class _PaymentTransactionState extends State<PaymentTransaction> {
           onTap:  () {
             Navigator.pop(context);
           },
-            child: Icon(CupertinoIcons.back,weight: width*0.099,)),
+            child: Icon(CupertinoIcons.back,weight: width*0.1,)),
       ),
       body: SingleChildScrollView(
         child: Column(

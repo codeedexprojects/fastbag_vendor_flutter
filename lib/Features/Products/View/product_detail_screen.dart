@@ -185,11 +185,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
-                        var variant = _viewModel.foodDetail?.variants?[index];
+                        final variant = _viewModel.foodDetail?.variants?[index]; // Get variant object
 
                         return GestureDetector(
                           onTap: () {
-                            setState(() {});
+                            setState(() {
+                              selectedVariant = variant?.name ?? '';// Store the selected variant
+                            });
                           },
                           child: Container(
                             height: height * 0.07,
@@ -199,7 +201,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               border: Border.all(color: OrderColor.green),
                             ),
                             child: Center(
-                              child: Text("${variant?.price}"),
+                              child: Text(
+                               " ${variant?.name?? 'noname'}", // Display variant name correctly
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         );
@@ -209,6 +214,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                     ),
                   ),
+                  // selectedVariant != null
+                  //     ? Column(
+                  //   children: [
+                  //     Text("Name: ${selectedVariant?.name}"),
+                  //     Text("Price: \$${selectedVariant?.price}"),
+                  //     Text("Availability: ${selectedVariant?.isAvailable}"),
+                  //   ],
+                  // )
+                  //     : SizedBox.shrink(),
+
+                  
+
+
+                  
                   // SizedBox(
                   //   height: height * 0.08,
                   //   child: ListView.separated(
@@ -265,16 +284,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
-// <<<<<<< HEAD
-//                   children: [
-//                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
-// =======
 
                       children: [
                         Text(
                           "price: ${selectedVariantDetails?['price'] ?? 'hh'}",
                           style: GoogleFonts.nunito(
-//>>>>>>> 23e9d131b1e9a068e932975d5dea75215c00ad44
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                           ),
