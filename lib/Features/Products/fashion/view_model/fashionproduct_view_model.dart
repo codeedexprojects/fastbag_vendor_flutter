@@ -48,7 +48,7 @@ class FashionProductViewModel extends ChangeNotifier {
         data,
       );
 
-      // _fashionProducts.add(Results.fromJson((response)));
+      _fashionProducts.add(Results.fromJson((response)));
 
       print('response------------>$response');
       final productId = response['id'];
@@ -72,16 +72,16 @@ class FashionProductViewModel extends ChangeNotifier {
     }
   }
 
-  updateImage(context, productId, data) {
+  updateImage(context, productId, data) async {
     try {
-      final response = _productRepository.updateImage(productId, data);
-      showFlushbar(
-          context: context,
-          color: FbColors.buttonColor,
-          icon: Icons.check,
-          message: 'Image Added Successfully');
-      print('response------------>$response');
+      final response = await _productRepository.updateImage(productId, data);
+      final index = fashionProducts.indexOf(
+          fashionProducts.firstWhere((element) => element.id == productId));
+
+      fashionProducts[index] = Results.fromJson(response);
       notifyListeners();
+
+      print('response------------>$response');
     } catch (e) {
       showFlushbar(
           context: context,
