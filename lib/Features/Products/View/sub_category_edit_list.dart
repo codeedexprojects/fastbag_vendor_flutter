@@ -56,6 +56,51 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.all(screenWidth * .02),
+// <<<<<<< HEAD
+//                 child: InkWell(
+//                   onTap: () {
+//                     navigate(
+//                         context: context,
+//                         screen: EditSubCategoryScreen(
+//                           categories: categoryProvider.categories,
+//                           category: categoryProvider.categories[0],
+//                           subCategory:
+//                               categoryProvider.selectsubCategories[index],
+//                         ));
+//                   },
+//                   child: Container(
+//                     padding: EdgeInsets.all(screenWidth * .02),
+//                     decoration: BoxDecoration(
+//                         border: Border.all(color: Colors.grey, width: 0.5)),
+//                     child: ListTile(
+//                       leading: CircleAvatar(
+//                         radius: 32,
+//                         backgroundColor:
+//                             Colors.grey[200], // Optional: Background color
+//                         child: ClipOval(
+//                           child: Image.network(
+//                             categoryProvider.selectsubCategories[index]
+//                                     .subcategoryImage ??
+//                                 '',
+//                             fit: BoxFit
+//                                 .cover, // Ensures the image fills the circle
+//                             width:
+//                                 64, // Diameter of the CircleAvatar (radius * 2)
+//                             height:
+//                                 64, // Diameter of the CircleAvatar (radius * 2)
+//                             errorBuilder: (context, error, stackTrace) {
+//                               return const Icon(Icons.error,
+//                                   color: Colors
+//                                       .red); // Optional: Handle loading errors
+//                             },
+//                           ),
+//                         ),
+//                       ),
+//                       title: Text(
+//                           categoryProvider.selectsubCategories[index].name ??
+//                               ''),
+//                       trailing: const Icon(Icons.edit),
+// =======
                 child: Container(
                   padding: EdgeInsets.all(screenWidth * .02),
                   decoration: BoxDecoration(
@@ -85,14 +130,11 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                       ),
                     ),
                     title: Text(
-                        categoryProvider.selectsubCategories[index].name ??
-                            ''),
+                        categoryProvider.selectsubCategories[index].name ?? ''),
                     trailing: SizedBox(
-
-                            width: screenWidth * .15,
+                      width: screenWidth * .15,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
                               onTap: () {
@@ -106,15 +148,28 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                                     ));
                               },
                               child: Icon(Icons.edit)),
-                          SizedBox(width: 10,),
+                          SizedBox(
+                            width: 10,
+                          ),
                           GestureDetector(
-                            onTap: (){
-                              categoryProvider.deleteSubCategory(context: context, subcategoryId:categoryProvider.selectsubCategories[index].id??0).then((v){
-                                categoryProvider.getFoodCategorybySubCategories(categoryId: widget.categoryId??0);
-                              }
-                              );
-                            },
-                              child: Icon(Icons.delete,color: FbColors.errorcolor,))
+                              onTap: () {
+                                categoryProvider
+                                    .deleteSubCategory(
+                                        context: context,
+                                        subcategoryId: categoryProvider
+                                                .selectsubCategories[index]
+                                                .id ??
+                                            0)
+                                    .then((v) {
+                                  categoryProvider
+                                      .getFoodCategorybySubCategories(
+                                          categoryId: widget.categoryId ?? 0);
+                                });
+                              },
+                              child: Icon(
+                                Icons.delete,
+                                color: FbColors.errorcolor,
+                              ))
                         ],
                       ),
                     ),

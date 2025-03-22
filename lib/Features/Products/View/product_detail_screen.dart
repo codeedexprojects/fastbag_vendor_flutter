@@ -26,16 +26,22 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? imageIndex;
   String? varientIndex;
-  var selectedVariant = "";
   var selectedVariantDetails;
   List varients = [];
   int _isSelected = 0;
+  String selectedVariant = ''; // To store the selected variant name
+  dynamic selectedPrice = 0.0;
+  dynamic totalPrice = 0.0;
+  String? selectedAvailability;
 
   @override
   void initState() {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
     super.initState();
+    if (selectedPrice != null) {
+      selectedPrice = _viewModel.foodDetail?.variants?.first.price;
+    }
   }
 
   @override
@@ -70,7 +76,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(width * 0.03)),
                   child: Container(
-                    height: height * 0.4, // Adjust height as needed
+                    height: height * 0.3, // Adjust height as needed
                     width: width,
                     child: CachedNetworkImage(
                       imageUrl: imageIndex ??
@@ -126,7 +132,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             color: FbColors.black),
                       ),
                       Text(
-                        '₹${_viewModel.foodDetail?.price ?? '00'}',
+                        '₹${selectedPrice ?? '00'}',
                         style: normalFont5(
                             fontsize: 20,
                             fontweight: FontWeight.w400,
@@ -162,6 +168,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       )
                     ],
                   ),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
+                  Text(
+                    'Availability : ${(selectedAvailability ?? _viewModel.foodDetail?.isAvailable) == true ? "in stock" : "out of stock"}',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: OrderColor.red,
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
                   Text('Available variants',
                       style: GoogleFonts.montserrat(
                           fontSize: 14,
@@ -170,36 +190,43 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   SizedBox(
                     height: height * 0.01,
                   ),
-                  Text('Available stocks:${_viewModel.foodDetail?.isAvailable}',
-                      style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: OrderColor.red)),
                   SizedBox(
-                    height: height * 0.01,
-                  ),
-                  SizedBox(
-                    height: height * 0.08,
+                    height: height * 0.05,
                     child: ListView.separated(
                       itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
-                        var variant = _viewModel.foodDetail?.variants?[index];
-
+                        final variant = _viewModel
+                            .foodDetail?.variants?[index]; // Get variant object
                         return GestureDetector(
                           onTap: () {
-                            setState(() {});
+                            setState(() {
+                              selectedVariant = variant?.name ?? 'Unknown';
+                              selectedPrice = variant?.price ?? 0.0;
+                              selectedAvailability =
+                                  variant?.stock ?? 'Unknown';
+                            });
                           },
                           child: Container(
-                            height: height * 0.07,
-                            width: width * 0.3,
+                            height: height * 0.06,
+                            width: width * 0.25,
                             decoration: BoxDecoration(
+                              color: OrderColor.white,
                               borderRadius: BorderRadius.circular(width * 0.03),
-                              border: Border.all(color: OrderColor.green),
+                              border: Border.all(
+                                color: selectedVariant == variant?.name
+                                    ? Colors.red // Highlight the selected one
+                                    : OrderColor.green,
+                                width: 2,
+                              ),
                             ),
                             child: Center(
-                              child: Text("${variant?.price}"),
+                              child: Text(
+                                variant?.name ?? 'No Name',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         );
@@ -209,105 +236,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                     ),
                   ),
-                  // SizedBox(
-                  //   height: height * 0.08,
-                  //   child: ListView.separated(
-                  //     itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
-                  //     shrinkWrap: true,
-                  //     scrollDirection: Axis.horizontal,
-                  //     itemBuilder: (BuildContext context, int index) {
-                  //       var variant = _viewModel.foodDetail?.variants?[index];
-                  //
-                  //       if (variant != null ) {
-                  //         String variantName = variant[index]; // Extract "Half", "Full", "Quater"
-                  //         var details = variant[variantName]; // Extract price, quantity, stock_status
-                  //
-                  //         return GestureDetector(
-                  //           onTap: () {
-                  //             setState(() {
-                  //               selectedVariant = variantName; // Store variant name
-                  //               selectedVariantDetails = details; // Store details map
-                  //             });
-                  //           },
-                  //           child: Container(
-                  //             height: height * 0.07,
-                  //             width: width * 0.3,
-                  //             decoration: BoxDecoration(
-                  //               borderRadius: BorderRadius.circular(width * 0.03),
-                  //               border: Border.all(
-                  //                 color: selectedVariant == variantName ? Colors.green : Colors.grey,
-                  //               ),
-                  //               color: selectedVariant == variantName ? Colors.green[100] : Colors.white,
-                  //             ),
-                  //             child: Center(
-                  //               child: Text(
-                  //                 variantName, // Show "Half", "Full", "Quater"
-                  //                 style: TextStyle(
-                  //                   fontWeight: FontWeight.bold,
-                  //                   color: selectedVariant == variantName ? Colors.green : Colors.black,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         );
-                  //       } else {
-                  //         return SizedBox.shrink(); // Hide if variant is null
-                  //       }
-                  //     },
-                  //     separatorBuilder: (BuildContext context, int index) {
-                  //       return SizedBox(width: width * 0.03);
-                  //     },
+                  SizedBox(height: height * 0.02),
+                  // Container(
+                  //   width: width * 1,
+                  //   padding: EdgeInsets.all(width * 0.03),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     color: FbColors.backgroundcolor,
+                  //   ),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Text("Variant: $selectedVariant",
+                  //           style: GoogleFonts.nunito(
+                  //               color: OrderColor.textColor,
+                  //               fontSize: 15,
+                  //               fontWeight: FontWeight.w600)),
+                  //       Text("Price: ₹$selectedPrice",
+                  //           style: GoogleFonts.nunito(
+                  //               color: OrderColor.textColor,
+                  //               fontSize: 15,
+                  //               fontWeight: FontWeight.w600)),
+                  //       Text("Availability: ${selectedAvailability}",
+                  //           style: GoogleFonts.nunito(
+                  //               color: OrderColor.textColor,
+                  //               fontSize: 15,
+                  //               fontWeight: FontWeight.w600)),
+                  //     ],
                   //   ),
                   // ),
-
-                  Padding(
-                    padding: EdgeInsets.all(width * 0.02),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-// <<<<<<< HEAD
-//                   children: [
-//                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
-// =======
-
-                      children: [
-                        Text(
-                          "price: ${selectedVariantDetails?['price'] ?? 'hh'}",
-                          style: GoogleFonts.nunito(
-//>>>>>>> 23e9d131b1e9a068e932975d5dea75215c00ad44
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        SizedBox(
-                          height: height * 0.01,
-                        ),
-                        Text(
-                            "quantity: ${selectedVariantDetails?['quantity'] ?? 'hh'}",
-                            style: GoogleFonts.nunito(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            )),
-                        SizedBox(
-                          height: height * 0.01,
-                        ),
-                        Text(
-                            "stockStatus: ${selectedVariantDetails?['stock_status'] ?? 'hh'}",
-                            style: GoogleFonts.nunito(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            )),
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),
             Divider(
-                color: Colors.grey, thickness: 1, indent: 34, endIndent: 34),
-            SizedBox(
-              height: 14,
-            ),
+                color: OrderColor.textColor.withOpacity(0.3),indent: width*0.03,endIndent: width*0.03,),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 10),
               child: Column(

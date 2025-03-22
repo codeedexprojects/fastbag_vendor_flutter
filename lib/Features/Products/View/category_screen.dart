@@ -180,7 +180,7 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
                     ),
                     //  category  List  Horzontal
                     SizedBox(
-                      height: screenHeight * .17,
+                      height: screenHeight * .19,
                       child: Consumer<CategoryViewModel>(
                         builder: (context, data, _) {
                           return GridView.builder(
