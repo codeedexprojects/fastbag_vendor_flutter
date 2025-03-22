@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_categoryby_subCategory_model.dart';
@@ -19,6 +20,7 @@ import '../grocery/model/grocery_catgeory_model.dart';
 
 class AddSubCategoryScreen extends StatefulWidget {
   final List<CategoryModel> categories;
+
   const AddSubCategoryScreen({super.key, required this.categories});
 
   @override
@@ -27,7 +29,7 @@ class AddSubCategoryScreen extends StatefulWidget {
 
 class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
   var nameController = TextEditingController();
-  var subCategoryController=TextEditingController();
+  var subCategoryController = TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
   bool _switchValue = false;
@@ -69,9 +71,11 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
           subcategoryImage: _selectedImage?.path ?? "",
           vendor: vendorId);
 
-      await categoryViewModel.addProductSubCategory(
-          subCategories: category, context: context).then((v){
-        categoryViewModel.getFoodCategorybySubCategories(categoryId: selectedCategory!.id);
+      await categoryViewModel
+          .addProductSubCategory(subCategories: category, context: context)
+          .then((v) {
+        categoryViewModel.getFoodCategorybySubCategories(
+            categoryId: selectedCategory!.id);
       });
 
       setState(() {
@@ -97,7 +101,10 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text("Add Sub Category"),
+        title: Text(
+          "Add Sub Category",
+          style: inter(fontWeight: FontWeight.w500, fontSize: 16),
+        ),
       ),
       body: Form(
           key: _formKey,
@@ -138,8 +145,8 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
                     });
                   },
                 ),
-                SizedBox(height: screenHeight*0.025,),
-                FbButton(onClick: _onSubmitForm, label: "Add to Sub Category")
+                SizedBox(height: screenWidth * .08),
+                FbButton(onClick: _onSubmitForm, label: "Add")
               ],
             ),
           )),

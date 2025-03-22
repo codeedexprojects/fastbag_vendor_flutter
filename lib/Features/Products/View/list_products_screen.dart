@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
@@ -18,6 +19,7 @@ import '../Model/food_categoryby_subCategory_model.dart';
 class ListProductsScreen extends StatefulWidget {
   final FoodCategoryBySubcategoryModel subCategorys;
   final List<FoodCategoryBySubcategoryModel> subCategoriess;
+
   const ListProductsScreen(
       {super.key, required this.subCategorys, required this.subCategoriess});
 
@@ -52,16 +54,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: screenHeight * 0.08),
-            Row(
-              children: [
-                SizedBox(
-                  height: screenWidth * 0.15,
-                  width: screenWidth * 0.8,
-                  child: TextField(
-                      decoration: searchBarDecoration(hint: "Search Here")),
-                ),
-                const Icon(Icons.more_vert)
-              ],
+            SizedBox(
+              height: screenWidth * 0.15,
+              child: TextField(
+                  decoration: searchBarDecoration(hint: "Search Here")),
             ),
             Consumer<ProductViewModel>(builder: (context, data, _) {
               return productProvider.foodProducts.isEmpty
@@ -77,15 +73,18 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                               children: [
                                 SvgPicture.asset(
                                   'assets/icons/no_product.svg',
-                                  width: screenWidth * .45, // Set desired width
-                                  height:
-                                      screenWidth * .3, // Set desired height
+                                  width: screenWidth * .3, // Set desired width
+                                  // Set desired height
                                 ),
                                 SizedBox(
                                   height: screenHeight * .004,
                                 ),
-                                const Text("Nothing to show yet. Created"),
-                                const Text("Product list will appear here")
+                                Text(
+                                  "No Product Available",
+                                  style: inter(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ],
                             ),
                           ))),
