@@ -55,6 +55,7 @@ class FashionProductViewModel extends ChangeNotifier {
       print('--------------->$productId');
       updateImage(context, productId, imageData);
       notifyListeners();
+      Navigator.pop(context);
 
       await showFlushbar(
           context: context,
