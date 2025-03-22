@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_response.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/category_screen.dart';
@@ -12,6 +13,9 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_categor
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_products_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
+
+import '../../../Commons/custom_inputdecoration.dart';
+import '../../../Commons/fonts.dart';
 
 class EditProductScreen extends StatefulWidget {
   final FoodResponseModel product;
@@ -52,15 +56,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
     offerPriceController.text = widget.product.offerPrice.toString();
     _inStock = widget.product.isAvailable ?? false;
     _isOffer = widget.product.isOfferProduct ?? false;
-    _isPopular = widget.product.isPopularProduct ??  false;
+    _isPopular = widget.product.isPopularProduct ?? false;
 
     // Pre-fill variants
     for (var variant in widget.product.variants ?? []) {
       variantFields.add({
-        'nameController': TextEditingController(text: variant.keys.first),
+        'nameController': TextEditingController(text: variant.name ?? ""),
         'priceController':
-        TextEditingController(text: variant.values.first['price'].toString()),
-        'stockStatus': variant.values.first['stock_status'],
+            TextEditingController(text: variant.price?.toString() ?? ""),
+        'stockStatus': variant.stock ?? '',
       });
     }
   }
@@ -83,16 +87,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
         if (name.isNotEmpty && price.isNotEmpty) {
           updatedVariants.add({
-            name: {
-              "price": double.parse(price),
-              "stock_status": stockStatus,
-            }
+            "name": name,
+            "price": double.parse(price),
+            "stock": stockStatus,
           });
         }
       }
 
       FoodItemModel updatedModel = FoodItemModel(
-        id: widget.product.id, // Ensure product ID is retained
+        id: widget.product.id,
+        // Ensure product ID is retained
         vendor: widget.product.vendor ?? 0,
         category: widget.product.category ?? 0,
         subcategory: widget.product.subcategory ?? 0,
@@ -111,20 +115,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
         variants: updatedVariants,
       );
 
-      productProvider.editFoodItem(context: context, product: updatedModel).then((res){
-        productProvider.getProductCategories(context: context, subCategoryId: widget.product.subcategory ?? 0,);
+      productProvider
+          .editFoodItem(context: context, product: updatedModel)
+          .then((res) {
+        productProvider.getProductCategories(
+          context: context,
+          subCategoryId: widget.product.subcategory ?? 0,
+        );
       });
     }
   }
 
-  // Function to add a new variant field
+// Function to add a new variant field
   void addVariant() {
     setState(() {
       variantFields.add({
         'nameController': TextEditingController(),
         'priceController': TextEditingController(),
-        'quantityController': TextEditingController(),
-        'stockStatus': 'in stock', // Default value
+        'stockStatus': 'in stock', // Default stock status
       });
     });
   }
@@ -139,7 +147,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: FbColors.backgroundcolor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: FbColors.backgroundcolor,
         title: const Text("Edit Product"),
       ),
       body: Form(
@@ -221,41 +232,88 @@ class _EditProductScreenState extends State<EditProductScreen> {
               const SizedBox(height: 20),
               Column(
                 children: List.generate(variantFields.length, (index) {
-                  return Card(
-                    elevation: 2,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: variantFields[index]['nameController'],
-                            decoration:
-                            const InputDecoration(labelText: "Variant Name"),
-                          ),
-                          TextFormField(
-                            controller: variantFields[index]['priceController'],
-                            decoration: const InputDecoration(labelText: "Price"),
-                            keyboardType: TextInputType.number,
-                          ),
-                          TextFormField(
-                            controller: variantFields[index]['quantityController'],
-                            decoration: const InputDecoration(labelText: "Quantity"),
-                            keyboardType: TextInputType.number,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () => removeVariant(index),
-                              child: const Text("Remove",
-                                  style: TextStyle(color: Colors.red)),
-                            ),
-                          ),
-                        ],
+                  return Column(
+                    children: [
+                      // Variant Name
+                      TextFormField(
+                        controller: variantFields[index]['nameController'],
+                        decoration: CustumInputDecoration.getDecoration(
+                            labelText: "Variant Name (e.g. Half, Full)"),
+                        validator: (value) =>
+                            value!.isEmpty ? "Enter a variant name" : null,
                       ),
-                    ),
+                      // Price
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: variantFields[index]['priceController'],
+                        decoration: CustumInputDecoration.getDecoration(
+                            labelText: "Price"),
+                        keyboardType: TextInputType.number,
+                        validator: (value) =>
+                            value!.isEmpty ? "Enter price" : null,
+                      ),
+                      // Quantity
+                      SizedBox(
+                        height: 10,
+                      ),
+                      DropdownButtonFormField<String>(
+                        value: variantFields[index]['stockStatus'],
+                        decoration: CustumInputDecoration.getDecoration(
+                            labelText: "Stock"),
+                        items: ["in stock", "out of stock"].map((status) {
+                          return DropdownMenuItem(
+                            value: status,
+                            child: Text(status),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            variantFields[index]['stockStatus'] = newValue!;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      // Remove Button
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () => removeVariant(index),
+                          child: Text("Remove",
+                              style: const TextStyle(color: Colors.red)),
+                        ),
+                      ),
+                    ],
                   );
                 }),
+              ),
+              GestureDetector(
+                onTap: addVariant,
+                child: Row(
+                  children: [
+                    Text('Add Varient',
+                        style: normalFont4(
+                            fontsize: 18,
+                            fontweight: FontWeight.w400,
+                            color: Colors.blue)),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: Colors.blue,
+                          size: 18,
+                        ),
+                        SizedBox(width: 5),
+                      ],
+                    ),
+                  ],
+                ),
               ),
 
               const SizedBox(height: 20),

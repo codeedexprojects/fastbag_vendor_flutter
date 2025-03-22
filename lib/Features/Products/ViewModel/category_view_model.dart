@@ -4,6 +4,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/food_categoryby_s
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Repository/category_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class CategoryViewModel extends ChangeNotifier {
   final CategoryRepository _categoryRepository = CategoryRepository();
@@ -66,5 +67,13 @@ class CategoryViewModel extends ChangeNotifier {
       {required BuildContext context,
       required FoodCategoryBySubcategoryModel subCategories}) async {
     await _categoryRepository.ProductSubCategoryEdit(context, subCategories);
+  }
+
+  deleteSubCategory({
+    required BuildContext context,
+    required int subcategoryId,
+  }) async {
+    await _categoryRepository.FoodCategoryBySubcategorydelete(
+        context, subcategoryId);
   }
 }

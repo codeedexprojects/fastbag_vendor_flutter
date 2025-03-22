@@ -100,6 +100,7 @@ class FoodDetail {
 class Variants {
   String? name;
   dynamic price;
+
   String? stock;
 
   Variants({this.name, this.price, this.stock});

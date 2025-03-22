@@ -81,7 +81,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
       variantFields.add({
         'nameController': TextEditingController(),
         'priceController': TextEditingController(),
-        'quantityController': TextEditingController(),
         'stockStatus': 'in stock', // Default stock status
       });
     });
@@ -117,7 +116,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         FoodItemModel model = FoodItemModel(
           vendor: widget.subCategory.vendor,
           category: widget.subCategory.category ?? 0,
-          subcategory: widget.subCategory.id as int,
+          subcategory: widget.subCategory.id ??0,
           name: nameController.text.trim(),
           description: descriptionController.text.trim(),
           price: priceController.text.trim(),
@@ -131,7 +130,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
           wholesale_price: wholeSaleController.text.trim(),
           variants: variants,
         );
-        productProvider.addFoodItem(context: context, model: model);
+        productProvider.addFoodItem(context: context, model: model).then((v){
+          productProvider.getProductCategories(context: context, subCategoryId: widget.subCategory.id??0);
+        });
       }
     }
   }
@@ -335,7 +336,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               SizedBox(height: screenHeight*0.01,),
               FbButton(
                 onClick: saveProduct,
-                label: "Add to Sub Category",
+                label: "Add  Product",
               ),
               SizedBox(height: screenHeight * 0.03),
             ],
