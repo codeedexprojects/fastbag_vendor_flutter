@@ -51,7 +51,7 @@ class ProductEditDeleteScreen extends StatelessWidget {
                       height:
                       screenWidth * .3, // Set desired height
                     ),
-                    Text('No Products'),
+                    Text('No Products Available',style: inter(fontWeight: FontWeight.w500,),),
                   ],
                 ),
               )

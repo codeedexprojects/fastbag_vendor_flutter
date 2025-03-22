@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
@@ -18,8 +19,9 @@ import '../Model/food_categoryby_subCategory_model.dart';
 class ListProductsScreen extends StatefulWidget {
   final FoodCategoryBySubcategoryModel subCategorys;
   final List<FoodCategoryBySubcategoryModel> subCategoriess;
+
   const ListProductsScreen(
-      {super.key,  required this.subCategorys, required this.subCategoriess});
+      {super.key, required this.subCategorys, required this.subCategoriess});
 
   @override
   State<ListProductsScreen> createState() => _ListProductsScreenState();
@@ -34,7 +36,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
     final productProvider =
         Provider.of<ProductViewModel>(context, listen: false);
     productProvider.getProductCategories(
-        context: context, subCategoryId: widget.subCategorys.id ??0);
+        context: context, subCategoryId: widget.subCategorys.id ?? 0);
   }
 
   @override
@@ -52,16 +54,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: screenHeight * 0.08),
-            Row(
-              children: [
-                SizedBox(
-                  height: screenWidth * 0.15,
-                  width: screenWidth * 0.8,
-                  child: TextField(
-                      decoration: searchBarDecoration(hint: "Search Here")),
-                ),
-                const Icon(Icons.more_vert)
-              ],
+            SizedBox(
+              height: screenWidth * 0.15,
+              child: TextField(
+                  decoration: searchBarDecoration(hint: "Search Here")),
             ),
             Consumer<ProductViewModel>(builder: (context, data, _) {
               return productProvider.foodProducts.isEmpty
@@ -70,21 +66,24 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                           height: screenHeight * .6,
                           child: Center(
                               child: SizedBox(
-                            height: screenWidth * .45,
                             width: screenWidth * .5,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SvgPicture.asset(
                                   'assets/icons/no_product.svg',
-                                  width: screenWidth * .45, // Set desired width
-                                  height:
-                                      screenWidth * .3, // Set desired height
+                                  width: screenWidth * .3, // Set desired width
+                                  // Set desired height
                                 ),
                                 SizedBox(
                                   height: screenHeight * .004,
                                 ),
-                                const Text("Nothing to show yet. Created"),
-                                const Text("Product list will appear here")
+                                Text(
+                                  "No Product Available",
+                                  style: inter(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ],
                             ),
                           ))),
@@ -126,8 +125,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                         child: CachedNetworkImage(
                                           fit: BoxFit.fill,
                                           imageUrl: productProvider
-                                              .foodProducts[index]
-                                              .imageUrls?[0].image ?? '',
+                                                  .foodProducts[index]
+                                                  .imageUrls?[0]
+                                                  .image ??
+                                              '',
                                           placeholder: (context, url) =>
                                               Image.asset(PlaceholderImage
                                                   .placeholderimage),
@@ -135,9 +136,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                       ),
                                     ),
                                     title: Text(productProvider
-                                        .foodProducts[index].name ?? ''),
-                                    subtitle: Text('₹${productProvider
-                                        .foodProducts[index].price ?? 0}'),
+                                            .foodProducts[index].name ??
+                                        ''),
+                                    subtitle: Text(
+                                        '₹${productProvider.foodProducts[index].price ?? 0}'),
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -146,7 +148,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                           inactiveThumbColor: Colors.white,
                                           materialTapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
-                                          value: productProvider.foodProducts[index].isAvailable ?? false,
+                                          value: productProvider
+                                                  .foodProducts[index]
+                                                  .isAvailable ??
+                                              false,
                                           onChanged: (value) {
                                             // Handle switch toggle logic
                                           },

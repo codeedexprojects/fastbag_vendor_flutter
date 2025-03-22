@@ -85,14 +85,10 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                       ),
                     ),
                     title: Text(
-                        categoryProvider.selectsubCategories[index].name ??
-                            ''),
+                        categoryProvider.selectsubCategories[index].name ?? ''),
                     trailing: SizedBox(
-
-                            width: screenWidth * .15,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .spaceBetween,
+                      width: screenWidth * .15,
+                      child: Wrap(
                         children: [
                           GestureDetector(
                               onTap: () {
@@ -106,15 +102,28 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                                     ));
                               },
                               child: Icon(Icons.edit)),
-                          SizedBox(width: 10,),
+                          SizedBox(
+                            width: 5,
+                          ),
                           GestureDetector(
-                            onTap: (){
-                              categoryProvider.deleteSubCategory(context: context, subcategoryId:categoryProvider.selectsubCategories[index].id??0).then((v){
-                                categoryProvider.getFoodCategorybySubCategories(categoryId: widget.categoryId??0);
-                              }
-                              );
-                            },
-                              child: Icon(Icons.delete,color: FbColors.errorcolor,))
+                              onTap: () {
+                                categoryProvider
+                                    .deleteSubCategory(
+                                        context: context,
+                                        subcategoryId: categoryProvider
+                                                .selectsubCategories[index]
+                                                .id ??
+                                            0)
+                                    .then((v) {
+                                  categoryProvider
+                                      .getFoodCategorybySubCategories(
+                                          categoryId: widget.categoryId ?? 0);
+                                });
+                              },
+                              child: Icon(
+                                Icons.delete,
+                                color: FbColors.errorcolor,
+                              ))
                         ],
                       ),
                     ),
