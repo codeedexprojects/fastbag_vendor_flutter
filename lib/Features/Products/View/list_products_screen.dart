@@ -66,6 +66,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                           height: screenHeight * .6,
                           child: Center(
                               child: SizedBox(
+                            height: screenWidth * .8,
                             width: screenWidth * .5,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -111,11 +112,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                       height: screenHeight * .05,
                                       width: screenHeight * .06,
                                       decoration: BoxDecoration(
-
-                                          // image: DecorationImage(fit:BoxFit.fill,
-                                          //   image: NetworkImage(productProvider
-                                          //       .foodProducts[index].image_urls[0]),
-                                          // ),
+                                          image: DecorationImage(fit:BoxFit.fill,
+                                            image: NetworkImage(productProvider
+                                                .foodProducts[index].imageUrls?[0].image?? ''),
+                                          ),
                                           border: Border.all(
                                               color: Colors.grey, width: 0.2),
                                           borderRadius:

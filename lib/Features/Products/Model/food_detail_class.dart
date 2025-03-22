@@ -20,23 +20,23 @@ class FoodDetail {
 
   FoodDetail(
       {this.id,
-        this.vendor,
-        this.vendorName,
-        this.category,
-        this.categoryName,
-        this.subcategory,
-        this.subcategoryName,
-        this.name,
-        this.description,
-        this.price,
-        this.wholesalePrice,
-        this.offerPrice,
-        this.variants,
-        this.discount,
-        this.isAvailable,
-        this.imageUrls,
-        this.isPopularProduct,
-        this.isOfferProduct});
+      this.vendor,
+      this.vendorName,
+      this.category,
+      this.categoryName,
+      this.subcategory,
+      this.subcategoryName,
+      this.name,
+      this.description,
+      this.price,
+      this.wholesalePrice,
+      this.offerPrice,
+      this.variants,
+      this.discount,
+      this.isAvailable,
+      this.imageUrls,
+      this.isPopularProduct,
+      this.isOfferProduct});
 
   FoodDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -100,21 +100,22 @@ class FoodDetail {
 class Variants {
   String? name;
   dynamic price;
-  String? isAvailable;
 
-  Variants({this.name, this.price, this.isAvailable});
+  String? stock;
+
+  Variants({this.name, this.price, this.stock});
 
   Variants.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     price = json['price'];
-    isAvailable = json['is_available'];
+    stock = json['stock'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
     data['price'] = this.price;
-    data['is_available'] = this.isAvailable;
+    data['stock'] = this.stock;
     return data;
   }
 }

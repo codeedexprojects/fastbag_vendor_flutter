@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../Profile/ViewModel/profile_shop_view_model.dart';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({
     super.key,
@@ -21,11 +23,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     final _viewModel = Provider.of<DashViewModel>(context,listen: false);
     _viewModel.getdata();
+    final profileShopProvider =
+    Provider.of<ProfileShopViewModel>(context,listen: false);
+    profileShopProvider.getShopProfile(context: context);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     final _viewModel = Provider.of<DashViewModel>(context);
+    final profileShopProvider =
+    Provider.of<ProfileShopViewModel>(context);
     return Scaffold(
       backgroundColor: FbColors.backgroundcolor,
       body: SingleChildScrollView(
@@ -45,13 +52,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 fontsize: 16,
                                 fontweight: FontWeight.w600,
                                 color: FbColors.black)),
-                        Text('Hi, Praveen.',
+                        Text(profileShopProvider.shop?.ownerName ?? "name",
                             style: mainFont(
                                 fontsize: 11,
                                 fontweight: FontWeight.w500,
                                 color: FbColors.greyColor)),
                         Text(
-                          'Welcome back to Postbag Admin!',
+                          'Welcome back to fastbag Admin!',
                           style: mainFont(
                               fontsize: 11,
                               fontweight: FontWeight.w500,

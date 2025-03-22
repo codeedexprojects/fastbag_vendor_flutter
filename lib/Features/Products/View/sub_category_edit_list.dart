@@ -8,12 +8,9 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/edit_sub_category_
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../grocery/model/grocery_catgeory_model.dart';
 
 class SubCategoryEditList extends StatefulWidget {
-  // final List<SubCategoryModel> subCategories;
-  // final List<CategoryModel> categories;
   final int? categoryId;
 
   const SubCategoryEditList({super.key, this.categoryId});
