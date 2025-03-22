@@ -189,6 +189,7 @@ class _FashionCategorybySubcategoryState
                   borderColor: Colors.blue,
                 ),
               ),
+            SizedBox(height: 20,)
           ],
         ),
       ),

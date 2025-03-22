@@ -185,18 +185,18 @@ class ProductRepository {
         print("product delete successful: ${response.data["results"]}");
         print(response.data);
         // List<dynamic> res = response.data["results"];
+        Navigator.pop(context);
+        showFlushbar(context: context, color: FbColors.buttonColor, icon: Icons.check, message: "product delete successful");
         return response.data;
 
-        // showDialog(
-        //   context: context,
-        //   barrierDismissible: true, // Allow dismissing by tapping outside
-        //   builder: (BuildContext context) => const FbBottomDialog(),
-        // );
+
+
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text("OOPs something happened in products get")),
         );
+
         SVProgressHUD.dismiss();
         print("Bad data: ${response.data}");
       } else {

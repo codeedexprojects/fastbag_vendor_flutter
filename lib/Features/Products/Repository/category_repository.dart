@@ -124,8 +124,8 @@ class CategoryRepository {
         "enable_subcategory": model.enableSubcategory,
         "name": model.name,
         "subcategory_image": await MultipartFile.fromFile(
-          model.subcategoryImage??"",
-          filename: basename(model.subcategoryImage??""),
+          model.subcategoryImage ?? "",
+          filename: basename(model.subcategoryImage ?? ""),
         ),
         "vendor": model.vendor
       });
@@ -272,8 +272,7 @@ class CategoryRepository {
     }
   }
 
-  Future<List<FoodCategoryBySubcategoryModel>?> FoodCategoryBySubcategoryGet(
-      int categoryId) async {
+  Future<dynamic> FoodCategoryBySubcategoryGet(int categoryId) async {
     try {
       SVProgressHUD.show();
       final prefs = await SharedPreferences.getInstance();
@@ -305,6 +304,49 @@ class CategoryRepository {
         print(response.statusMessage);
       }
     } on DioException catch (e) {
+      print("error ${e.response?.data}");
+    }
+  }
+
+  Future<dynamic> FoodCategoryBySubcategorydelete(
+      BuildContext context, int subcategoryId) async {
+    try {
+      SVProgressHUD.show();
+      final prefs = await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
+      var vendorId = prefs.getInt('vendor_id');
+      print("hhhhh $vendorId");
+      var headers = {
+        'Authorization': 'Bearer $tokenId',
+        "Content-Type": "application/json",
+      };
+      print("dhjhidih $subcategoryId");
+      var response = await _dio.request(
+        '${baseUrl}food/subcategories/$subcategoryId/',
+        options: Options(
+          method: 'DELETE',
+          headers: headers,
+        ),
+      );
+      if (response.statusCode == 204) {
+        SVProgressHUD.dismiss();
+
+        Navigator.pop(context);
+        showFlushbar(
+            context: context,
+            color: FbColors.buttonColor,
+            icon: Icons.check,
+            message: "subcategory delete successful");
+        // List jsonList = response.data;
+        // List<FoodCategoryBySubcategoryModel> jsonResponce = jsonList
+        //     .map((v) => FoodCategoryBySubcategoryModel.fromJson(v))
+        //     .toList();
+        // print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
+        // SVProgressHUD.dismiss();
+        // return jsonResponce;
+      }
+    } on DioException catch (e) {
+      SVProgressHUD.dismiss();
       print("error ${e.response?.data}");
     }
   }
