@@ -30,17 +30,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   List varients = [];
   int _isSelected = 0;
   String selectedVariant = ''; // To store the selected variant name
-  double selectedPrice = 0.0;
-  double totalPrice = 0.0;
-  String selectedAvailability = '';
+  dynamic selectedPrice = 0.0;
+  dynamic totalPrice = 0.0;
+  String? selectedAvailability;
 
   @override
   void initState() {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
     super.initState();
-    if(selectedPrice !=null){
-      selectedPrice=_viewModel.foodDetail?.variants?.first.price;
+    if (selectedPrice != null) {
+      selectedPrice = _viewModel.foodDetail?.variants?.first.price;
     }
   }
 
@@ -168,6 +168,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       )
                     ],
                   ),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
+                  Text(
+                    'Availability : ${(selectedAvailability ?? _viewModel.foodDetail?.isAvailable) == true ? "in stock" : "out of stock"}',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: OrderColor.red,
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
                   Text('Available variants',
                       style: GoogleFonts.montserrat(
                           fontSize: 14,
@@ -176,15 +190,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   SizedBox(
                     height: height * 0.01,
                   ),
-                  Text('Available stocks:${_viewModel.foodDetail?.isAvailable}',
-                      style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: OrderColor.red)),
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-
                   SizedBox(
                     height: height * 0.05,
                     child: ListView.separated(
@@ -200,7 +205,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               selectedVariant = variant?.name ?? 'Unknown';
                               selectedPrice = variant?.price ?? 0.0;
                               selectedAvailability =
-                                  variant?.isAvailable ?? 'Unknown';
+                                  variant?.stock ?? 'Unknown';
                             });
                           },
                           child: Container(
@@ -231,35 +236,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                     ),
                   ),
-                  SizedBox(height: height*0.02),
-                    Container(
-                      width: width * 1,
-                      padding: EdgeInsets.all(width * 0.03),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: FbColors.backgroundcolor,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Variant: $selectedVariant",
-                              style: GoogleFonts.nunito(
-                                  color: OrderColor.textColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600)),
-                          Text("Price: ₹$selectedPrice",
-                              style: GoogleFonts.nunito(
-                                  color: OrderColor.textColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600)),
-                          Text("Availability: ${selectedAvailability }",
-                              style: GoogleFonts.nunito(
-                                  color: OrderColor.textColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                    ),
+                  SizedBox(height: height * 0.02),
+                  // Container(
+                  //   width: width * 1,
+                  //   padding: EdgeInsets.all(width * 0.03),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     color: FbColors.backgroundcolor,
+                  //   ),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Text("Variant: $selectedVariant",
+                  //           style: GoogleFonts.nunito(
+                  //               color: OrderColor.textColor,
+                  //               fontSize: 15,
+                  //               fontWeight: FontWeight.w600)),
+                  //       Text("Price: ₹$selectedPrice",
+                  //           style: GoogleFonts.nunito(
+                  //               color: OrderColor.textColor,
+                  //               fontSize: 15,
+                  //               fontWeight: FontWeight.w600)),
+                  //       Text("Availability: ${selectedAvailability}",
+                  //           style: GoogleFonts.nunito(
+                  //               color: OrderColor.textColor,
+                  //               fontSize: 15,
+                  //               fontWeight: FontWeight.w600)),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
