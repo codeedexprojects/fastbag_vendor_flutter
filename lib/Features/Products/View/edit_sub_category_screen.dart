@@ -37,17 +37,20 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
   var nameController = TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
-  bool? _switchValue;
+  bool _switchValue = false;
   CategoryModel? selectedCategory;
 
   @override
   void initState() {
     FbStore.retrieveData(FbLocalStorage.vendorId).then((data) {
-      setState(() {
+      // setState(() {
         vendorId = data;
         selectedCategory = widget.category;
-        _switchValue = widget.subCategory.enableSubcategory;
-      });
+        _switchValue = widget.subCategory.enableSubcategory ?? false;
+        print(_switchValue);
+      // });
+        nameController.text = widget.subCategory.name ?? '';
+        print("object    ${ widget.subCategory.enableSubcategory}");
     });
     super.initState();
   }
@@ -74,20 +77,26 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
               : nameController.text,
           subcategoryImage: _selectedImage?.path ?? "",
           vendor: vendorId);
+      print("djbdjbdkjdb $_switchValue");
 
       await categoryViewModel.editProductSubCategory(
           subCategories: category, context: context).then((v){
          categoryViewModel.getFoodCategorybySubCategories(categoryId: selectedCategory!.id);
       });
 
-      setState(() {
-        nameController.clear();
-        _selectedImage = null;
-        _switchValue = false;
-      });
-    } else {
-      showFlushbar(context: context, color: FbColors.errorcolor, icon: Icons.check, message: "Change atleast one field to update");
+      // setState(() {
+      //   print("djbdjbdkjdb $_switchValue");
+      //
+      //   nameController.clear();
+      //   _selectedImage = null;
+      //   // _switchValue = false;
+      // });
     }
+    // else {
+    //   print("djbdjbdkjdb $_switchValue");
+    //
+    //   showFlushbar(context: context, color: FbColors.errorcolor, icon: Icons.check, message: "Change atleast one field to update");
+    // }
   }
 
   @override
@@ -138,7 +147,7 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
             ),
             FbToggleSwitch(
               title: 'Mark Category in stock',
-              initialValue: _switchValue!,
+              initialValue: _switchValue,
               onToggleChanged: (value) {
                 setState(() {
                   _switchValue = value;

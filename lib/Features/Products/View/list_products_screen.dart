@@ -34,7 +34,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
     final productProvider =
         Provider.of<ProductViewModel>(context, listen: false);
     productProvider.getProductCategories(
-        context: context, subCategoryId: widget.subCategorys.id as int);
+        context: context, subCategoryId: widget.subCategorys.id ??0);
   }
 
   @override
@@ -127,7 +127,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                           fit: BoxFit.fill,
                                           imageUrl: productProvider
                                               .foodProducts[index]
-                                              .image_urls[0],
+                                              .imageUrls?[0].image ?? '',
                                           placeholder: (context, url) =>
                                               Image.asset(PlaceholderImage
                                                   .placeholderimage),
@@ -135,9 +135,9 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                       ),
                                     ),
                                     title: Text(productProvider
-                                        .foodProducts[index].name),
-                                    subtitle: Text(productProvider
-                                        .foodProducts[index].price),
+                                        .foodProducts[index].name ?? ''),
+                                    subtitle: Text('₹${productProvider
+                                        .foodProducts[index].price ?? 0}'),
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [

@@ -14,8 +14,6 @@ import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_m
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Model/vendor_model.dart';
-
 class UpdateShopDetails extends StatefulWidget {
   const UpdateShopDetails({super.key});
 

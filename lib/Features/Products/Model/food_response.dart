@@ -1,4 +1,4 @@
-class FoodDetail {
+class FoodResponseModel {
   int? id;
   int? vendor;
   String? vendorName;
@@ -18,7 +18,7 @@ class FoodDetail {
   bool? isPopularProduct;
   bool? isOfferProduct;
 
-  FoodDetail(
+  FoodResponseModel(
       {this.id,
         this.vendor,
         this.vendorName,
@@ -38,7 +38,7 @@ class FoodDetail {
         this.isPopularProduct,
         this.isOfferProduct});
 
-  FoodDetail.fromJson(Map<String, dynamic> json) {
+  FoodResponseModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     vendor = json['vendor'];
     vendorName = json['vendor_name'];
@@ -99,22 +99,22 @@ class FoodDetail {
 
 class Variants {
   String? name;
-  int? price;
-  String? isAvailable;
+  dynamic price;
+  String? stock;
 
-  Variants({this.name, this.price, this.isAvailable});
+  Variants({this.name, this.price, this.stock});
 
   Variants.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     price = json['price'];
-    isAvailable = json['is_available'];
+    stock = json['stock'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
     data['price'] = this.price;
-    data['is_available'] = this.isAvailable;
+    data['stock'] = this.stock;
     return data;
   }
 }

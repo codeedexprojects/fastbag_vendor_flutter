@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_response.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/category_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 
 class EditProductScreen extends StatefulWidget {
-  final FoodItemModel product;
+  final FoodResponseModel product;
 
   const EditProductScreen({super.key, required this.product});
 
@@ -43,24 +44,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.initState();
 
     // Pre-fill the form with existing product data
-    nameController.text = widget.product.name;
-    descriptionController.text = widget.product.description;
+    nameController.text = widget.product.name ?? '';
+    descriptionController.text = widget.product.description ?? '';
     priceController.text = widget.product.price.toString();
     discountController.text = widget.product.discount.toString();
-    wholeSaleController.text = widget.product.wholesale_price.toString();
-    offerPriceController.text = widget.product.offer_price.toString();
-    _inStock = widget.product.is_available;
-    _isOffer = widget.product.is_offer_product;
-    _isPopular = widget.product.is_popular_product;
+    wholeSaleController.text = widget.product.wholesalePrice.toString();
+    offerPriceController.text = widget.product.offerPrice.toString();
+    _inStock = widget.product.isAvailable ?? false;
+    _isOffer = widget.product.isOfferProduct ?? false;
+    _isPopular = widget.product.isPopularProduct ??  false;
 
     // Pre-fill variants
-    for (var variant in widget.product.variants) {
+    for (var variant in widget.product.variants ?? []) {
       variantFields.add({
         'nameController': TextEditingController(text: variant.keys.first),
         'priceController':
-            TextEditingController(text: variant.values.first['price'].toString()),
-        'quantityController':
-            TextEditingController(text: variant.values.first['quantity'].toString()),
+        TextEditingController(text: variant.values.first['price'].toString()),
         'stockStatus': variant.values.first['stock_status'],
       });
     }
@@ -80,14 +79,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
       for (var variant in variantFields) {
         String name = variant['nameController'].text.trim();
         String price = variant['priceController'].text.trim();
-        String quantity = variant['quantityController'].text.trim();
         String stockStatus = variant['stockStatus'];
 
-        if (name.isNotEmpty && price.isNotEmpty && quantity.isNotEmpty) {
+        if (name.isNotEmpty && price.isNotEmpty) {
           updatedVariants.add({
             name: {
               "price": double.parse(price),
-              "quantity": int.parse(quantity),
               "stock_status": stockStatus,
             }
           });
@@ -96,9 +93,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
       FoodItemModel updatedModel = FoodItemModel(
         id: widget.product.id, // Ensure product ID is retained
-        vendor: widget.product.vendor,
-        category: widget.product.category,
-        subcategory: widget.product.subcategory,
+        vendor: widget.product.vendor ?? 0,
+        category: widget.product.category ?? 0,
+        subcategory: widget.product.subcategory ?? 0,
         name: nameController.text.trim(),
         description: descriptionController.text.trim(),
         price: priceController.text.trim(),
@@ -107,7 +104,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         is_available: _inStock,
         image_urls: _selectedImages != null
             ? _selectedImages!.map((file) => file.path).toList()
-            : widget.product.image_urls,
+            : [],
         is_popular_product: _isPopular,
         is_offer_product: _isOffer,
         wholesale_price: wholeSaleController.text.trim(),
@@ -115,7 +112,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       );
 
       productProvider.editFoodItem(context: context, product: updatedModel).then((res){
-        productProvider.getProductCategories(context: context, subCategoryId: widget.product.subcategory,);
+        productProvider.getProductCategories(context: context, subCategoryId: widget.product.subcategory ?? 0,);
       });
     }
   }
@@ -234,7 +231,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           TextFormField(
                             controller: variantFields[index]['nameController'],
                             decoration:
-                                const InputDecoration(labelText: "Variant Name"),
+                            const InputDecoration(labelText: "Variant Name"),
                           ),
                           TextFormField(
                             controller: variantFields[index]['priceController'],

@@ -15,13 +15,13 @@ class GroceryCategoryViewModel extends ChangeNotifier {
 
   Future<void> addGrocerySubCategory(
       {required BuildContext context,
-      required SubCategoryModel subCategories}) async {
+        required SubCategoryModel subCategories}) async {
     await _groceryRepository.addGrocerySubCategory(context, subCategories);
   }
 
   Future<void> editGrocerySubCategory(
       {required BuildContext context,
-      required SubCategoryModel subCategories}) async {
+        required SubCategoryModel subCategories}) async {
     await _groceryRepository.editGrocerySubCategory(context, subCategories);
   }
 }

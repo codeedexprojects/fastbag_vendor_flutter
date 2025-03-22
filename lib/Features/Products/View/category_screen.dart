@@ -85,7 +85,7 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
 
     // Ensure categories and subcategories are loaded
     if (categoryProvider.categories.isNotEmpty ||
-        categoryProvider.subCategories.isNotEmpty) {
+        categoryProvider.selectsubCategories.isNotEmpty) {
       // Combine category and subcategory names once data is available
       List<SerachItem> categoryItems = categoryProvider.categories.isNotEmpty
           ? categoryProvider.categories
@@ -97,11 +97,11 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
               .toList()
           : [];
       List<SerachItem> subCategoryItems =
-          categoryProvider.subCategories.isNotEmpty
-              ? categoryProvider.subCategories
+          categoryProvider.selectsubCategories.isNotEmpty
+              ? categoryProvider.selectsubCategories
                   .map<SerachItem>((subCategory) => SerachItem(
-                      id: subCategory.id,
-                      name: subCategory.name,
+                      id: subCategory.id??0,
+                      name: subCategory?.name??"",
                       type: "sub_category",
                       model: subCategory))
                   .toList()

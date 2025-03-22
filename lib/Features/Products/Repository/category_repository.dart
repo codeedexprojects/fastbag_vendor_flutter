@@ -113,19 +113,19 @@ class CategoryRepository {
   }
 
   Future<dynamic> ProductSubCategoryPost(
-      BuildContext context, SubCategoryModel model) async {
+      BuildContext context, FoodCategoryBySubcategoryModel model) async {
     print("inside");
     print("${baseUrl}food/subcategories/");
     try {
       print("inside try");
 
       FormData formData = FormData.fromMap({
-        "category": model.categoryId,
-        "enable_subcategory": model.is_enabled,
+        "category": model.category,
+        "enable_subcategory": model.enableSubcategory,
         "name": model.name,
         "subcategory_image": await MultipartFile.fromFile(
-          model.sub_category_image,
-          filename: basename(model.sub_category_image),
+          model.subcategoryImage??"",
+          filename: basename(model.subcategoryImage??""),
         ),
         "vendor": model.vendor
       });
@@ -156,11 +156,11 @@ class CategoryRepository {
         SVProgressHUD.dismiss();
         print("sub category added successful: ${response.data}");
         Navigator.pop(context);
-    await showFlushbar(context: context,
-      color: FbColors.buttonColor,
-      message: "SubCategoryAdded",
-      icon: Icons.check
-    );
+        await showFlushbar(
+            context: context,
+            color: FbColors.buttonColor,
+            message: "SubCategoryAdded",
+            icon: Icons.check);
         // showDialog(
         //   context: context,
         //   barrierDismissible: true, // Allow dismissing by tapping outside
@@ -205,8 +205,8 @@ class CategoryRepository {
         "name": model.name,
         if (model.subcategoryImage!.isNotEmpty)
           "subcategory_image": await MultipartFile.fromFile(
-            model.subcategoryImage??'',
-            filename: basename(model.subcategoryImage??''),
+            model.subcategoryImage ?? '',
+            filename: basename(model.subcategoryImage ?? ''),
           ),
       });
 
@@ -236,11 +236,11 @@ class CategoryRepository {
         SVProgressHUD.dismiss();
         print("sub category updated successful: ${response.data}");
         Navigator.pop(context);
-        await showFlushbar(context: context,
+        await showFlushbar(
+            context: context,
             color: FbColors.buttonColor,
             message: "Sub Category Updated",
-            icon: Icons.check
-        );
+            icon: Icons.check);
         // showDialog(
         //   context: context,
         //   barrierDismissible: true, // Allow dismissing by tapping outside
@@ -271,11 +271,13 @@ class CategoryRepository {
       print("Error: $e");
     }
   }
-  Future<List<FoodCategoryBySubcategoryModel>?>FoodCategoryBySubcategoryGet(int categoryId)async{
-    try{
+
+  Future<List<FoodCategoryBySubcategoryModel>?> FoodCategoryBySubcategoryGet(
+      int categoryId) async {
+    try {
       SVProgressHUD.show();
-      final prefs=await SharedPreferences.getInstance();
-      var tokenId=prefs.getString('access_token');
+      final prefs = await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
       // var tokenId = prefs.getString('access_token');
       var vendorId = prefs.getInt('vendor_id');
       print("hhhhh $vendorId");
@@ -292,18 +294,17 @@ class CategoryRepository {
         ),
       );
       if (response.statusCode == 200) {
-        List jsonList=response.data;
-        List<FoodCategoryBySubcategoryModel>
-        jsonResponce=
-        jsonList.map((v)=>FoodCategoryBySubcategoryModel.fromJson(v)).toList();
+        List jsonList = response.data;
+        List<FoodCategoryBySubcategoryModel> jsonResponce = jsonList
+            .map((v) => FoodCategoryBySubcategoryModel.fromJson(v))
+            .toList();
         print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
         SVProgressHUD.dismiss();
         return jsonResponce;
-      }
-      else {
+      } else {
         print(response.statusMessage);
       }
-    }on DioException catch (e) {
+    } on DioException catch (e) {
       print("error ${e.response?.data}");
     }
   }
