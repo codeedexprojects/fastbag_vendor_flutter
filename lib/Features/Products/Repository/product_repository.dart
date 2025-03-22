@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProductRepository {
   final Dio _dio = Dio();
 
-  Future<dynamic> getAllProducts(BuildContext context) async {
+  Future<dynamic> getAllProducts(BuildContext context,subCatId) async {
     print("inside");
     print("${baseUrl}food/dishes/");
     try {
@@ -24,13 +24,14 @@ class ProductRepository {
       SVProgressHUD.show();
 
       String token = await StoreManager().getAccessToken() as String;
+      int vendor = await StoreManager().getVendorId() as int;
       // Add the authorization header with the token
       _dio.options.headers = {"Authorization": "Bearer $token"};
       print(token);
 
       // Perform the POST request
       Response response = await _dio.get(
-        "${baseUrl}food/dishes/",
+        "${baseUrl}food/products/subcategory/$subCatId/vendor/$vendor/",
       );
 
       // Handle the response
