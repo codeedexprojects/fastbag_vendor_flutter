@@ -12,6 +12,9 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../Commons/colors.dart';
+import '../../../Commons/flush_bar.dart';
+
 class ProductRepository {
   final Dio _dio = Dio();
 
@@ -127,16 +130,22 @@ class ProductRepository {
       if (response.statusCode == 201) {
         SVProgressHUD.dismiss();
         print("product added successful: ${response.data}");
-        showDialog(
-          context: context,
-          barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(
-            text: "Product Added",
-            descrription:
-                "Your product has been added to the list and is visible to customers",
-            type: FbBottomDialogType.addSubCategory,
-          ),
+        Navigator.pop(context);
+        await showFlushbar(context: context,
+            color: FbColors.buttonColor,
+            message: "Product Added",
+            icon: Icons.check
         );
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: true, // Allow dismissing by tapping outside
+        //   builder: (BuildContext context) => const FbBottomDialog(
+        //     text: "Product Added",
+        //     descrription:
+        //         "Your product has been added to the list and is visible to customers",
+        //     type: FbBottomDialogType.addSubCategory,
+        //   ),
+        // );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OOPs something happened")),
@@ -272,15 +281,21 @@ class ProductRepository {
     if (response.statusCode == 200 || response.statusCode == 201) {
       SVProgressHUD.dismiss();
       print("Product edit successful: ${response.data}");
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) => const FbBottomDialog(
-          text: "Product Edited",
-          descrription: "Your product has been updated successfully",
-          type: FbBottomDialogType.addSubCategory,
-        ),
+      Navigator.pop(context);
+      await showFlushbar(context: context,
+          color: FbColors.buttonColor,
+          message: "Product Updated",
+          icon: Icons.check
       );
+      // showDialog(
+      //   context: context,
+      //   barrierDismissible: true,
+      //   builder: (BuildContext context) => const FbBottomDialog(
+      //     text: "Product Edited",
+      //     descrription: "Your product has been updated successfully",
+      //     type: FbBottomDialogType.addSubCategory,
+      //   ),
+      // );
     } else {
       SVProgressHUD.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -312,6 +327,7 @@ class ProductRepository {
       if (response.statusCode == 200) {
         print(response.data);
         return FoodDetail.fromJson(response.data);
+
       }
 
     }on DioException catch (e) {

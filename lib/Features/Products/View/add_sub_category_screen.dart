@@ -68,7 +68,9 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
           vendor: vendorId);
 
       await categoryViewModel.addProductSubCategory(
-          subCategories: category, context: context);
+          subCategories: category, context: context).then((v){
+        categoryViewModel.getFoodCategorybySubCategories(categoryId: selectedCategory!.id);
+      });
 
       setState(() {
         nameController.clear();

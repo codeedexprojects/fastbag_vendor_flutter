@@ -115,7 +115,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       );
 
       productProvider.editFoodItem(context: context, product: updatedModel).then((res){
-        //navigate(context: context, screen: const ListCategoryScreen());
+        productProvider.getProductCategories(context: context, subCategoryId: widget.product.subcategory,);
       });
     }
   }

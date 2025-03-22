@@ -63,7 +63,7 @@ class CategoryViewModel extends ChangeNotifier {
 
   Future<void> editProductSubCategory(
       {required BuildContext context,
-      required SubCategoryModel subCategories}) async {
+      required FoodCategoryBySubcategoryModel subCategories}) async {
     await _categoryRepository.ProductSubCategoryEdit(context, subCategories);
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
+import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
@@ -153,16 +155,22 @@ class CategoryRepository {
       if (response.statusCode == 201) {
         SVProgressHUD.dismiss();
         print("sub category added successful: ${response.data}");
-        showDialog(
-          context: context,
-          barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(
-            text: "Sub Category Added",
-            descrription:
-                "Your Category has been added to the list and is visible to customers",
-            type: FbBottomDialogType.addSubCategory,
-          ),
-        );
+        Navigator.pop(context);
+    await showFlushbar(context: context,
+      color: FbColors.buttonColor,
+      message: "SubCategoryAdded",
+      icon: Icons.check
+    );
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: true, // Allow dismissing by tapping outside
+        //   builder: (BuildContext context) => const FbBottomDialog(
+        //     text: "Sub Category Added",
+        //     descrription:
+        //         "Your Category has been added to the list and is visible to customers",
+        //     type: FbBottomDialogType.addSubCategory,
+        //   ),
+        // );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OOPs something happened")),
@@ -186,19 +194,19 @@ class CategoryRepository {
   }
 
   Future<dynamic> ProductSubCategoryEdit(
-      BuildContext context, SubCategoryModel model) async {
+      BuildContext context, FoodCategoryBySubcategoryModel model) async {
     print("inside");
     print("${baseUrl}food/subcategories/${model.id}/");
     try {
       print("inside try");
 
       FormData formData = FormData.fromMap({
-        "enable_subcategory": model.is_enabled,
+        "enable_subcategory": model.enableSubcategory,
         "name": model.name,
-        if (model.sub_category_image.isNotEmpty)
+        if (model.subcategoryImage!.isNotEmpty)
           "subcategory_image": await MultipartFile.fromFile(
-            model.sub_category_image,
-            filename: basename(model.sub_category_image),
+            model.subcategoryImage??'',
+            filename: basename(model.subcategoryImage??''),
           ),
       });
 
@@ -227,16 +235,22 @@ class CategoryRepository {
       if (response.statusCode == 200) {
         SVProgressHUD.dismiss();
         print("sub category updated successful: ${response.data}");
-        showDialog(
-          context: context,
-          barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(
-            text: "Sub Category Updated",
-            descrription:
-                "Your Category has been updated to the list and is visible to customers",
-            type: FbBottomDialogType.editSubCategory,
-          ),
+        Navigator.pop(context);
+        await showFlushbar(context: context,
+            color: FbColors.buttonColor,
+            message: "Sub Category Updated",
+            icon: Icons.check
         );
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: true, // Allow dismissing by tapping outside
+        //   builder: (BuildContext context) => const FbBottomDialog(
+        //     text: "Sub Category Updated",
+        //     descrription:
+        //         "Your Category has been updated to the list and is visible to customers",
+        //     type: FbBottomDialogType.editSubCategory,
+        //   ),
+        // );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OOPs something happened")),

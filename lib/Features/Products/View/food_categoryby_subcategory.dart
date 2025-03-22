@@ -53,7 +53,10 @@ class _FashionCategorybySubcategoryState
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: FbColors.backgroundcolor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -161,7 +164,7 @@ class _FashionCategorybySubcategoryState
                             categories: categoryProvider.categories,
                           ));
                     },
-                    label: "+ Add Category"),
+                    label: "+ Add Sub Category"),
               ),
             if (widget.isOperable &&
                 categoryProvider.selectsubCategories.isNotEmpty)
