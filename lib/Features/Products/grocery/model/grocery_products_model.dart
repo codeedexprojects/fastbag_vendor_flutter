@@ -63,10 +63,13 @@ class GroceryProductsModel {
       priceForSelectedWeight: json['price_for_selected_weight'].toDouble(),
       isOfferProduct: json['is_offer_product'],
       isPopularProduct: json['is_popular_product'],
-      available: json['Available'],
+      available: json['is_available'],
       createdAt: json['created_at'],
-      weights: (json['weights'] as List).map((e) => Weight.fromJson(e)).toList(),
-      images: (json['images'] as List).map((e) => ProductImage.fromJson(e)).toList(),
+      weights:
+          (json['weights'] as List).map((e) => Weight.fromJson(e)).toList(),
+      images: (json['images'] as List)
+          .map((e) => ProductImage.fromJson(e))
+          .toList(),
     );
   }
 }

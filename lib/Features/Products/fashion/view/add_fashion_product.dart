@@ -8,17 +8,15 @@ import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/color_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/color_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_categories.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_sub_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/productname_field.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/select_field.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
 import '../../View/widgets/fb_products_file_picker.dart';
@@ -26,8 +24,12 @@ import '../../View/widgets/fb_toggle_switch.dart';
 import '../view_model/fashionproduct_view_model.dart';
 
 class AddFashionProduct extends StatefulWidget {
+  final FashionCategoryModel category;
+  final FashionSubCategoryModel subCategory;
   const AddFashionProduct({
     super.key,
+    required this.category,
+    required this.subCategory,
   });
 
   @override
@@ -52,6 +54,13 @@ class _AddFashionProductState extends State<AddFashionProduct> {
 
   int? selectedCategoryId;
   int? selectedSubCategoryId;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    categoryController.text = widget.category.name ?? '';
+    subcategoryController.text = widget.subCategory.name ?? '';
+  }
 
   void _onFilePicked(List<File> files) {
     setState(() {

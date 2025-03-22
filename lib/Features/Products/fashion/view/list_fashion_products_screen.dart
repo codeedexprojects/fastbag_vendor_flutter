@@ -198,9 +198,9 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                     navigate(
                         context: context,
                         screen: AddFashionProduct(
-                            // subCategories: widget.subCategories,
-                            // subCategory: widget.subCategory,
-                            ));
+                          category: widget.category,
+                          subCategory: widget.subCategory,
+                        ));
                   },
                   label: "+ Add Product"),
             ),
