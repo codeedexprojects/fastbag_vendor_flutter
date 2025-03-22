@@ -59,18 +59,18 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
-      navigate(
-          context: context,
-          screen: AllCategoriesScreen(
-              categories: [item.model],
-              subCategories: categoryProvider.subCategories));
+      // navigate(
+      //     context: context,
+      //     screen: AllCategoriesScreen(
+      //         categories: [item.model],
+      //         subCategories: categoryProvider.subCategories));
     } else {
-      navigate(
-          context: context,
-          screen: AllSubCategoryScreen(
-              subCategories: [item.model],
-              categories: categoryProvider.categories,
-              isOperable: false));
+      // navigate(
+      //     context: context,
+      //     screen: AllSubCategoryScreen(
+      //         subCategories: [item.model],
+      //         categories: categoryProvider.categories,
+      //         isOperable: false));
     }
     setState(() {
       filteredList = []; // Optionally clear search results after submission
@@ -85,7 +85,7 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
 
     // Ensure categories and subcategories are loaded
     if (categoryProvider.categories.isNotEmpty ||
-        categoryProvider.subCategories.isNotEmpty) {
+        categoryProvider.selectsubCategories.isNotEmpty) {
       // Combine category and subcategory names once data is available
       List<SerachItem> categoryItems = categoryProvider.categories.isNotEmpty
           ? categoryProvider.categories
@@ -97,11 +97,11 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
               .toList()
           : [];
       List<SerachItem> subCategoryItems =
-          categoryProvider.subCategories.isNotEmpty
-              ? categoryProvider.subCategories
+          categoryProvider.selectsubCategories.isNotEmpty
+              ? categoryProvider.selectsubCategories
                   .map<SerachItem>((subCategory) => SerachItem(
-                      id: subCategory.id,
-                      name: subCategory.name,
+                      id: subCategory.id??0,
+                      name: subCategory?.name??"",
                       type: "sub_category",
                       model: subCategory))
                   .toList()
@@ -180,7 +180,7 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
                     ),
                     //  category  List  Horzontal
                     SizedBox(
-                      height: screenHeight * .17,
+                      height: screenHeight * .19,
                       child: Consumer<CategoryViewModel>(
                         builder: (context, data, _) {
                           return GridView.builder(

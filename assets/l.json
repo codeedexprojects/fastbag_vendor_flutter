@@ -1,0 +1,22 @@
+{
+  "variants": [
+    {
+      "name": "Quater",
+        "price": 250.0,
+        "quantity": 40,
+        "stock_status": "in stock"
+      },
+    {
+      "name": "Quater",
+      "price": 250.0,
+      "quantity": 40,
+      "stock_status": "in stock"
+    },
+    {
+      "name": "Quater",
+      "price": 250.0,
+      "quantity": 40,
+      "stock_status": "in stock"
+    }
+  ]
+}

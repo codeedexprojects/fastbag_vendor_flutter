@@ -229,10 +229,10 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
             SizedBox(
-              height: height * 1,
               child: ListView.separated(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     final order = filteredOrders[index];
                     return GestureDetector(

@@ -140,12 +140,12 @@ class AuthRepository {
         SVProgressHUD.dismiss();
         print("Registration failed: ${response.data}");
       }
-    } catch (e) {
+    } on DioException catch (e) {
       SVProgressHUD.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("OOPs something happened , Error: $e")),
       );
-      print("Error: $e");
+      print("Error: ${e.response}");
     }
   }
 

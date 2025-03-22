@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
@@ -17,6 +18,7 @@ class GroceryProductEditDeleteScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         title: Text(
           "Edit Products",
           style: mainFont(
@@ -69,7 +71,6 @@ class GroceryProductEditDeleteScreen extends StatelessWidget {
                         children: [
                           InkWell(
                               onTap: () {
-                               
                                 navigate(
                                     context: context,
                                     screen: EditGroceryProductScreen(

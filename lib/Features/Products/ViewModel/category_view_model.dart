@@ -4,21 +4,23 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/food_categoryby_s
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Repository/category_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class CategoryViewModel extends ChangeNotifier {
   final CategoryRepository _categoryRepository = CategoryRepository();
 
   List<CategoryModel> _categories = [];
+
   List<CategoryModel> get categories => _categories;
 
-  List<SubCategoryModel> _subCategories = [
-   
-  ];
+  List<SubCategoryModel> _subCategories = [];
+
   List<SubCategoryModel> get subCategories => _subCategories;
 
+  List<FoodCategoryBySubcategoryModel> _selectsubCategories = [];
 
-  List<FoodCategoryBySubcategoryModel>_selectsubCategories=[];
-  List<FoodCategoryBySubcategoryModel>get selectsubCategories=>_selectsubCategories;
+  List<FoodCategoryBySubcategoryModel> get selectsubCategories =>
+      _selectsubCategories;
 
   Future<List<CategoryModel>> getProductCategories(
       {required BuildContext context}) async {
@@ -46,9 +48,9 @@ class CategoryViewModel extends ChangeNotifier {
     print("returning subcategories $_subCategories");
     return _subCategories;
   }
+
   getFoodCategorybySubCategories({required int categoryId}) async {
-    await _categoryRepository
-        .FoodCategoryBySubcategoryGet(categoryId)
+    await _categoryRepository.FoodCategoryBySubcategoryGet(categoryId)
         .then((v) {
       _selectsubCategories = v ?? [];
       notifyListeners();
@@ -57,13 +59,21 @@ class CategoryViewModel extends ChangeNotifier {
 
   Future<void> addProductSubCategory(
       {required BuildContext context,
-      required SubCategoryModel subCategories}) async {
+      required FoodCategoryBySubcategoryModel subCategories}) async {
     await _categoryRepository.ProductSubCategoryPost(context, subCategories);
   }
 
   Future<void> editProductSubCategory(
       {required BuildContext context,
-      required SubCategoryModel subCategories}) async {
+      required FoodCategoryBySubcategoryModel subCategories}) async {
     await _categoryRepository.ProductSubCategoryEdit(context, subCategories);
+  }
+
+  deleteSubCategory({
+    required BuildContext context,
+    required int subcategoryId,
+  }) async {
+    await _categoryRepository.FoodCategoryBySubcategorydelete(
+        context, subcategoryId);
   }
 }

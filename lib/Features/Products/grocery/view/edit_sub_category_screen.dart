@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
@@ -83,6 +84,7 @@ class _EditGrocerySubCategoryScreenState
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -154,6 +156,7 @@ class _EditGrocerySubCategoryScreenState
                 });
               },
             ),
+            SizedBox(height: screenWidth*0.025,),
             FbButton(
                 onClick: () =>
                     onSubmitForm(groceryViewModel, widget.subCategory.id),
