@@ -14,8 +14,10 @@ import '../Model/food_detail_class.dart';
 class ProductDetailScreen extends StatefulWidget {
   final int productId;
 
-  const ProductDetailScreen({Key? key, required this.productId,})
-      : super(key: key);
+  const ProductDetailScreen({
+    Key? key,
+    required this.productId,
+  }) : super(key: key);
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -24,26 +26,22 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? imageIndex;
   String? varientIndex;
-  var selectedVariant ;
+  var selectedVariant = "";
   var selectedVariantDetails;
-  List varients=[];
+  List varients = [];
   int _isSelected = 0;
-
-
 
   @override
   void initState() {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
     super.initState();
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-    height=MediaQuery.of(context).size.height;
-    width=MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<FoodViewModel>(context);
     return Scaffold(
       backgroundColor: OrderColor.white,
@@ -67,10 +65,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Center(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(width*0.03)),
+                  borderRadius: BorderRadius.all(Radius.circular(width * 0.03)),
                   child: Container(
                     height: height * 0.4, // Adjust height as needed
                     width: width,
@@ -89,9 +87,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Container(
-                height: height*0.09,
+                height: height * 0.09,
                 width: width,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -113,7 +111,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             Padding(
-              padding:  EdgeInsets.all(width*0.03),
+              padding: EdgeInsets.all(width * 0.03),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -164,16 +162,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       )
                     ],
                   ),
-                  Text('Available variants',style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.textColor)),
-              SizedBox(height: height*0.01,),
-                  Text('Available stocks:${_viewModel.foodDetail?.isAvailable}',style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.red)),
-                  SizedBox(height: height*0.01,),
+                  Text('Available variants',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: OrderColor.textColor)),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
+                  Text('Available stocks:${_viewModel.foodDetail?.isAvailable}',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: OrderColor.red)),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
                   SizedBox(
                     height: height * 0.08,
                     child: ListView.separated(
@@ -181,46 +185,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
-                        var variant = _viewModel.foodDetail?.variants?[index];
-
-                        String selectedVariantName = "";
-                        int selectedPrice = 0;
-                        String selectedStockStatus = "";
-
-                        if (variant?.quater != null) {
-                          selectedVariantName = "Quater";
-                          selectedPrice = variant?.quater?.price ?? 0;
-                          selectedStockStatus = variant?.quater?.stockStatus ?? "N/A";
-                        } else if (variant?.half != null) {
-                          selectedVariantName = "Half";
-                          selectedPrice = variant?.half?.price ?? 0;
-                          selectedStockStatus = variant?.half?.stockStatus ?? "N/A";
-                        } else if (variant?.full != null) {
-                          selectedVariantName = "Full";
-                          selectedPrice = variant?.full?.price ?? 0;
-                          selectedStockStatus = variant?.full?.stockStatus ?? "N/A";
-                        }
+                        final variant = _viewModel.foodDetail?.variants?[index]; // Get variant object
 
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedVariantName = selectedVariantName;
-                              selectedPrice = selectedPrice;
-                              selectedStockStatus = selectedStockStatus;
+                              selectedVariant = variant?.name ?? '';// Store the selected variant
                             });
-                            print(
-
-                                "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkSelected Variant: $selectedVariantName, Price: $selectedPrice");
                           },
                           child: Container(
                             height: height * 0.07,
                             width: width * 0.3,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(width * 0.03),
-                              border: Border.all(color: Colors.green),
+                              border: Border.all(color: OrderColor.green),
                             ),
                             child: Center(
-                              child: Text(selectedVariantName),
+                              child: Text(
+                               " ${variant?.name?? 'noname'}", // Display variant name correctly
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         );
@@ -230,6 +214,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                     ),
                   ),
+                  // selectedVariant != null
+                  //     ? Column(
+                  //   children: [
+                  //     Text("Name: ${selectedVariant?.name}"),
+                  //     Text("Price: \$${selectedVariant?.price}"),
+                  //     Text("Availability: ${selectedVariant?.isAvailable}"),
+                  //   ],
+                  // )
+                  //     : SizedBox.shrink(),
+
+                  
+
+
+                  
                   // SizedBox(
                   //   height: height * 0.08,
                   //   child: ListView.separated(
@@ -282,30 +280,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   // ),
 
                   Padding(
-                padding:  EdgeInsets.all(width*0.02),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    padding: EdgeInsets.all(width * 0.02),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
-                  children: [
-                    Text("price: ${selectedVariantDetails?['price']?? 'hh'}",style: GoogleFonts.nunito(
-                     fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   ),) ,
-                   SizedBox(height: height*0.01,),
-                   Text("quantity: ${selectedVariantDetails?['quantity']?? 'hh'}",style: GoogleFonts.nunito(
-                   fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   )) ,
-                    SizedBox(height: height*0.01,),
-                   Text("stockStatus: ${selectedVariantDetails?['stock_status']?? 'hh'}" ,style: GoogleFonts.nunito(
-                     fontSize: 15,
-                     fontWeight: FontWeight.w400,
-                   )) ,
-                  ],
-                ),
-              )
-              ],
+                      children: [
+                        Text(
+                          "price: ${selectedVariantDetails?['price'] ?? 'hh'}",
+                          style: GoogleFonts.nunito(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                            "quantity: ${selectedVariantDetails?['quantity'] ?? 'hh'}",
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            )),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                            "stockStatus: ${selectedVariantDetails?['stock_status'] ?? 'hh'}",
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
             Divider(

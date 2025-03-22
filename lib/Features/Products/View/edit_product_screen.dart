@@ -12,6 +12,9 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_product
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 
+import '../../../Commons/custom_inputdecoration.dart';
+import '../../../Commons/fonts.dart';
+
 class EditProductScreen extends StatefulWidget {
   final FoodItemModel product;
 
@@ -57,10 +60,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     for (var variant in widget.product.variants) {
       variantFields.add({
         'nameController': TextEditingController(text: variant.keys.first),
-        'priceController':
-            TextEditingController(text: variant.values.first['price'].toString()),
-        'quantityController':
-            TextEditingController(text: variant.values.first['quantity'].toString()),
+        'priceController': TextEditingController(
+            text: variant.values.first['price'].toString()),
         'stockStatus': variant.values.first['stock_status'],
       });
     }
@@ -75,27 +76,26 @@ class _EditProductScreenState extends State<EditProductScreen> {
   // Function to update product details
   void updateProduct() {
     var productProvider = Provider.of<ProductViewModel>(context, listen: false);
+
     if (_formKey.currentState!.validate()) {
       List<Map<String, dynamic>> updatedVariants = [];
+
       for (var variant in variantFields) {
         String name = variant['nameController'].text.trim();
         String price = variant['priceController'].text.trim();
-        String quantity = variant['quantityController'].text.trim();
-        String stockStatus = variant['stockStatus'];
+        String stockStatus = variant['stockStatus']; // Directly store as String
 
-        if (name.isNotEmpty && price.isNotEmpty && quantity.isNotEmpty) {
+        if (name.isNotEmpty && price.isNotEmpty) {
           updatedVariants.add({
-            name: {
-              "price": double.parse(price),
-              "quantity": int.parse(quantity),
-              "stock_status": stockStatus,
-            }
+            "name": name,
+            "price": double.parse(price),
+            "is_available": stockStatus, // Store as String instead of bool
           });
         }
       }
 
       FoodItemModel updatedModel = FoodItemModel(
-        id: widget.product.id, // Ensure product ID is retained
+        id: widget.product.id,
         vendor: widget.product.vendor,
         category: widget.product.category,
         subcategory: widget.product.subcategory,
@@ -111,12 +111,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
         is_popular_product: _isPopular,
         is_offer_product: _isOffer,
         wholesale_price: wholeSaleController.text.trim(),
-        variants: updatedVariants,
+        variants: updatedVariants, // Updated variant format
       );
 
-      productProvider.editFoodItem(context: context, product: updatedModel).then((res){
-        //navigate(context: context, screen: const ListCategoryScreen());
-      });
+      productProvider.editFoodItem(context: context, product: updatedModel);
     }
   }
 
@@ -126,7 +124,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
       variantFields.add({
         'nameController': TextEditingController(),
         'priceController': TextEditingController(),
-        'quantityController': TextEditingController(),
         'stockStatus': 'in stock', // Default value
       });
     });
@@ -189,6 +186,79 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 controller: offerPriceController,
                 validator: customValidatornoSpaceError,
               ),
+              // Dynamic Variant Fields
+              const SizedBox(height: 20),
+              Column(
+                children: List.generate(variantFields.length, (index) {
+                  return Column(
+                    children: [
+                      TextFormField(
+                        controller: variantFields[index]['nameController'],
+                        decoration:
+                        CustumInputDecoration.getDecoration(
+                            labelText: "Varient Name"),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: variantFields[index]['priceController'],
+                        decoration:CustumInputDecoration.getDecoration(
+                            labelText: "Price"),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 20),
+                      DropdownButtonFormField<String>(
+                        value: variantFields[index]['stockStatus'],
+                        decoration: CustumInputDecoration.getDecoration(
+                            labelText: "Stock Status"),
+                        items: ["in stock", "out of stock"].map((status) {
+                          return DropdownMenuItem(
+                            value: status,
+                            child: Text(status),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            variantFields[index]['stockStatus'] = newValue!;
+                          });
+                        },
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () => removeVariant(index),
+                          child: const Text("Remove",
+                              style: TextStyle(color: Colors.red)),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
+              GestureDetector(
+                onTap: addVariant,
+                child: Row(
+                  children: [
+                    Text('Add Varient',
+                        style: normalFont4(
+                            fontsize: 18,
+                            fontweight: FontWeight.w400,
+                            color: Colors.blue)),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: Colors.blue,
+                          size: 18,
+                        ),
+                        SizedBox(width: 5),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
 
               // Toggle Switches
               const SizedBox(height: 20),
@@ -218,47 +288,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     _isPopular = value;
                   });
                 },
-              ),
-
-              // Dynamic Variant Fields
-              const SizedBox(height: 20),
-              Column(
-                children: List.generate(variantFields.length, (index) {
-                  return Card(
-                    elevation: 2,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: variantFields[index]['nameController'],
-                            decoration:
-                                const InputDecoration(labelText: "Variant Name"),
-                          ),
-                          TextFormField(
-                            controller: variantFields[index]['priceController'],
-                            decoration: const InputDecoration(labelText: "Price"),
-                            keyboardType: TextInputType.number,
-                          ),
-                          TextFormField(
-                            controller: variantFields[index]['quantityController'],
-                            decoration: const InputDecoration(labelText: "Quantity"),
-                            keyboardType: TextInputType.number,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () => removeVariant(index),
-                              child: const Text("Remove",
-                                  style: TextStyle(color: Colors.red)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
               ),
 
               const SizedBox(height: 20),
