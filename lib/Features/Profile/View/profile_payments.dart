@@ -31,7 +31,7 @@ class _ProfilePaymentsState extends State<ProfilePayments> {
               fontWeight: FontWeight.w600,
               color: OrderColor.black),
         ),
-        leading: Icon(CupertinoIcons.back),
+        leading: Icon(CupertinoIcons.back,size: height*0.06,),
       ),
       body: Padding(
         padding: EdgeInsets.all(width * 0.03),

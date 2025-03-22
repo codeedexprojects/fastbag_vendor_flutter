@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_category.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/view/grocery_category_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,6 +91,7 @@ class _FbBottomNavState extends State<FbBottomNav> {
 
   BottomNavigationBarItem navItem(String pngName, String label, int count) {
     return BottomNavigationBarItem(
+      backgroundColor: FbColors.backgroundcolor,
       icon: ColorFiltered(
         colorFilter: count == _selectedIndex
             ? const ColorFilter.mode(Colors.green, BlendMode.srcIn)

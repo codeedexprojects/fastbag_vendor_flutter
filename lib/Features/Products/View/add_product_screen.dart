@@ -330,6 +330,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   });
                 },
               ),
+              SizedBox(height: screenHeight*0.01,),
               FbButton(
                 onClick: saveProduct,
                 label: "Add to Sub Category",

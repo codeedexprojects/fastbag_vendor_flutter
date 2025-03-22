@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
+import 'package:fastbag_vendor_flutter/Commons/localvariables.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
@@ -97,7 +99,9 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: FbColors.backgroundcolor,
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -116,38 +120,44 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenWidth*0.07,vertical: screenHeight*0.01),
-        child: Column(
-          children: [
-            FbCategoryFormField(
-                label: "Category Name",
-                hint: widget.subCategory.name,
-                controller: nameController,
-                validator: customValidatornoSpaceError),
-            FbCategoryFilePicker(
-              onFilePicked: (file) => _onFilePicked(file),
-              fileCategory: "Category",
+        child: SizedBox(
+          height: screenHeight,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                FbCategoryFormField(
+                    label: "Category Name",
+                    hint: widget.subCategory.name,
+                    controller: nameController,
+                    validator: customValidatornoSpaceError),
+                FbCategoryFilePicker(
+                  onFilePicked: (file) => _onFilePicked(file),
+                  fileCategory: "Category",
+                ),
+                FbProductCategoryDropdown(
+                  categories: widget.categories,
+                  selectedCategory: selectedCategory,
+                  onChanged: (dynamic category) {
+                    setState(() {
+                      selectedCategory = category; // Update the selected category
+                    });
+                    print('Selected Category: ${category?.name}');
+                  },
+                ),
+                FbToggleSwitch(
+                  title: 'Mark Category in stock',
+                  initialValue: _switchValue!,
+                  onToggleChanged: (value) {
+                    setState(() {
+                      _switchValue = value;
+                    });
+                  },
+                ),
+                SizedBox(height: screenHeight*0.025,),
+                FbButton(onClick: _onSubmitForm, label: "Update Sub Category")
+              ],
             ),
-            FbProductCategoryDropdown(
-              categories: widget.categories,
-              selectedCategory: selectedCategory,
-              onChanged: (dynamic category) {
-                setState(() {
-                  selectedCategory = category; // Update the selected category
-                });
-                print('Selected Category: ${category?.name}');
-              },
-            ),
-            FbToggleSwitch(
-              title: 'Mark Category in stock',
-              initialValue: _switchValue!,
-              onToggleChanged: (value) {
-                setState(() {
-                  _switchValue = value;
-                });
-              },
-            ),
-            FbButton(onClick: _onSubmitForm, label: "Update Sub Category")
-          ],
+          ),
         ),
       ),
     );

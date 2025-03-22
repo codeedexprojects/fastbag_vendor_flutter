@@ -54,6 +54,7 @@ class _FashionCategorybySubcategoryState
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
@@ -84,6 +85,7 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -133,7 +135,7 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
                     });
                   },
                 ),
-                SizedBox(height: screenWidth * .08),
+                SizedBox(height: screenHeight*0.025,),
                 FbButton(onClick: _onSubmitForm, label: "Add to Sub Category")
               ],
             ),

@@ -68,9 +68,10 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                         height: screenHeight * .6,
                         child: Center(
                             child: SizedBox(
-                          height: screenWidth * .45,
+                          height: screenWidth * 15,
                           width: screenWidth * .5,
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
                                 'assets/icons/no_product.svg',

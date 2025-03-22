@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
@@ -77,6 +78,7 @@ class _AddGrocerySubCategoryScreenState
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
