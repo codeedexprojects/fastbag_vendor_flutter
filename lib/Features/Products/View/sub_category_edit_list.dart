@@ -37,8 +37,12 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: FbColors.backgroundcolor,
+<<<<<<< HEAD
         title: Text(categoryProvider.selectsubCategories.isEmpty? "Edit Sub Categories"
           :"${categoryProvider.selectsubCategories.first.categoryName??""} Edit Sub Categories",
+=======
+        title: Text("Edit Sub Categories",
+>>>>>>> 7317fe5cc4d2705ece17318cddd70f852b5e77be
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -60,7 +64,7 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                         screen: EditSubCategoryScreen(
                           categories: categoryProvider.categories,
                           category: categoryProvider.categories[0],
-                          subCategory: categoryProvider.subCategories[index],
+                          subCategory: categoryProvider.selectsubCategories[index],
                         ));
                   },
                   child: Container(

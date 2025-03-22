@@ -53,7 +53,12 @@ class _FashionCategorybySubcategoryState
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: FbColors.backgroundcolor,
       appBar: AppBar(
+<<<<<<< HEAD
+=======
+        scrolledUnderElevation: 0,
+>>>>>>> 7317fe5cc4d2705ece17318cddd70f852b5e77be
         backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
@@ -140,9 +145,7 @@ class _FashionCategorybySubcategoryState
                         navigate(
                           context: context,
                           screen: ListProductsScreen(
-                            subCategory:
-                            categoryProvider.subCategories[index],
-                            subCategories: categoryProvider.subCategories,
+                             subCategorys: categoryProvider.selectsubCategories[index], subCategoriess: categoryProvider.selectsubCategories,
                           ),
                         );
                       },
@@ -164,7 +167,7 @@ class _FashionCategorybySubcategoryState
                             categories: categoryProvider.categories,
                           ));
                     },
-                    label: "+ Add Category"),
+                    label: "+ Add Sub Category"),
               ),
             if (widget.isOperable &&
                 categoryProvider.selectsubCategories.isNotEmpty)

@@ -99,7 +99,7 @@ class FoodResponseModel {
 
 class Variants {
   String? name;
-  int? price;
+  dynamic price;
   String? stock;
 
   Variants({this.name, this.price, this.stock});

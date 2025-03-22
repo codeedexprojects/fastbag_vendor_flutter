@@ -7,6 +7,7 @@ class FbColors {
   static Color black = Colors.black;
   static Color greyColor = Colors.grey;
   static Color white = Colors.white;
+  static Color errorcolor = Colors.red;
   static Color backgroundcolor = Color.fromRGBO(245, 245, 245, 1);
   // static Color greyLite = Color.fromRGBO(238, 238, 238, 1);
   // static Color liteYellow = Color.fromRGBO(241, 246, 189, 0.65);

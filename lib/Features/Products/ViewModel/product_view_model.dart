@@ -6,21 +6,19 @@ import 'package:flutter/material.dart';
 class ProductViewModel extends ChangeNotifier {
   final ProductRepository _productRepository = ProductRepository();
 
-  List<FoodItemModel> _foodProducts = [];
+  List<FoodResponseModel> _foodProducts = [];
 
-  List<FoodItemModel> get foodProducts => _foodProducts;
+  List<FoodResponseModel> get foodProducts => _foodProducts;
 
-  List<FoodResponseModel> foodresponse = [];
+  // List<FoodResponseModel> foodresponse = [];
 
-  Future getProductCategories(
+  Future  getProductCategories(
       {required BuildContext context, required int subCategoryId}) async {
     var res = await _productRepository.getAllProducts(context, subCategoryId);
     if (res != null) {
       _foodProducts = res;
-      print(_foodProducts);
       notifyListeners();
     }
-    return _foodProducts;
   }
 
   Future<void> addFoodItem(

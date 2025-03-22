@@ -8,7 +8,7 @@ class FbToggleSwitch extends StatefulWidget {
   const FbToggleSwitch({
     super.key,
     required this.title,
-    this.initialValue = false,
+    required this.initialValue,
     required this.onToggleChanged,
   });
 

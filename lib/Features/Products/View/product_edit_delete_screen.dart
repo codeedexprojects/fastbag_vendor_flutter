@@ -2,6 +2,7 @@ import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_response.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/edit_product_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'package:provider/provider.dart';
 import '../fashion/view_model/fashionproduct_view_model.dart';
 
 class ProductEditDeleteScreen extends StatelessWidget {
-  final List<FoodItemModel> products;
+  final List<FoodResponseModel> products;
   const ProductEditDeleteScreen({super.key, required this.products});
 
   @override
@@ -53,7 +54,7 @@ class ProductEditDeleteScreen extends StatelessWidget {
                               Colors.grey[200], // Optional: Background color
                           child: ClipOval(
                             child: Image.network(
-                              data.foodProducts[index].image_urls[0],
+                              data.foodProducts[index].imageUrls?[0].image ?? '',
                               fit: BoxFit
                                   .cover, // Ensures the image fills the circle
                               width:
@@ -68,7 +69,7 @@ class ProductEditDeleteScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        title: Text(data.foodProducts[index].name),
+                        title: Text(data.foodProducts[index].name ?? ''),
                         trailing: SizedBox(
                           width: screenWidth * .15, // Set an appropriate width
                           child: Row(
@@ -97,7 +98,7 @@ class ProductEditDeleteScreen extends StatelessWidget {
                                     data.getProductCategories(
                                         context: context,
                                         subCategoryId: data
-                                            .foodProducts[index].subcategory);
+                                            .foodProducts[index].subcategory ?? 0);
                                   });
                                 },
                                 child: const Icon(
