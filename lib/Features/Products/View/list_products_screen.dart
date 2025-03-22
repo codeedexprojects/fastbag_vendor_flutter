@@ -146,7 +146,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                           inactiveThumbColor: Colors.white,
                                           materialTapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
-                                          value: false,
+                                          value: productProvider.foodProducts[index].isAvailable ?? false,
                                           onChanged: (value) {
                                             // Handle switch toggle logic
                                           },
