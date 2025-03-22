@@ -20,6 +20,7 @@ import '../../../Commons/fonts.dart';
 class AddProductScreen extends StatefulWidget {
   final SubCategoryModel subCategory;
   final List<SubCategoryModel> subCategories;
+
   const AddProductScreen(
       {super.key, required this.subCategory, required this.subCategories});
 
@@ -61,29 +62,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   final List<Map<String, dynamic>> sizes = [];
   final TextEditingController colorController = TextEditingController();
-  final TextEditingController wholesalePriceController = TextEditingController();
+  final TextEditingController wholesalePriceController =
+      TextEditingController();
   final TextEditingController offerPrice = TextEditingController();
-  void addSize() {
-    setState(() {
-      sizes.add({
-        "size": "",
-        "price": 0,
-        "stock": 0,
-      });
-    });
-  }
-
-  void submitVariant() {
-    final variantData = {
-      "color_name": colorController.text,
-      "color_image": int.parse(wholesalePriceController.text),
-      "sizes": sizes.map((size) => {
-        "size": size["size"],
-        "stock": size["stock"],
-        "price" : size["price"],
-      }).toList(),
-    };
-  }
 
   void _onFilePicked(List<File> files) {
     print(files);
@@ -115,44 +96,39 @@ class _AddProductScreenState extends State<AddProductScreen> {
   void saveProduct() {
     var productProvider = Provider.of<ProductViewModel>(context, listen: false);
     if (_formKey.currentState!.validate()) {
-      if (_selectedImages!.isNotEmpty) {
+      if (_selectedImages != null && _selectedImages!.isNotEmpty) {
         variants.clear();
         for (var variant in variantFields) {
           String name = variant['nameController'].text.trim();
           String price = variant['priceController'].text.trim();
-          String quantity = variant['quantityController'].text.trim();
           String stockStatus = variant['stockStatus'];
 
-          if (name.isNotEmpty && price.isNotEmpty && quantity.isNotEmpty) {
+          if (name.isNotEmpty && price.isNotEmpty) {
             variants.add({
-              name: {
-                "price": double.parse(price),
-                "quantity": int.parse(quantity),
-                "stock_status": stockStatus,
-              }
+              "name": name,
+              "price": double.parse(price),
+              "stock": stockStatus,
             });
           }
         }
-        print(variants);
+
         FoodItemModel model = FoodItemModel(
-            vendor: widget.subCategory.vendor,
-            category: widget.subCategory.categoryId,
-            subcategory: widget.subCategory.id as int,
-            name: nameController.text.trim(),
-            description: descriptionController.text.trim(),
-            price: priceController.text.trim(),
-            offer_price: offerPriceController.text.trim(),
-            discount: discountController.text.trim(),
-            is_available: _inStock,
-            image_urls:
-                _selectedImages!.map<String>((file) => file.path).toList(),
-            is_popular_product: _isPopular,
-            is_offer_product: _isOffer,
-            wholesale_price: wholeSaleController.text.trim(),
-            variants: variants);
-
-        print(model.variants);
-
+          vendor: widget.subCategory.vendor,
+          category: widget.subCategory.categoryId,
+          subcategory: widget.subCategory.id as int,
+          name: nameController.text.trim(),
+          description: descriptionController.text.trim(),
+          price: priceController.text.trim(),
+          offer_price: offerPriceController.text.trim(),
+          discount: discountController.text.trim(),
+          is_available: _inStock,
+          image_urls:
+              _selectedImages!.map<String>((file) => file.path).toList(),
+          is_popular_product: _isPopular,
+          is_offer_product: _isOffer,
+          wholesale_price: wholeSaleController.text.trim(),
+          variants: variants,
+        );
         productProvider.addFoodItem(context: context, model: model);
       }
     }
@@ -186,7 +162,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               SizedBox(height: screenWidth * .06),
 
               FbCategoryFormField(
-                label: "Category Name",
+                label: "Product Name",
                 controller: nameController,
                 validator: customValidatornoSpaceError,
               ),
@@ -248,16 +224,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             value!.isEmpty ? "Enter price" : null,
                       ),
                       // Quantity
-                      SizedBox(height: 10,),
-                      TextFormField(
-                        controller: variantFields[index]
-                            ['quantityController'],
-                        decoration: CustumInputDecoration.getDecoration(labelText: "Quantity"),
-                        keyboardType: TextInputType.number,
-                        validator: (value) =>
-                            value!.isEmpty ? "Enter quantity" : null,
-                      ),
-                      // Stock Status Dropdown
                       SizedBox(height: 10,),
                       DropdownButtonFormField<String>(
                         value: variantFields[index]['stockStatus'],
