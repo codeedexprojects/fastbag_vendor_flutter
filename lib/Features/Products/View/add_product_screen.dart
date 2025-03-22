@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
@@ -16,10 +17,11 @@ import 'package:provider/provider.dart';
 
 import '../../../Commons/custom_inputdecoration.dart';
 import '../../../Commons/fonts.dart';
+import '../Model/food_categoryby_subCategory_model.dart';
 
 class AddProductScreen extends StatefulWidget {
-  final SubCategoryModel subCategory;
-  final List<SubCategoryModel> subCategories;
+  final FoodCategoryBySubcategoryModel subCategory;
+  final List<FoodCategoryBySubcategoryModel> subCategories;
 
   const AddProductScreen(
       {super.key, required this.subCategory, required this.subCategories});
@@ -41,7 +43,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   bool _isOffer = false;
   bool _isPopular = false;
   var _formKey = GlobalKey<FormState>();
-  SubCategoryModel? selectedCategory;
+  FoodCategoryBySubcategoryModel? selectedCategory;
 
   // Map to store variants data
   List<Map<String, dynamic>> variants = [];
@@ -63,7 +65,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final List<Map<String, dynamic>> sizes = [];
   final TextEditingController colorController = TextEditingController();
   final TextEditingController wholesalePriceController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController offerPrice = TextEditingController();
 
   void _onFilePicked(List<File> files) {
@@ -114,7 +116,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
         FoodItemModel model = FoodItemModel(
           vendor: widget.subCategory.vendor,
-          category: widget.subCategory.categoryId,
+          category: widget.subCategory.category ?? 0,
           subcategory: widget.subCategory.id as int,
           name: nameController.text.trim(),
           description: descriptionController.text.trim(),
@@ -123,7 +125,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           discount: discountController.text.trim(),
           is_available: _inStock,
           image_urls:
-              _selectedImages!.map<String>((file) => file.path).toList(),
+          _selectedImages!.map<String>((file) => file.path).toList(),
           is_popular_product: _isPopular,
           is_offer_product: _isOffer,
           wholesale_price: wholeSaleController.text.trim(),
@@ -141,7 +143,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return Scaffold(
       backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
-          elevation: 0,
+        elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: Color(0xFFF5F5F5),
         centerTitle: true,
@@ -211,7 +213,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         controller: variantFields[index]['nameController'],
                         decoration: CustumInputDecoration.getDecoration(labelText: "Variant Name (e.g. Half, Full)"),
                         validator: (value) =>
-                            value!.isEmpty ? "Enter a variant name" : null,
+                        value!.isEmpty ? "Enter a variant name" : null,
                       ),
                       // Price
                       SizedBox(height: 10,),
@@ -221,14 +223,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ,
                         keyboardType: TextInputType.number,
                         validator: (value) =>
-                            value!.isEmpty ? "Enter price" : null,
+                        value!.isEmpty ? "Enter price" : null,
                       ),
                       // Quantity
                       SizedBox(height: 10,),
                       DropdownButtonFormField<String>(
                         value: variantFields[index]['stockStatus'],
                         decoration: CustumInputDecoration.getDecoration(labelText: "Stock Status"),
-                           
+
                         items: ["in stock", "out of stock"].map((status) {
                           return DropdownMenuItem(
                             value: status,

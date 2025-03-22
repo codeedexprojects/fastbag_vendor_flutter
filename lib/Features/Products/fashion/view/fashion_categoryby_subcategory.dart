@@ -167,7 +167,7 @@ class _FashionCategorybySubcategoryState
                             categories: categoryProvider.categories,
                           ));
                     },
-                    label: "+ Add Category"),
+                    label: "+ Add SubCategory"),
               ),
             if (widget.isOperable &&
                 categoryProvider.selectsubCategory.isNotEmpty)

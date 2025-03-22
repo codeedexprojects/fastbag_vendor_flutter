@@ -5,16 +5,16 @@ class FoodCategoryBySubcategoryModel {
   int? category;
   String? categoryName;
   bool? enableSubcategory;
-  int? vendor;
+  dynamic vendor;
   String? vendorName;
 
   FoodCategoryBySubcategoryModel(
       {this.id,
         this.name,
-        this.subcategoryImage,
-        this.category,
+        required this.subcategoryImage,
+        required this.category,
         this.categoryName,
-        this.enableSubcategory,
+        required this.enableSubcategory,
         this.vendor,
         this.vendorName});
 

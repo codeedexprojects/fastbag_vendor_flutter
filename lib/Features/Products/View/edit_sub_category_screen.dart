@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_categoryby_subCategory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
@@ -15,10 +17,12 @@ import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Commons/flush_bar.dart';
+
 class EditSubCategoryScreen extends StatefulWidget {
   final List<CategoryModel> categories;
   final CategoryModel category;
-  final SubCategoryModel subCategory;
+  final FoodCategoryBySubcategoryModel subCategory;
   const EditSubCategoryScreen(
       {super.key,
       required this.categories,
@@ -33,17 +37,20 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
   var nameController = TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
-  bool? _switchValue;
+  bool _switchValue = false;
   CategoryModel? selectedCategory;
 
   @override
   void initState() {
     FbStore.retrieveData(FbLocalStorage.vendorId).then((data) {
-      setState(() {
+      // setState(() {
         vendorId = data;
         selectedCategory = widget.category;
-        _switchValue = widget.subCategory.is_enabled;
-      });
+        _switchValue = widget.subCategory.enableSubcategory ?? false;
+        print(_switchValue);
+      // });
+        nameController.text = widget.subCategory.name ?? '';
+        print("object    ${ widget.subCategory.enableSubcategory}");
     });
     super.initState();
   }
@@ -60,36 +67,36 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
     if (nameController.text.isNotEmpty ||
         _selectedImage != null ||
         widget.category.name != selectedCategory!.name ||
-        widget.subCategory.is_enabled != _switchValue) {
-      SubCategoryModel category = SubCategoryModel(
+        widget.subCategory.enableSubcategory != _switchValue) {
+      FoodCategoryBySubcategoryModel category = FoodCategoryBySubcategoryModel(
           id: widget.subCategory.id,
-          categoryId: widget.subCategory.categoryId,
-          is_enabled: _switchValue!,
+          category: widget.subCategory.category,
+          enableSubcategory: _switchValue!,
           name: nameController.text.isEmpty
               ? widget.subCategory.name
               : nameController.text,
-          sub_category_image: _selectedImage?.path ?? "",
+          subcategoryImage: _selectedImage?.path ?? "",
           vendor: vendorId);
+      print("djbdjbdkjdb $_switchValue");
 
       await categoryViewModel.editProductSubCategory(
-          subCategories: category, context: context);
-
-      setState(() {
-        nameController.clear();
-        _selectedImage = null;
-        _switchValue = false;
+          subCategories: category, context: context).then((v){
+         categoryViewModel.getFoodCategorybySubCategories(categoryId: selectedCategory!.id);
       });
-    } else {
-      showDialog(
-        context: context,
-        barrierDismissible: true, // Allow dismissing by tapping outside
-        builder: (BuildContext context) => const FbBottomDialog(
-          text: "Update not possible",
-          descrription: "Change atleast one field to update",
-          type: FbBottomDialogType.editSubCategoryNotPossible,
-        ),
-      );
+
+      // setState(() {
+      //   print("djbdjbdkjdb $_switchValue");
+      //
+      //   nameController.clear();
+      //   _selectedImage = null;
+      //   // _switchValue = false;
+      // });
     }
+    // else {
+    //   print("djbdjbdkjdb $_switchValue");
+    //
+    //   showFlushbar(context: context, color: FbColors.errorcolor, icon: Icons.check, message: "Change atleast one field to update");
+    // }
   }
 
   @override
@@ -98,6 +105,7 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -139,13 +147,14 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
             ),
             FbToggleSwitch(
               title: 'Mark Category in stock',
-              initialValue: _switchValue!,
+              initialValue: _switchValue,
               onToggleChanged: (value) {
                 setState(() {
                   _switchValue = value;
                 });
               },
             ),
+            SizedBox(height: 25,),
             FbButton(onClick: _onSubmitForm, label: "Update Sub Category")
           ],
         ),

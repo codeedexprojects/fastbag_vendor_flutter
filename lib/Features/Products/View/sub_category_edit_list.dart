@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
@@ -35,8 +36,8 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(categoryProvider.selectsubCategories.isEmpty? "Edit Sub Categories"
-          :"${categoryProvider.selectsubCategories.first.categoryName??""}Edit Sub Categories",
+        backgroundColor: FbColors.backgroundcolor,
+        title: Text("Edit Sub Categories",
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -58,7 +59,7 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                         screen: EditSubCategoryScreen(
                           categories: categoryProvider.categories,
                           category: categoryProvider.categories[0],
-                          subCategory: categoryProvider.subCategories[index],
+                          subCategory: categoryProvider.selectsubCategories[index],
                         ));
                   },
                   child: Container(
