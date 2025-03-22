@@ -1,10 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
+import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/addproduct_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/color_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/add_fashion_product.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_category_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
+import 'package:provider/provider.dart';
 
 import '../model/fashion_item_model.dart';
 import '../repository/fashion_product_repository.dart';
@@ -32,37 +38,116 @@ class FashionProductViewModel extends ChangeNotifier {
 
   Future<void> addFashionProduct(
       {required BuildContext context,
+      required data,
+      required imageData}) async {
+    try {
+      SVProgressHUD.show();
 
-      model}) async {
-    var res =
-        await _productRepository.addFastionProduct(context, model);
-    notifyListeners();
-    if (res != null) {
-      print(res);
+      final response = await _productRepository.addFastionProduct(
+        context,
+        data,
+      );
+
+      // _fashionProducts.add(Results.fromJson((response)));
+
+      print('response------------>$response');
+      final productId = response['id'];
+      print('--------------->$productId');
+      updateImage(context, productId, imageData);
+      notifyListeners();
+
+      await showFlushbar(
+          context: context,
+          color: FbColors.buttonColor,
+          icon: Icons.check,
+          message: 'Product Added Successfully');
+    } catch (e) {
+      showFlushbar(
+          context: context,
+          color: Color(0xffFF5252),
+          icon: Icons.error_outline,
+          message: 'Product Adding Failed');
+    } finally {
+      SVProgressHUD.dismiss();
     }
   }
 
-  // Future<List<FashionItemModel>> getProductCategories({required BuildContext context,required int subCategoryId}) async {
-  //   var res = await _productRepository.fashiongetAllProducts(context);
-  //   if(res != null){
-  //     _fashionProducts=
-  //       res
-  //   .where((data) => data["subcategory"] == subCategoryId) // Filter data first
-  //   .map<FashionItemModel>((data) => FashionItemModel.fromMap(data)) // Convert to model
-  //   .toList();
-  //   print(_fashionProducts);
-  //   notifyListeners();
-  //   }
-  //   return _fashionProducts;
-  // }
+  updateImage(context, productId, data) {
+    try {
+      final response = _productRepository.updateImage(productId, data);
+      showFlushbar(
+          context: context,
+          color: FbColors.buttonColor,
+          icon: Icons.check,
+          message: 'Image Added Successfully');
+      print('response------------>$response');
+      notifyListeners();
+    } catch (e) {
+      showFlushbar(
+          context: context,
+          color: Color(0xffFF5252),
+          icon: Icons.error_outline,
+          message: 'Image Adding Failed');
+    }
+  }
 
-  // Future<void> addFoodItem(
-  //     {required BuildContext context, required FoodItemModel model}) async {
-  //   var res = await _productRepository.fashionAddProductItem(context, model);
-  //   if (res != null) {
-  //     print(res);
-  //   }
-  // }
+  enableDisdableProduct(
+      {required context,
+      required int productId,
+      required bool isActive}) async {
+    try {
+      SVProgressHUD.show();
+
+      final response =
+          await _productRepository.enableDisableProduct(productId, isActive);
+      print('response------------>$response');
+      showFlushbar(
+          context: context,
+          color: FbColors.buttonColor,
+          icon: Icons.check,
+          message: 'Product Status Updated');
+      notifyListeners();
+    } catch (e) {
+      print('error------------>$e');
+      showFlushbar(
+          context: context,
+          color: Color(0xffFF5252),
+          icon: Icons.error_outline,
+          message: 'Product Status Failed');
+    } finally {
+      SVProgressHUD.dismiss();
+    }
+  }
+
+  deleteProduct({
+    required context,
+    required int productId,
+  }) async {
+    try {
+      SVProgressHUD.show();
+
+      final response = await _productRepository.deleteProduct(productId);
+      print('response------------>$response');
+
+      fashionProducts.removeWhere((element) => element.id == productId);
+      notifyListeners();
+
+      showFlushbar(
+          context: context,
+          color: FbColors.buttonColor,
+          icon: Icons.check,
+          message: 'Product Deleted Successfully');
+    } catch (e) {
+      print('error------------>$e');
+      showFlushbar(
+          context: context,
+          color: Color(0xffFF5252),
+          icon: Icons.error_outline,
+          message: 'Product Delete Failed');
+    } finally {
+      SVProgressHUD.dismiss();
+    }
+  }
 
   Future<void> deleteFoodItem(
       {required BuildContext context, required int productId}) async {

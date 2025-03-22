@@ -77,7 +77,7 @@ class FashionAllCategoriesScreen extends StatelessWidget {
                               context: context,
                               screen: FashionCategorybySubcategory(
                                 isOperable: true,
-                                categoryId: data.categories[index]?.id ?? 0,
+                                category: data.categories[index],
                               ));
                         },
                         radius: screenWidth * .09,

@@ -37,8 +37,10 @@ class _ApprovalWaitingScreenState extends State<ApprovalWaitingScreen> {
   }
 
   void _startApiCall() {
-    _approvalCheckTimer = Timer.periodic(const Duration(seconds: 30), (timer) async {
-      final success = await _authRepository.checkAdminApproval(widget.id, context);
+    _approvalCheckTimer =
+        Timer.periodic(const Duration(seconds: 8), (timer) async {
+      final success =
+          await _authRepository.checkAdminApproval(widget.id, context);
       if (success) {
         timer.cancel();
         if (mounted) {

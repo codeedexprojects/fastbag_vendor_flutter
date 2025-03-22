@@ -20,9 +20,9 @@ class FashionCategoryViewModel extends ChangeNotifier {
 
   List<FashionSubCategoryModel> get subCategories => _subCategories;
 
-  List<CategoryBySubCategoryModel> _selectsubCategory = [];
+  List<FashionSubCategoryModel> _selectsubCategory = [];
 
-  List<CategoryBySubCategoryModel> get selectsubCategory => _selectsubCategory;
+  List<FashionSubCategoryModel> get selectsubCategory => _selectsubCategory;
 
   getfashionProductCategories() async {
     await _categoryRepository.fashionproductCategoryGet().then((v) {

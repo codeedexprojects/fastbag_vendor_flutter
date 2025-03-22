@@ -109,6 +109,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
     );
 
     final data = {
+      
       "category": selectedCategory.id,
       "sub_category": widget.subCategory.id,
       "name": nameController.text.trim(),

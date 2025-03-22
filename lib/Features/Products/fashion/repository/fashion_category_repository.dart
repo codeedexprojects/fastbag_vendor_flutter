@@ -20,59 +20,57 @@ class FashionCategoryRepository {
   final Dio _dio = Dio();
 
   Future<List<FashionCategoryModel>?> fashionproductCategoryGet() async {
-    try{
+    try {
       SVProgressHUD.show();
-    var response = await _dio.request(
-      '${baseUrl}vendors/categories/filter/?store_type_name=fashion',
-      options: Options(
-        method: 'GET',
-      ),
-    );
+      var response = await _dio.request(
+        '${baseUrl}vendors/categories/filter/?store_type_name=fashion',
+        options: Options(
+          method: 'GET',
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      List jsonList = response.data;
-      List<FashionCategoryModel> jsonResponse =
-          jsonList.map((v) => FashionCategoryModel.fromJson(v)).toList();
-      print(json.encode(response.data));
-      SVProgressHUD.dismiss();
-      return jsonResponse;
-    } }on DioException catch (e) {
-
+      if (response.statusCode == 200) {
+        List jsonList = response.data;
+        List<FashionCategoryModel> jsonResponse =
+            jsonList.map((v) => FashionCategoryModel.fromJson(v)).toList();
+        print(json.encode(response.data));
+        SVProgressHUD.dismiss();
+        return jsonResponse;
+      }
+    } on DioException catch (e) {
       print("error $e");
     }
   }
 
   Future<List<FashionSubCategoryModel>?> fashionproductSubCategoryGet() async {
-
-    try{
+    try {
       SVProgressHUD.show();
-    final prefs=await SharedPreferences.getInstance();
-    var tokenId=prefs.getString('access_token');
-    var headers = {
-      'Authorization': 'Bearer $tokenId',
-      "Content-Type": "application/json",
-    };
+      final prefs = await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
+      var headers = {
+        'Authorization': 'Bearer $tokenId',
+        "Content-Type": "application/json",
+      };
 
-    var response = await _dio.request(
-      '${baseUrl}fashion/clothing-subcategories/',
-      options: Options(
-        method: 'GET',
-        headers: headers,
-      ),
-    );
+      var response = await _dio.request(
+        '${baseUrl}fashion/clothing-subcategories/',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      List jsonList=response.data;
-      List<FashionSubCategoryModel> jsonResponce=
-       jsonList.map((v)=>FashionSubCategoryModel.fromJson(v)).toList();
-      print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
-      SVProgressHUD.dismiss();
-      return jsonResponce;
-    }
-    else {
-      print(response.statusMessage);
-    }}on DioException catch (e) {
-
+      if (response.statusCode == 200) {
+        List jsonList = response.data;
+        List<FashionSubCategoryModel> jsonResponce =
+            jsonList.map((v) => FashionSubCategoryModel.fromJson(v)).toList();
+        print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
+        SVProgressHUD.dismiss();
+        return jsonResponce;
+      } else {
+        print(response.statusMessage);
+      }
+    } on DioException catch (e) {
       print("error ${e.response?.data}");
     }
   }
@@ -93,15 +91,13 @@ class FashionCategoryRepository {
           filename: basename(model.subcategoryImage.toString()),
         ),
         "vendor_id": vendorId,
-        "description":model.description
+        "description": model.description
       });
 
       // Create FormData for file uploads
       SVProgressHUD.show();
 
-
       var tokenId = prefs.getString('access_token');
-
 
       var headers = {'Authorization': 'Bearer $tokenId'};
 
@@ -109,9 +105,7 @@ class FashionCategoryRepository {
       Response response = await _dio.post(
         "${baseUrl}fashion/clothing-subcategories/",
         data: formData,
-        options: Options(
-          headers: headers
-        ),
+        options: Options(headers: headers),
       );
 
       print(response.statusCode);
@@ -152,8 +146,8 @@ class FashionCategoryRepository {
     }
   }
 
-  Future<dynamic> fashionProductSubCategoryEdit(
-      BuildContext context, FashionSubCategoryModel model,int subcategoryId) async {
+  Future<dynamic> fashionProductSubCategoryEdit(BuildContext context,
+      FashionSubCategoryModel model, int subcategoryId) async {
     print("inside");
 
     try {
@@ -171,16 +165,14 @@ class FashionCategoryRepository {
           filename: basename(model.subcategoryImage.toString()),
         ),
         "vendor_id": vendorId,
-        "description":model.description
+        "description": model.description
       });
       // Create FormData for file uploads
       SVProgressHUD.show();
 
       var tokenId = prefs.getString('access_token');
 
-
       var headers = {'Authorization': 'Bearer $tokenId'};
-
 
       // Perform the POST request
       Response response = await _dio.patch(
@@ -219,7 +211,7 @@ class FashionCategoryRepository {
           const SnackBar(content: Text("OOPs something happened")),
         );
       }
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       print(e.response?.data);
       SVProgressHUD.dismiss();
       // ScaffoldMessenger.of(context).showSnackBar(
@@ -228,12 +220,13 @@ class FashionCategoryRepository {
       print("Error: $e");
     }
   }
-  Future<List<CategoryBySubCategoryModel>?> fashionpCategorybySubCategoryGet(int categoryId) async {
 
-    try{
+  Future<List<FashionSubCategoryModel>?> fashionpCategorybySubCategoryGet(
+      int categoryId) async {
+    try {
       SVProgressHUD.show();
-      final prefs=await SharedPreferences.getInstance();
-      var tokenId=prefs.getString('access_token');
+      final prefs = await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
       var headers = {
         'Authorization': 'Bearer $tokenId',
         "Content-Type": "application/json",
@@ -247,19 +240,16 @@ class FashionCategoryRepository {
         ),
       );
       if (response.statusCode == 200) {
-        List jsonList=response.data;
-        List<CategoryBySubCategoryModel>
-        jsonResponce=
-        jsonList.map((v)=>CategoryBySubCategoryModel.fromJson(v)).toList();
+        List jsonList = response.data;
+        List<FashionSubCategoryModel> jsonResponce =
+            jsonList.map((v) => FashionSubCategoryModel.fromJson(v)).toList();
         print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
         SVProgressHUD.dismiss();
         return jsonResponce;
-      }
-      else {
+      } else {
         print(response.statusMessage);
       }
-    }on DioException catch (e) {
-
+    } on DioException catch (e) {
       print("error ${e.response?.data}");
     }
   }
