@@ -39,7 +39,7 @@ class _FashionCategorybySubcategoryState
   @override
   void initState() {
     final categoryProvider =
-    Provider.of<CategoryViewModel>(context, listen: false);
+        Provider.of<CategoryViewModel>(context, listen: false);
     categoryProvider.getFoodCategorybySubCategories(
         categoryId: widget?.categoryId ?? 0);
     super.initState();
@@ -55,10 +55,7 @@ class _FashionCategorybySubcategoryState
     return Scaffold(
       backgroundColor: FbColors.backgroundcolor,
       appBar: AppBar(
-<<<<<<< HEAD
-=======
         scrolledUnderElevation: 0,
->>>>>>> 7317fe5cc4d2705ece17318cddd70f852b5e77be
         backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
@@ -68,9 +65,10 @@ class _FashionCategorybySubcategoryState
             Navigator.of(context).pop();
           },
         ),
-        title: Text(categoryProvider.selectsubCategories.isEmpty?
-        " Sub Categories":
-        categoryProvider.selectsubCategories.first.categoryName??'',
+        title: Text(
+          categoryProvider.selectsubCategories.isEmpty
+              ? " Sub Categories"
+              : categoryProvider.selectsubCategories.first.categoryName ?? '',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -125,36 +123,40 @@ class _FashionCategorybySubcategoryState
             ),
             categoryProvider.selectsubCategories.isNotEmpty
                 ? Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(5),
-                  gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 0.57,
-                      crossAxisSpacing: 14),
-                  itemCount: categoryProvider.selectsubCategories.length,
-                  itemBuilder: (context, index) {
-                    return subCategoryCard(
-                      height: screenWidth * 0.33,
-                      text: categoryProvider.selectsubCategories[index]?.name ??
-                          '',
-                      image: categoryProvider
-                          .selectsubCategories[index]?.subcategoryImage ??
-                          '',
-                      onTap: () {
-                        navigate(
-                          context: context,
-                          screen: ListProductsScreen(
-                             subCategorys: categoryProvider.selectsubCategories[index], subCategoriess: categoryProvider.selectsubCategories,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ))
+                    child: GridView.builder(
+                    padding: const EdgeInsets.all(5),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 0.57,
+                            crossAxisSpacing: 14),
+                    itemCount: categoryProvider.selectsubCategories.length,
+                    itemBuilder: (context, index) {
+                      return subCategoryCard(
+                        height: screenWidth * 0.33,
+                        text:
+                            categoryProvider.selectsubCategories[index]?.name ??
+                                '',
+                        image: categoryProvider
+                                .selectsubCategories[index]?.subcategoryImage ??
+                            '',
+                        onTap: () {
+                          navigate(
+                            context: context,
+                            screen: ListProductsScreen(
+                              subCategorys:
+                                  categoryProvider.selectsubCategories[index],
+                              subCategoriess:
+                                  categoryProvider.selectsubCategories,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ))
                 : const Center(
-              child: Text("Start adding your sub category now"),
-            ),
+                    child: Text("Start adding your sub category now"),
+                  ),
             if (widget.isOperable)
               Padding(
                 padding: EdgeInsets.symmetric(

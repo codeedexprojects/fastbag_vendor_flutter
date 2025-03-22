@@ -15,8 +15,7 @@ class SubCategoryEditList extends StatefulWidget {
   // final List<SubCategoryModel> subCategories;
   // final List<CategoryModel> categories;
   final int? categoryId;
-  const SubCategoryEditList(
-      {super.key,  this.categoryId});
+  const SubCategoryEditList({super.key, this.categoryId});
 
   @override
   State<SubCategoryEditList> createState() => _SubCategoryEditListState();
@@ -25,10 +24,13 @@ class SubCategoryEditList extends StatefulWidget {
 class _SubCategoryEditListState extends State<SubCategoryEditList> {
   @override
   void initState() {
-    final categoryProvider=Provider.of<CategoryViewModel>(context,listen: false);
-    categoryProvider.getFoodCategorybySubCategories(categoryId: widget?.categoryId??0);
+    final categoryProvider =
+        Provider.of<CategoryViewModel>(context, listen: false);
+    categoryProvider.getFoodCategorybySubCategories(
+        categoryId: widget?.categoryId ?? 0);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final categoryProvider = Provider.of<CategoryViewModel>(context);
@@ -37,12 +39,8 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: FbColors.backgroundcolor,
-<<<<<<< HEAD
-        title: Text(categoryProvider.selectsubCategories.isEmpty? "Edit Sub Categories"
-          :"${categoryProvider.selectsubCategories.first.categoryName??""} Edit Sub Categories",
-=======
-        title: Text("Edit Sub Categories",
->>>>>>> 7317fe5cc4d2705ece17318cddd70f852b5e77be
+        title: Text(
+          "Edit Sub Categories",
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -64,7 +62,8 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                         screen: EditSubCategoryScreen(
                           categories: categoryProvider.categories,
                           category: categoryProvider.categories[0],
-                          subCategory: categoryProvider.selectsubCategories[index],
+                          subCategory:
+                              categoryProvider.selectsubCategories[index],
                         ));
                   },
                   child: Container(
@@ -78,7 +77,9 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                             Colors.grey[200], // Optional: Background color
                         child: ClipOval(
                           child: Image.network(
-                            categoryProvider.selectsubCategories[index].subcategoryImage??'',
+                            categoryProvider.selectsubCategories[index]
+                                    .subcategoryImage ??
+                                '',
                             fit: BoxFit
                                 .cover, // Ensures the image fills the circle
                             width:
@@ -93,7 +94,9 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                           ),
                         ),
                       ),
-                      title: Text(categoryProvider.selectsubCategories[index].name??''),
+                      title: Text(
+                          categoryProvider.selectsubCategories[index].name ??
+                              ''),
                       trailing: const Icon(Icons.edit),
                     ),
                   ),
