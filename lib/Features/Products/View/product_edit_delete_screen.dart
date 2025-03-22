@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
@@ -6,6 +7,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/food_response.dar
 import 'package:fastbag_vendor_flutter/Features/Products/View/edit_product_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../fashion/view_model/fashionproduct_view_model.dart';
@@ -21,9 +23,13 @@ class ProductEditDeleteScreen extends StatelessWidget {
     final productProvider =
         Provider.of<FashionProductViewModel>(context, listen: false);
     return Scaffold(
+      backgroundColor: FbColors.backgroundcolor,
+
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: FbColors.backgroundcolor,
         title: Text(
-          "Edit Sub Categories",
+          "Edit Product Screen",
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -34,7 +40,23 @@ class ProductEditDeleteScreen extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: Consumer<ProductViewModel>(builder: (context, data, _) {
-          return ListView.builder(
+          return data.foodProducts.isEmpty ?
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/no_product.svg',
+                      width: screenWidth * .45, // Set desired width
+                      height:
+                      screenWidth * .3, // Set desired height
+                    ),
+                    Text('No Products'),
+                  ],
+                ),
+              )
+              :
+            ListView.builder(
               itemCount: data.foodProducts.length,
               itemBuilder: (context, index) {
                 return Padding(
