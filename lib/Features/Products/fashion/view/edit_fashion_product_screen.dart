@@ -1,277 +1,435 @@
 import 'dart:io';
-import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/category_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/product_edit_delete_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/fb_drop_down.dart';
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_products_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/product_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/color_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_sub_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/color_picker.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_categories.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_sub_categories.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashionproduct_view_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-import '../view_model/fashionproduct_view_model.dart';
+import '../model/fashion_item_model.dart' as fashion_model;
 
-class FashionEditProductScreen extends StatefulWidget {
-  final FoodItemModel product;
+class EditFashionProductScreen extends StatefulWidget {
+  final fashion_model.Results product;
+  final FashionCategoryModel category;
+  final FashionSubCategoryModel subCategory;
 
-  const FashionEditProductScreen({super.key, required this.product});
+  const EditFashionProductScreen(
+      {super.key,
+      required this.product,
+      required this.category,
+      required this.subCategory});
 
   @override
-  State<FashionEditProductScreen> createState() => _EditProductScreenState();
+  State<EditFashionProductScreen> createState() =>
+      _EditFashionProductScreenState();
 }
 
-class _EditProductScreenState extends State<FashionEditProductScreen> {
+class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
+  final _formKey = GlobalKey<FormState>();
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
   var priceController = TextEditingController();
-  var discountController = TextEditingController();
-  var wholeSaleController = TextEditingController();
-  var offerPriceController = TextEditingController();
-
-  List<File>? _selectedImages;
-  bool _inStock = false;
-  bool _isOffer = false;
-  bool _isPopular = false;
-  var _formKey = GlobalKey<FormState>();
-
-  // List of variants
-  List<Map<String, dynamic>> variantFields = [];
+  var wholeSalePriceController = TextEditingController();
+  var categoryController = TextEditingController();
+  var subcategoryController = TextEditingController();
+  var materialController = TextEditingController();
+  List<File> selectedImages = [];
+  String? selectedGender;
+  bool _inStock = true;
+  int? selectedCategoryId;
+  int? selectedSubCategoryId;
+  final List<Map<String, dynamic>> variants = [];
 
   @override
   void initState() {
     super.initState();
-
-    // Pre-fill the form with existing product data
-    nameController.text = widget.product.name;
-    descriptionController.text = widget.product.description;
-    priceController.text = widget.product.price.toString();
-    discountController.text = widget.product.discount.toString();
-    wholeSaleController.text = widget.product.wholesale_price.toString();
-    offerPriceController.text = widget.product.offer_price.toString();
-    _inStock = widget.product.is_available;
-    _isOffer = widget.product.is_offer_product;
-    _isPopular = widget.product.is_popular_product;
-
-    // Pre-fill variants
-    for (var variant in widget.product.variants) {
-      variantFields.add({
-        'nameController': TextEditingController(text: variant.keys.first),
-        'priceController':
-            TextEditingController(text: variant.values.first['price'].toString()),
-        'quantityController':
-            TextEditingController(text: variant.values.first['quantity'].toString()),
-        'stockStatus': variant.values.first['stock_status'],
-      });
-    }
+    _initializeForm();
   }
 
-  void _onFilePicked(List<File> files) {
-    setState(() {
-      _selectedImages = files;
-    });
+  void _initializeForm() {
+    final product = widget.product;
+
+    // Initialize basic fields
+    nameController.text = product.name ?? '';
+    descriptionController.text = product.description ?? '';
+    priceController.text = product.price.toString();
+    selectedGender = product.gender;
+    materialController.text = product.material ?? '';
+    _inStock = product.isActive ?? false;
+    wholeSalePriceController.text = product.wholesalePrice?.toString() ?? '';
+    selectedCategoryId = widget.category.id;
+    selectedSubCategoryId = widget.subCategory.id;
+
+    // Initialize variants
+    variants.addAll(product.colors!.map((color) {
+      return {
+        "color_name": TextEditingController(text: color.colorName),
+        "color_code": TextEditingController(text: color.colorCode),
+        "sizes": color.sizes!.map((size) {
+          return {
+            "selectedSize": size.size,
+            "price": TextEditingController(text: size.price.toString()),
+            "stock": TextEditingController(text: size.stock.toString()),
+            "offer_price":
+                TextEditingController(text: size.offerPrice.toString()),
+          };
+        }).toList(),
+      };
+    }));
   }
 
-  // Function to update product details
-  void updateProduct() {
-    var productProvider = Provider.of<FashionProductViewModel>(context, listen: false);
+  void submitVariants() async {
+    final productProvider =
+        Provider.of<FashionProductViewModel>(context, listen: false);
+
+    final formattedData = variants.map((variant) {
+      return {
+        "color_name": variant["color_name"].text,
+        "color_code": variant["color_code"].text,
+        "sizes": variant["sizes"]
+            .map((size) => {
+                  "size": size["selectedSize"],
+                  "price": double.parse(size["price"].text),
+                  "stock": int.parse(size["stock"].text),
+                  "offer_price": double.parse(size["offer_price"].text),
+                })
+            .toList(),
+      };
+    }).toList();
+
+    final data = {
+      "name": nameController.text,
+      "description": descriptionController.text,
+      "gender": selectedGender,
+      "price": double.parse(priceController.text),
+      "colors": formattedData,
+      "material": materialController.text,
+      "is_active": _inStock,
+      "wholesale_price": wholeSalePriceController.text.isNotEmpty
+          ? double.tryParse(wholeSalePriceController.text)
+          : null,
+    };
+
+    final imageData = {
+      "image_files": await Future.wait(
+        selectedImages
+            .map((file) async => await MultipartFile.fromFile(file.path)),
+      ),
+    };
+
     if (_formKey.currentState!.validate()) {
-      List<Map<String, dynamic>> updatedVariants = [];
-      for (var variant in variantFields) {
-        String name = variant['nameController'].text.trim();
-        String price = variant['priceController'].text.trim();
-        String quantity = variant['quantityController'].text.trim();
-        String stockStatus = variant['stockStatus'];
-
-        if (name.isNotEmpty && price.isNotEmpty && quantity.isNotEmpty) {
-          updatedVariants.add({
-            name: {
-              "price": double.parse(price),
-              "quantity": int.parse(quantity),
-              "stock_status": stockStatus,
-            }
-          });
-        }
-      }
-
-      FoodItemModel updatedModel = FoodItemModel(
-        id: widget.product.id, // Ensure product ID is retained
-        vendor: widget.product.vendor,
-        category: widget.product.category,
-        subcategory: widget.product.subcategory,
-        name: nameController.text.trim(),
-        description: descriptionController.text.trim(),
-        price: priceController.text.trim(),
-        offer_price: offerPriceController.text.trim(),
-        discount: discountController.text.trim(),
-        is_available: _inStock,
-        image_urls: _selectedImages != null
-            ? _selectedImages!.map((file) => file.path).toList()
-            : widget.product.image_urls,
-        is_popular_product: _isPopular,
-        is_offer_product: _isOffer,
-        wholesale_price: wholeSaleController.text.trim(),
-        variants: updatedVariants,
-      );
-
-      productProvider.editFoodItem(context: context, product: updatedModel).then((res){
-        //navigate(context: context, screen: const ListCategoryScreen());
-      });
+      // productProvider.updateProduct(
+      //   context: context,
+      //   productId: widget.product.id,
+      //   data: data,
+      //   imageData: selectedImages.isNotEmpty ? imageData : null,
+      // );
     }
-  }
-
-  // Function to add a new variant field
-  void addVariant() {
-    setState(() {
-      variantFields.add({
-        'nameController': TextEditingController(),
-        'priceController': TextEditingController(),
-        'quantityController': TextEditingController(),
-        'stockStatus': 'in stock', // Default value
-      });
-    });
-  }
-
-  // Function to remove a variant field
-  void removeVariant(int index) {
-    setState(() {
-      variantFields.removeAt(index);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final productProvider = Provider.of<FashionProductViewModel>(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: const Text("Edit Product"),
+        scrolledUnderElevation: 0,
+        backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
+        title: Text(
+          'Edit Fashion Product',
+          style: poppins(
+            fontSize: 19,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: screenWidth / 17),
+        child: Form(
+          key: _formKey,
           child: Column(
             children: [
               FbCategoryFormField(
-                label: "Product Name",
+                label: 'Product Name',
                 controller: nameController,
                 validator: customValidatornoSpaceError,
               ),
               FbCategoryFormField(
-                label: "Description",
+                label: 'Description',
                 controller: descriptionController,
                 validator: customValidatornoSpaceError,
               ),
+              FbCustomDropdown(
+                hintText: 'Select Gender',
+                value: selectedGender,
+                items: const ['M', 'W', 'K', 'U'],
+                onChanged: (value) => setState(() => selectedGender = value),
+              ),
               FbProductsFilePicker(
-                fileCategory: "Product",
-                onFilesPicked: _onFilePicked,
+                fileCategory: 'Product',
+                onFilesPicked: (files) =>
+                    setState(() => selectedImages = files),
               ),
-              FbCategoryFormField(
-                keyboard: TextInputType.number,
-                label: "Product Price",
-                controller: priceController,
-                validator: customValidatornoSpaceError,
-              ),
-              FbCategoryFormField(
-                keyboard: TextInputType.number,
-                label: "Discount Price",
-                controller: discountController,
-                validator: customValidatornoSpaceError,
-              ),
-              FbCategoryFormField(
-                keyboard: TextInputType.number,
-                label: "Wholesale Price",
-                controller: wholeSaleController,
-                validator: customValidatornoSpaceError,
-              ),
-              FbCategoryFormField(
-                keyboard: TextInputType.number,
-                label: "Offer Price",
-                controller: offerPriceController,
-                validator: customValidatornoSpaceError,
-              ),
-
-              // Toggle Switches
-              const SizedBox(height: 20),
-              FbToggleSwitch(
-                title: 'Mark Product in Stock',
-                initialValue: _inStock,
-                onToggleChanged: (value) {
-                  setState(() {
-                    _inStock = value;
-                  });
-                },
-              ),
-              FbToggleSwitch(
-                title: 'Is Offer Available',
-                initialValue: _isOffer,
-                onToggleChanged: (value) {
-                  setState(() {
-                    _isOffer = value;
-                  });
-                },
-              ),
-              FbToggleSwitch(
-                title: 'Is Popular Product',
-                initialValue: _isPopular,
-                onToggleChanged: (value) {
-                  setState(() {
-                    _isPopular = value;
-                  });
-                },
-              ),
-
-              // Dynamic Variant Fields
-              const SizedBox(height: 20),
-              Column(
-                children: List.generate(variantFields.length, (index) {
-                  return Card(
-                    elevation: 2,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: variantFields[index]['nameController'],
-                            decoration:
-                                const InputDecoration(labelText: "Variant Name"),
-                          ),
-                          TextFormField(
-                            controller: variantFields[index]['priceController'],
-                            decoration: const InputDecoration(labelText: "Price"),
-                            keyboardType: TextInputType.number,
-                          ),
-                          TextFormField(
-                            controller: variantFields[index]['quantityController'],
-                            decoration: const InputDecoration(labelText: "Quantity"),
-                            keyboardType: TextInputType.number,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () => removeVariant(index),
-                              child: const Text("Remove",
-                                  style: TextStyle(color: Colors.red)),
+              Row(
+                children: [
+                  Expanded(
+                    child: FbCategoryFormField(
+                      readOnly: true,
+                      onTap: () async {
+                        final category =
+                            await Navigator.push<CategoryRequestModel>(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ListCategoriesName()),
+                        );
+                        if (category != null) {
+                          setState(() {
+                            selectedCategoryId = category.id;
+                            categoryController.text = category.name!;
+                            subcategoryController.text = '';
+                            selectedSubCategoryId = null;
+                          });
+                        }
+                      },
+                      label: 'Category',
+                      controller: categoryController,
+                      validator: customValidatornoSpaceError,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: FbCategoryFormField(
+                      readOnly: true,
+                      onTap: () async {
+                        final subCategory =
+                            await Navigator.push<CategoryRequestModel>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ListSubcategoriesName(
+                              subcategoryId: selectedCategoryId,
                             ),
                           ),
-                        ],
-                      ),
+                        );
+                        if (subCategory != null) {
+                          setState(() {
+                            selectedSubCategoryId = subCategory.id;
+                            subcategoryController.text = subCategory.name!;
+                          });
+                        }
+                      },
+                      label: 'Sub Category',
+                      controller: subcategoryController,
+                      validator: customValidatornoSpaceError,
                     ),
-                  );
-                }),
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 20),
-              FbButton(
-                onClick: updateProduct,
-                label: "Update Product",
+              FbCategoryFormField(
+                label: 'Price',
+                controller: priceController,
+                keyboard: TextInputType.number,
+                validator: customValidatornoSpaceError,
+              ),
+              FbCategoryFormField(
+                label: 'Material',
+                controller: materialController,
+                validator: customValidatornoSpaceError,
+              ),
+              FbCategoryFormField(
+                label: 'Wholesale Price',
+                controller: wholeSalePriceController,
+                keyboard: TextInputType.number,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text('Variant Section',
+                        style:
+                            nunito(fontSize: 17, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+              for (int i = 0; i < variants.length; i++)
+                _buildVariantSection(i, productProvider),
+              GestureDetector(
+                onTap: () => setState(() => variants.add({
+                      "color_name": TextEditingController(),
+                      "color_code": TextEditingController(),
+                      "sizes": []
+                    })),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Add Variant', style: TextStyle(color: Colors.blue)),
+                      Icon(Icons.add, color: Colors.blue, size: 18),
+                    ],
+                  ),
+                ),
+              ),
+              FbToggleSwitch(
+                title: 'Mark Product in stock',
+                initialValue: _inStock,
+                onToggleChanged: (value) => setState(() => _inStock = value),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: FbButton(
+                  onClick: submitVariants,
+                  label: 'Update Product',
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildVariantSection(int index, FashionProductViewModel provider) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: FbCategoryFormField(
+                label: 'Color Name',
+                controller: variants[index]["color_name"],
+                onTap: () async => _onColorTap(provider, index),
+              ),
+            ),
+            if (provider.colorPicker?.colorCode != null) ...[
+              const SizedBox(width: 10),
+              Expanded(
+                child: FbCategoryFormField(
+                  label: 'Color Code',
+                  controller: variants[index]["color_code"],
+                ),
+              )
+            ]
+          ],
+        ),
+        for (int j = 0; j < variants[index]["sizes"].length; j++)
+          _buildSizeRow(index, j),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () => setState(() => variants[index]["sizes"].add({
+                    "selectedSize": null,
+                    "price": TextEditingController(),
+                    "stock": TextEditingController(),
+                    "offer_price": TextEditingController(),
+                  })),
+              child: const Text('+ Add Size',
+                  style: TextStyle(color: Colors.blue)),
+            ),
+            TextButton(
+              onPressed: () => setState(() => variants.removeAt(index)),
+              child: const Text('Remove Variant',
+                  style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSizeRow(int variantIndex, int sizeIndex) {
+    final sizes = variants[variantIndex]["sizes"];
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: FbCustomDropdown(
+                        value: sizes[sizeIndex]["selectedSize"],
+                        items: const ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+                        hintText: "Size",
+                        onChanged: (value) => setState(
+                            () => sizes[sizeIndex]["selectedSize"] = value),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: FbCategoryFormField(
+                        label: 'Price',
+                        controller: sizes[sizeIndex]["price"],
+                        keyboard: TextInputType.number,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FbCategoryFormField(
+                        label: 'Stock',
+                        controller: sizes[sizeIndex]["stock"],
+                        keyboard: TextInputType.number,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: FbCategoryFormField(
+                        label: 'Offer Price',
+                        controller: sizes[sizeIndex]["offer_price"],
+                        keyboard: TextInputType.number,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () => setState(() => sizes.removeAt(sizeIndex)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onColorTap(FashionProductViewModel provider, int index) async {
+    provider.colorPicker = await Navigator.push<ColorPickerModel>(
+      context,
+      MaterialPageRoute(builder: (_) => ColorPickerScreen()),
+    );
+    if (provider.colorPicker != null) {
+      setState(() {
+        variants[index]["color_name"].text = provider.colorPicker!.colorName;
+        variants[index]["color_code"].text = provider.colorPicker!.colorCode;
+      });
+    }
   }
 }

@@ -3,6 +3,9 @@ import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/edit_fashion_product_screen.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/product_edit_delete_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/product_fashion_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,14 +18,13 @@ import '../view_model/fashionproduct_view_model.dart';
 import 'add_fashion_product.dart';
 
 class FashionListProductsScreen extends StatefulWidget {
-  final CategoryBySubCategoryModel? subCategory;
-
-  final List<CategoryBySubCategoryModel?> subCategories;
+  final FashionSubCategoryModel subCategory;
+  final FashionCategoryModel category;
 
   const FashionListProductsScreen({
     super.key,
     required this.subCategory,
-    required this.subCategories,
+    required this.category,
   });
 
   @override
@@ -38,7 +40,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
     final productProvider =
         Provider.of<FashionProductViewModel>(context, listen: false);
     productProvider.getFashionProductCategories(
-        subCategoryId: widget.subCategory?.id ?? 0);
+        subCategoryId: widget.subCategory.id ?? 0);
   }
 
   @override
@@ -146,34 +148,40 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                           .fashionProducts[index]?.name ??
                                       ''),
                                   subtitle: Text(productProvider
-                                          .fashionProducts[index]?.wholesalePrice ??
+                                          .fashionProducts[index]
+                                          ?.wholesalePrice ??
                                       ''),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Switch(
+                                        value: productProvider
+                                                .fashionProducts[index]
+                                                .isActive ??
+                                            false,
                                         activeColor: Colors.green,
                                         inactiveThumbColor: Colors.white,
+                                        inactiveTrackColor: Colors.grey[300],
+                                        trackOutlineColor:
+                                            const WidgetStatePropertyAll(
+                                                Colors.transparent),
                                         materialTapTargetSize:
                                             MaterialTapTargetSize.shrinkWrap,
-                                        value: false,
                                         onChanged: (value) {
-                                          // Handle switch toggle logic
+                                          productProvider.enableDisdableProduct(
+                                              context: context,
+                                              productId: productProvider
+                                                      .fashionProducts[index]
+                                                      .id ??
+                                                  0,
+                                              isActive: !(productProvider
+                                                      .fashionProducts[index]
+                                                      .isActive ??
+                                                  false));
                                         },
                                       ),
                                     ],
                                   ),
-                                  // trailing: Switch(
-                                  //             activeColor: Colors.green,
-                                  //             inactiveThumbColor: Colors.white,
-                                  //             materialTapTargetSize:
-                                  //                 MaterialTapTargetSize
-                                  //                     .shrinkWrap,
-                                  //             value: false,
-                                  //             onChanged: (value) {
-                                  //               // Handle switch toggle logic
-                                  //             },
-                                  //           ),
                                 ),
                               ),
                             ],
@@ -201,19 +209,20 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                   horizontal: screenWidth / 15, vertical: 5),
               child: FbButton(
                 onClick: () {
-                  // navigate(
-                  //     context: context,
-                  //     screen: ProductEditDeleteScreen(
-                  //         products: productProvider.foodProducts));
+                  navigate(
+                      context: context,
+                      screen: ProductEditDeleteScreen(
+                          category: widget.category,
+                          subCategory: widget.subCategory));
                 },
-                label: "Export",
+                label: "Edit",
                 icon: const FaIcon(
-                  FontAwesomeIcons.arrowUpFromBracket,
+                  FontAwesomeIcons.penToSquare,
                   size: 17,
                 ),
                 color: Colors.white,
-                textColor: Colors.green,
-                borderColor: Colors.green,
+                textColor: Colors.blue,
+                borderColor: Colors.blue,
               ),
             ),
             SizedBox(height: screenHeight * .02),

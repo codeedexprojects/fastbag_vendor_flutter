@@ -18,14 +18,14 @@ import 'edit_fashion_sub_category_screen.dart';
 import 'list_fashion_products_screen.dart';
 
 class FashionCategorybySubcategory extends StatefulWidget {
-  final int? categoryId;
+  final FashionCategoryModel category;
 
   final bool isOperable;
 
   FashionCategorybySubcategory({
     super.key,
     required this.isOperable,
-    required this.categoryId,
+    required this.category,
     // this.selectSubCategory
   });
 
@@ -41,7 +41,7 @@ class _FashionCategorybySubcategoryState
     final categoryProvider =
         Provider.of<FashionCategoryViewModel>(context, listen: false);
     categoryProvider.getFashionCategorybySubCategories(
-        categoryId: widget?.categoryId ?? 0);
+        categoryId: widget?.category.id ?? 0);
     super.initState();
   }
 
@@ -68,7 +68,7 @@ class _FashionCategorybySubcategoryState
         title: Text(
           categoryProvider.selectsubCategory.isEmpty
               ? " Sub Categories"
-              : categoryProvider.selectsubCategory.first.categoryName ?? '',
+              : categoryProvider.selectsubCategory.first.name ?? '',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -143,9 +143,9 @@ class _FashionCategorybySubcategoryState
                           navigate(
                             context: context,
                             screen: FashionListProductsScreen(
+                              category: widget.category,
                               subCategory:
                                   categoryProvider.selectsubCategory[index],
-                              subCategories: categoryProvider.selectsubCategory,
                             ),
                           );
                         },
@@ -179,7 +179,7 @@ class _FashionCategorybySubcategoryState
                     navigate(
                         context: context,
                         screen: FashionSubCategoryEditList(
-                          categoryId: widget.categoryId,
+                          categoryId: widget.category.id,
                         ));
                   },
                   icon: const FaIcon(

@@ -2,7 +2,6 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_mode
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/Repository/grocery_category_repository.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/grocery/model/grocery_catgeory_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 
 class GroceryCategoryViewModel extends ChangeNotifier {
   final GroceryCtegoryRepository _groceryRepository = GroceryCtegoryRepository();

@@ -12,33 +12,27 @@ class ColorPickerScreen extends StatefulWidget {
 }
 
 class _ColorPickerScreenState extends State<ColorPickerScreen> {
-  Color selectedColor = Colors.blue;
+  ValueNotifier<Color> selectedColor = ValueNotifier<Color>(Colors.blue);
   String colorHex = "#0000FF";
   String colorName = "Blue";
 
   // Fetch color name from API
   Future<void> fetchColorName(String hex) async {
     final url =
-    Uri.parse("https://www.thecolorapi.com/id?hex=${hex.substring(1)}");
+        Uri.parse("https://www.thecolorapi.com/id?hex=${hex.substring(1)}");
     try {
       final response = await http.get(url);
-      if (!mounted) return; // 🔴 Prevent setState() if widget is disposed
+      if (!mounted) return;
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        setState(() {
-          colorName = data["name"]["value"] ?? "NA";
-        });
+        colorName = data["name"]["value"] ?? "NA";
       } else {
-        setState(() {
-          colorName = "Unknown";
-        });
+        colorName = "Unknown";
       }
     } catch (e) {
       if (!mounted) return;
-      setState(() {
-        colorName = "Unknown";
-      });
+      colorName = "Unknown";
     }
   }
 
@@ -57,22 +51,28 @@ class _ColorPickerScreenState extends State<ColorPickerScreen> {
         child: Column(
           children: [
             const SizedBox(height: 50),
-            ColorPicker(
-              pickerColor: selectedColor,
-              onColorChanged: (color) {
-                setState(() {
-                  selectedColor = color;
-                  colorHex =
-                  '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
-                });
-                fetchColorName(colorHex); // ✅ API call after color change
+            ValueListenableBuilder<Color>(
+              valueListenable: selectedColor,
+              builder: (context, color, _) {
+                return ColorPicker(
+                  paletteType: PaletteType.hueWheel,
+                  pickerColor: color,
+                  onColorChanged: (newColor) {
+                    selectedColor.value =
+                        newColor; // ✅ More efficient than setState()
+                    colorHex =
+                        '#${newColor.value.toRadixString(16).substring(2).toUpperCase()}';
+                  },
+                  showLabel: false,
+                  enableAlpha: false,
+                );
               },
-              showLabel: false,
-              enableAlpha: false,
             ),
             const SizedBox(height: 20),
             FbButton(
-              onClick: () {
+              onClick: () async {
+                await fetchColorName(colorHex);
+                if (!mounted) return;
                 Navigator.pop(
                   context,
                   ColorPickerModel(
@@ -82,10 +82,16 @@ class _ColorPickerScreenState extends State<ColorPickerScreen> {
                 );
               },
               label: "Pick",
-            )
+            ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    selectedColor.dispose();
+    super.dispose();
   }
 }

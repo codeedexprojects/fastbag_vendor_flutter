@@ -1,4 +1,5 @@
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
+import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:flutter/material.dart';
 
 class SelectField extends StatefulWidget {
@@ -39,18 +40,15 @@ class _SelectFieldState extends State<SelectField> {
           color: Color.fromRGBO(26, 26, 26, 1)),
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderSide:
-              const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+          borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
           borderRadius: BorderRadius.circular(0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide:
-              const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+          borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
           borderRadius: BorderRadius.circular(0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide:
-              const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
+          borderSide: const BorderSide(color: Color.fromRGBO(240, 240, 240, 1)),
           borderRadius: BorderRadius.circular(0),
         ),
         hintText: widget.label,
@@ -61,6 +59,7 @@ class _SelectFieldState extends State<SelectField> {
         ),
       ),
       value: selectedValue,
+      validator: customValidatornoSpaceError,
       items: widget.items.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
