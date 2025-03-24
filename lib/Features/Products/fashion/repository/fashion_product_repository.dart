@@ -7,7 +7,6 @@ import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.d
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_detail_class.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_item_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -342,9 +341,8 @@ class FashionProductRepository {
 
   deleteProductImage(imageId) async {
     try {
-      final tokenId =
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MTQ2NjA4LCJpYXQiOjE3Mzc2MTA2MDgsImp0aSI6IjcyNWYyNzhhYmE5MjQyOTU5OTNhOWYzNmQ4M2VhNGE5IiwidXNlcl9pZCI6MX0.cQvNtygE7CC7Vvcsyxpzr3YdeiVSIbKMw4ZMZuGw9nQ';
-      // await StoreManager().getAccessToken();
+      final tokenId = await StoreManager().getAccessToken();
+      print(tokenId);
       var headers = {'Authorization': 'Bearer $tokenId'};
 
       Response response = await _dio.delete(
