@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
@@ -17,7 +16,6 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/lis
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_sub_categories.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashionproduct_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../model/fashion_item_model.dart' as fashion_model;
@@ -71,6 +69,8 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
     materialController.text = product.material ?? '';
     _inStock = product.isActive ?? false;
     wholeSalePriceController.text = product.wholesalePrice?.toString() ?? '';
+    categoryController.text = widget.category.name ?? '';
+    subcategoryController.text = widget.subCategory.name ?? '';
     selectedCategoryId = widget.category.id;
     selectedSubCategoryId = widget.subCategory.id;
 
@@ -116,6 +116,8 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
       "description": descriptionController.text,
       "gender": selectedGender,
       "price": double.parse(priceController.text),
+      "category_id": selectedCategoryId,
+      "subcategory_id": selectedSubCategoryId,
       "colors": formattedData,
       "material": materialController.text,
       "is_active": _inStock,
@@ -130,14 +132,14 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
             .map((file) async => await MultipartFile.fromFile(file.path)),
       ),
     };
-
+    print(formattedData);
     if (_formKey.currentState!.validate()) {
-      // productProvider.updateProduct(
-      //   context: context,
-      //   productId: widget.product.id,
-      //   data: data,
-      //   imageData: selectedImages.isNotEmpty ? imageData : null,
-      // );
+      productProvider.editProduct(
+        context: context,
+        productId: widget.product.id,
+        data: data,
+        imageData: selectedImages.isNotEmpty ? imageData : null,
+      );
     }
   }
 
@@ -187,6 +189,13 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                 onChanged: (value) => setState(() => selectedGender = value),
               ),
               FbProductsFilePicker(
+                images: widget.product.images ?? [],
+                onImageRemove: (index) => setState(() {
+                  productProvider.deleteProductImage(
+                      context: context,
+                      productId: widget.product.id!,
+                      imageId: widget.product.images![index].id!);
+                }),
                 fileCategory: 'Product',
                 onFilesPicked: (files) =>
                     setState(() => selectedImages = files),
@@ -201,7 +210,7 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                             await Navigator.push<CategoryRequestModel>(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => ListCategoriesName()),
+                              builder: (_) => const ListCategoriesName()),
                         );
                         if (category != null) {
                           setState(() {
@@ -279,7 +288,7 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                       "color_code": TextEditingController(),
                       "sizes": []
                     })),
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -339,7 +348,7 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
           children: [
             TextButton(
               onPressed: () => setState(() => variants[index]["sizes"].add({
-                    "selectedSize": null,
+                    "selectedSize": '',
                     "price": TextEditingController(),
                     "stock": TextEditingController(),
                     "offer_price": TextEditingController(),
@@ -372,7 +381,9 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                   children: [
                     Expanded(
                       child: FbCustomDropdown(
-                        value: sizes[sizeIndex]["selectedSize"],
+                        value: sizes[sizeIndex]["selectedSize"].isEmpty
+                            ? null
+                            : sizes[sizeIndex]["selectedSize"],
                         items: const ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
                         hintText: "Size",
                         onChanged: (value) => setState(

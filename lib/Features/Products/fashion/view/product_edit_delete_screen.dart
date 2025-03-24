@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
+import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/edit_fashion_product_screen.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_category_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashionproduct_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,16 +38,17 @@ class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     final fashionProductViewModel =
         Provider.of<FashionProductViewModel>(context);
     //final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           fashionProductViewModel.fashionProducts.isEmpty
-              ? "Edit Products"
-              : 'Edit ${fashionProductViewModel.fashionProducts.first.category} SubCategories',
+              ? "Edit Sub Category Products"
+              : 'Edit ${fashionProductViewModel.fashionProducts.first.category} Products',
           style: mainFont(
               fontsize: screenWidth * 0.04,
               fontweight: FontWeight.w500,
@@ -77,28 +79,27 @@ class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 0.5)),
                     child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 32,
-                        backgroundColor:
-                            Colors.grey[200], // Optional: Background color
-                        child: ClipOval(
-                          child: Image.network(
-                            fashionProductViewModel
-                                .fashionProducts[index].images!.first.image
-                                .toString(),
-                            fit: BoxFit
-                                .cover, // Ensures the image fills the circle
-                            width:
-                                64, // Diameter of the CircleAvatar (radius * 2)
-                            height:
-                                64, // Diameter of the CircleAvatar (radius * 2)
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error,
-                                  color: Colors
-                                      .red); // Optional: Handle loading errors
-                            },
-                          ),
-                        ),
+                      leading: Container(
+                        height: screenHeight * .05,
+                        width: screenHeight * .06,
+                        child: (fashionProductViewModel
+                                        .fashionProducts[index].images !=
+                                    null &&
+                                fashionProductViewModel
+                                    .fashionProducts[index].images!.isNotEmpty)
+                            ? CachedNetworkImage(
+                                imageUrl: fashionProductViewModel
+                                        .fashionProducts[index]
+                                        .images?[0]
+                                        .imageUrl ??
+                                    '',
+                                placeholder: (context, url) => Image.asset(
+                                    PlaceholderImage.placeholderimage),
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              )
+                            : Image.asset(PlaceholderImage.placeholderimage),
                       ),
                       title: Text(fashionProductViewModel
                           .fashionProducts[index].name

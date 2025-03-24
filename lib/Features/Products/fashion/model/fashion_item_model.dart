@@ -33,8 +33,12 @@ class FashionItemModel {
 class Results {
   int? id;
   int? vendor;
+  int? categoryId;
+  int? subcategoryId;
+
   String? category;
   String? subcategory;
+
   String? name;
   String? description;
   String? gender;
@@ -52,27 +56,31 @@ class Results {
 
   Results(
       {this.id,
-        this.vendor,
-        this.category,
-        this.subcategory,
-        this.name,
-        this.description,
-        this.gender,
-        this.price,
-        this.discount,
-        this.offerPrice,
-        this.wholesalePrice,
-        this.totalStock,
-        this.colors,
-        this.material,
-        this.images,
-        this.isActive,
-        this.createdAt,
-        this.updatedAt});
+      this.vendor,
+      this.categoryId,
+      this.subcategoryId,
+      this.category,
+      this.subcategory,
+      this.name,
+      this.description,
+      this.gender,
+      this.price,
+      this.discount,
+      this.offerPrice,
+      this.wholesalePrice,
+      this.totalStock,
+      this.colors,
+      this.material,
+      this.images,
+      this.isActive,
+      this.createdAt,
+      this.updatedAt});
 
   Results.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     vendor = json['vendor'];
+    categoryId = json['categoryid'];
+    subcategoryId = json['subcategoryid'];
     category = json['category'];
     subcategory = json['subcategory'];
     name = json['name'];
@@ -105,6 +113,8 @@ class Results {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['vendor'] = this.vendor;
+    data['categoryid'] = this.categoryId;
+    data['subcategoryid'] = this.subcategoryId;
     data['category'] = this.category;
     data['subcategory'] = this.subcategory;
     data['name'] = this.name;

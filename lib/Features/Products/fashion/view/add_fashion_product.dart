@@ -58,6 +58,8 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    selectedCategoryId = widget.category.id;
+    selectedSubCategoryId = widget.subCategory.id;
     categoryController.text = widget.category.name ?? '';
     subcategoryController.text = widget.subCategory.name ?? '';
   }
@@ -90,7 +92,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       variants[variantIndex]["sizes"] ??= [];
 
       variants[variantIndex]["sizes"].add({
-        "selectedSize": null,
+        "selectedSize": '',
         "price": TextEditingController(),
         "stock": TextEditingController(),
         "offer_price": TextEditingController(),
@@ -109,17 +111,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       variants[variantIndex]["sizes"].removeAt(sizeIndex);
     });
   }
-
-  // Future<void> pickImage(int index) async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.gallery);
-  //
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       variants[index]["color_image"] = File(pickedFile.path);
-  //     });
-  //   }
-  // }
 
   void submitVariants() async {
     final productProvider =
@@ -239,15 +230,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                   });
                 },
               ),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(
-              //       horizontal: screenWidth * .07,
-              //       vertical: screenHeight * .01),
-              //   child: SelectField(
-              //       label: 'Select Gender',
-              //       controller: TextEditingController(),
-              //       items: const ['M', 'W', 'K', 'U']),
-              // ),
+            
               FbProductsFilePicker(
                   fileCategory: 'Product',
                   onFilesPicked: (List<File> files) {
@@ -265,7 +248,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                             (await Navigator.push<CategoryRequestModel>(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => ListCategoriesName())));
+                                    builder: (_) => const ListCategoriesName())));
                         selectedCategoryId =
                             productProvider.categoryRequestModel?.id;
                         categoryController.text =
@@ -462,14 +445,18 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                   children: [
                     Expanded(
                       child: FbCustomDropdown(
-                        value: sizes[sizeIndex]["selectedSize"],
+                        value: sizes[sizeIndex]["selectedSize"].isEmpty
+                            ? null
+                            : sizes[sizeIndex]["selectedSize"],
                         items: const ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
                         hintText: "Size",
-                        onChanged: (newValue) {
+                        onChanged: (String? newValue) {
+                          print('------------->$newValue');
                           setState(() {
                             sizes[sizeIndex]["selectedSize"] = newValue;
-                            print(newValue);
                           });
+                          print(
+                              '------------------------->${sizes[sizeIndex]["selectedSize"]}');
                         },
                       ),
                     ),
