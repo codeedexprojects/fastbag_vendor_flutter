@@ -1,4 +1,5 @@
 import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
+import 'package:fastbag_vendor_flutter/Commons/localvariables.dart';
 import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -184,7 +185,7 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                     ),
                     //  category  List  Horzontal
                     SizedBox(
-                      height: screenHeight * .17,
+                      height: screenHeight * .2,
                       child: Consumer<FashionCategoryViewModel>(
                         builder: (context, data, _) {
                           return GridView.builder(
@@ -289,18 +290,20 @@ class _FashionCategoryScreenState extends State<FashionCategoryScreen> {
                   ],
                 ))
               else
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: filteredList.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(filteredList[index].name),
-                      onTap: () {
-                        searchController.text = filteredList[index].name;
-                        _onSubmitted(filteredList[index]);
-                      },
-                    );
-                  },
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: filteredList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(filteredList[index].name),
+                        onTap: () {
+                          searchController.text = filteredList[index].name;
+                          _onSubmitted(filteredList[index]);
+                        },
+                      );
+                    },
+                  ),
                 ),
             ],
           ),

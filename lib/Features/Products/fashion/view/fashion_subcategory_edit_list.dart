@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
@@ -42,11 +43,12 @@ class _FashionSubCategoryEditListState
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         title: Text(categoryProvider.selectsubCategory.isEmpty?
           "Edit Sub Categories"
           :'${categoryProvider.selectsubCategory.first.categoryName??''} Edit SubCategories',
           style: mainFont(
-              fontsize: screenWidth * 0.04,
+              fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
               color: Colors.black),
         ),

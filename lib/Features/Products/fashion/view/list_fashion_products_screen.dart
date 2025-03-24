@@ -77,7 +77,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                           height: screenHeight * .6,
                           child: Center(
                               child: SizedBox(
-                            height: screenWidth * .45,
+                            height: screenWidth * .5,
                             width: screenWidth * .5,
                             child: Column(
                               children: [
