@@ -290,6 +290,32 @@ class FashionProductRepository {
     }
   }
 
+  // edit product
+
+  editProduct(productId, data) async {
+    try {
+      final tokenId = await StoreManager().getAccessToken();
+      var headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer $tokenId'
+      };
+      Response response = await _dio.patch(
+        '${baseUrl}fashion/clothing/details/$productId/',
+        options: Options(
+          headers: headers,
+        ),
+        data: jsonEncode(data),
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      print("Error: ${e.response}");
+      final errorMessage = 'Product Unable to edit';
+    } catch (e) {
+      print("erro $e");
+    }
+  }
+
 // delete peoduct
   deleteProduct(productId) async {
     try {
@@ -304,12 +330,35 @@ class FashionProductRepository {
       );
       print(response.data);
       return response.data;
-
     } on DioException catch (e) {
       print("Error: ${e.response}");
       final errorMessage = 'Product Unable to delete';
     } catch (e) {
       print("erro $e");
-    } 
+    }
+  }
+
+  // Delete Product Image
+
+  deleteProductImage(imageId) async {
+    try {
+      final tokenId =
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MTQ2NjA4LCJpYXQiOjE3Mzc2MTA2MDgsImp0aSI6IjcyNWYyNzhhYmE5MjQyOTU5OTNhOWYzNmQ4M2VhNGE5IiwidXNlcl9pZCI6MX0.cQvNtygE7CC7Vvcsyxpzr3YdeiVSIbKMw4ZMZuGw9nQ';
+      // await StoreManager().getAccessToken();
+      var headers = {'Authorization': 'Bearer $tokenId'};
+
+      Response response = await _dio.delete(
+        '${baseUrl}fashion/clothing/images/${imageId}/delete/',
+        options: Options(
+          headers: headers,
+        ),
+      );
+      return response;
+    } on DioException catch (e) {
+      print("Error: ${e.response}");
+      final errorMessage = 'Unable to delete Image';
+    } catch (e) {
+      print("erro $e");
+    }
   }
 }

@@ -1,16 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/addproduct_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/color_picker.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/add_fashion_product.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_category_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
-import 'package:provider/provider.dart';
 
 import '../model/fashion_item_model.dart';
 import '../repository/fashion_product_repository.dart';
@@ -65,7 +60,7 @@ class FashionProductViewModel extends ChangeNotifier {
     } catch (e) {
       showFlushbar(
           context: context,
-          color: Color(0xffFF5252),
+          color: const Color(0xffFF5252),
           icon: Icons.error_outline,
           message: 'Product Adding Failed');
     } finally {
@@ -120,6 +115,39 @@ class FashionProductViewModel extends ChangeNotifier {
     }
   }
 
+  editProduct(
+      {required context, required productId, required data, imageData}) async {
+    try {
+      final response = await _productRepository.editProduct(productId, data);
+      final index = fashionProducts.indexOf(
+          fashionProducts.firstWhere((element) => element.id == productId));
+      if (fashionProducts[index].categoryId != response['categoryid'] ||
+          fashionProducts[index].subcategoryId != response['subcategoryid']) {
+        fashionProducts.removeAt(index);
+      } else {
+        fashionProducts[index] = Results.fromJson(response);
+      }
+      if (imageData != null) {
+        updateImage(context, productId, imageData);
+      }
+      notifyListeners();
+      Navigator.pop(context);
+      await showFlushbar(
+          context: context,
+          color: FbColors.buttonColor,
+          icon: Icons.check,
+          message: 'Product Updated Successfully');
+
+      print('response------------>$response');
+    } catch (e) {
+      showFlushbar(
+          context: context,
+          color: Color(0xffFF5252),
+          icon: Icons.error_outline,
+          message: 'Product Adding Failed');
+    }
+  }
+
   deleteProduct({
     required context,
     required int productId,
@@ -149,20 +177,41 @@ class FashionProductViewModel extends ChangeNotifier {
       SVProgressHUD.dismiss();
     }
   }
+// Delete Product Image
 
-  Future<void> deleteFoodItem(
-      {required BuildContext context, required int productId}) async {
-    var res = await _productRepository.fashiondeleteProduct(context, productId);
-    if (res != null) {
-      print(res);
-    }
-  }
+  deleteProductImage({
+    required context,
+    required int productId,
+    required int imageId,
+  }) async {
+    try {
+      SVProgressHUD.show();
 
-  Future<void> editFoodItem(
-      {required BuildContext context, required FoodItemModel product}) async {
-    var res = await _productRepository.fashionEditProductItem(context, product);
-    if (res != null) {
-      print(res);
+      final response = await _productRepository.deleteProductImage(imageId);
+      print('response------------>$response');
+
+      final index = fashionProducts.indexOf(
+          fashionProducts.firstWhere((element) => element.id == productId));
+
+      fashionProducts[index]
+          .images!
+          .removeWhere((element) => element.id == imageId);
+      notifyListeners();
+
+      showFlushbar(
+          context: context,
+          color: FbColors.buttonColor,
+          icon: Icons.check,
+          message: 'Product Image Deleted Successfully');
+    } catch (e) {
+      print('error------------>$e');
+      showFlushbar(
+          context: context,
+          color: Color(0xffFF5252),
+          icon: Icons.error_outline,
+          message: 'Product Image Delete Failed');
+    } finally {
+      SVProgressHUD.dismiss();
     }
   }
 }

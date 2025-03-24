@@ -116,21 +116,21 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                       ));
                                 },
                                 child: ListTile(
-                                  leading: Container(
+                                  leading: SizedBox(
                                     height: screenHeight * .05,
                                     width: screenHeight * .06,
                                     child: (productProvider
                                                     .fashionProducts[index]
-                                                    ?.images !=
+                                                    .images !=
                                                 null &&
                                             productProvider
-                                                .fashionProducts[index]!
+                                                .fashionProducts[index]
                                                 .images!
                                                 .isNotEmpty)
                                         ? CachedNetworkImage(
                                             imageUrl: productProvider
                                                     .fashionProducts[index]
-                                                    ?.images?[0]
+                                                    .images?[0]
                                                     .imageUrl ??
                                                 '',
                                             placeholder: (context, url) =>
@@ -145,11 +145,11 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                             PlaceholderImage.placeholderimage),
                                   ),
                                   title: Text(productProvider
-                                          .fashionProducts[index]?.name ??
+                                          .fashionProducts[index].name ??
                                       ''),
                                   subtitle: Text(productProvider
                                           .fashionProducts[index]
-                                          ?.wholesalePrice ??
+                                          .wholesalePrice ??
                                       ''),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,

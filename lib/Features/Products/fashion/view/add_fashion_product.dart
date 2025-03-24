@@ -15,6 +15,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/lis
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_sub_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../../../Commons/colors.dart';
@@ -58,6 +59,8 @@ class _AddFashionProductState extends State<AddFashionProduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    selectedCategoryId = widget.category.id;
+    selectedSubCategoryId = widget.subCategory.id;
     categoryController.text = widget.category.name ?? '';
     subcategoryController.text = widget.subCategory.name ?? '';
   }
@@ -90,7 +93,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       variants[variantIndex]["sizes"] ??= [];
 
       variants[variantIndex]["sizes"].add({
-        "selectedSize": null,
+        "selectedSize": '',
         "price": TextEditingController(),
         "stock": TextEditingController(),
         "offer_price": TextEditingController(),
@@ -109,17 +112,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
       variants[variantIndex]["sizes"].removeAt(sizeIndex);
     });
   }
-
-  // Future<void> pickImage(int index) async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.gallery);
-  //
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       variants[index]["color_image"] = File(pickedFile.path);
-  //     });
-  //   }
-  // }
 
   void submitVariants() async {
     final productProvider =
@@ -239,15 +231,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                   });
                 },
               ),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(
-              //       horizontal: screenWidth * .07,
-              //       vertical: screenHeight * .01),
-              //   child: SelectField(
-              //       label: 'Select Gender',
-              //       controller: TextEditingController(),
-              //       items: const ['M', 'W', 'K', 'U']),
-              // ),
               FbProductsFilePicker(
                   fileCategory: 'Product',
                   onFilesPicked: (List<File> files) {
@@ -265,7 +248,8 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                             (await Navigator.push<CategoryRequestModel>(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => ListCategoriesName())));
+                                    builder: (_) =>
+                                        const ListCategoriesName())));
                         selectedCategoryId =
                             productProvider.categoryRequestModel?.id;
                         categoryController.text =
@@ -308,12 +292,13 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                 label: 'Price',
                 controller: priceController,
                 keyboard: TextInputType.number,
-                validator: customValidatornoSpaceError,
+                validator: priceValidator,
               ),
               FbCategoryFormField(
                 label: 'Stock Unit',
                 controller: stockUnitController,
                 keyboard: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: customValidatornoSpaceError,
               ),
               FbCategoryFormField(
@@ -325,7 +310,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               FbCategoryFormField(
                 label: 'Wholesale Price ',
                 controller: wholeSalePriceController,
-                validator: customValidatornoSpaceError,
+                validator: priceValidator,
                 keyboard: TextInputType.number,
               ),
               Padding(
@@ -462,14 +447,18 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                   children: [
                     Expanded(
                       child: FbCustomDropdown(
-                        value: sizes[sizeIndex]["selectedSize"],
+                        value: sizes[sizeIndex]["selectedSize"].isEmpty
+                            ? null
+                            : sizes[sizeIndex]["selectedSize"],
                         items: const ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
                         hintText: "Size",
-                        onChanged: (newValue) {
+                        onChanged: (String? newValue) {
+                          print('------------->$newValue');
                           setState(() {
                             sizes[sizeIndex]["selectedSize"] = newValue;
-                            print(newValue);
                           });
+                          print(
+                              '------------------------->${sizes[sizeIndex]["selectedSize"]}');
                         },
                       ),
                     ),
@@ -478,7 +467,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                         child: FbCategoryFormField(
                             label: 'Price',
                             controller: sizes[sizeIndex]["price"],
-                            validator: customValidatornoSpaceError,
+                            validator: priceValidator,
                             keyboard: TextInputType.number)),
                   ],
                 ),
@@ -490,13 +479,16 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                             label: 'Stock',
                             controller: sizes[sizeIndex]["stock"],
                             validator: customValidatornoSpaceError,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             keyboard: TextInputType.number)),
                     const SizedBox(width: 10),
                     Expanded(
                         child: FbCategoryFormField(
                             label: 'Offer Price',
                             controller: sizes[sizeIndex]["offer_price"],
-                            validator: customValidatornoSpaceError,
+                            validator: priceValidator,
                             keyboard: TextInputType.number)),
                   ],
                 ),
