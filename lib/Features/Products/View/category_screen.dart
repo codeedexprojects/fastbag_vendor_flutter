@@ -100,8 +100,8 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
           categoryProvider.selectsubCategories.isNotEmpty
               ? categoryProvider.selectsubCategories
                   .map<SerachItem>((subCategory) => SerachItem(
-                      id: subCategory.id??0,
-                      name: subCategory?.name??"",
+                      id: subCategory.id ?? 0,
+                      name: subCategory?.name ?? "",
                       type: "sub_category",
                       model: subCategory))
                   .toList()
@@ -190,25 +190,28 @@ class _ListCategoryScreenState extends State<FoodCategoryScreen> {
                                 text: data.categories[index].name,
                                 onTap: () {
                                   navigate(
-                                    context: context,
-                                    screen:
-                                    FoodCategorybySubcategory(isOperable: true, categoryId:  data.categories[index]?.id ?? 0)
-                                    // AllSubCategoryScreen(
-                                    //   subCategories: data.subCategories,
-                                    //   categories: data.categories,
-                                    //   isOperable: true,
-                                    // ),
-                                  );
+                                      context: context,
+                                      screen: FoodCategorybySubcategory(
+                                          isOperable: true,
+                                          categoryId:
+                                              data.categories[index]?.id ?? 0)
+                                      // AllSubCategoryScreen(
+                                      //   subCategories: data.subCategories,
+                                      //   categories: data.categories,
+                                      //   isOperable: true,
+                                      // ),
+                                      );
                                 },
                                 radius: screenWidth * .115,
                                 image: NetworkImage(
                                   data.categories[index].category_image,
                                 ),
                               );
-                            }, padding: EdgeInsets.only(top: screenHeight * .015),
-                              gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3, childAspectRatio: 0.7),
+                            },
+                            padding: EdgeInsets.only(top: screenHeight * .015),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3, childAspectRatio: 0.7),
                           );
                         },
                       ),

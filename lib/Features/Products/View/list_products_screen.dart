@@ -112,9 +112,13 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                       height: screenHeight * .05,
                                       width: screenHeight * .06,
                                       decoration: BoxDecoration(
-                                          image: DecorationImage(fit:BoxFit.fill,
+                                          image: DecorationImage(
+                                            fit: BoxFit.fill,
                                             image: NetworkImage(productProvider
-                                                .foodProducts[index].imageUrls?[0].image?? ''),
+                                                    .foodProducts[index]
+                                                    .imageUrls?[0]
+                                                    .image ??
+                                                ''),
                                           ),
                                           border: Border.all(
                                               color: Colors.grey, width: 0.2),
