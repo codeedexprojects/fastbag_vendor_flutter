@@ -10,6 +10,7 @@ class SalesinsightScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: FbColors.backgroundcolor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
@@ -62,7 +63,7 @@ class SalesinsightScreen extends StatelessWidget {
                 children: [
                   Container(
                     padding: EdgeInsets.all(5),
-                    width: 386,
+                    width: double.infinity,
                     height: 400,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
