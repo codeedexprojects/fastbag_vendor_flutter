@@ -156,7 +156,9 @@ class _EditGrocerySubCategoryScreenState
                 });
               },
             ),
-            SizedBox(height: screenWidth*0.025,),
+            SizedBox(
+              height: screenWidth * 0.025,
+            ),
             FbButton(
                 onClick: () =>
                     onSubmitForm(groceryViewModel, widget.subCategory.id),

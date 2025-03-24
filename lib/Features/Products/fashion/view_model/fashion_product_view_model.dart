@@ -12,7 +12,6 @@ class FashionProductViewModel extends ChangeNotifier {
   final FashionProductRepository _productRepository =
       FashionProductRepository();
 
-  // FashionItemModel? fashionItemModel;
   Results? fashionProductDetail;
 
   List<Results> _fashionProducts = [];

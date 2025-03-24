@@ -257,7 +257,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                       },
                       label: 'Category',
                       controller: categoryController,
-                      keyboard: TextInputType.number,
                       validator: customValidatornoSpaceError,
                     ),
                   ),

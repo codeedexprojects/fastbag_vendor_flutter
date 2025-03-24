@@ -13,12 +13,9 @@ import '../view_model/fashion_category_view_model.dart';
 import 'edit_fashion_sub_category_screen.dart';
 
 class FashionSubCategoryEditList extends StatefulWidget {
-  // final List<FashionSubCategoryModel> subCategories;
-  // final List<FashionCategoryModel> categories;
+  final FashionCategoryModel category;
 
-  final int? categoryId;
-
-  const FashionSubCategoryEditList({super.key, required this.categoryId});
+  const FashionSubCategoryEditList({super.key, required this.category});
 
   @override
   State<FashionSubCategoryEditList> createState() =>
@@ -31,7 +28,7 @@ class _FashionSubCategoryEditListState
     final categoryProvider =
         Provider.of<FashionCategoryViewModel>(context, listen: false);
     categoryProvider.getFashionCategorybySubCategories(
-        categoryId: widget?.categoryId ?? 0);
+        categoryId: widget.category.id ?? 0);
     super.initState();
   }
 
@@ -42,9 +39,10 @@ class _FashionSubCategoryEditListState
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(categoryProvider.selectsubCategory.isEmpty?
-          "Edit Sub Categories"
-          :'${categoryProvider.selectsubCategory.first.categoryName??''} Edit SubCategories',
+        title: Text(
+          categoryProvider.selectsubCategory.isEmpty
+              ? "Edit Sub Categories"
+              : '${categoryProvider.selectsubCategory.first.categoryName ?? ''} Edit SubCategories',
           style: mainFont(
               fontsize: screenWidth * 0.04,
               fontweight: FontWeight.w500,
@@ -61,12 +59,15 @@ class _FashionSubCategoryEditListState
                 padding: EdgeInsets.all(screenWidth * .02),
                 child: InkWell(
                   onTap: () {
+                    print(
+                      categoryProvider.selectsubCategory[index].name,
+                    );
                     navigate(
                         context: context,
                         screen: FashionEditSubCategoryScreen(
-                          categories: categoryProvider.categories,
-                          category: categoryProvider.categories[0],
-                          subCategory: categoryProvider.subCategories[index],
+                          category: widget.category,
+                          subCategory:
+                              categoryProvider.selectsubCategory[index],
                         ));
                   },
                   child: Container(

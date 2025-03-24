@@ -12,9 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../model/fashion_category_model.dart';
-import '../model/fashion_sub_category_model.dart';
 import 'add_fashion_sub_category_screen.dart';
-import 'edit_fashion_sub_category_screen.dart';
 import 'list_fashion_products_screen.dart';
 
 class FashionCategorybySubcategory extends StatefulWidget {
@@ -41,7 +39,7 @@ class _FashionCategorybySubcategoryState
     final categoryProvider =
         Provider.of<FashionCategoryViewModel>(context, listen: false);
     categoryProvider.getFashionCategorybySubCategories(
-        categoryId: widget?.category.id ?? 0);
+        categoryId: widget.category.id ?? 0);
     super.initState();
   }
 
@@ -80,39 +78,11 @@ class _FashionCategorybySubcategoryState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     SizedBox(
-            //       width: screenWidth * 0.8,
-            //       child: SearchBar(
-            //         backgroundColor: const WidgetStatePropertyAll(Colors.white),
-            //         elevation: const WidgetStatePropertyAll(0),
-            //         shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.circular(5))),
-            //         side: WidgetStatePropertyAll(
-            //             BorderSide(color: FbColors.black, width: 0.5)),
-            //         trailing: const [
-            //           Icon(
-            //             Icons.search,
-            //             size: 35,
-            //           )
-            //         ],
-            //         hintText: "search here",
-            //       ),
-            //     ),
-            //     const Icon(Icons.more_vert)
-            //   ],
-            // ),
             SizedBox(
               height: screenHeight * .02,
             ),
             Text(
-              //
-              // categoryProvider.selectsubCategory.isEmpty
-              //     ?
               "Select Sub Categories",
-              //     : "No Sub Categories added",
               style: mainFont(
                   fontsize: 18,
                   fontweight: FontWeight.w600,
@@ -179,7 +149,7 @@ class _FashionCategorybySubcategoryState
                     navigate(
                         context: context,
                         screen: FashionSubCategoryEditList(
-                          categoryId: widget.category.id,
+                          category: widget.category,
                         ));
                   },
                   icon: const FaIcon(
