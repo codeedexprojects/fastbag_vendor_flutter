@@ -13,9 +13,10 @@ class DashRepository{
       var headers = {
         'Authorization': 'Bearer $tokenId'
       };
+      print('${vendorId}');
       var dio = Dio();
       var response = await dio.request(
-        '${baseUrl}/vendors/dish-count/$vendorId/',
+        '${baseUrl}vendors/analytics/$vendorId/',
         options: Options(
           method: 'GET',
           headers: headers,

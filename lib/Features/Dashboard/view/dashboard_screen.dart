@@ -103,7 +103,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Expanded(
                     child: _buildproductInsightCard(
                         'Total\nPoducts',
-                        _viewModel.dishClass?.productCount ?? 0,
+                        _viewModel.dishClass?.availableProductCount ?? 0,
                         'assets/icons/Icon_Order.png'),
                   ),
                   SizedBox(
@@ -111,13 +111,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   Expanded(
                       child: _buildproductInsightCard('Available\nProducts',
-                          357, 'assets/icons/icon Delivered.png')),
+                          _viewModel.dishClass?.availableProductCount??0, 'assets/icons/icon Delivered.png')),
                   SizedBox(
                     width: 16,
                   ),
                   Expanded(
                     child: _buildproductInsightCard('Out of stock\nProducts',
-                        65, 'assets/icons/Icon_Order (1).png'),
+                        _viewModel.dishClass?.outOfStockCounts?.total??0, 'assets/icons/Icon_Order (1).png'),
                   ),
                 ],
               ),
