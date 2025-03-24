@@ -114,6 +114,7 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
               children: [
                 SizedBox(height: screenWidth * .06),
                 FbCategoryFormField(
+                  keyboard:TextInputType.name ,
                     label: "Sub Category Name",
                     controller: nameController,
                     validator: customValidatornoSpaceError),
