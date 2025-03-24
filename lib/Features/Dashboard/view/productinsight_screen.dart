@@ -49,17 +49,17 @@ class _ProductinsightScreenState extends State<ProductinsightScreen> {
         child: Column(
           children: [
             _productInsightItem('assets/icons/frame1.png',
-                _viewModel.dishClass?.productCount ?? 0, 'Total Products'),
+                _viewModel.dishClass?.availableProductCount ?? 0, 'Total Products'),
             SizedBox(
               height: 14,
             ),
             _productInsightItem(
-                'assets/icons/frame2.png', 24456, 'Available Products'),
+                'assets/icons/frame2.png', _viewModel.dishClass?.availableProductCount??0, 'Available Products'),
             SizedBox(
               height: 14,
             ),
             _productInsightItem(
-                'assets/icons/frame3.png', 05, 'Out of stock Products')
+                'assets/icons/frame3.png', _viewModel.dishClass?.outOfStockCounts?.total??0, 'Out of stock Products')
           ],
         ),
       ),
