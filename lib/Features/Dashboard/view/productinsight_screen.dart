@@ -49,7 +49,7 @@ class _ProductinsightScreenState extends State<ProductinsightScreen> {
         child: Column(
           children: [
             _productInsightItem('assets/icons/frame1.png',
-                _viewModel.dishClass?.productCount ?? 0, 'Total Products'),
+                _viewModel.dishClass?.availableProductCount ?? 0, 'Total Products'),
             SizedBox(
               height: 14,
             ),
