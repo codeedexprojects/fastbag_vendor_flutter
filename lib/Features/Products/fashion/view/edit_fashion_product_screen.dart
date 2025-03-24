@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_drop_down.dart';
+import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
@@ -135,12 +136,20 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
     };
     print(formattedData);
     if (_formKey.currentState!.validate()) {
-      productProvider.editProduct(
-        context: context,
-        productId: widget.product.id,
-        data: data,
-        imageData: selectedImages.isNotEmpty ? imageData : null,
-      );
+      if (widget.product.images!.isEmpty && selectedImages.isEmpty) {
+        showFlushbar(
+            context: context,
+            color: Colors.red,
+            icon: Icons.error_outline,
+            message: 'No Image Selected');
+      } else {
+        productProvider.editProduct(
+          context: context,
+          productId: widget.product.id,
+          data: data,
+          imageData: selectedImages.isNotEmpty ? imageData : null,
+        );
+      }
     }
   }
 
