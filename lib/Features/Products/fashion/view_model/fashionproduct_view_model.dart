@@ -1,9 +1,7 @@
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/color_picker.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_category_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 
@@ -97,11 +95,9 @@ class FashionProductViewModel extends ChangeNotifier {
       final response =
           await _productRepository.enableDisableProduct(productId, isActive);
       print('response------------>$response');
-      showFlushbar(
-          context: context,
-          color: FbColors.buttonColor,
-          icon: Icons.check,
-          message: 'Product Status Updated');
+      final index = fashionProducts.indexOf(
+          fashionProducts.firstWhere((element) => element.id == productId));
+      fashionProducts[index].isActive = response['is_active'];
       notifyListeners();
     } catch (e) {
       print('error------------>$e');
