@@ -72,7 +72,7 @@ class SalesinsightScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 16,right: 16),
+                          padding: const EdgeInsets.only(left: 16, right: 16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -136,142 +136,138 @@ class SalesinsightScreen extends StatelessWidget {
   ////////////
   Widget _salesInsightItem(String path, int count, String name,
       String arrowpath, dynamic persatage) {
-    return Card(
-      child: Container(
-        height: 198,
-        width: 396,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: FbColors.white),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              leading: Image.asset(path),
-              title: Text(
-                name,
-                style: mainFont(
-                    fontsize: 16,
-                    fontweight: FontWeight.w600,
-                    color: FbColors.black),
-              ),
+    return Container(
+      height: 198,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: FbColors.white),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            leading: Image.asset(path),
+            title: Text(
+              name,
+              style: mainFont(
+                  fontsize: 16,
+                  fontweight: FontWeight.w600,
+                  color: FbColors.black),
             ),
-            SizedBox(
-              height: 15,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Text(
+              count.toString(),
+              style: mainFont(
+                  fontsize: 28,
+                  fontweight: FontWeight.w700,
+                  color: FbColors.lightBlack),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: Text(
-                count.toString(),
-                style: mainFont(
-                    fontsize: 28,
-                    fontweight: FontWeight.w700,
-                    color: FbColors.lightBlack),
-              ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  arrowpath,
+                  height: 13,
+                  width: 35,
+                ),
+                Text(
+                  '$persatage%',
+                  style: normalFont4(
+                      fontsize: 13,
+                      fontweight: FontWeight.w500,
+                      color: FbColors.greendark),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  'Vs Last Month',
+                  style: mainFont(
+                      fontsize: 14,
+                      fontweight: FontWeight.w400,
+                      color: Color.fromRGBO(77, 77, 77, 1)),
+                )
+              ],
             ),
-            SizedBox(
-              height: 15,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    arrowpath,
-                    height: 13,
-                    width: 35,
-                  ),
-                  Text(
-                    '$persatage%',
-                    style: normalFont4(
-                        fontsize: 13,
-                        fontweight: FontWeight.w500,
-                        color: FbColors.greendark),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    'Vs Last Month',
-                    style: mainFont(
-                        fontsize: 14,
-                        fontweight: FontWeight.w400,
-                        color: Color.fromRGBO(77, 77, 77, 1)),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
 
   Widget _salesInsightItemtwo(String path, int count, String name,
       String arrowpath, dynamic persatage) {
-    return Card(
-      child: Container(
-        height: 184,
-        width: 396,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: FbColors.white),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              leading: Image.asset(path),
-              title: Text(
-                name,
-                style: mainFont(
-                    fontsize: 16,
-                    fontweight: FontWeight.w600,
-                    color: FbColors.black),
-              ),
+    return Container(
+      height: 184,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: FbColors.white),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            leading: Image.asset(path),
+            title: Text(
+              name,
+              style: mainFont(
+                  fontsize: 16,
+                  fontweight: FontWeight.w600,
+                  color: FbColors.black),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: Text(
-                count.toString(),
-                style: mainFont(
-                    fontsize: 28,
-                    fontweight: FontWeight.w700,
-                    color: FbColors.lightBlack),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Text(
+              count.toString(),
+              style: mainFont(
+                  fontsize: 28,
+                  fontweight: FontWeight.w700,
+                  color: FbColors.lightBlack),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, top: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    arrowpath,
-                    height: 30,
-                    width: 35,
-                  ),
-                  Text(
-                    '$persatage%',
-                    style: normalFont4(
-                        fontsize: 13,
-                        fontweight: FontWeight.w500,
-                        color: Color.fromRGBO(163, 36, 36, 1)),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    'Vs Last Month',
-                    style: mainFont(
-                        fontsize: 14,
-                        fontweight: FontWeight.w400,
-                        color: Color.fromRGBO(77, 77, 77, 1)),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, top: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  arrowpath,
+                  height: 30,
+                  width: 35,
+                ),
+                Text(
+                  '$persatage%',
+                  style: normalFont4(
+                      fontsize: 13,
+                      fontweight: FontWeight.w500,
+                      color: Color.fromRGBO(163, 36, 36, 1)),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  'Vs Last Month',
+                  style: mainFont(
+                      fontsize: 14,
+                      fontweight: FontWeight.w400,
+                      color: Color.fromRGBO(77, 77, 77, 1)),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

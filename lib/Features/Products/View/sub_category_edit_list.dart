@@ -56,7 +56,7 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                 child: Container(
                   padding: EdgeInsets.all(screenWidth * .02),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.grey, width: 0.5)),
                   child: ListTile(
                     leading: CircleAvatar(
@@ -69,8 +69,8 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                           categoryProvider.selectsubCategories[index]
                                   .subcategoryImage ??
                               '',
-                          fit: BoxFit
-                              .fill, // Ensures the image fills the circle
+                          fit:
+                              BoxFit.fill, // Ensures the image fills the circle
                           width:
                               60, // Diameter of the CircleAvatar (radius * 2)
                           height:
@@ -108,13 +108,11 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                                   .deleteSubCategory(
                                       context: context,
                                       subcategoryId: categoryProvider
-                                              .selectsubCategories[index]
-                                              .id ??
+                                              .selectsubCategories[index].id ??
                                           0)
                                   .then((v) {
-                                categoryProvider
-                                    .getFoodCategorybySubCategories(
-                                        categoryId: widget.categoryId ?? 0);
+                                categoryProvider.getFoodCategorybySubCategories(
+                                    categoryId: widget.categoryId ?? 0);
                               });
                             },
                             child: Icon(

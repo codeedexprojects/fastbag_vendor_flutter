@@ -120,7 +120,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top:width * 0.03),
+                padding: EdgeInsets.only(top: width * 0.03),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -182,66 +182,70 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         color: OrderColor.red,
                       ),
                     ),
-                    if(_viewModel.foodDetail?.variants?.isNotEmpty == true)
-                    SizedBox(
-                      height: height * 0.01,
-                    ),
-                    if(_viewModel.foodDetail?.variants?.isNotEmpty == true)
-                    Text('Available variants',
-                        style: GoogleFonts.montserrat(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: OrderColor.textColor)),
-                    SizedBox(
-                      height: height * 0.01,
-                    ),
-                    if(_viewModel.foodDetail?.variants?.isNotEmpty == true)
-                    SizedBox(
-                      height:height*0.05,
-                      child: ListView.separated(
-                        itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          final variant = _viewModel
-                              .foodDetail?.variants?[index]; // Get variant object
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedVariant = variant?.name ?? 'Unknown';
-                                selectedPrice = variant?.price ?? 0.0;
-                                selectedAvailability =
-                                    variant?.stock ?? 'Unknown';
-                              });
-                            },
-                            child: Container(
-                              height: height * 0.06,
-                              width: width * 0.25,
-                              decoration: BoxDecoration(
-                                color: OrderColor.white,
-                                borderRadius: BorderRadius.circular(width * 0.03),
-                                border: Border.all(
-                                  color: selectedVariant == variant?.name
-                                      ? Colors.red // Highlight the selected one
-                                      : OrderColor.green,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  variant?.name ?? 'No Name',
-                                  style: TextStyle(
-                                      fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(width: width * 0.03);
-                        },
+                    if (_viewModel.foodDetail?.variants?.isNotEmpty == true)
+                      SizedBox(
+                        height: height * 0.01,
                       ),
+                    if (_viewModel.foodDetail?.variants?.isNotEmpty == true)
+                      Text('Available variants',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: OrderColor.textColor)),
+                    SizedBox(
+                      height: height * 0.01,
                     ),
+                    if (_viewModel.foodDetail?.variants?.isNotEmpty == true)
+                      SizedBox(
+                        height: height * 0.05,
+                        child: ListView.separated(
+                          itemCount:
+                              _viewModel.foodDetail?.variants?.length ?? 0,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            final variant = _viewModel.foodDetail
+                                ?.variants?[index]; // Get variant object
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedVariant = variant?.name ?? 'Unknown';
+                                  selectedPrice = variant?.price ?? 0.0;
+                                  selectedAvailability =
+                                      variant?.stock ?? 'Unknown';
+                                });
+                              },
+                              child: Container(
+                                height: height * 0.06,
+                                width: width * 0.25,
+                                decoration: BoxDecoration(
+                                  color: OrderColor.white,
+                                  borderRadius:
+                                      BorderRadius.circular(width * 0.03),
+                                  border: Border.all(
+                                    color: selectedVariant == variant?.name
+                                        ? Colors
+                                            .red // Highlight the selected one
+                                        : OrderColor.green,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    variant?.name ?? 'No Name',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(width: width * 0.03);
+                          },
+                        ),
+                      ),
                     // SizedBox(height: height * 0.02),
                     // Container(
                     //   width: width * 1,
@@ -275,21 +279,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               Divider(
-                  color: OrderColor.textColor.withOpacity(0.3),indent: width*0.01,endIndent: width*0.03,),
+                color: OrderColor.textColor.withOpacity(0.3),
+                indent: width * 0.01,
+                endIndent: width * 0.03,
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Text("Description",style: normalFont1(
-                          fontsize: 15,
-                          fontweight: FontWeight.w900,
-                          color: FbColors.black),),
+                      Text(
+                        "Description",
+                        style: normalFont1(
+                            fontsize: 15,
+                            fontweight: FontWeight.w900,
+                            color: FbColors.black),
+                      ),
                     ],
                   ),
                   Text(
-                     textAlign:TextAlign.start,
+                    textAlign: TextAlign.start,
                     _viewModel.foodDetail?.description ??
                         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
                     style: normalFont4(

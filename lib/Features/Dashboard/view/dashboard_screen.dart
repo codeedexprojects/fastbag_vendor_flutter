@@ -21,23 +21,23 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
-    final _viewModel = Provider.of<DashViewModel>(context,listen: false);
+    final _viewModel = Provider.of<DashViewModel>(context, listen: false);
     _viewModel.getdata();
     final profileShopProvider =
-    Provider.of<ProfileShopViewModel>(context,listen: false);
+        Provider.of<ProfileShopViewModel>(context, listen: false);
     profileShopProvider.getShopProfile(context: context);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final _viewModel = Provider.of<DashViewModel>(context);
-    final profileShopProvider =
-    Provider.of<ProfileShopViewModel>(context);
+    final profileShopProvider = Provider.of<ProfileShopViewModel>(context);
     return Scaffold(
       backgroundColor: FbColors.backgroundcolor,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(top: 68, left: 10, right: 10),
+          padding: EdgeInsets.only(top: 50, left: 10, right: 10),
           child: Column(
             children: [
               Row(
@@ -52,15 +52,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 fontsize: 16,
                                 fontweight: FontWeight.w600,
                                 color: FbColors.black)),
-                        Text(profileShopProvider.shop?.ownerName ?? "name",
+                        Text(
+                            'Hi,${profileShopProvider.shop?.ownerName ?? "name"}',
                             style: mainFont(
-                                fontsize: 11,
+                                fontsize: 15,
                                 fontweight: FontWeight.w500,
                                 color: FbColors.greyColor)),
                         Text(
                           'Welcome back to fastbag Admin!',
                           style: mainFont(
-                              fontsize: 11,
+                              fontsize: 15,
                               fontweight: FontWeight.w500,
                               color: FbColors.greyColor),
                         )
@@ -101,15 +102,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   Expanded(
                     child: _buildproductInsightCard(
-                        'Total\nPoducts', _viewModel.dishClass?.productCount ?? 0, 'assets/icons/Icon_Order.png'),
+                        'Total\nPoducts',
+                        _viewModel.dishClass?.productCount ?? 0,
+                        'assets/icons/Icon_Order.png'),
                   ),
-                  SizedBox(width: 16,),
-                  Expanded(  child:_buildproductInsightCard('Available\nProducts', 357,
-                      'assets/icons/icon Delivered.png')),
-                  SizedBox(width: 16,),
+                  SizedBox(
+                    width: 16,
+                  ),
                   Expanded(
-                    child: _buildproductInsightCard('Out of stock\nProducts', 65,
-                        'assets/icons/Icon_Order (1).png'),
+                      child: _buildproductInsightCard('Available\nProducts',
+                          357, 'assets/icons/icon Delivered.png')),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: _buildproductInsightCard('Out of stock\nProducts',
+                        65, 'assets/icons/Icon_Order (1).png'),
                   ),
                 ],
               ),
@@ -141,23 +149,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                    child: _buildSalesInsightItem(
-                        'Total Orders',
-                        75,
-                        'assets/icons/Icon_Order.png',
-                        'assets/icons/Icon.png',
-                        '4%(30 days)')
+                      child: _buildSalesInsightItem(
+                          'Total Orders',
+                          75,
+                          'assets/icons/Icon_Order.png',
+                          'assets/icons/Icon.png',
+                          '4%(30 days)')),
+                  SizedBox(
+                    width: 16,
                   ),
-                  SizedBox(width: 16,),
                   Expanded(
-                    child: _buildSalesInsightItem(
-                        'Total Delivered',
-                        357,
-                        'assets/icons/icon Delivered.png',
-                        'assets/icons/Icon.png',
-                        '4%(30 days)')
+                      child: _buildSalesInsightItem(
+                          'Total Delivered',
+                          357,
+                          'assets/icons/icon Delivered.png',
+                          'assets/icons/Icon.png',
+                          '4%(30 days)')),
+                  SizedBox(
+                    width: 16,
                   ),
-                  SizedBox(width: 16,),
                   Expanded(
                     child: _buildSalesInsightItem(
                         'Total Canceled',
@@ -179,7 +189,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(width: 2,),
+                    SizedBox(
+                      width: 2,
+                    ),
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.green[200],
@@ -189,13 +201,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         width: 41,
                       ),
                     ),
-                    SizedBox(width: 12,),
+                    SizedBox(
+                      width: 12,
+                    ),
                     Text('₹4,560',
                         style: normalFont3(
                             fontsize: 30,
                             fontweight: FontWeight.w700,
                             color: FbColors.lightBlack)),
-                    SizedBox(width: 12,),
+                    SizedBox(
+                      width: 12,
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -371,52 +387,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildSalesInsightItem(String title, int total, String assetpath,
       String path, String percentage) {
     return Container(
-          height: 90,
-          width: double.infinity,
-          decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10), color: FbColors.white),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Image.asset(
-          assetpath,
-          height: 32.26,
-          width: 32,
+      height: 90,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: FbColors.white),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset(
+              assetpath,
+              height: 32.26,
+              width: 32,
+            ),
+            Text(total.toString(),
+                style: normalFont3(
+                  fontsize: 28,
+                  fontweight: FontWeight.w700,
+                  color: FbColors.black,
+                ))
+          ],
         ),
-        Text(total.toString(),
-            style: normalFont3(
-              fontsize: 28,
-              fontweight: FontWeight.w700,
-              color: FbColors.black,
-            ))
-      ],
-    ),
-    Text(
-        textAlign: TextAlign.center,
-        title,
-        style: mainFont(
-            fontsize: 12,
-            fontweight: FontWeight.w400,
-            color: FbColors.black)),
-    Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          path,
-          height: 16,
-          width: 16.13,
-        ),
-        Text(percentage,
+        Text(
+            textAlign: TextAlign.center,
+            title,
             style: mainFont(
-              fontsize: 8,
-              fontweight: FontWeight.w400,
-              color: FbColors.greyColor,
-            ))
-      ],
-    ),
-          ]),
-        );
+                fontsize: 12,
+                fontweight: FontWeight.w400,
+                color: FbColors.black)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              path,
+              height: 16,
+              width: 16.13,
+            ),
+            Text(percentage,
+                style: mainFont(
+                  fontsize: 8,
+                  fontweight: FontWeight.w400,
+                  color: FbColors.greyColor,
+                ))
+          ],
+        ),
+      ]),
+    );
   }
 
   Widget _buildOrderHistory() {
