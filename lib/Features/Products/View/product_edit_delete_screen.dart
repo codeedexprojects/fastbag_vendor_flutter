@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../fashion/view_model/fashionproduct_view_model.dart';
+import '../fashion/view_model/fashion_product_view_model.dart';
 
 class ProductEditDeleteScreen extends StatelessWidget {
   final List<FoodResponseModel> products;

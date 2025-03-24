@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../model/fashion_categoryby_subcategory.dart';
 import '../model/fashion_sub_category_model.dart';
-import '../view_model/fashionproduct_view_model.dart';
+import '../view_model/fashion_product_view_model.dart';
 import 'add_fashion_product.dart';
 
 class FashionListProductsScreen extends StatefulWidget {

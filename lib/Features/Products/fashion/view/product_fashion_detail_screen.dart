@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_product_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
 import '../../../../Commons/placeholder.dart';
-import '../view_model/fashiondetail_view_model.dart';
 
 class FashionProductDetailScreen extends StatefulWidget {
   final int productId;
@@ -29,16 +29,15 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
   int _colorisSelected = 0;
   int _sizeisSelected = 0;
   String? size;
-  dynamic? prize;
+  dynamic prize;
   int? Stock;
   bool _prizeInitialized = false;
-
 
   @override
   void initState() {
     final _viewModel =
-        Provider.of<FashiondetailViewModel>(context, listen: false);
-    _viewModel.getfashiondata(widget.productId);
+        Provider.of<FashionProductViewModel>(context, listen: false);
+    _viewModel.fetchFashionProductDetail(widget.productId);
     super.initState();
   }
 
@@ -46,17 +45,15 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final _viewModel = Provider.of<FashiondetailViewModel>(context);
-    final productProvider = Provider.of<FashiondetailViewModel>(
-      context,
-    );
+    final _viewModel = Provider.of<FashionProductViewModel>(context);
 
-    if (_viewModel.fashionDetail != null && !_prizeInitialized) {
-      final initialColor = _viewModel.fashionDetail!.colors?[_colorisSelected];
+    if (_viewModel.fashionProductDetail != null && !_prizeInitialized) {
+      final initialColor =
+          _viewModel.fashionProductDetail!.colors?[_colorisSelected];
       final initialSize = initialColor?.sizes?[_sizeisSelected];
-      prize = initialSize?.price ?? _viewModel.fashionDetail!.price;
+      prize = initialSize?.price ?? _viewModel.fashionProductDetail!.price;
       Stock = initialSize?.stock ??
-          _viewModel.fashionDetail!.colors?.first.sizes?.first.stock;
+          _viewModel.fashionProductDetail!.colors?.first.sizes?.first.stock;
       _prizeInitialized = true;
     }
 
@@ -87,18 +84,19 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                 child: Center(
                   child: Container(
                       decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10)),
                       height: 336.22,
                       width: 336,
-                      child: (productProvider.fashionDetail?.images != null &&
-                              productProvider
-                                  .fashionDetail!.images!.isNotEmpty)
+                      child: (_viewModel.fashionProductDetail?.images !=
+                                  null &&
+                              _viewModel
+                                  .fashionProductDetail!.images!.isNotEmpty)
                           ? ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                            child: CachedNetworkImage(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
                                 imageUrl: imageIndex ??
-                                    _viewModel
-                                        .fashionDetail?.images?.first.image ??
+                                    _viewModel.fashionProductDetail?.images
+                                        ?.first.image ??
                                     "",
                                 fit: BoxFit.fill,
                                 placeholder: (context, url) => Image.asset(
@@ -106,7 +104,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.downloading),
                               ),
-                          )
+                            )
                           : Image.asset(PlaceholderImage.placeholderimage)),
                 ),
               ),
@@ -118,10 +116,12 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                 width: 340,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: _viewModel.fashionDetail?.images?.length ?? 0,
+                  itemCount:
+                      _viewModel.fashionProductDetail?.images?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
                     final imageUrl =
-                        _viewModel.fashionDetail?.images?[index].image ?? '';
+                        _viewModel.fashionProductDetail?.images?[index].image ??
+                            '';
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: productDifferntimage(imageUrl, () {
@@ -143,7 +143,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                   SizedBox(
                     width: screenWidth * 0.5,
                     child: Text(
-                      _viewModel.fashionDetail?.name ?? '',
+                      _viewModel.fashionProductDetail?.name ?? '',
                       style: normalFont5(
                           fontsize: screenWidth * 0.05,
                           fontweight: FontWeight.w400,
@@ -151,7 +151,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                     ),
                   ),
                   Text(
-                    '₹${prize ?? _viewModel.fashionDetail?.price ?? '00'}',
+                    '₹${prize ?? _viewModel.fashionProductDetail?.price ?? '00'}',
                     style: normalFont5(
                         fontsize: screenWidth * 0.05,
                         fontweight: FontWeight.w400,
@@ -163,7 +163,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${_viewModel.fashionDetail?.material ?? 0}',
+                    '${_viewModel.fashionProductDetail?.material ?? 0}',
                     style: normalFont4(
                         fontsize: 16,
                         fontweight: FontWeight.w400,
@@ -190,7 +190,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               Row(
                 children: [
                   Text(
-                    'Available Stock : ${Stock ?? _viewModel.fashionDetail?.colors?.first.sizes?.first.stock} units',
+                    'Available Stock : ${Stock ?? _viewModel.fashionProductDetail?.colors?.first.sizes?.first.stock} units',
                     style: normalFont5(
                         fontsize: 15,
                         fontweight: FontWeight.w500,
@@ -213,11 +213,12 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               Container(
                 height: 80,
                 child: ListView.builder(
-                    itemCount: _viewModel.fashionDetail?.colors?.length ?? 0,
+                    itemCount:
+                        _viewModel.fashionProductDetail?.colors?.length ?? 0,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       final ImageUrl =
-                          "${_viewModel.fashionDetail?.colors?[index].colorCode ?? ''}";
+                          "${_viewModel.fashionProductDetail?.colors?[index].colorCode ?? ''}";
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Column(
@@ -229,11 +230,11 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                                   _sizeisSelected = 0; // Reset size selection
                                   // Update price to new color's first size
 
-                                  final newColor =
-                                      _viewModel.fashionDetail?.colors?[index];
+                                  final newColor = _viewModel
+                                      .fashionProductDetail?.colors?[index];
                                   final newSize = newColor?.sizes?.first;
                                   prize = newSize?.price ??
-                                      _viewModel.fashionDetail?.price;
+                                      _viewModel.fashionProductDetail?.price;
                                   Stock = newSize?.stock ?? 0;
                                 });
                               },
@@ -241,7 +242,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                                 height: 60,
                                 width: 60,
                                 decoration: BoxDecoration(
-                                  color: ImageUrl.toColor(),
+                                    color: ImageUrl.toColor(),
                                     borderRadius: BorderRadius.circular(55),
                                     border: Border.all(
                                         width:
@@ -271,7 +272,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                             //   height: 5,
                             // ),
                             // Text(
-                            //     '${_viewModel.fashionDetail?.colors?[index].colorName ?? 0}')
+                            //     '${_viewModel.fashionProductDetail?.colors?[index].colorName ?? 0}')
                           ],
                         ),
                       );
@@ -292,12 +293,12 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               Container(
                 height: 50,
                 child: ListView.builder(
-                    itemCount: _viewModel.fashionDetail
+                    itemCount: _viewModel.fashionProductDetail
                             ?.colors?[_colorisSelected].sizes?.length ??
                         0,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      final sizeItem = _viewModel.fashionDetail
+                      final sizeItem = _viewModel.fashionProductDetail
                           ?.colors?[_colorisSelected].sizes?[index];
                       final sizeUrl = sizeItem?.size ?? "";
                       return Padding(
@@ -308,7 +309,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                               _sizeisSelected = index;
                               final selectedSize = sizeItem;
                               prize = selectedSize?.price ??
-                                  _viewModel.fashionDetail?.price;
+                                  _viewModel.fashionProductDetail?.price;
                               Stock = sizeItem?.stock ?? 0;
                             });
                           },
@@ -344,7 +345,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                     children: [
                       Text(
                         textAlign: TextAlign.start,
-                        _viewModel.fashionDetail?.description ??
+                        _viewModel.fashionProductDetail?.description ??
                             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
                         style: normalFont4(
                             fontsize: 16,

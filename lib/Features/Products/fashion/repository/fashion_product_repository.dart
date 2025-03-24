@@ -187,29 +187,23 @@ class FashionProductRepository {
     }
   }
 
-  Future<FashionDetail?> fetchfashionDetail(int productId) async {
+  Future fetchFashionProductDetail(int productId) async {
+    
     try {
-      SVProgressHUD.show();
-      final prefs = await SharedPreferences.getInstance();
-      var tokenId = prefs.getString('access_token');
-      var headers = {'Authorization': 'Bearer $tokenId'};
-      var dio = Dio();
-      var response = await dio.request(
+      final tokenId = await StoreManager().getAccessToken();
+      final headers = {'Authorization': 'Bearer $tokenId'};
+      final response = await _dio.request(
         '${baseUrl}fashion/clothing/details/$productId/',
         options: Options(
           method: 'GET',
           headers: headers,
         ),
       );
-
-      if (response.statusCode == 200) {
-        print(response.data);
-        SVProgressHUD.dismiss();
-        return FashionDetail.fromJson(response.data);
-      }
+      return response.data;
     } on DioException catch (e) {
-      SVProgressHUD.dismiss();
-      print("error $e");
+      print("error ${e.response}");
+    } catch (e) {
+      print(e);
     }
   }
 
