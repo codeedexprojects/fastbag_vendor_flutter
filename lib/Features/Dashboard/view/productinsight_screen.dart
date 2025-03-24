@@ -54,12 +54,12 @@ class _ProductinsightScreenState extends State<ProductinsightScreen> {
               height: 14,
             ),
             _productInsightItem(
-                'assets/icons/frame2.png', 24456, 'Available Products'),
+                'assets/icons/frame2.png', _viewModel.dishClass?.availableProductCount??0, 'Available Products'),
             SizedBox(
               height: 14,
             ),
             _productInsightItem(
-                'assets/icons/frame3.png', 05, 'Out of stock Products')
+                'assets/icons/frame3.png', _viewModel.dishClass?.outOfStockCounts?.total??0, 'Out of stock Products')
           ],
         ),
       ),
