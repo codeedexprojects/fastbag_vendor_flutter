@@ -104,9 +104,13 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
           const SnackBar(content: Text("Invalid OTP. Please try again!")),
         );
       }
-    } catch (e) {
+    } on DioException catch (dioError) {
+      print("Somthing Happend${dioError.response}");
+    }
+
+    catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
+        SnackBar(content: Text("Error: ${e}")),
       );
     } finally {
       setState(() {

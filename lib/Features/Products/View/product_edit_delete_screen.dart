@@ -68,68 +68,69 @@ class ProductEditDeleteScreen extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.all(screenWidth * .02),
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: Colors.grey, width: 0.5)),
                       child: ListTile(
                         leading: CircleAvatar(
                           radius: 32,
                           backgroundColor:
                               Colors.grey[200], // Optional: Background color
-                          child: ClipOval(
-                            child: Image.network(
-                              data.foodProducts[index].imageUrls?[0].image ?? '',
-                              fit: BoxFit
-                                  .cover, // Ensures the image fills the circle
-                              width:
-                                  64, // Diameter of the CircleAvatar (radius * 2)
-                              height:
-                                  64, // Diameter of the CircleAvatar (radius * 2)
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(Icons.error,
-                                    color: Colors
-                                        .red); // Optional: Handle loading errors
-                              },
+                          child: Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                data.foodProducts[index].imageUrls?[0].image ?? '',
+                                fit: BoxFit
+                                    .fill, // Ensures the image fills the circle
+                                width:
+                                    60, // Diameter of the CircleAvatar (radius * 2)
+                                height:
+                                    55, // Diameter of the CircleAvatar (radius * 2)
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.error,
+                                      color: Colors
+                                          .red); // Optional: Handle loading errors
+                                },
+                              ),
                             ),
                           ),
                         ),
                         title: Text(data.foodProducts[index].name ?? ''),
-                        trailing: SizedBox(
-                          width: screenWidth * .15, // Set an appropriate width
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, // Ensures spacing between icons
-                            children: [
-                              InkWell(
-                                  onTap: () {
-                                    navigate(
-                                        context: context,
-                                        screen: EditProductScreen(
-                                            product: data.foodProducts[index]));
-                                  },
-                                  child: Icon(
-                                    Icons.edit,
-                                    color: Colors.blueAccent,
-                                  )),
-                              InkWell(
+                        trailing: Wrap(
+
+                          children: [
+                            GestureDetector(
                                 onTap: () {
-                                  data
-                                      .deleteFoodItem(
-                                          context: context,
-                                          productId: data.foodProducts[index].id
-                                              as int)
-                                      .then((res) {
-                                    data.getProductCategories(
-                                        context: context,
-                                        subCategoryId: data
-                                            .foodProducts[index].subcategory ?? 0);
-                                  });
+                                  navigate(
+                                      context: context,
+                                      screen: EditProductScreen(
+                                          product: data.foodProducts[index]));
                                 },
-                                child: const Icon(
-                                  Icons.delete,
-                                  color: Colors.redAccent,
-                                ),
-                              ), // Changed one icon to "delete" to make sense
-                            ],
-                          ),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.blueAccent,
+                                )),
+                            SizedBox(width: 10,),
+                            GestureDetector(
+                              onTap: () {
+                                data
+                                    .deleteFoodItem(
+                                        context: context,
+                                        productId: data.foodProducts[index].id
+                                            as int)
+                                    .then((res) {
+                                  data.getProductCategories(
+                                      context: context,
+                                      subCategoryId: data
+                                          .foodProducts[index].subcategory ?? 0);
+                                });
+                              },
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.redAccent,
+                              ),
+                            ), // Changed one icon to "delete" to make sense
+                          ],
                         ),
                       ),
                     ),

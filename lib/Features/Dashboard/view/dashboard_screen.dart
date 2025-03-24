@@ -97,14 +97,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               SizedBox(height: 5.0),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildproductInsightCard(
-                      'Total\nPoducts', _viewModel.dishClass?.productCount ?? 0, 'assets/icons/Icon_Order.png'),
-                  _buildproductInsightCard('Available\nProducts', 357,
-                      'assets/icons/icon Delivered.png'),
-                  _buildproductInsightCard('Out of stock\nProducts', 65,
-                      'assets/icons/Icon_Order (1).png'),
+                  Expanded(
+                    child: _buildproductInsightCard(
+                        'Total\nPoducts', _viewModel.dishClass?.productCount ?? 0, 'assets/icons/Icon_Order.png'),
+                  ),
+                  SizedBox(width: 16,),
+                  Expanded(  child:_buildproductInsightCard('Available\nProducts', 357,
+                      'assets/icons/icon Delivered.png')),
+                  SizedBox(width: 16,),
+                  Expanded(
+                    child: _buildproductInsightCard('Out of stock\nProducts', 65,
+                        'assets/icons/Icon_Order (1).png'),
+                  ),
                 ],
               ),
               SizedBox(height: 5.0),
@@ -132,32 +138,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildSalesInsightItem(
-                      'Total Orders',
-                      75,
-                      'assets/icons/Icon_Order.png',
-                      'assets/icons/Icon.png',
-                      '4%(30 days)'),
-                  _buildSalesInsightItem(
-                      'Total Delivered',
-                      357,
-                      'assets/icons/icon Delivered.png',
-                      'assets/icons/Icon.png',
-                      '4%(30 days)'),
-                  _buildSalesInsightItem(
-                      'Total Canceled',
-                      65,
-                      'assets/icons/Icon_Order (1).png',
-                      'assets/icons/Icon (1).png',
-                      '4%(30 days)')
+                  Expanded(
+                    child: _buildSalesInsightItem(
+                        'Total Orders',
+                        75,
+                        'assets/icons/Icon_Order.png',
+                        'assets/icons/Icon.png',
+                        '4%(30 days)')
+                  ),
+                  SizedBox(width: 16,),
+                  Expanded(
+                    child: _buildSalesInsightItem(
+                        'Total Delivered',
+                        357,
+                        'assets/icons/icon Delivered.png',
+                        'assets/icons/Icon.png',
+                        '4%(30 days)')
+                  ),
+                  SizedBox(width: 16,),
+                  Expanded(
+                    child: _buildSalesInsightItem(
+                        'Total Canceled',
+                        65,
+                        'assets/icons/Icon_Order (1).png',
+                        'assets/icons/Icon (1).png',
+                        '4%(30 days)'),
+                  )
                 ],
               ),
               SizedBox(height: 10.0),
               Container(
-                padding: EdgeInsets.only(left: 10,right: 10),
-                width: 376,
+                // padding: EdgeInsets.only(left: 10,right: 10),
+                width: double.infinity,
                 height: 82,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -222,7 +236,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   Container(
                     padding: EdgeInsets.all(5),
-                    width: 386,
+                    width: double.infinity,
                     height: 350,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -317,95 +331,92 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildproductInsightCard(String title, int total, String assetpath) {
-    return Card(
-      child: Container(
-        height: 90,
-        width: 100,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: FbColors.white),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Image.asset(
-                  assetpath,
-                  height: 32.26,
-                  width: 32,
-                ),
-                Text('$total',
-                    style: normalFont3(
-                      fontsize: 28,
-                      fontweight: FontWeight.w700,
-                      color: FbColors.black,
-                    ))
-              ],
-            ),
-            Text(
-                textAlign: TextAlign.center,
-                title,
-                style: mainFont(
-                    fontsize: 12,
-                    fontweight: FontWeight.w400,
-                    color: FbColors.black)),
-            SizedBox(height: 8.0),
-          ],
-        ),
+    return Container(
+      height: 90,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: FbColors.white),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset(
+                assetpath,
+                height: 32.26,
+                width: 32,
+              ),
+              Text('$total',
+                  style: normalFont3(
+                    fontsize: 28,
+                    fontweight: FontWeight.w700,
+                    color: FbColors.black,
+                  ))
+            ],
+          ),
+          Text(
+              textAlign: TextAlign.center,
+              title,
+              style: mainFont(
+                  fontsize: 12,
+                  fontweight: FontWeight.w400,
+                  color: FbColors.black)),
+          SizedBox(height: 8.0),
+        ],
       ),
     );
   }
 
   Widget _buildSalesInsightItem(String title, int total, String assetpath,
       String path, String percentage) {
-    return Card(
-        child: Container(
-      height: 90,
-      width: 100,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: FbColors.white),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset(
-              assetpath,
-              height: 32.26,
-              width: 32,
-            ),
-            Text(total.toString(),
-                style: normalFont3(
-                  fontsize: 28,
-                  fontweight: FontWeight.w700,
-                  color: FbColors.black,
-                ))
-          ],
+    return Container(
+          height: 90,
+          width: double.infinity,
+          decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10), color: FbColors.white),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Image.asset(
+          assetpath,
+          height: 32.26,
+          width: 32,
         ),
-        Text(
-            textAlign: TextAlign.center,
-            title,
+        Text(total.toString(),
+            style: normalFont3(
+              fontsize: 28,
+              fontweight: FontWeight.w700,
+              color: FbColors.black,
+            ))
+      ],
+    ),
+    Text(
+        textAlign: TextAlign.center,
+        title,
+        style: mainFont(
+            fontsize: 12,
+            fontweight: FontWeight.w400,
+            color: FbColors.black)),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          path,
+          height: 16,
+          width: 16.13,
+        ),
+        Text(percentage,
             style: mainFont(
-                fontsize: 12,
-                fontweight: FontWeight.w400,
-                color: FbColors.black)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              path,
-              height: 16,
-              width: 16.13,
-            ),
-            Text(percentage,
-                style: mainFont(
-                  fontsize: 8,
-                  fontweight: FontWeight.w400,
-                  color: FbColors.greyColor,
-                ))
-          ],
-        ),
-      ]),
-    ));
+              fontsize: 8,
+              fontweight: FontWeight.w400,
+              color: FbColors.greyColor,
+            ))
+      ],
+    ),
+          ]),
+        );
   }
 
   Widget _buildOrderHistory() {

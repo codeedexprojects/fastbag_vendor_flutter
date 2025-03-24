@@ -12,7 +12,7 @@ class GroceryRepository {
       print("----------------------->$storeType");
 
       Response response = await dio.get(
-        "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
+        "${baseUrl}vendors/categories/filter/?store_type_name=Grocery",
       );
 
       return response.data;
