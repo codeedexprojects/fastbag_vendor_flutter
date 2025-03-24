@@ -16,6 +16,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/lis
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_sub_categories.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashionproduct_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../model/fashion_item_model.dart' as fashion_model;
@@ -258,7 +259,7 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                 label: 'Price',
                 controller: priceController,
                 keyboard: TextInputType.number,
-                validator: customValidatornoSpaceError,
+                validator: priceValidator,
               ),
               FbCategoryFormField(
                 label: 'Material',
@@ -269,6 +270,7 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                 label: 'Wholesale Price',
                 controller: wholeSalePriceController,
                 keyboard: TextInputType.number,
+                validator: priceValidator,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -396,6 +398,7 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                         label: 'Price',
                         controller: sizes[sizeIndex]["price"],
                         keyboard: TextInputType.number,
+                        validator: priceValidator,
                       ),
                     ),
                   ],
@@ -408,6 +411,10 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                         label: 'Stock',
                         controller: sizes[sizeIndex]["stock"],
                         keyboard: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        validator: customValidatornoSpaceError,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -416,6 +423,7 @@ class _EditFashionProductScreenState extends State<EditFashionProductScreen> {
                         label: 'Offer Price',
                         controller: sizes[sizeIndex]["offer_price"],
                         keyboard: TextInputType.number,
+                        validator: priceValidator,
                       ),
                     ),
                   ],

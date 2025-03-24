@@ -15,6 +15,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/lis
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_sub_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../../../Commons/colors.dart';
@@ -230,7 +231,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                   });
                 },
               ),
-            
               FbProductsFilePicker(
                   fileCategory: 'Product',
                   onFilesPicked: (List<File> files) {
@@ -248,7 +248,8 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                             (await Navigator.push<CategoryRequestModel>(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const ListCategoriesName())));
+                                    builder: (_) =>
+                                        const ListCategoriesName())));
                         selectedCategoryId =
                             productProvider.categoryRequestModel?.id;
                         categoryController.text =
@@ -291,12 +292,13 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                 label: 'Price',
                 controller: priceController,
                 keyboard: TextInputType.number,
-                validator: customValidatornoSpaceError,
+                validator: priceValidator,
               ),
               FbCategoryFormField(
                 label: 'Stock Unit',
                 controller: stockUnitController,
                 keyboard: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: customValidatornoSpaceError,
               ),
               FbCategoryFormField(
@@ -308,7 +310,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
               FbCategoryFormField(
                 label: 'Wholesale Price ',
                 controller: wholeSalePriceController,
-                validator: customValidatornoSpaceError,
+                validator: priceValidator,
                 keyboard: TextInputType.number,
               ),
               Padding(
@@ -465,7 +467,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                         child: FbCategoryFormField(
                             label: 'Price',
                             controller: sizes[sizeIndex]["price"],
-                            validator: customValidatornoSpaceError,
+                            validator: priceValidator,
                             keyboard: TextInputType.number)),
                   ],
                 ),
@@ -477,13 +479,16 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                             label: 'Stock',
                             controller: sizes[sizeIndex]["stock"],
                             validator: customValidatornoSpaceError,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             keyboard: TextInputType.number)),
                     const SizedBox(width: 10),
                     Expanded(
                         child: FbCategoryFormField(
                             label: 'Offer Price',
                             controller: sizes[sizeIndex]["offer_price"],
-                            validator: customValidatornoSpaceError,
+                            validator: priceValidator,
                             keyboard: TextInputType.number)),
                   ],
                 ),
