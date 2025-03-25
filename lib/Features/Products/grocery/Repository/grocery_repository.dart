@@ -29,6 +29,7 @@ class GroceryRepository {
       throw 'Unexpected error occurred. Please try again.';
     }
   }
+
   Future fetchGrocerySubCategory() async {
     try {
       String? storeType = await StoreManager().getStoreType();
@@ -54,7 +55,6 @@ class GroceryRepository {
       throw 'Unexpected error occurred. Please try again.';
     }
   }
-
 
   Future fetchGrocerySubCategoryList() async {
     try {
@@ -167,9 +167,7 @@ class GroceryRepository {
   // Edit Sub Category
   editSubCategory(int subCategoryId, data) async {
     try {
-      // final token = await StoreManager().getAccessToken();
-      final token =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o';
+      final token = await StoreManager().getAccessToken();
       // Set headers
       Options options = Options(
         headers: {
@@ -203,9 +201,8 @@ class GroceryRepository {
   // Delete Sub Category
   deleteSubCategory(int subCategoryId) async {
     try {
-      // final token = await StoreManager().getAccessToken();
-      final token =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o';
+      final token = await StoreManager().getAccessToken();
+
       // Set headers
       Options options = Options(
         headers: {
@@ -285,9 +282,7 @@ class GroceryRepository {
   // Edit Product
   editProduct(productId, data) async {
     try {
-      // final token = await StoreManager().getAccessToken();
-      final token =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o';
+      final token = await StoreManager().getAccessToken();
       // Set headers
       Options options = Options(
         headers: {
@@ -322,16 +317,14 @@ class GroceryRepository {
   // Enable Disable Product
   enableDisableProduct(productId, bool isProductEnabled) async {
     try {
-      // final token = await StoreManager().getAccessToken();
-      final token =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o';
+      final token = await StoreManager().getAccessToken();
       // Set headers
       Options options = Options(
         headers: {
           "Authorization": "Bearer $token",
         },
       );
-      final fromData = FormData.fromMap({"Available": isProductEnabled});
+      final fromData = FormData.fromMap({"is_available": isProductEnabled});
 
       Response response = await dio.patch(
           '${baseUrl}grocery/products/$productId/',
@@ -358,12 +351,7 @@ class GroceryRepository {
   deleteProduct(int productId) async {
     try {
       final token = await StoreManager().getAccessToken();
-      if (token ==
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczMzE0MDk3LCJpYXQiOjE3NDE3NzgwOTcsImp0aSI6IjZiYjk0ZWVmMDRmYjQzMDk5NTM0OTJkZDY0OWMwNjc0IiwidXNlcl9pZCI6MX0.-czSNSuQNR4U4-awexhFHRGU3UuR25tDsst-NslRs2o') {
-        print('=--------------->Tocken Matches');
-      } else {
-        print('=--------------->Tocken Nooooooot      Matches');
-      }
+
       // Set headers
       Options options = Options(
         headers: {
