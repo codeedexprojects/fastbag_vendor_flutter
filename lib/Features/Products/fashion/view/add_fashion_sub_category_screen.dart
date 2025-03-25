@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
@@ -19,20 +20,23 @@ import '../view_model/fashion_category_view_model.dart';
 
 class FashionAddSubCategoryScreen extends StatefulWidget {
   final List<FashionCategoryModel?> categories;
+
   const FashionAddSubCategoryScreen({super.key, required this.categories});
 
   @override
-  State<FashionAddSubCategoryScreen> createState() => _AddSubCategoryScreenState();
+  State<FashionAddSubCategoryScreen> createState() =>
+      _AddSubCategoryScreenState();
 }
 
 class _AddSubCategoryScreenState extends State<FashionAddSubCategoryScreen> {
   var nameController = TextEditingController();
-  var subCategoryController=TextEditingController();
+  var subCategoryController = TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
   bool _switchValue = false;
   var _formKey = GlobalKey<FormState>();
   FashionCategoryModel? selectedCategory;
+  FashionSubCategoryModel? subCategoryModel;
 
   @override
   void initState() {
@@ -52,7 +56,7 @@ class _AddSubCategoryScreenState extends State<FashionAddSubCategoryScreen> {
 
   void _onSubmitForm() async {
     final categoryViewModel =
-    Provider.of<FashionCategoryViewModel>(context, listen: false);
+        Provider.of<FashionCategoryViewModel>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
       if (selectedCategory == null) {
@@ -64,24 +68,29 @@ class _AddSubCategoryScreenState extends State<FashionAddSubCategoryScreen> {
 
       if (_selectedImage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("You must select an image for category")),
+          const SnackBar(
+              content: Text("You must select an image for category")),
         );
         return;
       }
 
       FashionSubCategoryModel category = FashionSubCategoryModel(
-        category: selectedCategory!.id,
-        enableSubcategory: _switchValue,
-        name: nameController.text.trim(),
-        subcategoryImage: _selectedImage?.path ?? "",
-        categoryName: selectedCategory!.storeTypeName,
-          description: subCategoryController.text.trim()
-      );
+          category: selectedCategory!.id,
+          enableSubcategory: _switchValue,
+          name: nameController.text.trim(),
+          subcategoryImage: _selectedImage?.path ?? "",
+          categoryName: selectedCategory!.storeTypeName,
+          description: subCategoryController.text.trim());
 
-      await categoryViewModel.addProductSubCategory(
+      await categoryViewModel
+          .addProductSubCategory(
         context: context,
         subCategories: category,
-      );
+      )
+          .then((e) {
+        categoryViewModel.getFashionCategorybySubCategories(
+            categoryId: selectedCategory?.id ?? 0);
+      });
 
       setState(() {
         nameController.clear();
@@ -93,14 +102,14 @@ class _AddSubCategoryScreenState extends State<FashionAddSubCategoryScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(

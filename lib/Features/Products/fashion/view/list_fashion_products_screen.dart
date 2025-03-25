@@ -76,7 +76,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                   onTapOutside: (e) => searchFocusNode.unfocus(),
                   onTap: () {},
                   focusNode: searchFocusNode,
-                  autofocus: true,
+                  autofocus: false,
                   decoration: searchBarDecoration(hint: "Search Here")),
             ),
             Consumer<FashionProductViewModel>(builder: (context, data, _) {
@@ -139,7 +139,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                 .isNotEmpty)
                                         ? ClipRRect(
                                             borderRadius:
-                                                BorderRadius.circular(10),
+                                                BorderRadius.circular(15),
                                             child: CachedNetworkImage(
                                               imageUrl: productProvider
                                                       .fashionProducts[index]
