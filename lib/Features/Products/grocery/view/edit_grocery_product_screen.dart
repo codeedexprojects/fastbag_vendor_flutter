@@ -123,7 +123,6 @@ class _EditGroceryProductScreenState extends State<EditGroceryProductScreen> {
 
       "description": descriptionController.text.trim(),
       "weight_measurement": selectedMeasurment,
-      "Available": isProductInStock,
       "is_offer_product": isOfferProduct,
       "is_popular_product": isPopularProduct,
       "weights": jsonEncode([
@@ -136,11 +135,12 @@ class _EditGroceryProductScreenState extends State<EditGroceryProductScreen> {
                   "${(variant['weightController']!.text)}${variant['selectedVariantMeasurment']}",
               "price": double.tryParse(variant['priceController']!.text.trim())
                   ?.toStringAsFixed(2),
-              "quantity": int.parse(variant['quantityController']),
+              "quantity": int.parse(variant['quantityController'].text.trim()),
               "is_in_stock": variant['stockStatus'],
             }
       ]),
       "images": imageFiles, // Sending images as MultipartFile
+      "is_available": isProductInStock
     };
     print("------------------------------------->$data");
     print("------------------------------------->${widget.product.id}");

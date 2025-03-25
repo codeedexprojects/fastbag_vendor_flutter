@@ -27,12 +27,22 @@ class ListGroceryProducts extends StatefulWidget {
 }
 
 class _ListGroceryProductsState extends State<ListGroceryProducts> {
+  TextEditingController searchController = TextEditingController();
+  FocusNode searchFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
     final groceryViewModel =
-    Provider.of<GroceryViewModel>(context, listen: false);
+        Provider.of<GroceryViewModel>(context, listen: false);
     groceryViewModel.fetchProductList(context, widget.subCategory.id);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose(); // Dispose of the controller
+    searchFocusNode.dispose(); // Dispose of the focus node
+    super.dispose();
   }
 
   @override
@@ -59,6 +69,8 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                   height: screenWidth * 0.15,
                   width: screenWidth * 0.8,
                   child: TextField(
+                      controller: searchController,
+                      focusNode: searchFocusNode,
                       decoration: searchBarDecoration(hint: "Search Here")),
                 ),
                 const Icon(Icons.more_vert)
@@ -68,87 +80,95 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
               final products = groceryViewModel.subCategoryProducts;
               return products.isEmpty
                   ? Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/no_product.svg',
-                          width: screenWidth * .45, // Set desired width
-                          height: screenWidth * .3, // Set desired height
-                        ),
-                        SizedBox(
-                          height: screenHeight * .004,
-                        ),
-                        Text("Nothing to show yet. Created", style: nunito()),
-                        Text("Product list will appear here", style: nunito())
-                      ],
-                    ),
-                  ))
-                  : Expanded(
-                child: ListView.builder(
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    print(
-                        '-----------------> lenth ------------> ${products.length}');
-                    print(
-                        '-----------------> products ------------> ${products[index].name}');
-                    return Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            // navigate(
-                            //     context: context,
-                            //     screen: ProductDetailScreen(
-                            //         productId: products[index].id));
-                          },
-                          child: ListTile(
-                            onTap: () {
-                              navigate(context: context, screen: ProductDetails(product: products[index],));
-                            },
-                            leading: Container(
-                              height: screenHeight * .05,
-                              width: screenHeight * .06,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: products[index].images.isNotEmpty
-                                      ? NetworkImage(
-                                      products[index].images[0].image)
-                                      : const AssetImage(
-                                      'assets/Images/grocery.jpeg'),
-                                  fit: BoxFit.cover,
-                                ),
-                                border: Border.all(
-                                    color: Colors.grey, width: 0.2),
-                              ),
-                            ),
-                            title: Text(products[index].name),
-                            subtitle:
-                            Text(products[index].price.toString()),
-                            trailing: Switch(
-                              value: products[index].available,
-                              activeColor: Colors.green,
-                              inactiveThumbColor: Colors.white,
-                              inactiveTrackColor: Colors.grey[300],
-                              trackOutlineColor:
-                              const WidgetStatePropertyAll(
-                                  Colors.transparent),
-                              materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                              onChanged: (value) {
-                                groceryViewModel.updateProductAvailable(
-                                    context,
-                                    products[index].id,
-                                    !products[index].available);
-                              },
-                            ),
+                      child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/no_product.svg',
+                            width: screenWidth * .45, // Set desired width
+                            height: screenWidth * .3, // Set desired height
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            height: screenHeight * .004,
+                          ),
+                          Text("Nothing to show yet. Created", style: nunito()),
+                          Text("Product list will appear here", style: nunito())
+                        ],
+                      ),
+                    ))
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: products.length,
+                        itemBuilder: (context, index) {
+                          print(
+                              '-----------------> lenth ------------> ${products.length}');
+                          print(
+                              '-----------------> products ------------> ${products[index].name}');
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  // navigate(
+                                  //     context: context,
+                                  //     screen: ProductDetailScreen(
+                                  //         productId: products[index].id));
+                                },
+                                child: ListTile(
+                                  onTap: () {
+                                    searchController.clear();
+                                    searchFocusNode
+                                        .unfocus(); // Dismiss keyboard before navigation
+
+                                    navigate(
+                                        context: context,
+                                        screen: ProductDetails(
+                                          product: products[index],
+                                        ));
+                                  },
+                                  leading: Container(
+                                    height: screenHeight * .05,
+                                    width: screenHeight * .06,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: products[index].images.isNotEmpty
+                                            ? NetworkImage(
+                                                products[index].images[0].image)
+                                            : const AssetImage(
+                                                'assets/Images/grocery.jpeg'),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      border: Border.all(
+                                          color: Colors.grey, width: 0.2),
+                                    ),
+                                  ),
+                                  title: Text(products[index].name),
+                                  subtitle:
+                                      Text(products[index].price.toString()),
+                                  trailing: Switch(
+                                    value: products[index].available,
+                                    activeColor: Colors.green,
+                                    inactiveThumbColor: Colors.white,
+                                    inactiveTrackColor: Colors.grey[300],
+                                    trackOutlineColor:
+                                        const WidgetStatePropertyAll(
+                                            Colors.transparent),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    onChanged: (value) {
+                                      groceryViewModel.updateProductAvailable(
+                                          context,
+                                          products[index].id,
+                                          !products[index].available);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     );
-                  },
-                ),
-              );
             }),
             Padding(
               padding: EdgeInsets.symmetric(
