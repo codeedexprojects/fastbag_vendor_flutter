@@ -34,6 +34,7 @@ class FashionListProductsScreen extends StatefulWidget {
 class _ListProductsScreenState extends State<FashionListProductsScreen> {
   Map<int, bool> isExpandedMap = {}; // Track expanded state per item
   final FocusNode searchFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +46,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-   // final FocusNode searchFocusNode = FocusNode();
+    // final FocusNode searchFocusNode = FocusNode();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     final productProvider = Provider.of<FashionProductViewModel>(
@@ -62,13 +63,11 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
             SizedBox(height: screenHeight * 0.08),
             SizedBox(
               height: screenWidth * 0.15,
-             
               child: TextFormField(
-                onTapOutside: (e)=> searchFocusNode.unfocus(),
-                onTap: (){
-                },
-                focusNode: searchFocusNode,
-                autofocus: true,
+                  onTapOutside: (e) => searchFocusNode.unfocus(),
+                  onTap: () {},
+                  focusNode: searchFocusNode,
+                  autofocus: false,
                   decoration: searchBarDecoration(hint: "Search Here")),
             ),
             Consumer<FashionProductViewModel>(builder: (context, data, _) {
@@ -108,7 +107,6 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-
                                   navigate(
                                       context: context,
                                       screen: FashionProductDetailScreen(
@@ -129,8 +127,10 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                 .fashionProducts[index]
                                                 .images!
                                                 .isNotEmpty)
-                                        ? ClipRRect(borderRadius:BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            child: CachedNetworkImage(
                                               imageUrl: productProvider
                                                       .fashionProducts[index]
                                                       .images?[0]
@@ -144,7 +144,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                   (context, url, error) =>
                                                       Icon(Icons.error),
                                             ),
-                                        )
+                                          )
                                         : Image.asset(
                                             PlaceholderImage.placeholderimage),
                                   ),

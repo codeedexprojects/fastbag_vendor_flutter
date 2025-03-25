@@ -162,7 +162,8 @@ class FashionProductViewModel extends ChangeNotifier {
     try {
       SVProgressHUD.show();
 
-      final response = await _productRepository.deleteProduct(productId);
+      final response =
+          await _productRepository.deleteProduct(context, productId);
       print('response------------>$response');
 
       fashionProducts.removeWhere((element) => element.id == productId);
@@ -170,8 +171,8 @@ class FashionProductViewModel extends ChangeNotifier {
 
       showFlushbar(
           context: context,
-          color: FbColors.buttonColor,
-          icon: Icons.check,
+          color: FbColors.errorcolor,
+          icon: Icons.delete,
           message: 'Product Deleted Successfully');
     } catch (e) {
       print('error------------>$e');
@@ -184,6 +185,7 @@ class FashionProductViewModel extends ChangeNotifier {
       SVProgressHUD.dismiss();
     }
   }
+
 // Delete Product Image
 
   deleteProductImage({
@@ -221,5 +223,4 @@ class FashionProductViewModel extends ChangeNotifier {
       SVProgressHUD.dismiss();
     }
   }
-
 }

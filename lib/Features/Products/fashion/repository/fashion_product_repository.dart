@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Commons/colors.dart';
+import '../../../../Commons/flush_bar.dart';
+
 class FashionProductRepository {
   final Dio _dio = Dio();
 
@@ -188,7 +191,6 @@ class FashionProductRepository {
   }
 
   Future fetchFashionProductDetail(int productId) async {
-    
     try {
       final tokenId = await StoreManager().getAccessToken();
       final headers = {'Authorization': 'Bearer $tokenId'};
@@ -310,7 +312,7 @@ class FashionProductRepository {
   }
 
 // delete peoduct
-  deleteProduct(productId) async {
+  deleteProduct(BuildContext context, productId) async {
     try {
       final tokenId = await StoreManager().getAccessToken();
       var headers = {'Authorization': 'Bearer $tokenId'};
@@ -322,7 +324,15 @@ class FashionProductRepository {
         ),
       );
       print(response.data);
-      return response.data;
+
+      if (response.statusCode == 204) {
+        showFlushbar(
+            context: context,
+            color: FbColors.errorcolor,
+            icon: Icons.delete,
+            message: "Product delete successfully");
+      }
+      // return response.data;
     } on DioException catch (e) {
       print("Error: ${e.response}");
       final errorMessage = 'Product Unable to delete';

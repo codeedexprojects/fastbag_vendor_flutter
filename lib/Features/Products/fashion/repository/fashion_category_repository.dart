@@ -116,16 +116,12 @@ class FashionCategoryRepository {
       if (response.statusCode == 201) {
         SVProgressHUD.dismiss();
         print("sub category added successful: ${response.data}");
-        showDialog(
-          context: context,
-          barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(
-            text: "Sub Category Added",
-            descrription:
-                "Your Category has been added to the list and is visible to customers",
-            type: FbBottomDialogType.addSubCategory,
-          ),
-        );
+        Navigator.pop(context);
+        showFlushbar(
+            context: context,
+            color: FbColors.buttonColor,
+            icon: Icons.check,
+            message: "SubCartegory Add Successfull");
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OOPs something happened")),
@@ -229,7 +225,6 @@ class FashionCategoryRepository {
       );
 
       if (response.statusCode == 204) {
-
         showFlushbar(
             context: context,
             color: FbColors.errorcolor,
