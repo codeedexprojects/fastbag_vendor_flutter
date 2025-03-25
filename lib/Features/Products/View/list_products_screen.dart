@@ -47,6 +47,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
         Provider.of<ProductViewModel>(context, listen: false);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromRGBO(247, 253, 247, 1),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -57,6 +58,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
             SizedBox(
               height: screenWidth * 0.15,
               child: TextField(
+                autofocus: false,
                   decoration: searchBarDecoration(hint: "Search Here")),
             ),
             Consumer<ProductViewModel>(builder: (context, data, _) {

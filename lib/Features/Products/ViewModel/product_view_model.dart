@@ -1,3 +1,4 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_response.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Repository/product_repository.dart';
