@@ -215,6 +215,39 @@ class ProductRepository {
   //     print("Error: $e");
   //   }
   // }
+
+  enableDisableProduct(productId, bool isProductEnabled) async {
+    try {
+      final token = await StoreManager().getAccessToken();
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+      final fromData = FormData.fromMap({"is_available": isProductEnabled});
+
+      Response response = await _dio.patch(
+          "${baseUrl}food/dishes/$productId/",
+          data: fromData,
+          options: options);
+      return response.data;
+    } on DioException catch (e) {
+      print("DioError: ${e.response?.statusCode}");
+
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw 'Failed to Update. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
   Future<dynamic> deleteProduct(BuildContext context, int productId) async {
     print("inside deleteProduct");
     print("Deleting: ${baseUrl}food/dishes/$productId/");

@@ -152,14 +152,21 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                         Switch(
                                           activeColor: Colors.green,
                                           inactiveThumbColor: Colors.white,
+                                          inactiveTrackColor: Colors.grey[300],
+                                          trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                                           materialTapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
                                           value: productProvider
                                                   .foodProducts[index]
                                                   .isAvailable ??
                                               false,
-                                          onChanged: (value) {
-                                            // Handle switch toggle logic
+                                          onChanged: (value) async {
+                                            await productProvider.enableDisableProduct(
+                                              productProvider.foodProducts[index].id!,
+                                              value, // New availability state
+                                            );
+                                            productProvider.foodProducts[index].isAvailable = value;
+                                            productProvider.notifyListeners();
                                           },
                                         ),
                                       ],
