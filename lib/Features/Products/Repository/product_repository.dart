@@ -188,8 +188,8 @@ class ProductRepository {
         Navigator.pop(context);
         showFlushbar(
             context: context,
-            color: FbColors.buttonColor,
-            icon: Icons.check,
+            color: FbColors.errorcolor,
+            icon: Icons.delete,
             message: "product delete successful");
         return response.data;
       } else if (response.statusCode == 401) {

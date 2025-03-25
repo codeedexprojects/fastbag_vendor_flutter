@@ -28,12 +28,23 @@ class ProductEditDeleteScreen extends StatefulWidget {
 }
 
 class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
+  ScrollController _scrollController = ScrollController();
+  late FashionProductViewModel fashionViewModel = FashionProductViewModel();
+
+  @override
   void initState() {
-    final fashionProductViewModel =
-        Provider.of<FashionProductViewModel>(context, listen: false);
-    fashionProductViewModel.getFashionProductCategories(
-        subCategoryId: widget.subCategory.id ?? 0);
     super.initState();
+    fashionViewModel =
+        Provider.of<FashionProductViewModel>(context, listen: false);
+    fashionViewModel.allproductPage = 1;
+    fashionViewModel.getAllProducts(subCategoryId: widget.subCategory.id ?? 0);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        fashionViewModel.getAllProductLoading(
+            subCategoryId: widget.subCategory.id ?? 0);
+      }
+    });
   }
 
   @override
@@ -59,6 +70,7 @@ class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: ListView.builder(
+            controller: _scrollController,
             itemCount: fashionProductViewModel.fashionProducts.length,
             itemBuilder: (context, index) {
               return Padding(

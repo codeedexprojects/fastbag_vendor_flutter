@@ -13,6 +13,8 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Commons/colors.dart';
+import '../../../../Commons/flush_bar.dart';
 import '../model/fashion_categoryby_subcategory.dart';
 import '../model/fashion_sub_category_model.dart';
 
@@ -205,6 +207,38 @@ class FashionCategoryRepository {
       } else {
         print(response.statusMessage);
       }
+    } on DioException catch (e) {
+      print("error ${e.response?.data}");
+    }
+  }
+
+  Future<dynamic> FashionSubCategoryDelete(
+      BuildContext context, int subcategoryId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
+      var vendorId = prefs.getInt('vendor_id');
+      var headers = {'Authorization': 'Bearer $tokenId'};
+      var dio = Dio();
+      var response = await dio.request(
+        '${baseUrl}fashion/clothing-subcategories/$subcategoryId/',
+        options: Options(
+          method: 'DELETE',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 204) {
+
+        showFlushbar(
+            context: context,
+            color: FbColors.errorcolor,
+            icon: Icons.delete,
+            message: "subcategory delete successful");
+      }
+      // else {
+      //   print(response.statusMessage);
+      // }
     } on DioException catch (e) {
       print("error ${e.response?.data}");
     }

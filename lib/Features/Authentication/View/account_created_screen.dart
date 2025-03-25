@@ -85,7 +85,7 @@ class AccountCreatedScreen extends StatelessWidget {
                 label: "Continue to Setup"),
             FbButton(
               onClick: () {
-                navigate(context: context, screen: FbBottomNav());
+                navigate(context: context, screen: FbBottomNav(),type: NavigationType.pushAndRemoveUntil);
               },
               label: "Skip for later",
               color: Colors.white,

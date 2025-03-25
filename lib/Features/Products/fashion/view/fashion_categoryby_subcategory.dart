@@ -66,7 +66,7 @@ class _FashionCategorybySubcategoryState
         title: Text(
           categoryProvider.selectsubCategory.isEmpty
               ? " Sub Categories"
-              : categoryProvider.selectsubCategory.first.name ?? '',
+              : categoryProvider.selectsubCategory.first.categoryName ?? '',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
