@@ -14,12 +14,9 @@ import '../view_model/fashion_category_view_model.dart';
 import 'edit_fashion_sub_category_screen.dart';
 
 class FashionSubCategoryEditList extends StatefulWidget {
-  // final List<FashionSubCategoryModel> subCategories;
-  // final List<FashionCategoryModel> categories;
+  final FashionCategoryModel category;
 
-  final int? categoryId;
-
-  const FashionSubCategoryEditList({super.key, required this.categoryId});
+  const FashionSubCategoryEditList({super.key, required this.category});
 
   @override
   State<FashionSubCategoryEditList> createState() =>
@@ -32,7 +29,7 @@ class _FashionSubCategoryEditListState
     final categoryProvider =
         Provider.of<FashionCategoryViewModel>(context, listen: false);
     categoryProvider.getFashionCategorybySubCategories(
-        categoryId: widget?.categoryId ?? 0);
+        categoryId: widget.category.id ?? 0);
     super.initState();
   }
 
@@ -44,9 +41,8 @@ class _FashionSubCategoryEditListState
     return Scaffold(
       appBar: AppBar(
         backgroundColor: FbColors.backgroundcolor,
-        title: Text(categoryProvider.selectsubCategory.isEmpty?
-          "Edit Sub Categories"
-          :'${categoryProvider.selectsubCategory.first.categoryName??''} Edit SubCategories',
+        title: Text(
+          "Edit Sub Categories",
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -61,47 +57,76 @@ class _FashionSubCategoryEditListState
             itemBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.all(screenWidth * .02),
-                child: InkWell(
-                  onTap: () {
-                    navigate(
-                        context: context,
-                        screen: FashionEditSubCategoryScreen(
-                          categories: categoryProvider.categories,
-                          category: categoryProvider.categories[0],
-                          subCategory: categoryProvider.subCategories[index],
-                        ));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(screenWidth * .02),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 0.5)),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 32,
-                        backgroundColor:
-                            Colors.grey[200], // Optional: Background color
-                        child: ClipOval(
-                          child: Image.network(
-                            categoryProvider
-                                .selectsubCategory[index].subcategoryImage
-                                .toString(),
-                            fit: BoxFit
-                                .cover, // Ensures the image fills the circle
-                            width:
-                                64, // Diameter of the CircleAvatar (radius * 2)
-                            height:
-                                64, // Diameter of the CircleAvatar (radius * 2)
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error,
-                                  color: Colors
-                                      .red); // Optional: Handle loading errors
-                            },
-                          ),
+                child: Container(
+                  padding: EdgeInsets.all(screenWidth * .02),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey, width: 0.5)),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 32,
+                      backgroundColor:
+                          Colors.grey[200], // Optional: Background color
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          categoryProvider
+                              .selectsubCategory[index].subcategoryImage
+                              .toString(),
+                          fit: BoxFit
+                              .cover, // Ensures the image fills the circle
+                          width:
+                              64, // Diameter of the CircleAvatar (radius * 2)
+                          height:
+                              64, // Diameter of the CircleAvatar (radius * 2)
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.error,
+                                color: Colors
+                                    .red); // Optional: Handle loading errors
+                          },
                         ),
                       ),
-                      title: Text(categoryProvider.selectsubCategory[index].name
-                          .toString()),
-                      trailing: const Icon(Icons.edit),
+                    ),
+                    title: Text(categoryProvider.selectsubCategory[index].name
+                        .toString()),
+                    trailing: Wrap(
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              print(
+                                categoryProvider.selectsubCategory[index].name,
+                              );
+                              navigate(
+                                  context: context,
+                                  screen: FashionEditSubCategoryScreen(
+                                    category: widget.category,
+                                    subCategory: categoryProvider
+                                        .selectsubCategory[index],
+                                  ));
+                            },
+                            child: Icon(Icons.edit)),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              categoryProvider
+                                  .deleteSubCategory(
+                                      context: context,
+                                      subcategoryId: categoryProvider
+                                              .selectsubCategory[index].id ??
+                                          0)
+                                  .then((v) {
+                                categoryProvider
+                                    .getFashionCategorybySubCategories(
+                                        categoryId: widget.category.id ?? 0);
+                              });
+                            },
+                            child: Icon(
+                              Icons.delete,
+                              color: FbColors.errorcolor,
+                            ))
+                      ],
                     ),
                   ),
                 ),

@@ -13,6 +13,8 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Commons/colors.dart';
+import '../../../../Commons/flush_bar.dart';
 import '../model/fashion_categoryby_subcategory.dart';
 import '../model/fashion_sub_category_model.dart';
 
@@ -146,31 +148,13 @@ class FashionCategoryRepository {
     }
   }
 
-  Future<dynamic> fashionProductSubCategoryEdit(BuildContext context,
-      FashionSubCategoryModel model, int subcategoryId) async {
-    print("inside");
-
+  Future<dynamic> editFashionSubCategory(
+      BuildContext context, data, subcategoryId) async {
+    print('---------------$data');
     try {
-      SVProgressHUD.show();
-      print(subcategoryId);
-      print("inside try");
-      final prefs = await SharedPreferences.getInstance();
-      var vendorId = prefs.getInt(FbLocalStorage.vendorId);
-      FormData formData = FormData.fromMap({
-        "category": model.category,
-        "enable_subcategory": model.enableSubcategory,
-        "name": model.name,
-        "subcategory_image": await MultipartFile.fromFile(
-          model.subcategoryImage.toString(),
-          filename: basename(model.subcategoryImage.toString()),
-        ),
-        "vendor_id": vendorId,
-        "description": model.description
-      });
-      // Create FormData for file uploads
-      SVProgressHUD.show();
+      FormData formData = FormData.fromMap(data);
 
-      var tokenId = prefs.getString('access_token');
+      final tokenId = await StoreManager().getAccessToken();
 
       var headers = {'Authorization': 'Bearer $tokenId'};
 
@@ -184,40 +168,14 @@ class FashionCategoryRepository {
       );
 
       print(response.statusCode);
+      return response.data;
 
       // Handle the response
-      if (response.statusCode == 200) {
-        SVProgressHUD.dismiss();
-        print("sub category updated successful: ${response.data}");
-        showDialog(
-          context: context,
-          barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(
-            text: "Sub Category Updated",
-            descrription:
-                "Your Category has been updated to the list and is visible to customers",
-            type: FbBottomDialogType.editSubCategory,
-          ),
-        );
-      } else if (response.statusCode == 401) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OOPs something happened")),
-        );
-        SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
-      } else {
-        SVProgressHUD.dismiss();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OOPs something happened")),
-        );
-      }
     } on DioException catch (e) {
-      print(e.response?.data);
-      SVProgressHUD.dismiss();
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("OOPs something happened , Error: $e")),
-      // );
-      print("Error: $e");
+      print(e.response);
+      throw 'Unable to Update Sub Category';
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -249,6 +207,38 @@ class FashionCategoryRepository {
       } else {
         print(response.statusMessage);
       }
+    } on DioException catch (e) {
+      print("error ${e.response?.data}");
+    }
+  }
+
+  Future<dynamic> FashionSubCategoryDelete(
+      BuildContext context, int subcategoryId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
+      var vendorId = prefs.getInt('vendor_id');
+      var headers = {'Authorization': 'Bearer $tokenId'};
+      var dio = Dio();
+      var response = await dio.request(
+        '${baseUrl}fashion/clothing-subcategories/$subcategoryId/',
+        options: Options(
+          method: 'DELETE',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 204) {
+
+        showFlushbar(
+            context: context,
+            color: FbColors.errorcolor,
+            icon: Icons.delete,
+            message: "subcategory delete successful");
+      }
+      // else {
+      //   print(response.statusMessage);
+      // }
     } on DioException catch (e) {
       print("error ${e.response?.data}");
     }

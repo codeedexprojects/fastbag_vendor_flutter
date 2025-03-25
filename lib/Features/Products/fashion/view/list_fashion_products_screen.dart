@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../model/fashion_categoryby_subcategory.dart';
 import '../model/fashion_sub_category_model.dart';
-import '../view_model/fashionproduct_view_model.dart';
+import '../view_model/fashion_product_view_model.dart';
 import 'add_fashion_product.dart';
 
 class FashionListProductsScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class FashionListProductsScreen extends StatefulWidget {
 
 class _ListProductsScreenState extends State<FashionListProductsScreen> {
   Map<int, bool> isExpandedMap = {}; // Track expanded state per item
-
+  final FocusNode searchFocusNode = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -45,6 +45,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+   // final FocusNode searchFocusNode = FocusNode();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     final productProvider = Provider.of<FashionProductViewModel>(
@@ -59,16 +60,16 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: screenHeight * 0.08),
-            Row(
-              children: [
-                SizedBox(
-                  height: screenWidth * 0.15,
-                  width: screenWidth * 0.8,
-                  child: TextField(
-                      decoration: searchBarDecoration(hint: "Search Here")),
-                ),
-                const Icon(Icons.more_vert)
-              ],
+            SizedBox(
+              height: screenWidth * 0.15,
+             
+              child: TextFormField(
+                onTapOutside: (e)=> searchFocusNode.unfocus(),
+                onTap: (){
+                },
+                focusNode: searchFocusNode,
+                autofocus: true,
+                  decoration: searchBarDecoration(hint: "Search Here")),
             ),
             Consumer<FashionProductViewModel>(builder: (context, data, _) {
               return productProvider.fashionProducts.isEmpty
@@ -107,6 +108,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
+
                                   navigate(
                                       context: context,
                                       screen: FashionProductDetailScreen(
@@ -127,20 +129,22 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                 .fashionProducts[index]
                                                 .images!
                                                 .isNotEmpty)
-                                        ? CachedNetworkImage(
-                                            imageUrl: productProvider
-                                                    .fashionProducts[index]
-                                                    .images?[0]
-                                                    .imageUrl ??
-                                                '',
-                                            placeholder: (context, url) =>
-                                                Image.asset(PlaceholderImage
-                                                    .placeholderimage),
-                                            fit: BoxFit.cover,
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                          )
+                                        ? ClipRRect(borderRadius:BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                              imageUrl: productProvider
+                                                      .fashionProducts[index]
+                                                      .images?[0]
+                                                      .imageUrl ??
+                                                  '',
+                                              placeholder: (context, url) =>
+                                                  Image.asset(PlaceholderImage
+                                                      .placeholderimage),
+                                              fit: BoxFit.cover,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
+                                        )
                                         : Image.asset(
                                             PlaceholderImage.placeholderimage),
                                   ),

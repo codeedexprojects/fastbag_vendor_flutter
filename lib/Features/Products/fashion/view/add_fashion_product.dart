@@ -22,7 +22,7 @@ import '../../../../Commons/colors.dart';
 import '../../../../Commons/fonts.dart';
 import '../../View/widgets/fb_products_file_picker.dart';
 import '../../View/widgets/fb_toggle_switch.dart';
-import '../view_model/fashionproduct_view_model.dart';
+import '../view_model/fashion_product_view_model.dart';
 
 class AddFashionProduct extends StatefulWidget {
   final FashionCategoryModel category;
@@ -257,7 +257,6 @@ class _AddFashionProductState extends State<AddFashionProduct> {
                       },
                       label: 'Category',
                       controller: categoryController,
-                      keyboard: TextInputType.number,
                       validator: customValidatornoSpaceError,
                     ),
                   ),
