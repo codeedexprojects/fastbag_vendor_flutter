@@ -12,7 +12,7 @@ class FashionProductViewModel extends ChangeNotifier {
   final FashionProductRepository _productRepository =
       FashionProductRepository();
 
-  // FashionItemModel? fashionItemModel;
+  Results? fashionProductDetail;
 
   List<Results> _fashionProducts = [];
 
@@ -29,17 +29,28 @@ class FashionProductViewModel extends ChangeNotifier {
 
   ColorPickerModel? colorPicker;
 
+  fetchFashionProductDetail(productId) async {
+    try {
+      SVProgressHUD.show();
+
+      final response =
+          await _productRepository.fetchFashionProductDetail(productId);
+      fashionProductDetail = Results.fromJson(response);
+    } catch (e) {
+      print(e);
+    } finally {
+      SVProgressHUD.dismiss();
+    }
+  }
+
   Future<void> addFashionProduct(
       {required BuildContext context,
       required data,
       required imageData}) async {
     try {
       SVProgressHUD.show();
-
-      final response = await _productRepository.addFastionProduct(
-        context,
-        data,
-      );
+      final response =
+          await _productRepository.addFastionProduct(context, data);
 
       _fashionProducts.add(Results.fromJson((response)));
 

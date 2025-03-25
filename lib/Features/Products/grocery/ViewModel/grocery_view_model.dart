@@ -50,12 +50,12 @@ class GroceryViewModel extends ChangeNotifier {
   Future fetchGrocerySubCategory(context) async {
     try {
       SVProgressHUD.show();
-      final response = await _groceryRepo.fetchGrocerySubCategory();
+      final response = await _groceryRepo.fetchGrocerySubCategoryList();
       //  Map JSON response to GroceryCategoryModel list
       if (response is List) {
         allSubCategories = response
             .map((json) =>
-            GrocerySubCategoryModel.fromJson(json as Map<String, dynamic>))
+                GrocerySubCategoryModel.fromJson(json as Map<String, dynamic>))
             .toList();
       }
 
@@ -70,7 +70,8 @@ class GroceryViewModel extends ChangeNotifier {
   // Fetch  Product List
   fetchProductList(BuildContext context, subCategoryId) async {
     try {
-      final response = await _groceryRepo.fetchProducts(subCategoryId);
+      final response =
+          await _groceryRepo.fetchProductsbySubcategory(subCategoryId);
 
       subCategoryProducts = (response as List)
           .map((json) => GroceryProductsModel.fromJson(json))
@@ -89,16 +90,15 @@ class GroceryViewModel extends ChangeNotifier {
 
   // Add Sub Category
 
-  addSubCategory(
-      BuildContext context,
-      data,
-      ) async {
+  addSubCategory(BuildContext context, data, categoryId) async {
     SVProgressHUD.show();
     try {
       final response = await _groceryRepo.addSubCategory(data);
       // add subcategory  to  List
       final newSubCategory = GrocerySubCategoryModel.fromJson(response);
       allSubCategories.add(newSubCategory);
+      if (categoryId == response['category'])
+        filteredSubCategories.add(newSubCategory);
       notifyListeners();
 
       Navigator.pop(context);
@@ -131,14 +131,14 @@ class GroceryViewModel extends ChangeNotifier {
 
       // Update the All Subcategories list
       final index =
-      allSubCategories.indexWhere((sub) => sub.id == subCategoryId);
+          allSubCategories.indexWhere((sub) => sub.id == subCategoryId);
       if (index != -1) {
         allSubCategories[index] = updatedSubCategory;
       }
 
       // Update the Filtered Subcategories list
       final index1 =
-      filteredSubCategories.indexWhere((sub) => sub.id == subCategoryId);
+          filteredSubCategories.indexWhere((sub) => sub.id == subCategoryId);
       if (index1 != -1) {
         if (filteredSubCategories[index1].category ==
             updatedSubCategory.category) {
@@ -200,16 +200,16 @@ class GroceryViewModel extends ChangeNotifier {
   }
 
   // Add Product
-  addProduct(
-      BuildContext context,
-      data,
-      ) async {
+  addProduct(BuildContext context, data, subCategoryId) async {
     SVProgressHUD.show();
     try {
       final response = await _groceryRepo.addProduct(data);
 // Add Product to List
+      print(response);
       final newProduct = GroceryProductsModel.fromJson(response);
-      subCategoryProducts.add(newProduct);
+      if (subCategoryId == response['sub_category']) {
+        subCategoryProducts.add(newProduct);
+      }
       notifyListeners();
 
       Navigator.pop(context);
@@ -235,15 +235,17 @@ class GroceryViewModel extends ChangeNotifier {
     try {
       SVProgressHUD.show();
       final response = await _groceryRepo.editProduct(productId, data);
-
+      final responseData = response['data'];
       // update the Product from List
-      final updatedData = GroceryProductsModel.fromJson(response['data']);
-
+      final updatedData = GroceryProductsModel.fromJson(responseData);
       final index =
-      subCategoryProducts.indexWhere((product) => product.id == productId);
-      if (index != -1) {
+          subCategoryProducts.indexWhere((product) => product.id == productId);
+      if (subCategoryProducts[index].subCategory ==
+          responseData['sub_category']) {
         subCategoryProducts[index] =
             updatedData; // Replace old entry with updated data
+      } else {
+        subCategoryProducts.removeAt(index);
       }
       notifyListeners();
       Navigator.pop(context);
@@ -270,12 +272,12 @@ class GroceryViewModel extends ChangeNotifier {
     SVProgressHUD.show();
     try {
       final response =
-      await _groceryRepo.enableDisableProduct(productId, isProductEnabled);
+          await _groceryRepo.enableDisableProduct(productId, isProductEnabled);
       print(response['data']);
       final updatedData = GroceryProductsModel.fromJson(response['data']);
       // update the Product from List
       final index =
-      subCategoryProducts.indexWhere((product) => product.id == productId);
+          subCategoryProducts.indexWhere((product) => product.id == productId);
       if (index != -1) {
         subCategoryProducts[index] =
             updatedData; // Replace old entry with updated data

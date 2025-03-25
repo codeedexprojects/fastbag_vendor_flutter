@@ -1,21 +1,16 @@
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/edit_sub_category_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../model/fashion_category_model.dart';
 import '../model/fashion_sub_category_model.dart';
 import 'edit_fashion_sub_category_screen.dart';
 
 class FashionAllSubCategoryEditList extends StatelessWidget {
   final List<FashionSubCategoryModel> subCategories;
-  final List<FashionCategoryModel> categories;
+  final FashionCategoryModel category;
 
   const FashionAllSubCategoryEditList(
-      {super.key, required this.subCategories, required this.categories});
+      {super.key, required this.subCategories, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +39,7 @@ class FashionAllSubCategoryEditList extends StatelessWidget {
                     navigate(
                         context: context,
                         screen: FashionEditSubCategoryScreen(
-                          categories: categories,
-                          category: categories[0],
+                          category: category,
                           subCategory: subCategories[index],
                         ));
                   },
