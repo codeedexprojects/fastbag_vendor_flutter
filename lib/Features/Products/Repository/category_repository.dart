@@ -334,8 +334,8 @@ class CategoryRepository {
         Navigator.pop(context);
         showFlushbar(
             context: context,
-            color: FbColors.buttonColor,
-            icon: Icons.check,
+            color: FbColors.errorcolor,
+            icon: Icons.delete,
             message: "subcategory delete successful");
         // List jsonList = response.data;
         // List<FoodCategoryBySubcategoryModel> jsonResponce = jsonList
