@@ -32,19 +32,19 @@ class UpdateShopModel {
      required this.business_landmark,
   });
 
-  // Map<String,dynamic> toMap(UpdateShopModel model){
-  //   return {
-  //     "business_name":model.business_name,
-  //     "business_location":model.bussiness_location,
-  //     "business_landmark":model.business_landmark,
-  //     "address":model.address,
-  //     "city":model.city,
-  //     "state":model.state,
-  //     "pincode":model.pincode,
-  //     "fssai_no":model.fssai_no,
-  //     "license":model.license,
-  //     "store_type":model.store_type,
-  //     "fssai_certificate":model.fssai_certicate
-  //   };
-  // }
+  Map<String,dynamic> toMap(UpdateShopModel model){
+    return {
+      "business_name":model.business_name,
+      "business_location":model.bussiness_location,
+      "business_landmark":model.business_landmark,
+      "address":model.address,
+      "city":model.city,
+      "state":model.state,
+      "pincode":model.pincode,
+      "fssai_no":model.fssai_no,
+      "license":model.license,
+      "store_type":model.store_type,
+      "fssai_certificate":model.fssai_certicate
+    };
+  }
 }
