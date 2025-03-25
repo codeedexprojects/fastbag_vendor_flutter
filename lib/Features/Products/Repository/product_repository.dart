@@ -161,58 +161,134 @@ class ProductRepository {
     }
   }
 
-  Future<dynamic> deleteProduct(BuildContext context, int productId) async {
-    print("inside");
-    print("${baseUrl}food/dishes/$productId/");
+  // Future<dynamic> deleteProduct(BuildContext context, int productId) async {
+  //   print("inside");
+  //   print("${baseUrl}food/dishes/$productId/");
+  //   try {
+  //     print("inside try");
+  //     // Create FormData for file uploads
+  //     SVProgressHUD.show();
+  //
+  //     String token = await StoreManager().getAccessToken() as String;
+  //     // Add the authorization header with the token
+  //     _dio.options.headers = {"Authorization": "Bearer $token"};
+  //     print(token);
+  //
+  //     // Perform the POST request
+  //     Response response = await _dio.delete(
+  //       "${baseUrl}food/dishes/$productId/",
+  //     );
+  //     print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${response}");
+  //     // Handle the response
+  //     if (response.statusCode == 200) {
+  //       SVProgressHUD.dismiss();
+  //       print("product delete successful: ${response.data["results"]}");
+  //       print("${response.data}");
+  //       // List<dynamic> res = response.data["results"];
+  //       showFlushbar(
+  //           context: context,
+  //           color: FbColors.buttonColor,
+  //           icon: Icons.check,
+  //           message: "product delete successful");
+  //       Navigator.pop(context);
+  //
+  //       return response.data;
+  //
+  //     } else if (response.statusCode == 401) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //             content: Text("OOPs something happened in products get")),
+  //       );
+  //
+  //       SVProgressHUD.dismiss();
+  //       print("Bad data: ${response.data}");
+  //     } else {
+  //       SVProgressHUD.dismiss();
+  //       print("product deletion failed: ${response.data}");
+  //     }
+  //   } catch (e) {
+  //     SVProgressHUD.dismiss();
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //           content: Text("OOPs something happened category get , Error: $e")),
+  //     );
+  //     print("Error: $e");
+  //   }
+  // }
+
+  enableDisableProduct(productId, bool isProductEnabled) async {
     try {
-      print("inside try");
-      // Create FormData for file uploads
-      SVProgressHUD.show();
-
-      String token = await StoreManager().getAccessToken() as String;
-      // Add the authorization header with the token
-      _dio.options.headers = {"Authorization": "Bearer $token"};
-      print(token);
-
-      // Perform the POST request
-      Response response = await _dio.delete(
-        "${baseUrl}food/dishes/$productId/",
+      final token = await StoreManager().getAccessToken();
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
       );
+      final fromData = FormData.fromMap({"is_available": isProductEnabled});
 
-      // Handle the response
-      if (response.statusCode == 200) {
-        SVProgressHUD.dismiss();
-        print("product delete successful: ${response.data["results"]}");
-        print(response.data);
-        // List<dynamic> res = response.data["results"];
-        Navigator.pop(context);
+      Response response = await _dio.patch(
+          "${baseUrl}food/dishes/$productId/",
+          data: fromData,
+          options: options);
+      return response.data;
+    } on DioException catch (e) {
+      print("DioError: ${e.response?.statusCode}");
+
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw 'Failed to Update. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+  Future<dynamic> deleteProduct(BuildContext context, int productId) async {
+    try {
+      SVProgressHUD.show();
+      String token = await StoreManager().getAccessToken() as String;
+      _dio.options.headers = {"Authorization": "Bearer $token"};
+      Response response = await _dio.delete("${baseUrl}food/dishes/$productId/");
+      SVProgressHUD.dismiss(); // Hide loading indicator
+      if (response.statusCode == 200 || response.statusCode == 204) {
         showFlushbar(
             context: context,
             color: FbColors.errorcolor,
             icon: Icons.delete,
-            message: "product delete successful");
+            message: "Product deleted successfully!");
         return response.data;
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text("OOPs something happened in products get")),
         );
-
-        SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
+        Future.delayed(Duration(seconds: 1), () {
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
+        });
+        return response.data;
       } else {
-        SVProgressHUD.dismiss();
-        print("product deletion failed: ${response.data}");
+        print("Product deletion failed. Status: ${response.statusCode}");
+        print("Response data: ${response.data}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to delete product!")),
+        );
       }
     } catch (e) {
       SVProgressHUD.dismiss();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text("OOPs something happened category get , Error: $e")),
-      );
       print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error deleting product: $e")),
+      );
     }
   }
+
 
   Future<dynamic> EditProductItem(
       BuildContext context, FoodItemModel model) async {

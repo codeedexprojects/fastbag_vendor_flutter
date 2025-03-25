@@ -34,15 +34,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   dynamic selectedPrice = 0.0;
   dynamic totalPrice = 0.0;
   String? selectedAvailability;
+  late VoidCallback _listener;
 
   @override
   void initState() {
+    // final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
+    // _viewModel.getfooddata(widget.productId);
+    // super.initState();
+    // if (_viewModel.foodDetail?.variants?.isNotEmpty == true) {
+    //   selectedPrice = _viewModel.foodDetail?.variants?.first.price;
+    // }
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
-    super.initState();
-    if (_viewModel.foodDetail?.variants?.isNotEmpty == true) {
-      selectedPrice = _viewModel.foodDetail?.variants?.first.price;
-    }
+    _viewModel.addListener(() {
+      if (_viewModel.foodDetail?.variants?.isNotEmpty == true) {
+        if (mounted)
+          setState(() {
+            selectedPrice = _viewModel.foodDetail?.price ?? 0;
+          });
+        else {
+          return;
+        }
+      }
+    });
   }
 
   @override
@@ -135,7 +149,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               color: FbColors.black),
                         ),
                         Text(
-                          '₹${selectedPrice ?? '00'}',
+                          '₹${(selectedPrice ?? _viewModel.foodDetail?.price)}',
                           style: normalFont5(
                               fontsize: 20,
                               fontweight: FontWeight.w400,
