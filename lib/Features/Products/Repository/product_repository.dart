@@ -186,11 +186,12 @@ class ProductRepository {
         print(response.data);
         // List<dynamic> res = response.data["results"];
         Navigator.pop(context);
-        showFlushbar(context: context, color: FbColors.buttonColor, icon: Icons.check, message: "product delete successful");
+        showFlushbar(
+            context: context,
+            color: FbColors.buttonColor,
+            icon: Icons.check,
+            message: "product delete successful");
         return response.data;
-
-
-
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

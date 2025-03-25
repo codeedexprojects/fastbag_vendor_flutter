@@ -275,8 +275,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         setState(() {
                           selectedCategory =
                               category; // Update the selected category
+                          print('Selected Category: ${category?.name}');
+                          print('Selected Category: ${category?.id}');
                         });
                         print('Selected Category: ${category?.name}');
+                        print('Selected Category: ${category?.id}');
+
                       },
                     ),
                     FbTextFormField(

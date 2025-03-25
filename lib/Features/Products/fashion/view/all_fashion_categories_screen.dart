@@ -25,6 +25,7 @@ class FashionAllCategoriesScreen extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor:FbColors.backgroundcolor ,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -80,7 +81,7 @@ class FashionAllCategoriesScreen extends StatelessWidget {
                                 category: data.categories[index],
                               ));
                         },
-                        radius: screenWidth * .09,
+                        radius: screenWidth * .091,
                         image: NetworkImage(
                           data.categories[index]?.categoryImage ?? '',
                         ),

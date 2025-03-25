@@ -39,7 +39,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
     super.initState();
-    if (selectedPrice != null) {
+    if (_viewModel.foodDetail?.variants?.isNotEmpty == true) {
       selectedPrice = _viewModel.foodDetail?.variants?.first.price;
     }
   }
@@ -66,37 +66,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(width * 0.03),
-              child: Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(width * 0.03)),
-                  child: Container(
-                    height: height * 0.3, // Adjust height as needed
-                    width: width,
-                    child: CachedNetworkImage(
-                      imageUrl: imageIndex ??
-                          _viewModel.foodDetail?.imageUrls?.first.image ??
-                          "",
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Image.asset(
-                          'assets/Images/image_5-removebg-preview.png'),
-                      errorWidget: (context, url, error) =>
-                          Icon(Icons.downloading),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: width * .07, vertical: height * .01),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(width * 0.03),
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: Container(
+                      height: 336.22,
+                      width: 336,
+                      child: CachedNetworkImage(
+                        imageUrl: imageIndex ??
+                            _viewModel.foodDetail?.imageUrls?.first.image ??
+                            "",
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Image.asset(
+                            'assets/Images/image_5-removebg-preview.png'),
+                        errorWidget: (context, url, error) =>
+                            Icon(Icons.downloading),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(width * 0.03),
-              child: Container(
-                height: height * 0.09,
-                width: width,
+              SizedBox(
+                height: 24.78,
+              ),
+              Container(
+                height: 60,
+                width: 340,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _viewModel.foodDetail?.imageUrls?.length ?? 0,
@@ -115,165 +119,185 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   },
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(width * 0.03),
-              child: Column(
+              Padding(
+                padding: EdgeInsets.only(top: width * 0.03),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _viewModel.foodDetail?.name ?? '',
+                          style: normalFont5(
+                              fontsize: 20,
+                              fontweight: FontWeight.w400,
+                              color: FbColors.black),
+                        ),
+                        Text(
+                          '₹${selectedPrice ?? '00'}',
+                          style: normalFont5(
+                              fontsize: 20,
+                              fontweight: FontWeight.w400,
+                              color: FbColors.black),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${_viewModel.foodDetail?.categoryName ?? 0}',
+                          style: normalFont4(
+                              fontsize: 16,
+                              fontweight: FontWeight.w400,
+                              color: FbColors.black),
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              size: 16,
+                              color: Color.fromRGBO(231, 176, 8, 1),
+                            ),
+                            Text(
+                              '4.8(100+ reviews)',
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  color: Color.fromRGBO(17, 24, 39, 1)),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: height * 0.01,
+                    ),
+                    Text(
+                      'Availability : ${(selectedAvailability ?? _viewModel.foodDetail?.isAvailable) == true ? "in stock" : "out of stock"}',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: OrderColor.red,
+                      ),
+                    ),
+                    if (_viewModel.foodDetail?.variants?.isNotEmpty == true)
+                      SizedBox(
+                        height: height * 0.01,
+                      ),
+                    if (_viewModel.foodDetail?.variants?.isNotEmpty == true)
+                      Text('Available variants',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: OrderColor.textColor)),
+                    SizedBox(
+                      height: height * 0.01,
+                    ),
+                    if (_viewModel.foodDetail?.variants?.isNotEmpty == true)
+                      SizedBox(
+                        height: height * 0.05,
+                        child: ListView.separated(
+                          itemCount:
+                              _viewModel.foodDetail?.variants?.length ?? 0,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            final variant = _viewModel.foodDetail
+                                ?.variants?[index]; // Get variant object
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedVariant = variant?.name ?? 'Unknown';
+                                  selectedPrice = variant?.price ?? 0.0;
+                                  selectedAvailability =
+                                      variant?.stock ?? 'Unknown';
+                                });
+                              },
+                              child: Container(
+                                height: height * 0.06,
+                                width: width * 0.25,
+                                decoration: BoxDecoration(
+                                  color: OrderColor.white,
+                                  borderRadius:
+                                      BorderRadius.circular(width * 0.03),
+                                  border: Border.all(
+                                    color: selectedVariant == variant?.name
+                                        ? Colors
+                                            .red // Highlight the selected one
+                                        : OrderColor.green,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    variant?.name ?? 'No Name',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(width: width * 0.03);
+                          },
+                        ),
+                      ),
+                    // SizedBox(height: height * 0.02),
+                    // Container(
+                    //   width: width * 1,
+                    //   padding: EdgeInsets.all(width * 0.03),
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(10),
+                    //     color: FbColors.backgroundcolor,
+                    //   ),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Text("Variant: $selectedVariant",
+                    //           style: GoogleFonts.nunito(
+                    //               color: OrderColor.textColor,
+                    //               fontSize: 15,
+                    //               fontWeight: FontWeight.w600)),
+                    //       Text("Price: ₹$selectedPrice",
+                    //           style: GoogleFonts.nunito(
+                    //               color: OrderColor.textColor,
+                    //               fontSize: 15,
+                    //               fontWeight: FontWeight.w600)),
+                    //       Text("Availability: ${selectedAvailability}",
+                    //           style: GoogleFonts.nunito(
+                    //               color: OrderColor.textColor,
+                    //               fontSize: 15,
+                    //               fontWeight: FontWeight.w600)),
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+              Divider(
+                color: OrderColor.textColor.withOpacity(0.3),
+                indent: width * 0.01,
+                endIndent: width * 0.03,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        _viewModel.foodDetail?.name ?? '',
-                        style: normalFont5(
-                            fontsize: 20,
-                            fontweight: FontWeight.w400,
-                            color: FbColors.black),
-                      ),
-                      Text(
-                        '₹${selectedPrice ?? '00'}',
-                        style: normalFont5(
-                            fontsize: 20,
-                            fontweight: FontWeight.w400,
+                        "Description",
+                        style: normalFont1(
+                            fontsize: 15,
+                            fontweight: FontWeight.w900,
                             color: FbColors.black),
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${_viewModel.foodDetail?.categoryName ?? 0}',
-                        style: normalFont4(
-                            fontsize: 16,
-                            fontweight: FontWeight.w400,
-                            color: FbColors.black),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star,
-                            size: 16,
-                            color: Color.fromRGBO(231, 176, 8, 1),
-                          ),
-                          Text(
-                            '4.8(100+ reviews)',
-                            style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                                color: Color.fromRGBO(17, 24, 39, 1)),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-                  Text(
-                    'Availability : ${(selectedAvailability ?? _viewModel.foodDetail?.isAvailable) == true ? "in stock" : "out of stock"}',
-                    style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: OrderColor.red,
-                    ),
-                  ),
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-                  Text('Available variants',
-                      style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: OrderColor.textColor)),
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-                  SizedBox(
-                    height: height * 0.05,
-                    child: ListView.separated(
-                      itemCount: _viewModel.foodDetail?.variants?.length ?? 0,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (BuildContext context, int index) {
-                        final variant = _viewModel
-                            .foodDetail?.variants?[index]; // Get variant object
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedVariant = variant?.name ?? 'Unknown';
-                              selectedPrice = variant?.price ?? 0.0;
-                              selectedAvailability =
-                                  variant?.stock ?? 'Unknown';
-                            });
-                          },
-                          child: Container(
-                            height: height * 0.06,
-                            width: width * 0.25,
-                            decoration: BoxDecoration(
-                              color: OrderColor.white,
-                              borderRadius: BorderRadius.circular(width * 0.03),
-                              border: Border.all(
-                                color: selectedVariant == variant?.name
-                                    ? Colors.red // Highlight the selected one
-                                    : OrderColor.green,
-                                width: 2,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                variant?.name ?? 'No Name',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: width * 0.03);
-                      },
-                    ),
-                  ),
-                  SizedBox(height: height * 0.02),
-                  // Container(
-                  //   width: width * 1,
-                  //   padding: EdgeInsets.all(width * 0.03),
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(10),
-                  //     color: FbColors.backgroundcolor,
-                  //   ),
-                  //   child: Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Text("Variant: $selectedVariant",
-                  //           style: GoogleFonts.nunito(
-                  //               color: OrderColor.textColor,
-                  //               fontSize: 15,
-                  //               fontWeight: FontWeight.w600)),
-                  //       Text("Price: ₹$selectedPrice",
-                  //           style: GoogleFonts.nunito(
-                  //               color: OrderColor.textColor,
-                  //               fontSize: 15,
-                  //               fontWeight: FontWeight.w600)),
-                  //       Text("Availability: ${selectedAvailability}",
-                  //           style: GoogleFonts.nunito(
-                  //               color: OrderColor.textColor,
-                  //               fontSize: 15,
-                  //               fontWeight: FontWeight.w600)),
-                  //     ],
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-            Divider(
-                color: OrderColor.textColor.withOpacity(0.3),indent: width*0.03,endIndent: width*0.03,),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 10),
-              child: Column(
-                children: [
                   Text(
                     textAlign: TextAlign.start,
                     _viewModel.foodDetail?.description ??
@@ -289,8 +313,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   // )
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

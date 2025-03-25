@@ -24,6 +24,7 @@ class EditSubCategoryScreen extends StatefulWidget {
   final List<CategoryModel> categories;
   final CategoryModel category;
   final FoodCategoryBySubcategoryModel subCategory;
+
   const EditSubCategoryScreen(
       {super.key,
       required this.categories,

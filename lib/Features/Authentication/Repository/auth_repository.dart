@@ -124,7 +124,7 @@ class AuthRepository {
         SVProgressHUD.dismiss();
         print("Registration successful: ${response.data}");
         await StoreManager().saveVendorId(response.data["id"]);
-        await StoreManager().saveStoreType(response.data["store_type"]);
+        await StoreManager().saveStoreType(response.data["store_type_name"]);
         navigate(
             context: context,
             screen: ApprovalWaitingScreen(
@@ -140,13 +140,19 @@ class AuthRepository {
         SVProgressHUD.dismiss();
         print("Registration failed: ${response.data}");
       }
-    } on DioException catch (e) {
+    }on DioException catch (e) {
       SVProgressHUD.dismiss();
+      String errorMessage = "Oops! Something went wrong.";
+      if (e.response != null && e.response?.data is Map<String, dynamic>) {
+        Map<String, dynamic> errorData = e.response!.data;
+        if (errorData.isNotEmpty) {
+          errorMessage =
+              errorData.values.first.first;
+        }
+      }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("OOPs something happened , Error: $e")),
-      );
-      print("Error: ${e.response}");
-    }
+          SnackBar(content: Text(errorMessage)));
+          }
   }
 
   Future<bool> checkAdminApproval(int id, BuildContext context) async {
@@ -233,6 +239,8 @@ class AuthRepository {
         //     .toList();
       }
     } on DioException catch (dioError) {
+      print("somthing${dioError.response}");
+
       print("error${dioError.response?.data}");
       SVProgressHUD.dismiss();
       if (dioError.response != null &&

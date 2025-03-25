@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
@@ -65,7 +64,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final List<Map<String, dynamic>> sizes = [];
   final TextEditingController colorController = TextEditingController();
   final TextEditingController wholesalePriceController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController offerPrice = TextEditingController();
 
   void _onFilePicked(List<File> files) {
@@ -116,7 +115,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         FoodItemModel model = FoodItemModel(
           vendor: widget.subCategory.vendor,
           category: widget.subCategory.category ?? 0,
-          subcategory: widget.subCategory.id ??0,
+          subcategory: widget.subCategory.id ?? 0,
           name: nameController.text.trim(),
           description: descriptionController.text.trim(),
           price: priceController.text.trim(),
@@ -124,14 +123,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
           discount: discountController.text.trim(),
           is_available: _inStock,
           image_urls:
-          _selectedImages!.map<String>((file) => file.path).toList(),
+              _selectedImages!.map<String>((file) => file.path).toList(),
           is_popular_product: _isPopular,
           is_offer_product: _isOffer,
           wholesale_price: wholeSaleController.text.trim(),
           variants: variants,
         );
-        productProvider.addFoodItem(context: context, model: model).then((v){
-          productProvider.getProductCategories(context: context, subCategoryId: widget.subCategory.id??0);
+        productProvider.addFoodItem(context: context, model: model).then((v) {
+          productProvider.getProductCategories(
+              context: context, subCategoryId: widget.subCategory.id ?? 0);
         });
       }
     }
@@ -212,26 +212,31 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       // Variant Name
                       TextFormField(
                         controller: variantFields[index]['nameController'],
-                        decoration: CustumInputDecoration.getDecoration(labelText: "Variant Name (e.g. Half, Full)"),
+                        decoration: CustumInputDecoration.getDecoration(
+                            labelText: "Variant Name (e.g. Half, Full)"),
                         validator: (value) =>
-                        value!.isEmpty ? "Enter a variant name" : null,
+                            value!.isEmpty ? "Enter a variant name" : null,
                       ),
                       // Price
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       TextFormField(
                         controller: variantFields[index]['priceController'],
-                        decoration:CustumInputDecoration.getDecoration(labelText: "Price")
-                        ,
+                        decoration: CustumInputDecoration.getDecoration(
+                            labelText: "Price"),
                         keyboardType: TextInputType.number,
                         validator: (value) =>
-                        value!.isEmpty ? "Enter price" : null,
+                            value!.isEmpty ? "Enter price" : null,
                       ),
                       // Quantity
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       DropdownButtonFormField<String>(
                         value: variantFields[index]['stockStatus'],
-                        decoration: CustumInputDecoration.getDecoration(labelText: "Stock Status"),
-
+                        decoration: CustumInputDecoration.getDecoration(
+                            labelText: "Stock Status"),
                         items: ["in stock", "out of stock"].map((status) {
                           return DropdownMenuItem(
                             value: status,
@@ -244,7 +249,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           });
                         },
                       ),
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       // Remove Button
                       Align(
                         alignment: Alignment.centerRight,
@@ -261,9 +268,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
               // Add Variant Button
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * .01, vertical: screenHeight * .01),
+                    horizontal: screenWidth * .01,
+                    vertical: screenHeight * .01),
                 child: GestureDetector(
-                  onTap:addVariant ,
+                  onTap: addVariant,
                   child: Row(
                     children: [
                       Text('Add Varient',
@@ -333,7 +341,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   });
                 },
               ),
-              SizedBox(height: screenHeight*0.01,),
+              SizedBox(
+                height: screenHeight * 0.01,
+              ),
               FbButton(
                 onClick: saveProduct,
                 label: "Add  Product",
