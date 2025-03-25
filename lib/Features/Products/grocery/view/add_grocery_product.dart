@@ -122,7 +122,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
 
       "description": descriptionController.text.trim(),
       "weight_measurement": selectedMeasurment,
-      "Available": isProductInStock,
+      "is_available": isProductInStock,
       "is_offer_product": isOfferProduct,
       "is_popular_product": isPopularProduct,
       "weights": jsonEncode([
