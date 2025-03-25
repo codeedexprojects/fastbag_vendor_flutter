@@ -109,9 +109,8 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
     );
 
     final data = {
-      
       "category": selectedCategory.id,
-      "sub_category": widget.subCategory.id,
+      "sub_category": selectedSubCategory?.id,
       "name": nameController.text.trim(),
       "wholesale_price": double.tryParse(wholesalePriceController.text.trim())
           ?.toStringAsFixed(2),
@@ -152,7 +151,7 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
           message: 'Select at least one Image',
         );
       } else {
-        await groceryViewModel.addProduct(context, data);
+        await groceryViewModel.addProduct(context, data, widget.subCategory.id);
       }
     }
   }
@@ -266,6 +265,8 @@ class _AddGroceryProductState extends State<AddGroceryProduct> {
                           setState(() {
                             selectedSubCategory = selectedSubCat;
                             subCategoryController.text = selectedSubCat.name;
+                            print(selectedSubCat.id);
+                            print(selectedSubCat.name);
                           });
                         }
                       },

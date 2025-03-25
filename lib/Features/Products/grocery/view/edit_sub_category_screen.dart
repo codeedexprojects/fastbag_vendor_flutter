@@ -123,6 +123,7 @@ class _EditGrocerySubCategoryScreenState
             //       )
             //     :
             FbCategoryFilePicker(
+              image: widget.subCategory.subcategoryImage ?? '',
               onFilePicked: (file) => _onFilePicked(file),
               fileCategory: "Category",
             ),

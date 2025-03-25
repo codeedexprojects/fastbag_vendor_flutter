@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
@@ -31,8 +29,34 @@ class GroceryRepository {
       throw 'Unexpected error occurred. Please try again.';
     }
   }
-
   Future fetchGrocerySubCategory() async {
+    try {
+      String? storeType = await StoreManager().getStoreType();
+      print("----------------------->$storeType");
+
+      Response response = await dio.get(
+        "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        // Server returned a response (status code other than 2xx)
+        throw e.response?.data ??
+            'Failed to fetch categories. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+
+  Future fetchGrocerySubCategoryList() async {
     try {
       // String? token = await StoreManager().getAccessToken();
       // // Set headers
@@ -60,9 +84,9 @@ class GroceryRepository {
     }
   }
 
-// Fetch Product List
+// Fetch Product List of subCtegory
 
-  fetchProducts(subCategoryId) async {
+  fetchProductsbySubcategory(subCategoryId) async {
     try {
       final vendorId = await StoreManager().getVendorId();
       // final vendorId = 18;
