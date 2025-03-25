@@ -30,7 +30,7 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     super.initState();
     // Fetch categories and subcategories
     final groceryViewModel =
-    Provider.of<GroceryViewModel>(context, listen: false);
+        Provider.of<GroceryViewModel>(context, listen: false);
     groceryViewModel.fetchGroceryCategory(context);
     groceryViewModel.fetchGrocerySubCategory(context);
   }
@@ -65,23 +65,23 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
       // Combine category and subcategory names once data is available
       List<SerachItem> categoryItems = groceryViewModel.categories.isNotEmpty
           ? groceryViewModel.categories
-          .map<SerachItem>((category) => SerachItem(
-          id: category.id ?? 0,
-          name: category.name ?? "",
-          type: "category",
-          model: category))
-          .toList()
+              .map<SerachItem>((category) => SerachItem(
+                  id: category.id ?? 0,
+                  name: category.name ?? "",
+                  type: "category",
+                  model: category))
+              .toList()
           : [];
       List<SerachItem> subCategoryItems =
-      groceryViewModel.allSubCategories.isNotEmpty
-          ? groceryViewModel.allSubCategories
-          .map<SerachItem>((subCategory) => SerachItem(
-          id: subCategory.id,
-          name: subCategory.name,
-          type: "sub_category",
-          model: subCategory))
-          .toList()
-          : [];
+          groceryViewModel.allSubCategories.isNotEmpty
+              ? groceryViewModel.allSubCategories
+                  .map<SerachItem>((subCategory) => SerachItem(
+                      id: subCategory.id,
+                      name: subCategory.name,
+                      type: "sub_category",
+                      model: subCategory))
+                  .toList()
+              : [];
       combinedList = [...categoryItems, ...subCategoryItems];
       print("Combined List: $combinedList"); // Debugging output
     }
@@ -136,15 +136,13 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                     return GridView.builder(
                       padding: const EdgeInsets.all(0),
                       gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, childAspectRatio: 0.7),
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3, childAspectRatio: 0.7),
                       itemCount: data.categories.length,
                       itemBuilder: (context, index) {
                         return categoryCard(
                           text: data.categories[index].name,
                           onTap: () {
-                            data.subCategoriesByCategory(
-                                data.categories[index].id as int);
                             navigate(
                                 context: context,
                                 screen: AllGrocerySubCategoryScreen(

@@ -15,7 +15,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_s
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/color_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_categories.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_sub_categories.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashionproduct_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_product_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';

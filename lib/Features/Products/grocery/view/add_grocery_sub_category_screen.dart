@@ -36,6 +36,7 @@ class _AddGrocerySubCategoryScreenState
   @override
   void initState() {
     super.initState();
+    selectedCategory = widget.category;
     categoryController.text = widget.category.name ?? '';
   }
 
@@ -63,8 +64,9 @@ class _AddGrocerySubCategoryScreenState
           'subcategory_image': imageFile,
           'enable_subcategory': enableSubcategory,
         };
-
-        await groceryViewModel.addSubCategory(context, data);
+        print(data);
+        await groceryViewModel.addSubCategory(
+            context, data, widget.category.id);
       }
     }
   }

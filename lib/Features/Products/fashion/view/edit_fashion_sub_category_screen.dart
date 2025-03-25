@@ -1,16 +1,16 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_product_category_dropdown.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_toggle_switch.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/category_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/widget/list_categories.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_product_view_model.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +21,11 @@ import '../model/fashion_sub_category_model.dart';
 import '../view_model/fashion_category_view_model.dart';
 
 class FashionEditSubCategoryScreen extends StatefulWidget {
-  final List<FashionCategoryModel?> categories;
   final FashionCategoryModel? category;
   final FashionSubCategoryModel subCategory;
 
   FashionEditSubCategoryScreen(
-      {super.key,
-      required this.categories,
-      required this.category,
-      required this.subCategory});
+      {super.key, required this.category, required this.subCategory});
 
   @override
   State<FashionEditSubCategoryScreen> createState() =>
@@ -38,21 +34,27 @@ class FashionEditSubCategoryScreen extends StatefulWidget {
 
 class _FashionEditSubCategoryScreenState
     extends State<FashionEditSubCategoryScreen> {
-  var nameController = TextEditingController();
+  var _formkey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController categoryControler = TextEditingController();
+
+  int? selectedCategoryId;
   File? _selectedImage;
   int vendorId = 0;
   bool? _switchValue;
-  FashionCategoryModel? selectedCategory;
 
   @override
   void initState() {
-    FbStore.retrieveData(FbLocalStorage.vendorId).then((data) {
-      setState(() {
-        vendorId = data;
-        selectedCategory = widget.category;
-        _switchValue = widget.subCategory.enableSubcategory;
-      });
+    FbStore.retrieveData(FbLocalStorage.vendorId);
+    setState(() {
+      nameController.text = widget.subCategory.name!;
+      descriptionController.text = widget.subCategory.description!;
+      categoryControler.text = widget.category?.name ?? '';
+      selectedCategoryId = widget.category?.id;
+      _switchValue = widget.subCategory.enableSubcategory;
     });
+
     super.initState();
   }
 
@@ -63,54 +65,43 @@ class _FashionEditSubCategoryScreenState
   }
 
   void _onSubmitForm() async {
+    MultipartFile? imageFile;
     final categoryViewModel =
         Provider.of<FashionCategoryViewModel>(context, listen: false);
-    if (nameController.text.isNotEmpty ||
-        _selectedImage != null ||
-        widget.category?.name != selectedCategory!.name ||
-        widget.subCategory.enableSubcategory != _switchValue) {
-      FashionSubCategoryModel category = FashionSubCategoryModel(
-        // category: widget.subCategory.category,
-        // enableSubcategory: _switchValue!,
-        // name: nameController.text.isEmpty
-        //     ? widget.subCategory.name
-        //     : nameController.text,
-        // subcategoryImage: _selectedImage?.path ?? "",
-        // vendor: widget.subCategory.vendor
-        category: selectedCategory!.id,
-        enableSubcategory: _switchValue,
-        name: nameController.text.isEmpty
-            ? widget.subCategory.name
-            : nameController.text,
-        subcategoryImage: _selectedImage?.path ?? "",
-        categoryName: selectedCategory!.storeTypeName,
-      );
+    if (_formkey.currentState!.validate()) {
+      if (_selectedImage != null) {
+        imageFile = await MultipartFile.fromFile(_selectedImage!.path);
+      }
 
-      await categoryViewModel?.editProductSubCategory(
-          subCategories: category,
+      final data = {
+        'category': selectedCategoryId,
+        'name': nameController.text,
+        'description': descriptionController.text,
+        if (imageFile != null) 'subcategory_image': imageFile,
+        'enable_subcategory': _switchValue
+      };
+      await categoryViewModel.editFashionSubCategory(
           context: context,
-          subcategoryId: widget.subCategory?.id ?? 0);
-
-      setState(() {
-        nameController.clear();
-        _selectedImage = null;
-        _switchValue = false;
-      });
-    } else {
-      showDialog(
-        context: context,
-        barrierDismissible: true, // Allow dismissing by tapping outside
-        builder: (BuildContext context) => const FbBottomDialog(
-          text: "Update not possible",
-          descrription: "Change atleast one field to update",
-          type: FbBottomDialogType.editSubCategoryNotPossible,
-        ),
-      );
+          data: data,
+          subcategoryId: widget.subCategory.id ?? 0);
     }
+    // else {
+    //   showDialog(
+    //     context: context,
+    //     barrierDismissible: true, // Allow dismissing by tapping outside
+    //     builder: (BuildContext context) => const FbBottomDialog(
+    //       text: "Update not possible",
+    //       descrription: "Change atleast one field to update",
+    //       type: FbBottomDialogType.editSubCategoryNotPossible,
+    //     ),
+    //   );
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
+    var productProvider = Provider.of<FashionProductViewModel>(context);
+
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -132,44 +123,58 @@ class _FashionEditSubCategoryScreenState
               color: Colors.black),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
             horizontal: screenWidth * 0.07, vertical: screenHeight * 0.01),
-        child: Column(
-          children: [
-            FbCategoryFormField(
-                label: "Category Name",
-                hint: widget.subCategory.name,
-                controller: nameController,
-                validator: customValidatornoSpaceError),
-            FbCategoryFilePicker(
-              onFilePicked: (file) => _onFilePicked(file),
-              fileCategory: "Category",
-            ),
-            FbProductCategoryDropdown(
-              categories: widget.categories,
-              selectedCategory: selectedCategory,
-              onChanged: (dynamic category) {
-                setState(() {
-                  selectedCategory = category; // Update the selected category
-                });
-                print('Selected Category: ${category?.name}');
-              },
-            ),
-            FbToggleSwitch(
-              title: 'Mark Category in stock',
-              initialValue: _switchValue!,
-              onToggleChanged: (value) {
-                setState(() {
-                  _switchValue = value;
-                });
-              },
-            ),
-            SizedBox(
-              height: screenHeight * .04,
-            ),
-            FbButton(onClick: _onSubmitForm, label: "Update Sub Category")
-          ],
+        child: Form(
+          key: _formkey,
+          child: Column(
+            children: [
+              FbCategoryFormField(
+                  label: "Category Name",
+                  controller: nameController,
+                  keyboard: TextInputType.name,
+                  validator: customValidatornoSpaceError),
+              FbCategoryFilePicker(
+                  image: widget.subCategory.subcategoryImage ?? '',
+                  onFilePicked: (file) => _onFilePicked(file),
+                  fileCategory: "Category"),
+              FbCategoryFormField(
+                label: 'Select Category',
+                controller: categoryControler,
+                validator: customValidatornoSpaceError,
+                readOnly: true,
+                onTap: () async {
+                  productProvider.categoryRequestModel =
+                      (await Navigator.push<CategoryRequestModel>(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const ListCategoriesName())));
+                  selectedCategoryId = productProvider.categoryRequestModel?.id;
+                  categoryControler.text =
+                      productProvider.categoryRequestModel?.name ?? '';
+                },
+              ),
+              FbCategoryFormField(
+                  label: "Description",
+                  controller: descriptionController,
+                  keyboard: TextInputType.name,
+                  validator: customValidatornoSpaceError),
+              FbToggleSwitch(
+                title: 'Mark Category in stock',
+                initialValue: _switchValue!,
+                onToggleChanged: (value) {
+                  setState(() {
+                    _switchValue = value;
+                  });
+                },
+              ),
+              SizedBox(
+                height: screenHeight * .04,
+              ),
+              FbButton(onClick: _onSubmitForm, label: "Update Sub Category")
+            ],
+          ),
         ),
       ),
     );
