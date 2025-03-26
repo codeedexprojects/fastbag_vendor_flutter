@@ -10,6 +10,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_ca
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -148,6 +149,7 @@ class FashionCategoryRepository {
       BuildContext context, data, subcategoryId) async {
     print('---------------$data');
     try {
+      SVProgressHUD.show();
       FormData formData = FormData.fromMap(data);
 
       final tokenId = await StoreManager().getAccessToken();
@@ -164,7 +166,10 @@ class FashionCategoryRepository {
       );
 
       print(response.statusCode);
-      return response.data;
+      if (response.statusCode == 200) {
+        SVProgressHUD.dismiss();
+        return response.data;
+      }
 
       // Handle the response
     } on DioException catch (e) {
@@ -175,8 +180,8 @@ class FashionCategoryRepository {
     }
   }
 
-  Future<List<FashionSubCategoryModel>?> fashionpCategorybySubCategoryGet(
-      int categoryId) async {
+  Future<FaSubCategoryModel?> fashionpCategorybySubCategoryGet(
+      {int? categoryId, int? page}) async {
     try {
       SVProgressHUD.show();
       final prefs = await SharedPreferences.getInstance();
@@ -187,23 +192,21 @@ class FashionCategoryRepository {
       };
       print("dhjhidih $categoryId");
       var response = await _dio.request(
-        '${baseUrl}fashion/subcategories/by-category/$categoryId/',
+        '${baseUrl}fashion/subcategories/by-category/$categoryId/?page=$page',
         options: Options(
           method: 'GET',
           headers: headers,
         ),
       );
       if (response.statusCode == 200) {
-        List jsonList = response.data;
-        List<FashionSubCategoryModel> jsonResponce =
-            jsonList.map((v) => FashionSubCategoryModel.fromJson(v)).toList();
-        print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
         SVProgressHUD.dismiss();
-        return jsonResponce;
+
+        return FaSubCategoryModel.fromJson(response.data);
       } else {
         print(response.statusMessage);
       }
     } on DioException catch (e) {
+      SVProgressHUD.dismiss();
       print("error ${e.response?.data}");
     }
   }

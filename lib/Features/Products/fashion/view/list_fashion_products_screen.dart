@@ -113,6 +113,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                         itemCount: productProvider.fashionProducts.length,
                         itemBuilder: (context, index) {
                           print("${productProvider.fashionProducts.length}");
+
                           return Column(
                             children: [
                               GestureDetector(

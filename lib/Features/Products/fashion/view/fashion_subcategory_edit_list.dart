@@ -25,11 +25,21 @@ class FashionSubCategoryEditList extends StatefulWidget {
 
 class _FashionSubCategoryEditListState
     extends State<FashionSubCategoryEditList> {
+  ScrollController _scrollController = ScrollController();
+
   void initState() {
     final categoryProvider =
         Provider.of<FashionCategoryViewModel>(context, listen: false);
+    categoryProvider.allcategorypage = 1;
     categoryProvider.getFashionCategorybySubCategories(
         categoryId: widget.category.id ?? 0);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        categoryProvider.getAllSubCategoryLoading(
+            categoryId: widget.category.id ?? 0);
+      }
+    });
     super.initState();
   }
 
@@ -40,6 +50,7 @@ class _FashionSubCategoryEditListState
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: FbColors.backgroundcolor,
         title: Text(
           "Edit Sub Categories",
@@ -53,6 +64,7 @@ class _FashionSubCategoryEditListState
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: ListView.builder(
+            controller: _scrollController,
             itemCount: categoryProvider.selectsubCategory.length,
             itemBuilder: (context, index) {
               return Padding(
@@ -60,7 +72,7 @@ class _FashionSubCategoryEditListState
                 child: Container(
                   padding: EdgeInsets.all(screenWidth * .02),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.grey, width: 0.5)),
                   child: ListTile(
                     leading: CircleAvatar(
