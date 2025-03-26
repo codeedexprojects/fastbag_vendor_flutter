@@ -129,7 +129,7 @@ class ProductEditDeleteScreen extends StatelessWidget {
                                         .then((res) {
                                       data.getProductCategories(
                                           context: context,
-                                          subCategoryId: data
+                                          subCatId: data
                                                   .foodProducts[index]
                                                   .subcategory ??
                                               0);

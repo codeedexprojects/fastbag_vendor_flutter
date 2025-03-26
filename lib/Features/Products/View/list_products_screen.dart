@@ -28,15 +28,23 @@ class ListProductsScreen extends StatefulWidget {
 }
 
 class _ListProductsScreenState extends State<ListProductsScreen> {
-  Map<int, bool> isExpandedMap = {}; // Track expanded state per item
+  Map<int, bool> isExpandedMap = {};
+  ScrollController _scrollController=ScrollController();
 
   @override
   void initState() {
     super.initState();
     final productProvider =
         Provider.of<ProductViewModel>(context, listen: false);
+    productProvider.allProductPage=1;
     productProvider.getProductCategories(
-        context: context, subCategoryId: widget.subCategorys.id ?? 0);
+        context: context, subCatId: widget.subCategorys.id ?? 0);
+    _scrollController.addListener(() {
+      if(_scrollController.position.pixels==_scrollController.position.maxScrollExtent){
+        productProvider.getAllProductLoading(context: context,subCatId: widget.subCategorys.id?? 0);
+      }
+    },);
+
   }
 
   @override
