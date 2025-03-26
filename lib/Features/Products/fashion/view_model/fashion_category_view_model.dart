@@ -34,15 +34,6 @@ class FashionCategoryViewModel extends ChangeNotifier {
     });
   }
 
-  getFashionCategorybySubCategories({required int categoryId}) async {
-    await _categoryRepository
-        .fashionpCategorybySubCategoryGet(categoryId)
-        .then((v) {
-      _selectsubCategory = v ?? [];
-      notifyListeners();
-    });
-  }
-
   getFashionProductSubCategories() async {
     await _categoryRepository.fashionproductSubCategoryGet().then((v) {
       _subCategories = v ?? [];
@@ -90,10 +81,47 @@ class FashionCategoryViewModel extends ChangeNotifier {
       SVProgressHUD.dismiss();
     }
   }
+
   deleteSubCategory({
     required BuildContext context,
     required int subcategoryId,
   }) async {
     await _categoryRepository.FashionSubCategoryDelete(context, subcategoryId);
+  }
+
+  int currentpage = 1;
+  int allcategorypage = 1;
+  bool gettingallproduct = false;
+  bool productloadingall = false;
+
+  getFashionCategorybySubCategories({required int categoryId}) async {
+    productloadingall = true;
+    await _categoryRepository
+        .fashionpCategorybySubCategoryGet(
+            categoryId: categoryId, page: allcategorypage)
+        .then((v) {
+      _selectsubCategory = v?.results ?? [];
+      v?.results != null
+          ? productloadingall = false
+          : productloadingall = false;
+    });
+    notifyListeners();
+  }
+
+  getAllSubCategoryLoading({required int categoryId}) async {
+    gettingallproduct = true;
+    notifyListeners();
+    allcategorypage++;
+    await _categoryRepository
+        .fashionpCategorybySubCategoryGet(
+            categoryId: categoryId, page: allcategorypage)
+        .then((value) {
+      if (value?.results != null) {
+        _selectsubCategory.addAll(value?.results ?? []);
+      } else if (value?.results == null) {
+        gettingallproduct = false;
+      }
+    });
+    notifyListeners();
   }
 }
