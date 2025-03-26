@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/images.dart';
+import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
 import 'package:flutter/material.dart';
@@ -100,8 +101,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             _viewModel.foodDetail?.imageUrls?.first.image ??
                             "",
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => Image.asset(
-                            'assets/Images/image_5-removebg-preview.png'),
+                        placeholder: (context, url) => Image.asset(PlaceholderImage.placeholderimage),
                         errorWidget: (context, url, error) =>
                             Icon(Icons.downloading),
                       ),

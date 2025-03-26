@@ -90,4 +90,10 @@ class FashionCategoryViewModel extends ChangeNotifier {
       SVProgressHUD.dismiss();
     }
   }
+  deleteSubCategory({
+    required BuildContext context,
+    required int subcategoryId,
+  }) async {
+    await _categoryRepository.FashionSubCategoryDelete(context, subcategoryId);
+  }
 }

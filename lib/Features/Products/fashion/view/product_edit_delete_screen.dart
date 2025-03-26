@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
@@ -28,12 +29,23 @@ class ProductEditDeleteScreen extends StatefulWidget {
 }
 
 class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
+  ScrollController _scrollController = ScrollController();
+  late FashionProductViewModel fashionViewModel = FashionProductViewModel();
+
+  @override
   void initState() {
-    final fashionProductViewModel =
-        Provider.of<FashionProductViewModel>(context, listen: false);
-    fashionProductViewModel.getFashionProductCategories(
-        subCategoryId: widget.subCategory.id ?? 0);
     super.initState();
+    fashionViewModel =
+        Provider.of<FashionProductViewModel>(context, listen: false);
+    fashionViewModel.allproductPage = 1;
+    fashionViewModel.getAllProducts(subCategoryId: widget.subCategory.id ?? 0);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        fashionViewModel.getAllProductLoading(
+            subCategoryId: widget.subCategory.id ?? 0);
+      }
+    });
   }
 
   @override
@@ -45,6 +57,8 @@ class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
     //final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
+        scrolledUnderElevation: 0,
         title: Text(
           fashionProductViewModel.fashionProducts.isEmpty
               ? "Edit Sub Category Products"
@@ -59,6 +73,7 @@ class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: ListView.builder(
+            controller: _scrollController,
             itemCount: fashionProductViewModel.fashionProducts.length,
             itemBuilder: (context, index) {
               return Padding(
@@ -87,17 +102,20 @@ class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
                                     null &&
                                 fashionProductViewModel
                                     .fashionProducts[index].images!.isNotEmpty)
-                            ? CachedNetworkImage(
-                                imageUrl: fashionProductViewModel
-                                        .fashionProducts[index]
-                                        .images?[0]
-                                        .imageUrl ??
-                                    '',
-                                placeholder: (context, url) => Image.asset(
-                                    PlaceholderImage.placeholderimage),
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl: fashionProductViewModel
+                                          .fashionProducts[index]
+                                          .images?[0]
+                                          .imageUrl ??
+                                      '',
+                                  placeholder: (context, url) => Image.asset(
+                                      PlaceholderImage.placeholderimage),
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
                               )
                             : Image.asset(PlaceholderImage.placeholderimage),
                       ),

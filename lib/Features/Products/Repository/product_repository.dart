@@ -249,44 +249,33 @@ class ProductRepository {
   }
 
   Future<dynamic> deleteProduct(BuildContext context, int productId) async {
-    print("inside deleteProduct");
-    print("Deleting: ${baseUrl}food/dishes/$productId/");
-
     try {
       SVProgressHUD.show();
-
       String token = await StoreManager().getAccessToken() as String;
       _dio.options.headers = {"Authorization": "Bearer $token"};
-
       Response response = await _dio.delete("${baseUrl}food/dishes/$productId/");
       SVProgressHUD.dismiss(); // Hide loading indicator
-
-      print("Response: ${response.data}"); // Debugging
-
       if (response.statusCode == 200 || response.statusCode == 204) {
-        print("✅ Product deleted successfully!");
-
-        // ✅ Remove invalid key access & print full response
-        print("Response data: ${response.data}");
-
         showFlushbar(
-          context: context,
-          color: FbColors.buttonColor,
-          icon: Icons.check,
-          message: "Product deleted successfully!",
+            context: context,
+            color: FbColors.errorcolor,
+            icon: Icons.delete,
+            message: "Product deleted successfully!");
+        return response.data;
+      } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text("OOPs something happened in products get")),
         );
-
         Future.delayed(Duration(seconds: 1), () {
           if (context.mounted) {
             Navigator.pop(context);
           }
         });
-
         return response.data;
       } else {
         print("Product deletion failed. Status: ${response.statusCode}");
         print("Response data: ${response.data}");
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Failed to delete product!")),
         );
@@ -294,7 +283,6 @@ class ProductRepository {
     } catch (e) {
       SVProgressHUD.dismiss();
       print("Error: $e");
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error deleting product: $e")),
       );

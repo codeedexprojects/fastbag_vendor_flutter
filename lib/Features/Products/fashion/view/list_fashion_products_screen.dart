@@ -33,18 +33,29 @@ class FashionListProductsScreen extends StatefulWidget {
 
 class _ListProductsScreenState extends State<FashionListProductsScreen> {
   Map<int, bool> isExpandedMap = {}; // Track expanded state per item
+  final FocusNode searchFocusNode = FocusNode();
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+
     final productProvider =
         Provider.of<FashionProductViewModel>(context, listen: false);
-    productProvider.getFashionProductCategories(
-        subCategoryId: widget.subCategory.id ?? 0);
+    productProvider.allproductPage = 1;
+    productProvider.getAllProducts(subCategoryId: widget.subCategory.id ?? 0);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        productProvider.getAllProductLoading(
+            subCategoryId: widget.subCategory.id ?? 0);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // final FocusNode searchFocusNode = FocusNode();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     final productProvider = Provider.of<FashionProductViewModel>(
@@ -59,16 +70,14 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: screenHeight * 0.08),
-            Row(
-              children: [
-                SizedBox(
-                  height: screenWidth * 0.15,
-                  width: screenWidth * 0.8,
-                  child: TextField(
-                      decoration: searchBarDecoration(hint: "Search Here")),
-                ),
-                const Icon(Icons.more_vert)
-              ],
+            SizedBox(
+              height: screenWidth * 0.15,
+              child: TextFormField(
+                  onTapOutside: (e) => searchFocusNode.unfocus(),
+                  onTap: () {},
+                  focusNode: searchFocusNode,
+                  autofocus: false,
+                  decoration: searchBarDecoration(hint: "Search Here")),
             ),
             Consumer<FashionProductViewModel>(builder: (context, data, _) {
               return productProvider.fashionProducts.isEmpty
@@ -100,6 +109,7 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                       child: SizedBox(
                       height: screenHeight * .15,
                       child: ListView.builder(
+                        controller: _scrollController,
                         itemCount: productProvider.fashionProducts.length,
                         itemBuilder: (context, index) {
                           print("${productProvider.fashionProducts.length}");
@@ -127,19 +137,23 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                                                 .fashionProducts[index]
                                                 .images!
                                                 .isNotEmpty)
-                                        ? CachedNetworkImage(
-                                            imageUrl: productProvider
-                                                    .fashionProducts[index]
-                                                    .images?[0]
-                                                    .imageUrl ??
-                                                '',
-                                            placeholder: (context, url) =>
-                                                Image.asset(PlaceholderImage
-                                                    .placeholderimage),
-                                            fit: BoxFit.cover,
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            child: CachedNetworkImage(
+                                              imageUrl: productProvider
+                                                      .fashionProducts[index]
+                                                      .images?[0]
+                                                      .imageUrl ??
+                                                  '',
+                                              placeholder: (context, url) =>
+                                                  Image.asset(PlaceholderImage
+                                                      .placeholderimage),
+                                              fit: BoxFit.cover,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
                                           )
                                         : Image.asset(
                                             PlaceholderImage.placeholderimage),
