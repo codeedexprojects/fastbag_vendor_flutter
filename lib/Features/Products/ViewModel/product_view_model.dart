@@ -14,13 +14,51 @@ class ProductViewModel extends ChangeNotifier {
 
   // List<FoodResponseModel> foodresponse = [];
 
-  Future  getProductCategories(
-      {required BuildContext context, required int subCategoryId}) async {
-    var res = await _productRepository.getAllProducts(context, subCategoryId);
-    if (res != null) {
-      _foodProducts = res;
-      notifyListeners();
-    }
+  int currentPage = 1;
+  int allProductPage = 1;
+  bool gettingAllProducts = false;
+  bool productLoadingInAll = false;
+
+  // Future getProductCategories(
+  //     {required BuildContext context, required int subCategoryId}) async {
+  //   var res = await _productRepository.getAllProducts(context, subCategoryId,);
+  //   if (res != null) {
+  //     _foodProducts = res;
+  //     notifyListeners();
+  //   }
+  // }
+
+  Future getProductCategories(
+      {required BuildContext context,  int? subCatId}) async {
+    productLoadingInAll = true;
+    await _productRepository
+        .getAllProducts(context, page: allProductPage, subCatId: subCatId)
+        .then(
+      (value) {
+        _foodProducts = value?? [];
+        _foodProducts != null
+            ? productLoadingInAll = false
+            : productLoadingInAll = false;
+      },
+    );
+    notifyListeners();
+  }
+
+  getAllProductLoading({required BuildContext context, int? subCatId}) async {
+    gettingAllProducts = true;
+    notifyListeners();
+    allProductPage++;
+    await _productRepository
+        .getAllProducts(context, page: allProductPage, subCatId: subCatId)
+        .then(
+            (value) {
+          _foodProducts = value?? [];
+          _foodProducts != null?
+              _foodProducts.addAll(value?? [])
+              : gettingAllProducts=false;
+        },
+    );
+    notifyListeners();
   }
 
   Future<void> addFoodItem(
@@ -39,15 +77,16 @@ class ProductViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> enableDisableProduct(int productId, bool isProductEnabled) async {
+  Future<void> enableDisableProduct(
+      int productId, bool isProductEnabled) async {
     SVProgressHUD.show();
     try {
       notifyListeners(); // Notify UI to show loading state
-      var response = await _productRepository.enableDisableProduct(productId, isProductEnabled);
+      var response = await _productRepository.enableDisableProduct(
+          productId, isProductEnabled);
       print("Product Updated: $response");
       // Notify UI after updating the product
       notifyListeners();
-
     } catch (e) {
       notifyListeners();
       print("Error enabling/disabling product: $e");
@@ -55,7 +94,7 @@ class ProductViewModel extends ChangeNotifier {
     SVProgressHUD.dismiss();
   }
 
-   Future<void> editFoodItem(
+  Future<void> editFoodItem(
       {required BuildContext context, required FoodItemModel product}) async {
     var res = await _productRepository.EditProductItem(context, product);
     if (res != null) {

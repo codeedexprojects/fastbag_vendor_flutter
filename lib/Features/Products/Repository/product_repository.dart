@@ -20,7 +20,7 @@ class ProductRepository {
   final Dio _dio = Dio();
 
   Future<List<FoodResponseModel>?> getAllProducts(
-      BuildContext context, subCatId) async {
+      BuildContext context,   {int? subCatId, int? page,}) async {
     print("inside");
 
     try {
@@ -35,8 +35,8 @@ class ProductRepository {
 
       // Perform the POST request
       Response response = await _dio.get(
-        "${baseUrl}food/products/subcategory/$subCatId/vendor/$vendorId/",
-      );
+        "${baseUrl}food/products/subcategory/$subCatId/vendor/$vendorId/?page=$page",
+      );print("777777777777777777777777777777777777777777777777777777${page}");
 
       // Handle the response
       if (response.statusCode == 200) {
