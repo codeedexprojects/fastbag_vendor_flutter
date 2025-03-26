@@ -32,7 +32,7 @@ class _AllGrocerySubCategoryScreenState
     super.initState();
     final groceryViewModel =
         Provider.of<GroceryViewModel>(context, listen: false);
-    groceryViewModel.subCategoriesByCategory(widget.category.id as int);
+    // groceryViewModel.fetchGrocerySubCategoriesByCategory(context,widget.category.id as int,);
   }
 
   @override

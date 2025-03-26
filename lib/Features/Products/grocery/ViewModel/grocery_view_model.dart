@@ -11,16 +11,7 @@ class GroceryViewModel extends ChangeNotifier {
   List<GroceryCategoryModel> categories = [];
   List<GrocerySubCategoryModel> allSubCategories = [];
   List<GrocerySubCategoryModel> filteredSubCategories = [];
-
   List<GroceryProductsModel> subCategoryProducts = [];
-
-  // Getter to return subcategories based on a selected category ID
-
-  subCategoriesByCategory(int categoryId) {
-    filteredSubCategories =
-        allSubCategories.where((sub) => sub.category == categoryId).toList();
-    notifyListeners();
-  }
 
   get filteredList => [];
 
@@ -47,31 +38,13 @@ class GroceryViewModel extends ChangeNotifier {
     }
   }
 
-  Future fetchGrocerySubCategory(context) async {
+  // Fetch Grocery Sub Category By Category List
+  fetchGrocerySubCategoryByCategory(
+      BuildContext context, int? categoryId, int? page) async {
+    SVProgressHUD.show();
     try {
-      SVProgressHUD.show();
-      final response = await _groceryRepo.fetchGrocerySubCategoryList();
-      //  Map JSON response to GroceryCategoryModel list
-      if (response is List) {
-        allSubCategories = response
-            .map((json) =>
-                GrocerySubCategoryModel.fromJson(json as Map<String, dynamic>))
-            .toList();
-      }
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    } finally {
-      SVProgressHUD.dismiss();
-    }
-  }
-
-  // Fetch  Product List
-  fetchProductList(BuildContext context, subCategoryId) async {
-    try {
-      final response =
-          await _groceryRepo.fetchProductsbySubcategory(subCategoryId);
+      final response = await _groceryRepo.fetchGrocerySubCategoryByCategory(
+          categoryId, page);
 
       subCategoryProducts = (response as List)
           .map((json) => GroceryProductsModel.fromJson(json))
@@ -83,8 +56,10 @@ class GroceryViewModel extends ChangeNotifier {
         context: context,
         color: Colors.red,
         icon: Icons.error_outline,
-        message: 'Fetch Products Failed',
+        message: 'Fetch Sub Category Failed',
       );
+    } finally {
+      SVProgressHUD.dismiss();
     }
   }
 
@@ -194,6 +169,31 @@ class GroceryViewModel extends ChangeNotifier {
           color: Colors.red,
           icon: Icons.error_outline,
           message: e.toString());
+    } finally {
+      SVProgressHUD.dismiss();
+    }
+  }
+
+  // Fetch Grocery Products By Sub Category List
+  fetchGroceryProductsBySubCategory(
+      BuildContext context, int? categoryId, int? page) async {
+    SVProgressHUD.show();
+    try {
+      final response = await _groceryRepo.fetchProductsbySubcategory(
+          categoryId, page);
+
+      subCategoryProducts = (response as List)
+          .map((json) => GroceryProductsModel.fromJson(json))
+          .toList();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      showFlushbar(
+        context: context,
+        color: Colors.red,
+        icon: Icons.error_outline,
+        message: 'Fetch Products Failed',
+      );
     } finally {
       SVProgressHUD.dismiss();
     }
