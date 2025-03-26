@@ -293,13 +293,13 @@ class CategoryRepository {
         ),
       );
       if (response.statusCode == 200) {
-        print("Response Data: ${json.encode(response.data)}");
-
-        return (response.data)
-            .map((v) => FoodCategoryBySubcategoryModel.fromJson(v));
-        // print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
-        // SVProgressHUD.dismiss();
-        // return jsonResponce;
+        List jsonList = response.data;
+        List<FoodCategoryBySubcategoryModel> jsonResponce = jsonList
+            .map((v) => FoodCategoryBySubcategoryModel.fromJson(v))
+            .toList();
+        print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
+        SVProgressHUD.dismiss();
+        return jsonResponce;
       } else {
         print(response.statusMessage);
       }
