@@ -1,79 +1,62 @@
-# Flutter specific
+# Flutter/Dart/Pub related
 .dart_tool/
 .packages
-.pub-cache/
-.pub/
+pubspec.lock
+.flutter-plugins-dependencies
+.flutter-plugins
+
+# Build outputs
 build/
-flutter_*.log
+*.apk
+*.ipa
+*.app
+*.app.dSYM
+*.dSYM
+
+# iOS
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Flutter.podspec.json
+ios/.symlinks/
+ios/Pods/
+ios/Podfile.lock
 
 # Android
 android/.gradle/
-android/app/build/
+android/app/debug/
+android/app/profile/
+android/app/release/
 android/local.properties
-android/key.properties
 
-# iOS
-ios/.symlinks/
-ios/Pods/
-ios/.generated/
-ios/Flutter/Flutter.framework
-ios/Flutter/App.framework
-ios/Flutter/Generated.xcconfig
-ios/Podfile.lock
-
-# Web
-web/.dart_tool/
-web/build/
+# Mac
+*.DS_Store
 
 # Linux
-linux/.dart_tool/
-linux/build/
-
-# macOS
-macos/.dart_tool/
-macos/build/
-macos/Flutter/ephemeral/
-
-# Windows
-windows/.dart_tool/
-windows/build/
-
-# JetBrains IDEs
-.idea/
-*.iml
+*~
 
 # VS Code settings
 .vscode/
 
-# Xcode
-xcuserdata/
-*.xcworkspace/
-DerivedData/
-*.pbxuser
-*.mode1v3
-*.mode2v3
-*.perspectivev3
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# JetBrains project files
+*.ipr
+*.iws
+*.idea/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
 
 # Other
 *.log
-*.DS_Store
-*.swp
-*.swo
-*.tmp
 *.dat
 *.csv
 *.ts
 *.jar
 
-<<<<<<< HEAD
 # Custom local files
 *.env
-
-android/app/build/
-android/app/src/debug/
-android/app/src/profile/
-android/app/src/release/
-=======
-# Custom local environment files
-*.env
->>>>>>> 4226ca2f46a5392c2f2afe3d6f240166cf96d3c6
