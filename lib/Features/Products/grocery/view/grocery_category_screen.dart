@@ -32,7 +32,8 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     final groceryViewModel =
         Provider.of<GroceryViewModel>(context, listen: false);
     groceryViewModel.fetchGroceryCategory(context);
-    groceryViewModel.fetchGrocerySubCategory(context);
+
+    ///   groceryViewModel.fetchGrocerySubCategory(context);
   }
 
   void _filterSearch(String query) {
@@ -59,32 +60,32 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    // Ensure categories and subcategories are loaded
-    if (groceryViewModel.categories.isNotEmpty ||
-        groceryViewModel.allSubCategories.isNotEmpty) {
-      // Combine category and subcategory names once data is available
-      List<SerachItem> categoryItems = groceryViewModel.categories.isNotEmpty
-          ? groceryViewModel.categories
-              .map<SerachItem>((category) => SerachItem(
-                  id: category.id ?? 0,
-                  name: category.name ?? "",
-                  type: "category",
-                  model: category))
-              .toList()
-          : [];
-      List<SerachItem> subCategoryItems =
-          groceryViewModel.allSubCategories.isNotEmpty
-              ? groceryViewModel.allSubCategories
-                  .map<SerachItem>((subCategory) => SerachItem(
-                      id: subCategory.id,
-                      name: subCategory.name,
-                      type: "sub_category",
-                      model: subCategory))
-                  .toList()
-              : [];
-      combinedList = [...categoryItems, ...subCategoryItems];
-      print("Combined List: $combinedList"); // Debugging output
-    }
+    // // Ensure categories and subcategories are loaded
+    // if (groceryViewModel.categories.isNotEmpty ||
+    //     groceryViewModel.allSubCategories.isNotEmpty) {
+    //   // Combine category and subcategory names once data is available
+    //   List<SerachItem> categoryItems = groceryViewModel.categories.isNotEmpty
+    //       ? groceryViewModel.categories
+    //           .map<SerachItem>((category) => SerachItem(
+    //               id: category.id ?? 0,
+    //               name: category.name ?? "",
+    //               type: "category",
+    //               model: category))
+    //           .toList()
+    //       : [];
+    //   List<SerachItem> subCategoryItems =
+    //       groceryViewModel.allSubCategories.isNotEmpty
+    //           ? groceryViewModel.allSubCategories
+    //               .map<SerachItem>((subCategory) => SerachItem(
+    //                   id: subCategory.id,
+    //                   name: subCategory.name,
+    //                   type: "sub_category",
+    //                   model: subCategory))
+    //               .toList()
+    //           : [];
+    //   combinedList = [...categoryItems, ...subCategoryItems];
+    //   print("Combined List: $combinedList"); // Debugging output
+    // }
     gap(value) {
       return SizedBox(height: screenWidth * value);
     }
@@ -143,6 +144,8 @@ class _ListCategoryScreenState extends State<GroceryCategoryScreen> {
                         return categoryCard(
                           text: data.categories[index].name,
                           onTap: () {
+                            searchController.clear();
+                            searchFocusNode.unfocus();
                             navigate(
                                 context: context,
                                 screen: AllGrocerySubCategoryScreen(

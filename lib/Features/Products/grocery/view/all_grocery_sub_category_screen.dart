@@ -26,19 +26,36 @@ class AllGrocerySubCategoryScreen extends StatefulWidget {
 
 class _AllGrocerySubCategoryScreenState
     extends State<AllGrocerySubCategoryScreen> {
+  final TextEditingController searchController = TextEditingController();
+  FocusNode searchFocusNode = FocusNode();
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     final groceryViewModel =
         Provider.of<GroceryViewModel>(context, listen: false);
-    // groceryViewModel.fetchGrocerySubCategoriesByCategory(context,widget.category.id as int,);
+    groceryViewModel.hasMorePages = true;
+    groceryViewModel.currentPage = 1;
+
+    groceryViewModel.fetchGrocerySubCategoryByCategory(
+        context, widget.category.id);
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 100) {
+        groceryViewModel.fetchGrocerySubCategoryByCategory(
+            context, widget.category.id);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController searchController = TextEditingController();
     final groceryViewModel = Provider.of<GroceryViewModel>(context);
+
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     gap(value) {
@@ -56,6 +73,7 @@ class _AllGrocerySubCategoryScreenState
               height: screenWidth * 0.15,
               child: TextField(
                 controller: searchController,
+                focusNode: searchFocusNode,
                 decoration: searchBarDecoration(
                   hint: 'Search here',
                 ),
@@ -71,33 +89,33 @@ class _AllGrocerySubCategoryScreenState
                   color: FbColors.greendark),
             ),
             gap(0.04),
-            groceryViewModel.filteredSubCategories.isNotEmpty
+            groceryViewModel.subCategoriesByCategory.isNotEmpty
                 ? Expanded(
                     child: GridView.builder(
+                    controller: _scrollController,
                     padding: const EdgeInsets.all(0),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
                             childAspectRatio: 0.57,
                             crossAxisSpacing: 14),
-                    itemCount: groceryViewModel.filteredSubCategories.length,
+                    itemCount: groceryViewModel.subCategoriesByCategory.length,
                     itemBuilder: (context, index) {
                       return subCategoryCard(
                         height: screenWidth * 0.33,
-                        text:
-                            groceryViewModel.filteredSubCategories[index].name,
-                        image: groceryViewModel.filteredSubCategories[index]
+                        text: groceryViewModel
+                            .subCategoriesByCategory[index].name,
+                        image: groceryViewModel.subCategoriesByCategory[index]
                                 .subcategoryImage ??
                             '',
                         onTap: () {
-                          print(
-                              '----------------------->${groceryViewModel.filteredSubCategories[index].name}');
-
+                          searchController.clear();
+                          searchFocusNode.unfocus();
                           navigate(
                             context: context,
                             screen: ListGroceryProducts(
-                              subCategory:
-                                  groceryViewModel.filteredSubCategories[index],
+                              subCategory: groceryViewModel
+                                  .subCategoriesByCategory[index],
                             ),
                           );
                         },
@@ -138,7 +156,7 @@ class _AllGrocerySubCategoryScreenState
                   },
                   label: "+ Add Sub Category"),
             ),
-            if (groceryViewModel.filteredSubCategories.isNotEmpty)
+            if (groceryViewModel.subCategoriesByCategory.isNotEmpty)
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: screenWidth / 15, vertical: 5),
@@ -147,7 +165,8 @@ class _AllGrocerySubCategoryScreenState
                     navigate(
                         context: context,
                         screen: GrocerySubCategoryEditList(
-                          subCategories: groceryViewModel.filteredSubCategories,
+                          subCategories:
+                              groceryViewModel.subCategoriesByCategory,
                           category: widget.category,
                         ));
                   },

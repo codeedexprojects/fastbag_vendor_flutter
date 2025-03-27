@@ -39,7 +39,7 @@ class GroceryRepository {
         },
       );
       Response response = await dio.get(
-          "${baseUrl}grocery/subcategories/by-category/${categoryId}/?page=1",
+          "${baseUrl}grocery/subcategories/by-category/${categoryId}/?page=$page",
           options: options);
 
       return response.data;
@@ -74,7 +74,7 @@ class GroceryRepository {
       );
 
       Response response = await dio.get(
-          '${baseUrl}grocery/products/$vendorId/$subCategoryId/',
+          '${baseUrl}grocery/products/$vendorId/$subCategoryId/?page=$page',
           options: options);
       return response.data;
     } on DioException catch (e) {

@@ -9,9 +9,17 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 
 class GroceryViewModel extends ChangeNotifier {
   List<GroceryCategoryModel> categories = [];
-  List<GrocerySubCategoryModel> allSubCategories = [];
-  List<GrocerySubCategoryModel> filteredSubCategories = [];
+  List<GrocerySubCategoryModel> subCategoriesByCategory = [];
+  List<GrocerySubCategoryModel> subCategoriesListForSelection = [];
   List<GroceryProductsModel> subCategoryProducts = [];
+  bool isLoading = false;
+  bool hasMorePages = true;
+  int _currentPage = 1;
+  get currentPage => _currentPage;
+  set currentPage(value) {
+    _currentPage = value;
+    notifyListeners();
+  }
 
   get filteredList => [];
 
@@ -40,15 +48,93 @@ class GroceryViewModel extends ChangeNotifier {
 
   // Fetch Grocery Sub Category By Category List
   fetchGrocerySubCategoryByCategory(
-      BuildContext context, int? categoryId, int? page) async {
+    BuildContext context,
+    int? categoryId,
+  ) async {
+    print('In========  ${currentPage}  =========>In');
+
+    if (isLoading || !hasMorePages) {
+      return; // Prevent multiple calls
+    }
+    isLoading = true;
+    notifyListeners();
+
     SVProgressHUD.show();
     try {
       final response = await _groceryRepo.fetchGrocerySubCategoryByCategory(
-          categoryId, page);
+          categoryId, currentPage);
 
-      subCategoryProducts = (response as List)
-          .map((json) => GroceryProductsModel.fromJson(json))
-          .toList();
+      final totalPage = response['total_pages'];
+      final responseData = response['results'];
+
+      print('Total pages: $totalPage, Current Page: $currentPage');
+
+      if (currentPage == 1) {
+        subCategoriesByCategory = (responseData as List)
+            .map((json) => GrocerySubCategoryModel.fromJson(json))
+            .toList();
+      } else {
+        subCategoriesByCategory.addAll((responseData as List)
+            .map((json) => GrocerySubCategoryModel.fromJson(json))
+            .toList());
+      }
+
+      // Update pagination control
+      hasMorePages = currentPage < totalPage;
+      if (hasMorePages) currentPage++;
+
+      notifyListeners();
+    } catch (e) {
+      print("Error fetching subcategories: $e");
+      showFlushbar(
+        context: context,
+        color: Colors.red,
+        icon: Icons.error_outline,
+        message: 'Fetch Sub Category Failed',
+      );
+    } finally {
+      isLoading = false;
+      SVProgressHUD.dismiss();
+    }
+  }
+
+  // Fetch  Sub Category By Category For List  SubCategory in Product Add Edit Page
+  fetchSubCategoryForSubCategorySelection(
+    BuildContext context,
+    int? categoryId,
+  ) async {
+    print('In========  ${currentPage}  =========>In');
+
+    if (isLoading || !hasMorePages) {
+      return; // Prevent multiple calls
+    }
+    isLoading = true;
+    notifyListeners();
+
+    SVProgressHUD.show();
+    try {
+      final response = await _groceryRepo.fetchGrocerySubCategoryByCategory(
+          categoryId, currentPage);
+
+      final totalPage = response['total_pages'];
+      final responseData = response['results'];
+
+      print('Total pages: $totalPage, Current Page: $currentPage');
+
+      if (currentPage == 1) {
+        subCategoriesListForSelection = (responseData as List)
+            .map((json) => GrocerySubCategoryModel.fromJson(json))
+            .toList();
+      } else {
+        subCategoriesListForSelection.addAll((responseData as List)
+            .map((json) => GrocerySubCategoryModel.fromJson(json))
+            .toList());
+      }
+
+      // Update pagination control
+      hasMorePages = currentPage < totalPage;
+      if (hasMorePages) currentPage++;
+
       notifyListeners();
     } catch (e) {
       print(e);
@@ -59,7 +145,9 @@ class GroceryViewModel extends ChangeNotifier {
         message: 'Fetch Sub Category Failed',
       );
     } finally {
+      isLoading = false;
       SVProgressHUD.dismiss();
+      notifyListeners();
     }
   }
 
@@ -71,9 +159,8 @@ class GroceryViewModel extends ChangeNotifier {
       final response = await _groceryRepo.addSubCategory(data);
       // add subcategory  to  List
       final newSubCategory = GrocerySubCategoryModel.fromJson(response);
-      allSubCategories.add(newSubCategory);
       if (categoryId == response['category'])
-        filteredSubCategories.add(newSubCategory);
+        subCategoriesByCategory.add(newSubCategory);
       notifyListeners();
 
       Navigator.pop(context);
@@ -104,24 +191,17 @@ class GroceryViewModel extends ChangeNotifier {
       // Convert response into model
       final updatedSubCategory = GrocerySubCategoryModel.fromJson(response);
 
-      // Update the All Subcategories list
-      final index =
-          allSubCategories.indexWhere((sub) => sub.id == subCategoryId);
-      if (index != -1) {
-        allSubCategories[index] = updatedSubCategory;
-      }
-
-      // Update the Filtered Subcategories list
+      // Update the  Subcategories list
       final index1 =
-          filteredSubCategories.indexWhere((sub) => sub.id == subCategoryId);
+          subCategoriesByCategory.indexWhere((sub) => sub.id == subCategoryId);
       if (index1 != -1) {
-        if (filteredSubCategories[index1].category ==
+        if (subCategoriesByCategory[index1].category ==
             updatedSubCategory.category) {
           // Update only if category is the same
-          filteredSubCategories[index1] = updatedSubCategory;
+          subCategoriesByCategory[index1] = updatedSubCategory;
         } else {
           // Remove it if the category has changed
-          filteredSubCategories.removeAt(index1);
+          subCategoriesByCategory.removeAt(index1);
         }
       }
 
@@ -153,8 +233,7 @@ class GroceryViewModel extends ChangeNotifier {
       await _groceryRepo.deleteSubCategory(subCategoryId);
 
       // Remove the subcategory from List
-      allSubCategories.removeWhere((sub) => sub.id == subCategoryId);
-      filteredSubCategories.removeWhere((sub) => sub.id == subCategoryId);
+      subCategoriesByCategory.removeWhere((sub) => sub.id == subCategoryId);
 
       notifyListeners();
       showFlushbar(
@@ -174,17 +253,37 @@ class GroceryViewModel extends ChangeNotifier {
     }
   }
 
+// -------------> Products Section
+
   // Fetch Grocery Products By Sub Category List
   fetchGroceryProductsBySubCategory(
-      BuildContext context, int? categoryId, int? page) async {
+    BuildContext context,
+    int? subCategoryId,
+  ) async {
+    if (isLoading || !hasMorePages) {
+      return; // Prevent multiple calls
+    }
+    isLoading = true;
+    notifyListeners();
     SVProgressHUD.show();
     try {
       final response = await _groceryRepo.fetchProductsbySubcategory(
-          categoryId, page);
+          subCategoryId, currentPage);
+      final totalPage = response['total_pages'];
 
-      subCategoryProducts = (response as List)
-          .map((json) => GroceryProductsModel.fromJson(json))
-          .toList();
+      final responseData = response['results'];
+      if (currentPage == 1) {
+        subCategoryProducts = (responseData as List)
+            .map((json) => GroceryProductsModel.fromJson(json))
+            .toList();
+      } else {
+        subCategoryProducts.addAll((responseData as List)
+            .map((json) => GroceryProductsModel.fromJson(json))
+            .toList());
+      }
+      // Update pagination control
+      hasMorePages = currentPage < totalPage;
+      if (hasMorePages) currentPage++;
       notifyListeners();
     } catch (e) {
       print(e);
@@ -195,7 +294,9 @@ class GroceryViewModel extends ChangeNotifier {
         message: 'Fetch Products Failed',
       );
     } finally {
+      isLoading = false;
       SVProgressHUD.dismiss();
+      notifyListeners();
     }
   }
 

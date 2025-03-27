@@ -29,13 +29,24 @@ class ListGroceryProducts extends StatefulWidget {
 class _ListGroceryProductsState extends State<ListGroceryProducts> {
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     final groceryViewModel =
         Provider.of<GroceryViewModel>(context, listen: false);
-    groceryViewModel.fetchProductList(context, widget.subCategory.id);
+    groceryViewModel.hasMorePages = true;
+    groceryViewModel.currentPage = 1;
+    groceryViewModel.fetchGroceryProductsBySubCategory(
+        context, widget.subCategory.id);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 100) {
+        groceryViewModel.fetchGroceryProductsBySubCategory(
+            context, widget.subCategory.id);
+      }
+    });
   }
 
   @override
@@ -99,10 +110,11 @@ class _ListGroceryProductsState extends State<ListGroceryProducts> {
                     ))
                   : Expanded(
                       child: ListView.builder(
+                        controller: _scrollController,
                         itemCount: products.length,
                         itemBuilder: (context, index) {
                           print(
-                              '-----------------> lenth ------------> ${products.length}');
+                              '-----------------> Id ------------> ${products[index].id}');
                           print(
                               '-----------------> products ------------> ${products[index].name}');
                           return Column(
