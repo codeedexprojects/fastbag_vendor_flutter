@@ -1,14 +1,16 @@
 class FaSubCategoryModel {
   int? count;
+  int? totalPages;
   String? next;
   dynamic previous;
   List<FashionSubCategoryModel>? results;
 
   FaSubCategoryModel(
-      {this.count, this.next, this.previous, this.results});
+      {this.count, this.totalPages, this.next, this.previous, this.results});
 
   FaSubCategoryModel.fromJson(Map<String, dynamic> json) {
     count = json['count'];
+    totalPages = json['total_pages'];
     next = json['next'];
     previous = json['previous'];
     if (json['results'] != null) {
@@ -22,6 +24,7 @@ class FaSubCategoryModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['count'] = this.count;
+    data['total_pages'] = this.totalPages;
     data['next'] = this.next;
     data['previous'] = this.previous;
     if (this.results != null) {
@@ -44,14 +47,14 @@ class FashionSubCategoryModel {
 
   FashionSubCategoryModel(
       {this.id,
-        this.vendor,
-        this.category,
-        this.categoryName,
-        this.name,
-        this.description,
-        this.subcategoryImage,
-        this.enableSubcategory,
-        this.createdAt});
+      this.vendor,
+      this.category,
+      this.categoryName,
+      this.name,
+      this.description,
+      this.subcategoryImage,
+      this.enableSubcategory,
+      this.createdAt});
 
   FashionSubCategoryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

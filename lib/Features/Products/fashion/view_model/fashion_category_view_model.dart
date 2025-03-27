@@ -14,6 +14,7 @@ import '../repository/fashion_category_repository.dart';
 
 class FashionCategoryViewModel extends ChangeNotifier {
   FashionCategoryRepository _categoryRepository = FashionCategoryRepository();
+  FaSubCategoryModel? _subCategoryModel;
 
   List<FashionCategoryModel> _categories = [];
 
@@ -109,6 +110,9 @@ class FashionCategoryViewModel extends ChangeNotifier {
   }
 
   getAllSubCategoryLoading({required int categoryId}) async {
+    if (allcategorypage == _subCategoryModel?.totalPages) {
+      return;
+    }
     gettingallproduct = true;
     notifyListeners();
     allcategorypage++;
@@ -116,6 +120,7 @@ class FashionCategoryViewModel extends ChangeNotifier {
         .fashionpCategorybySubCategoryGet(
             categoryId: categoryId, page: allcategorypage)
         .then((value) {
+      _subCategoryModel = value;
       if (value?.results != null) {
         _selectsubCategory.addAll(value?.results ?? []);
       } else if (value?.results == null) {

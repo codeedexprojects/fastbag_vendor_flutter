@@ -113,7 +113,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         }
 
         FoodItemModel model = FoodItemModel(
-          vendor: widget.subCategory.vendor,
+          vendor: widget.subCategory?.vendor??0,
           category: widget.subCategory.category ?? 0,
           subcategory: widget.subCategory.id ?? 0,
           name: nameController.text.trim(),

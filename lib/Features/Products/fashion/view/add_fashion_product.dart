@@ -27,6 +27,7 @@ import '../view_model/fashion_product_view_model.dart';
 class AddFashionProduct extends StatefulWidget {
   final FashionCategoryModel category;
   final FashionSubCategoryModel subCategory;
+
   const AddFashionProduct({
     super.key,
     required this.category,
@@ -55,6 +56,7 @@ class _AddFashionProductState extends State<AddFashionProduct> {
 
   int? selectedCategoryId;
   int? selectedSubCategoryId;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -168,6 +170,13 @@ class _AddFashionProductState extends State<AddFashionProduct> {
             color: const Color(0xffFF5252),
             icon: Icons.error_outline,
             message: 'Please select an image');
+        return;
+      } else if (formattedData.length == 0) {
+        showFlushbar(
+            context: context,
+            color: const Color(0xffFF5252),
+            icon: Icons.error_outline,
+            message: 'Please add an varient');
         return;
       } else {
         productProvider.addFashionProduct(

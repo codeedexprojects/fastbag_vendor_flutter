@@ -10,7 +10,6 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_ca
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

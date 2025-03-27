@@ -20,12 +20,22 @@ class SubCategoryEditList extends StatefulWidget {
 }
 
 class _SubCategoryEditListState extends State<SubCategoryEditList> {
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     final categoryProvider =
         Provider.of<CategoryViewModel>(context, listen: false);
+    categoryProvider.allsubcategorypage = 1;
     categoryProvider.getFoodCategorybySubCategories(
         categoryId: widget?.categoryId ?? 0);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        categoryProvider.getAllSubCategoryLoading(
+            categoryId: widget?.categoryId ?? 0);
+      }
+    });
     super.initState();
   }
 
@@ -36,6 +46,7 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: FbColors.backgroundcolor,
         title: Text(
           "Edit Sub Categories",
@@ -49,6 +60,7 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
         child: ListView.builder(
+            controller: _scrollController,
             itemCount: categoryProvider.selectsubCategories.length,
             itemBuilder: (context, index) {
               return Padding(

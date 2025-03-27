@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 
 class CategoryViewModel extends ChangeNotifier {
   final CategoryRepository _categoryRepository = CategoryRepository();
+  FoodSubCategoryModel? _categoryModel;
 
   List<CategoryModel> _categories = [];
 
@@ -49,14 +50,6 @@ class CategoryViewModel extends ChangeNotifier {
     return _subCategories;
   }
 
-  getFoodCategorybySubCategories({required int categoryId}) async {
-    await _categoryRepository.FoodCategoryBySubcategoryGet(categoryId)
-        .then((v) {
-      _selectsubCategories = v ?? [];
-      notifyListeners();
-    });
-  }
-
   Future<void> addProductSubCategory(
       {required BuildContext context,
       required FoodCategoryBySubcategoryModel subCategories}) async {
@@ -75,5 +68,51 @@ class CategoryViewModel extends ChangeNotifier {
   }) async {
     await _categoryRepository.FoodCategoryBySubcategorydelete(
         context, subcategoryId);
+  }
+
+  int currentpage = 1;
+  int allsubcategorypage = 1;
+  bool gettingallsubcategory = false;
+  bool subcategoryloadingall = false;
+
+  getFoodCategorybySubCategories({required int categoryId}) async {
+    print("mmmmmmmmmmmmmmmmmmmmmm ${_categoryModel?.totalPages}");
+    subcategoryloadingall = true;
+
+    await _categoryRepository.FoodCategoryBySubcategoryGet(
+            categoryId: categoryId, page: allsubcategorypage)
+        .then((v) {
+      _categoryModel = v;
+      _selectsubCategories = v?.results ?? [];
+      v?.results != null
+          ? subcategoryloadingall = false
+          : subcategoryloadingall = false;
+    });
+    notifyListeners();
+  }
+
+  getAllSubCategoryLoading({required int categoryId}) async {
+    print("paehges ${allsubcategorypage}");
+    print("mmmmmmmmmmmmmmmmmmmmmm ${_categoryModel?.totalPages}");
+    print(
+        "knnscddwndbiownd ${allsubcategorypage == _categoryModel?.totalPages}");
+    if (allsubcategorypage == _categoryModel?.totalPages) {
+      return;
+    }
+
+    gettingallsubcategory = true;
+    notifyListeners();
+    allsubcategorypage++;
+    await _categoryRepository.FoodCategoryBySubcategoryGet(
+            categoryId: categoryId, page: allsubcategorypage)
+        .then((value) {
+      _categoryModel = value;
+      if (value?.results != null) {
+        _selectsubCategories.addAll(value?.results ?? []);
+      } else if (value?.results == null) {
+        gettingallsubcategory = false;
+      }
+    });
+    notifyListeners();
   }
 }

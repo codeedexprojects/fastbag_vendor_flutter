@@ -36,12 +36,22 @@ class FoodCategorybySubcategory extends StatefulWidget {
 
 class _FashionCategorybySubcategoryState
     extends State<FoodCategorybySubcategory> {
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     final categoryProvider =
         Provider.of<CategoryViewModel>(context, listen: false);
+    categoryProvider.allsubcategorypage = 1;
     categoryProvider.getFoodCategorybySubCategories(
         categoryId: widget?.categoryId ?? 0);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        categoryProvider.getAllSubCategoryLoading(
+            categoryId: widget?.categoryId ?? 0);
+      }
+    });
     super.initState();
   }
 
@@ -124,6 +134,7 @@ class _FashionCategorybySubcategoryState
             categoryProvider.selectsubCategories.isNotEmpty
                 ? Expanded(
                     child: GridView.builder(
+                    controller: _scrollController,
                     padding: const EdgeInsets.all(5),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
