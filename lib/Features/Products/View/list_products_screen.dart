@@ -28,15 +28,23 @@ class ListProductsScreen extends StatefulWidget {
 }
 
 class _ListProductsScreenState extends State<ListProductsScreen> {
-  Map<int, bool> isExpandedMap = {}; // Track expanded state per item
+  Map<int, bool> isExpandedMap = {};
+  ScrollController _scrollController=ScrollController();
 
   @override
   void initState() {
     super.initState();
     final productProvider =
         Provider.of<ProductViewModel>(context, listen: false);
+    productProvider.allProductPage=1;
     productProvider.getProductCategories(
-        context: context, subCategoryId: widget.subCategorys.id ?? 0);
+        context: context, subCatId: widget.subCategorys.id ?? 0);
+    _scrollController.addListener(() {
+      if(_scrollController.position.pixels==_scrollController.position.maxScrollExtent){
+        productProvider.getAllProductLoading(context: context,subCatId: widget.subCategorys.id?? 0);
+      }
+    },);
+
   }
 
   @override
@@ -47,6 +55,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
         Provider.of<ProductViewModel>(context, listen: false);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromRGBO(247, 253, 247, 1),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -57,6 +66,7 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
             SizedBox(
               height: screenWidth * 0.15,
               child: TextField(
+                autofocus: false,
                   decoration: searchBarDecoration(hint: "Search Here")),
             ),
             Consumer<ProductViewModel>(builder: (context, data, _) {
@@ -150,14 +160,21 @@ class _ListProductsScreenState extends State<ListProductsScreen> {
                                         Switch(
                                           activeColor: Colors.green,
                                           inactiveThumbColor: Colors.white,
+                                          inactiveTrackColor: Colors.grey[300],
+                                          trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                                           materialTapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
                                           value: productProvider
                                                   .foodProducts[index]
                                                   .isAvailable ??
                                               false,
-                                          onChanged: (value) {
-                                            // Handle switch toggle logic
+                                          onChanged: (value) async {
+                                            await productProvider.enableDisableProduct(
+                                              productProvider.foodProducts[index].id!,
+                                              value, // New availability state
+                                            );
+                                            productProvider.foodProducts[index].isAvailable = value;
+                                            productProvider.notifyListeners();
                                           },
                                         ),
                                       ],

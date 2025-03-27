@@ -34,12 +34,22 @@ class FashionCategorybySubcategory extends StatefulWidget {
 
 class _FashionCategorybySubcategoryState
     extends State<FashionCategorybySubcategory> {
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     final categoryProvider =
         Provider.of<FashionCategoryViewModel>(context, listen: false);
+    categoryProvider.allcategorypage = 1;
     categoryProvider.getFashionCategorybySubCategories(
         categoryId: widget.category.id ?? 0);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        categoryProvider.getAllSubCategoryLoading(
+            categoryId: widget.category.id ?? 0);
+      }
+    });
     super.initState();
   }
 
@@ -66,7 +76,7 @@ class _FashionCategorybySubcategoryState
         title: Text(
           categoryProvider.selectsubCategory.isEmpty
               ? " Sub Categories"
-              : categoryProvider.selectsubCategory.first.name ?? '',
+              : categoryProvider.selectsubCategory.first.categoryName ?? '',
           style: mainFont(
               fontsize: screenWidth * 0.05,
               fontweight: FontWeight.w500,
@@ -94,6 +104,7 @@ class _FashionCategorybySubcategoryState
             categoryProvider.selectsubCategory.isNotEmpty
                 ? Expanded(
                     child: GridView.builder(
+                    controller: _scrollController,
                     padding: const EdgeInsets.all(5),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -162,6 +173,9 @@ class _FashionCategorybySubcategoryState
                   borderColor: Colors.blue,
                 ),
               ),
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),

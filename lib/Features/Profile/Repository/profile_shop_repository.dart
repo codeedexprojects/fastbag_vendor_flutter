@@ -101,6 +101,8 @@ class ProfileShopRepository{
         print("Error: ${response.statusMessage}");
       }
     } on DioException catch (dioError) {
+      print("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy${dioError.response}");
+      print("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy${dioError.error}");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(

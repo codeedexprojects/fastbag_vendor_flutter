@@ -80,10 +80,15 @@ class _FashionEditSubCategoryScreenState
         if (imageFile != null) 'subcategory_image': imageFile,
         'enable_subcategory': _switchValue
       };
-      await categoryViewModel.editFashionSubCategory(
-          context: context,
-          data: data,
-          subcategoryId: widget.subCategory.id ?? 0);
+      await categoryViewModel
+          .editFashionSubCategory(
+              context: context,
+              data: data,
+              subcategoryId: widget.subCategory.id ?? 0)
+          .then((v) {
+        categoryViewModel.getAllSubCategoryLoading(
+            categoryId: widget.subCategory.id ?? 0);
+      });
     }
     // else {
     //   showDialog(

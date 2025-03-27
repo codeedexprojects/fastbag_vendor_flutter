@@ -10,6 +10,7 @@ import '../repository/fashion_category_repository.dart';
 
 class FashionCategoryViewModel extends ChangeNotifier {
   FashionCategoryRepository _categoryRepository = FashionCategoryRepository();
+  FaSubCategoryModel? _subCategoryModel;
 
   List<FashionCategoryModel> _categories = [];
 
@@ -26,15 +27,6 @@ class FashionCategoryViewModel extends ChangeNotifier {
   getfashionProductCategories() async {
     await _categoryRepository.fashionproductCategoryGet().then((v) {
       _categories = v ?? [];
-      notifyListeners();
-    });
-  }
-
-  getFashionCategorybySubCategories({required int categoryId}) async {
-    await _categoryRepository
-        .fashionpCategorybySubCategoryGet(categoryId)
-        .then((v) {
-      _selectsubCategory = v ?? [];
       notifyListeners();
     });
   }
@@ -85,5 +77,52 @@ class FashionCategoryViewModel extends ChangeNotifier {
     } finally {
       SVProgressHUD.dismiss();
     }
+  }
+
+  deleteSubCategory({
+    required BuildContext context,
+    required int subcategoryId,
+  }) async {
+    await _categoryRepository.FashionSubCategoryDelete(context, subcategoryId);
+  }
+
+  int currentpage = 1;
+  int allcategorypage = 1;
+  bool gettingallproduct = false;
+  bool productloadingall = false;
+
+  getFashionCategorybySubCategories({required int categoryId}) async {
+    productloadingall = true;
+    await _categoryRepository
+        .fashionpCategorybySubCategoryGet(
+            categoryId: categoryId, page: allcategorypage)
+        .then((v) {
+      _selectsubCategory = v?.results ?? [];
+      v?.results != null
+          ? productloadingall = false
+          : productloadingall = false;
+    });
+    notifyListeners();
+  }
+
+  getAllSubCategoryLoading({required int categoryId}) async {
+    if (allcategorypage == _subCategoryModel?.totalPages) {
+      return;
+    }
+    gettingallproduct = true;
+    notifyListeners();
+    allcategorypage++;
+    await _categoryRepository
+        .fashionpCategorybySubCategoryGet(
+            categoryId: categoryId, page: allcategorypage)
+        .then((value) {
+      _subCategoryModel = value;
+      if (value?.results != null) {
+        _selectsubCategory.addAll(value?.results ?? []);
+      } else if (value?.results == null) {
+        gettingallproduct = false;
+      }
+    });
+    notifyListeners();
   }
 }

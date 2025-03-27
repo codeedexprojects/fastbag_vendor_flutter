@@ -1,5 +1,6 @@
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/category_request_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_categoryby_subcategory.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_sub_category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../Commons/fonts.dart';
@@ -19,7 +20,7 @@ class ListSubcategoriesName extends StatefulWidget {
 }
 
 class _ListSubcategoriesNameState extends State<ListSubcategoriesName> {
-  CategoryBySubCategoryModel? categoryModel;
+  FashionSubCategoryModel? categoryModel;
 
   @override
   void initState() {

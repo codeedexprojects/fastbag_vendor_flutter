@@ -120,7 +120,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           .then((res) {
         productProvider.getProductCategories(
           context: context,
-          subCategoryId: widget.product.subcategory ?? 0,
+          subCatId: widget.product.subcategory ?? 0,
         );
       });
     }

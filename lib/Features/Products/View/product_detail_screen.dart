@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/images.dart';
+import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/ViewModel/fooddetail_view_model.dart';
 import 'package:flutter/material.dart';
@@ -33,15 +34,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   dynamic selectedPrice = 0.0;
   dynamic totalPrice = 0.0;
   String? selectedAvailability;
+  late VoidCallback _listener;
 
   @override
   void initState() {
+    // final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
+    // _viewModel.getfooddata(widget.productId);
+    // super.initState();
+    // if (_viewModel.foodDetail?.variants?.isNotEmpty == true) {
+    //   selectedPrice = _viewModel.foodDetail?.variants?.first.price;
+    // }
     final _viewModel = Provider.of<FoodViewModel>(context, listen: false);
     _viewModel.getfooddata(widget.productId);
-    super.initState();
-    if (_viewModel.foodDetail?.variants?.isNotEmpty == true) {
-      selectedPrice = _viewModel.foodDetail?.variants?.first.price;
-    }
+    _viewModel.addListener(() {
+      if (_viewModel.foodDetail?.variants?.isNotEmpty == true) {
+        if (mounted)
+          setState(() {
+            selectedPrice = _viewModel.foodDetail?.price ?? 0;
+          });
+        else {
+          return;
+        }
+      }
+    });
   }
 
   @override
@@ -86,8 +101,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             _viewModel.foodDetail?.imageUrls?.first.image ??
                             "",
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => Image.asset(
-                            'assets/Images/image_5-removebg-preview.png'),
+                        placeholder: (context, url) => Image.asset(PlaceholderImage.placeholderimage),
                         errorWidget: (context, url, error) =>
                             Icon(Icons.downloading),
                       ),
@@ -135,7 +149,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               color: FbColors.black),
                         ),
                         Text(
-                          '₹${selectedPrice ?? '00'}',
+                          '₹${(selectedPrice ?? _viewModel.foodDetail?.price)}',
                           style: normalFont5(
                               fontsize: 20,
                               fontweight: FontWeight.w400,

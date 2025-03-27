@@ -13,6 +13,8 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Commons/colors.dart';
+import '../../../../Commons/flush_bar.dart';
 import '../model/fashion_categoryby_subcategory.dart';
 import '../model/fashion_sub_category_model.dart';
 
@@ -114,16 +116,12 @@ class FashionCategoryRepository {
       if (response.statusCode == 201) {
         SVProgressHUD.dismiss();
         print("sub category added successful: ${response.data}");
-        showDialog(
-          context: context,
-          barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(
-            text: "Sub Category Added",
-            descrription:
-                "Your Category has been added to the list and is visible to customers",
-            type: FbBottomDialogType.addSubCategory,
-          ),
-        );
+        Navigator.pop(context);
+        showFlushbar(
+            context: context,
+            color: FbColors.buttonColor,
+            icon: Icons.check,
+            message: "SubCartegory Add Successfull");
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OOPs something happened")),
@@ -150,6 +148,7 @@ class FashionCategoryRepository {
       BuildContext context, data, subcategoryId) async {
     print('---------------$data');
     try {
+      SVProgressHUD.show();
       FormData formData = FormData.fromMap(data);
 
       final tokenId = await StoreManager().getAccessToken();
@@ -166,7 +165,10 @@ class FashionCategoryRepository {
       );
 
       print(response.statusCode);
-      return response.data;
+      if (response.statusCode == 200) {
+        SVProgressHUD.dismiss();
+        return response.data;
+      }
 
       // Handle the response
     } on DioException catch (e) {
@@ -177,8 +179,8 @@ class FashionCategoryRepository {
     }
   }
 
-  Future<List<FashionSubCategoryModel>?> fashionpCategorybySubCategoryGet(
-      int categoryId) async {
+  Future<FaSubCategoryModel?> fashionpCategorybySubCategoryGet(
+      {int? categoryId, int? page}) async {
     try {
       SVProgressHUD.show();
       final prefs = await SharedPreferences.getInstance();
@@ -189,22 +191,51 @@ class FashionCategoryRepository {
       };
       print("dhjhidih $categoryId");
       var response = await _dio.request(
-        '${baseUrl}fashion/subcategories/by-category/$categoryId/',
+        '${baseUrl}fashion/subcategories/by-category/$categoryId/?page=$page',
         options: Options(
           method: 'GET',
           headers: headers,
         ),
       );
       if (response.statusCode == 200) {
-        List jsonList = response.data;
-        List<FashionSubCategoryModel> jsonResponce =
-            jsonList.map((v) => FashionSubCategoryModel.fromJson(v)).toList();
-        print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
         SVProgressHUD.dismiss();
-        return jsonResponce;
+
+        return FaSubCategoryModel.fromJson(response.data);
       } else {
         print(response.statusMessage);
       }
+    } on DioException catch (e) {
+      SVProgressHUD.dismiss();
+      print("error ${e.response?.data}");
+    }
+  }
+
+  Future<dynamic> FashionSubCategoryDelete(
+      BuildContext context, int subcategoryId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
+      var vendorId = prefs.getInt('vendor_id');
+      var headers = {'Authorization': 'Bearer $tokenId'};
+      var dio = Dio();
+      var response = await dio.request(
+        '${baseUrl}fashion/clothing-subcategories/$subcategoryId/',
+        options: Options(
+          method: 'DELETE',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 204) {
+        showFlushbar(
+            context: context,
+            color: FbColors.errorcolor,
+            icon: Icons.delete,
+            message: "subcategory delete successful");
+      }
+      // else {
+      //   print(response.statusMessage);
+      // }
     } on DioException catch (e) {
       print("error ${e.response?.data}");
     }

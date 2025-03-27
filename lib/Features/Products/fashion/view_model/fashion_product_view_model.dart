@@ -21,7 +21,9 @@ class FashionProductViewModel extends ChangeNotifier {
   CategoryRequestModel? categoryRequestModel;
 
   getFashionProductCategories({required int subCategoryId}) async {
-    await _productRepository.fashiongetAllProducts(subCategoryId).then((v) {
+    await _productRepository
+        .fashiongetAllProducts(subcategoryId: subCategoryId)
+        .then((v) {
       _fashionProducts = v?.results ?? [];
       notifyListeners();
     });
@@ -32,7 +34,6 @@ class FashionProductViewModel extends ChangeNotifier {
   fetchFashionProductDetail(productId) async {
     try {
       SVProgressHUD.show();
-
       final response =
           await _productRepository.fetchFashionProductDetail(productId);
       fashionProductDetail = Results.fromJson(response);
@@ -162,7 +163,8 @@ class FashionProductViewModel extends ChangeNotifier {
     try {
       SVProgressHUD.show();
 
-      final response = await _productRepository.deleteProduct(productId);
+      final response =
+          await _productRepository.deleteProduct(context, productId);
       print('response------------>$response');
 
       fashionProducts.removeWhere((element) => element.id == productId);
@@ -170,8 +172,8 @@ class FashionProductViewModel extends ChangeNotifier {
 
       showFlushbar(
           context: context,
-          color: FbColors.buttonColor,
-          icon: Icons.check,
+          color: FbColors.errorcolor,
+          icon: Icons.delete,
           message: 'Product Deleted Successfully');
     } catch (e) {
       print('error------------>$e');
@@ -184,6 +186,7 @@ class FashionProductViewModel extends ChangeNotifier {
       SVProgressHUD.dismiss();
     }
   }
+
 // Delete Product Image
 
   deleteProductImage({
@@ -220,5 +223,41 @@ class FashionProductViewModel extends ChangeNotifier {
     } finally {
       SVProgressHUD.dismiss();
     }
+  }
+
+  int currentPage = 1;
+  int allproductPage = 1;
+  bool gettingAllProducts = false;
+  bool productloadingInAll = false;
+
+  getAllProducts({required int subCategoryId}) async {
+    productloadingInAll = true;
+    await _productRepository
+        .fashiongetAllProducts(
+            subcategoryId: subCategoryId, page: allproductPage)
+        .then((value) {
+      _fashionProducts = value?.results ?? [];
+      value?.results != null
+          ? productloadingInAll = false
+          : productloadingInAll = false;
+    });
+    notifyListeners();
+  }
+
+  getAllProductLoading({required int subCategoryId}) async {
+    gettingAllProducts = true;
+    notifyListeners();
+    allproductPage++;
+    await _productRepository
+        .fashiongetAllProducts(
+            subcategoryId: subCategoryId, page: allproductPage)
+        .then((value) {
+      if (value?.results != null) {
+        _fashionProducts.addAll(value?.results ?? []);
+      } else if (value?.results == null) {
+        gettingAllProducts = false;
+      }
+    });
+    notifyListeners();
   }
 }
