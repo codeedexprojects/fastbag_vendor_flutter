@@ -37,6 +37,7 @@ class FashionProductViewModel extends ChangeNotifier {
       final response =
           await _productRepository.fetchFashionProductDetail(productId);
       fashionProductDetail = Results.fromJson(response);
+      notifyListeners();
     } catch (e) {
       print(e);
     } finally {
