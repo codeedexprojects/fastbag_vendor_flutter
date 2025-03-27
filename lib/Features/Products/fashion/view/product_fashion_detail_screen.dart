@@ -47,15 +47,15 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final _viewModel = Provider.of<FashionProductViewModel>(context);
 
-      if (_viewModel.fashionProductDetail != null && !_prizeInitialized) {
-        final initialColor =
-            _viewModel.fashionProductDetail?.colors?[_colorisSelected ?? 0];
-        final initialSize = initialColor?.sizes?[_sizeisSelected ?? 0];
-        prize = initialSize?.price ?? _viewModel.fashionProductDetail?.price;
-        Stock = initialSize?.stock ??
-            _viewModel.fashionProductDetail?.colors?.first.sizes?.first.stock;
-        _prizeInitialized = true;
-      }
+    if (_viewModel.fashionProductDetail != null && !_prizeInitialized) {
+      final initialColor =
+          _viewModel.fashionProductDetail?.colors?[_colorisSelected ?? 0];
+      final initialSize = initialColor?.sizes?[_sizeisSelected ?? 0];
+      prize = initialSize?.price ?? _viewModel.fashionProductDetail?.price;
+      Stock = initialSize?.stock ??
+          _viewModel.fashionProductDetail?.colors?.first.sizes?.first.stock;
+      _prizeInitialized = true;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -229,13 +229,23 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                                     _colorisSelected = index;
                                     _sizeisSelected = 0; // Reset size selection
                                     // Update price to new color's first size
+                                    if (_viewModel.fashionProductDetail
+                                                ?.colors![index].sizes !=
+                                            null &&
+                                        _viewModel.fashionProductDetail
+                                                ?.colors![index].sizes !=
+                                            null &&
+                                        _viewModel.fashionProductDetail!
+                                            .colors![index].sizes!.isNotEmpty) {
+                                      final newColor = _viewModel
+                                          .fashionProductDetail?.colors?[index];
 
-                                    final newColor = _viewModel
-                                        .fashionProductDetail?.colors?[index];
-                                    final newSize = newColor?.sizes?.first;
-                                    prize = newSize?.price ??
-                                        _viewModel.fashionProductDetail?.price;
-                                    Stock = newSize?.stock ?? 0;
+                                      final newSize = newColor?.sizes?.first;
+                                      prize = newSize?.price ??
+                                          _viewModel
+                                              .fashionProductDetail?.price;
+                                      Stock = newSize?.stock ?? 0;
+                                    }
                                   });
                                 },
                                 child: Container(
@@ -247,7 +257,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                                       border: Border.all(
                                           width:
                                               _colorisSelected == index ? 2 : 0,
-                                          color: FbColors.black)),
+                                          color: Colors.blue)),
                                   // child: CachedNetworkImage(
                                   //   height: 70,
                                   //   width: 70,
@@ -278,19 +288,27 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                         );
                       }),
                 ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Size',
-                    style: normalFont1(
-                        fontsize: 20,
-                        fontweight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ],
-              ),
-              if (_viewModel.fashionProductDetail?.colors?.isNotEmpty == true)
+              if (_viewModel.fashionProductDetail?.colors != null &&
+                  _viewModel.fashionProductDetail!.colors!.isNotEmpty &&
+                  _viewModel.fashionProductDetail != null &&
+                  _viewModel.fashionProductDetail!.colors != null &&
+                  _viewModel.fashionProductDetail!
+                          .colors![_colorisSelected ?? 0].sizes !=
+                      null &&
+                  _viewModel.fashionProductDetail!
+                      .colors![_colorisSelected ?? 0].sizes!.isNotEmpty) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Size',
+                      style: normalFont1(
+                          fontsize: 20,
+                          fontweight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                  ],
+                ),
                 Container(
                   height: 50,
                   child: ListView.builder(
@@ -330,6 +348,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
                         );
                       }),
                 ),
+              ],
               SizedBox(
                 height: 17,
               ),
@@ -393,3 +412,164 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
     );
   }
 }
+// class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
+//   // ... existing properties
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     final _viewModel = Provider.of<FashionProductViewModel>(context, listen: false);
+//     _viewModel.fetchFashionProductDetail(widget.productId);
+    
+//     // Initialize selections safely
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       if (_viewModel.fashionProductDetail?.colors?.isNotEmpty == true) {
+//         _colorisSelected = 0;
+//         if (_viewModel.fashionProductDetail!.colors![0].sizes?.isNotEmpty == true) {
+//           _sizeisSelected = 0;
+//         }
+//       }
+//       _prizeInitialized = true;
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // ... existing build setup
+
+//     // Safe initialization of price and stock
+//     if (_viewModel.fashionProductDetail != null && !_prizeInitialized) {
+//       final colors = _viewModel.fashionProductDetail!.colors;
+//       if (colors != null && colors.isNotEmpty) {
+//         _colorisSelected = 0;
+//         final sizes = colors[0].sizes;
+//         if (sizes != null && sizes.isNotEmpty) {
+//           _sizeisSelected = 0;
+//           prize = sizes[0].price ?? _viewModel.fashionProductDetail?.price;
+//           Stock = sizes[0].stock;
+//         }
+//       }
+//       _prizeInitialized = true;
+//     }
+
+//     return Scaffold(
+//       // ... existing scaffold
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: EdgeInsets.symmetric(
+//               horizontal: screenWidth * .07, vertical: screenHeight * .01),
+//           child: Column(
+//             children: [
+//               // ... existing image section
+              
+//               // Color selection with safe access
+//               if (_viewModel.fashionProductDetail?.colors?.isNotEmpty == true)
+//                 Container(
+//                   height: 80,
+//                   child: ListView.builder(
+//                     itemCount: _viewModel.fashionProductDetail!.colors!.length,
+//                     scrollDirection: Axis.horizontal,
+//                     itemBuilder: (context, index) {
+//                       final color = _viewModel.fashionProductDetail!.colors![index];
+//                       return Padding(
+//                         padding: const EdgeInsets.symmetric(horizontal: 4),
+//                         child: Column(
+//                           children: [
+//                             GestureDetector(
+//                               onTap: () {
+//                                 setState(() {
+//                                   _colorisSelected = index;
+//                                   _sizeisSelected = null;
+//                                   if (color.sizes?.isNotEmpty == true) {
+//                                     _sizeisSelected = 0;
+//                                     prize = color.sizes![0].price ?? _viewModel.fashionProductDetail?.price;
+//                                     Stock = color.sizes![0].stock;
+//                                   }
+//                                 });
+//                               },
+//                               child: Container(
+//                                 height: 60,
+//                                 width: 60,
+//                                 decoration: BoxDecoration(
+//                                   color: color.colorCode?.toColor() ?? Colors.grey,
+//                                   borderRadius: BorderRadius.circular(55),
+//                                   border: Border.all(
+//                                     width: _colorisSelected == index ? 2 : 0,
+//                                     color: Colors.blue
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ),
+
+//               // Size selection with safe access
+//               if (_colorisSelected != null &&
+//                   _viewModel.fashionProductDetail?.colors?[_colorisSelected!].sizes?.isNotEmpty == true)
+//                 Column(
+//                   children: [
+//                     Row(
+//                       mainAxisAlignment: MainAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                           'Size',
+//                           style: normalFont1(
+//                             fontsize: 20,
+//                             fontweight: FontWeight.bold,
+//                             color: Colors.black
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                     Container(
+//                       height: 50,
+//                       child: ListView.builder(
+//                         itemCount: _viewModel.fashionProductDetail!
+//                             .colors![_colorisSelected!].sizes!.length,
+//                         scrollDirection: Axis.horizontal,
+//                         itemBuilder: (context, index) {
+//                           final sizeItem = _viewModel.fashionProductDetail!
+//                               .colors![_colorisSelected!].sizes![index];
+//                           return Padding(
+//                             padding: const EdgeInsets.symmetric(horizontal: 10),
+//                             child: GestureDetector(
+//                               onTap: () {
+//                                 setState(() {
+//                                   _sizeisSelected = index;
+//                                   prize = sizeItem.price ?? _viewModel.fashionProductDetail?.price;
+//                                   Stock = sizeItem.stock;
+//                                 });
+//                               },
+//                               child: Container(
+//                                 height: 50,
+//                                 width: 50,
+//                                 decoration: BoxDecoration(
+//                                   borderRadius: BorderRadius.circular(10),
+//                                   border: Border.all(
+//                                     color: Colors.grey,
+//                                     width: _sizeisSelected == index ? 2 : 0
+//                                   ),
+//                                 ),
+//                                 child: Center(
+//                                   child: Text(sizeItem.size ?? ''),
+//                                 ),
+//                               ),
+//                             ),
+//                           );
+//                         },
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               // ... rest of the code
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -8,6 +8,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/fashion_su
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/sub_fashion_category_edit_list.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_category_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -133,8 +134,32 @@ class _FashionCategorybySubcategoryState
                       );
                     },
                   ))
-                : const Center(
-                    child: Text("Start adding your sub category now"),
+                : Expanded(
+                    child: SizedBox(
+                      height: screenHeight,
+                      width: screenWidth,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/no_product.svg',
+                            width: screenWidth * .3, // Set desired width
+                            // Set desired height
+                          ),
+                          SizedBox(
+                            height: screenHeight * .004,
+                          ),
+                          SizedBox(
+                            height: screenHeight * .004,
+                          ),
+                          Text("Nothing to show yet. Created", style: nunito()),
+                          Text(
+                            "Sub Category list will appear here",
+                            style: nunito(),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
             if (widget.isOperable)
               Padding(
