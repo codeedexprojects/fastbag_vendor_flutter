@@ -30,14 +30,17 @@ class GroceryRepository {
     }
   }
 
-  Future fetchGrocerySubCategory() async {
+  Future fetchGrocerySubCategoryByCategory(int? categoryId, int? page) async {
     try {
-      String? storeType = await StoreManager().getStoreType();
-      print("----------------------->$storeType");
-
-      Response response = await dio.get(
-        "${baseUrl}vendors/categories/filter/?store_type_name=$storeType",
+      final token = await StoreManager().getAccessToken();
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token", // Add token to header
+        },
       );
+      Response response = await dio.get(
+          "${baseUrl}grocery/subcategories/by-category/${categoryId}/?page=$page",
+          options: options);
 
       return response.data;
     } on DioException catch (e) {
@@ -48,35 +51,7 @@ class GroceryRepository {
       if (e.response != null) {
         // Server returned a response (status code other than 2xx)
         throw e.response?.data ??
-            'Failed to fetch categories. Please try again.';
-      }
-    } catch (e) {
-      print("Error: $e");
-      throw 'Unexpected error occurred. Please try again.';
-    }
-  }
-
-  Future fetchGrocerySubCategoryList() async {
-    try {
-      // String? token = await StoreManager().getAccessToken();
-      // // Set headers
-      // Options options = Options(
-      //   headers: {
-      //     "Authorization": "Bearer $token", // Add token to header
-      //   },
-      // );
-      Response response =
-          await dio.get("${baseUrl}grocery/gro-Subcategories/list/");
-      print(response.data);
-      return response.data;
-    } on DioException catch (e) {
-      // Print the full Dio error for debugging
-      print("DioError: ${e.response?.data}");
-
-      // Handle different Dio error types
-      if (e.response != null) {
-        throw e.response?.data ??
-            'Failed to fetch Sub categories. Please try again.';
+            'Failed to fetch Sub Categories. Please try again.';
       }
     } catch (e) {
       print("Error: $e");
@@ -86,7 +61,7 @@ class GroceryRepository {
 
 // Fetch Product List of subCtegory
 
-  fetchProductsbySubcategory(subCategoryId) async {
+  fetchProductsbySubcategory(subCategoryId, page) async {
     try {
       final vendorId = await StoreManager().getVendorId();
       // final vendorId = 18;
@@ -99,7 +74,7 @@ class GroceryRepository {
       );
 
       Response response = await dio.get(
-          '${baseUrl}grocery/products/$vendorId/$subCategoryId/',
+          '${baseUrl}grocery/products/$vendorId/$subCategoryId/?page=$page',
           options: options);
       return response.data;
     } on DioException catch (e) {
