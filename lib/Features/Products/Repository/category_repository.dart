@@ -272,7 +272,7 @@ class CategoryRepository {
     }
   }
 
-  Future<dynamic> FoodCategoryBySubcategoryGet(int categoryId) async {
+  Future<FoodSubCategoryModel?> FoodCategoryBySubcategoryGet({int? categoryId,int? page}) async {
     try {
       SVProgressHUD.show();
       final prefs = await SharedPreferences.getInstance();
@@ -286,24 +286,26 @@ class CategoryRepository {
       };
       print("dhjhidih $categoryId");
       var response = await _dio.request(
-        '${baseUrl}food/subcategories/by-category/$categoryId/',
+        '${baseUrl}food/subcategories/by-category/$categoryId/?page=$page',
         options: Options(
           method: 'GET',
           headers: headers,
         ),
       );
       if (response.statusCode == 200) {
-        List jsonList = response.data;
-        List<FoodCategoryBySubcategoryModel> jsonResponce = jsonList
-            .map((v) => FoodCategoryBySubcategoryModel.fromJson(v))
-            .toList();
-        print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
+        // List jsonList = response.data;
+        // List<FoodCategoryBySubcategoryModel> jsonResponce = jsonList
+        //     .map((v) => FoodCategoryBySubcategoryModel.fromJson(v))
+        //     .toList();
+        // print("jhhhhhhhhhhhhhhhhhhhhh    ${json.encode(response.data)}");
         SVProgressHUD.dismiss();
-        return jsonResponce;
+        return FoodSubCategoryModel.fromJson(response.data);
+        // // return jsonResponce;
       } else {
         print(response.statusMessage);
       }
     } on DioException catch (e) {
+      SVProgressHUD.dismiss();
       print("error ${e.response?.data}");
     }
   }

@@ -8,6 +8,7 @@ import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_s
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/edit_fashion_product_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/fashion/view_model/fashion_product_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class ProductEditDeleteScreen extends StatefulWidget {
@@ -72,93 +73,117 @@ class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.all(screenWidth * .05),
-        child: ListView.builder(
-            controller: _scrollController,
-            itemCount: fashionProductViewModel.fashionProducts.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.all(screenWidth * .02),
-                child: InkWell(
-                  onTap: () {
-                    navigate(
-                        context: context,
-                        screen: EditFashionProductScreen(
-                          category: widget.category,
-                          subCategory: widget.subCategory,
-                          product:
-                              fashionProductViewModel.fashionProducts[index],
-                        ));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(screenWidth * .02),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 0.5)),
-                    child: ListTile(
-                      leading: Container(
-                        height: screenHeight * .05,
-                        width: screenHeight * .06,
-                        child: (fashionProductViewModel
-                                        .fashionProducts[index].images !=
-                                    null &&
-                                fashionProductViewModel
-                                    .fashionProducts[index].images!.isNotEmpty)
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: CachedNetworkImage(
-                                  imageUrl: fashionProductViewModel
-                                          .fashionProducts[index]
-                                          .images?[0]
-                                          .imageUrl ??
-                                      '',
-                                  placeholder: (context, url) => Image.asset(
-                                      PlaceholderImage.placeholderimage),
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ),
-                              )
-                            : Image.asset(PlaceholderImage.placeholderimage),
-                      ),
-                      title: Text(fashionProductViewModel
-                          .fashionProducts[index].name
-                          .toString()),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                              onTap: () => navigate(
-                                  context: context,
-                                  screen: EditFashionProductScreen(
-                                    category: widget.category,
-                                    subCategory: widget.subCategory,
-                                    product: fashionProductViewModel
-                                        .fashionProducts[index],
-                                  )),
-                              child: const Icon(
-                                Icons.edit,
-                                color: Colors.blueAccent,
-                              )),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                fashionProductViewModel.deleteProduct(
-                                    context: context,
-                                    productId: fashionProductViewModel
-                                        .fashionProducts[index].id!);
-                              },
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              )),
-                        ],
+        child: fashionProductViewModel.fashionProducts.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/no_product.svg',
+                      width: screenWidth * .45, // Set desired width
+                      height: screenWidth * .3, // Set desired height
+                    ),
+                    Text(
+                      'No Products Available',
+                      style: inter(
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              );
-            }),
+              )
+            : ListView.builder(
+                controller: _scrollController,
+                itemCount: fashionProductViewModel.fashionProducts.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.all(screenWidth * .02),
+                    child: InkWell(
+                      onTap: () {
+                        navigate(
+                            context: context,
+                            screen: EditFashionProductScreen(
+                              category: widget.category,
+                              subCategory: widget.subCategory,
+                              product: fashionProductViewModel
+                                  .fashionProducts[index],
+                            ));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(screenWidth * .02),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey, width: 0.5)),
+                        child: ListTile(
+                          leading: Container(
+                            height: screenHeight * .05,
+                            width: screenHeight * .06,
+                            child: (fashionProductViewModel
+                                            .fashionProducts[index].images !=
+                                        null &&
+                                    fashionProductViewModel
+                                        .fashionProducts[index]
+                                        .images!
+                                        .isNotEmpty)
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: fashionProductViewModel
+                                              .fashionProducts[index]
+                                              .images?[0]
+                                              .imageUrl ??
+                                          '',
+                                      placeholder: (context, url) =>
+                                          Image.asset(PlaceholderImage
+                                              .placeholderimage),
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
+                                  )
+                                : Image.asset(
+                                    PlaceholderImage.placeholderimage),
+                          ),
+                          title: Text(fashionProductViewModel
+                              .fashionProducts[index].name
+                              .toString()),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                  onTap: () => navigate(
+                                      context: context,
+                                      screen: EditFashionProductScreen(
+                                        category: widget.category,
+                                        subCategory: widget.subCategory,
+                                        product: fashionProductViewModel
+                                            .fashionProducts[index],
+                                      )),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.blueAccent,
+                                  )),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              GestureDetector(
+                                  onTap: () {
+                                    fashionProductViewModel.deleteProduct(
+                                        context: context,
+                                        productId: fashionProductViewModel
+                                            .fashionProducts[index].id!);
+                                  },
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
       ),
     );
   }

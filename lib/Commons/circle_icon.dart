@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
+import 'package:fastbag_vendor_flutter/Commons/placeholder.dart';
 import 'package:flutter/material.dart';
 
 class IconInCircle extends StatelessWidget {
@@ -82,14 +84,19 @@ subCategoryCard(
         onTap: onTap,
         child: Container(
           height: height,
+          width: 103,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), // Optional rounded corners
-
-            image: DecorationImage(
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: CachedNetworkImage(
+              height: height,
+              width: 103,
               fit: BoxFit.cover,
-              image: image.isEmpty
-                  ? const AssetImage('assets/Images/grocery.jpeg')
-                  : NetworkImage(image),
+              imageUrl: image,
+              placeholder: (context, url) =>
+                  Image.asset(PlaceholderImage.placeholderimage),
             ),
           ),
         ),

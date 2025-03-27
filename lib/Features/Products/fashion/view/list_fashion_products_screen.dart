@@ -12,6 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../Commons/fonts.dart';
 import '../model/fashion_categoryby_subcategory.dart';
 import '../model/fashion_sub_category_model.dart';
 import '../view_model/fashion_product_view_model.dart';
@@ -86,21 +87,25 @@ class _ListProductsScreenState extends State<FashionListProductsScreen> {
                           height: screenHeight * .6,
                           child: Center(
                               child: SizedBox(
-                            height: screenWidth * .5,
+                            height: screenWidth * .8,
                             width: screenWidth * .5,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SvgPicture.asset(
                                   'assets/icons/no_product.svg',
-                                  width: screenWidth * .45, // Set desired width
-                                  height:
-                                      screenWidth * .3, // Set desired height
+                                  width: screenWidth * .3, // Set desired width
+                                  // Set desired height
                                 ),
                                 SizedBox(
                                   height: screenHeight * .004,
                                 ),
-                                const Text("Nothing to show yet. Created"),
-                                const Text("Product list will appear here")
+                                Text(
+                                  "No Product Available",
+                                  style: inter(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ],
                             ),
                           ))),

@@ -88,7 +88,8 @@ class _AddSubCategoryScreenState extends State<FashionAddSubCategoryScreen> {
         subCategories: category,
       )
           .then((e) {
-        categoryViewModel.getFashionCategorybySubCategories(
+        categoryViewModel.allcategorypage = 1;
+        categoryViewModel.getAllSubCategoryLoading(
             categoryId: selectedCategory?.id ?? 0);
       });
 

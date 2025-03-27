@@ -35,7 +35,6 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
   bool _switchValue = false;
   var _formKey = GlobalKey<FormState>();
   CategoryModel? selectedCategory;
-
   @override
   void initState() {
     FbStore.retrieveData(FbLocalStorage.vendorId).then((data) {
@@ -74,7 +73,8 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
       await categoryViewModel
           .addProductSubCategory(subCategories: category, context: context)
           .then((v) {
-        categoryViewModel.getFoodCategorybySubCategories(
+            categoryViewModel.allsubcategorypage=1;
+        categoryViewModel.getAllSubCategoryLoading(
             categoryId: selectedCategory!.id);
       });
 

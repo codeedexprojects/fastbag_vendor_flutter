@@ -202,6 +202,7 @@ class FashionProductRepository {
           headers: headers,
         ),
       );
+      print("fashion detail..... ${response.data}");
       return response.data;
     } on DioException catch (e) {
       print("error ${e.response}");
