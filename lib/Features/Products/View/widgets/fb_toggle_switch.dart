@@ -8,7 +8,7 @@ class FbToggleSwitch extends StatefulWidget {
   const FbToggleSwitch({
     super.key,
     required this.title,
-    this.initialValue = false,
+    required this.initialValue,
     required this.onToggleChanged,
   });
 
@@ -29,29 +29,27 @@ class _FbToggleSwitchState extends State<FbToggleSwitch> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * .07,
-        vertical: screenHeight * .02,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade300),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 0.2),
-        ),
-        child: ListTile(
-          title: Text(widget.title),
-          trailing: Switch(
-            activeColor: Colors.green,
-            inactiveThumbColor: Colors.white,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            value: _value,
-            onChanged: (value) {
-              setState(() {
-                _value = value;
-              });
-              widget.onToggleChanged(value);
-            },
-          ),
+      child: ListTile(
+        title: Text(widget.title),
+        trailing: Switch(
+          activeColor: Colors.green,
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: Colors.grey[300],
+          trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          value: _value,
+          onChanged: (value) {
+            setState(() {
+              _value = value;
+            });
+            widget.onToggleChanged(value);
+          },
         ),
       ),
     );

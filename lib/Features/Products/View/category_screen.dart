@@ -1,4 +1,7 @@
+import 'package:fastbag_vendor_flutter/Commons/circle_icon.dart';
+import 'package:fastbag_vendor_flutter/Commons/text_field_decortion.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/serach_item.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/View/food_categoryby_subcategory.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/list_products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,14 +12,14 @@ import 'package:fastbag_vendor_flutter/Features/Products/View/all_categories_scr
 import 'package:fastbag_vendor_flutter/Features/Products/View/all_sub_category_screen.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
 
-class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
+class FoodCategoryScreen extends StatefulWidget {
+  const FoodCategoryScreen({super.key});
 
   @override
-  State<CategoryScreen> createState() => _ListCategoryScreenState();
+  State<FoodCategoryScreen> createState() => _ListCategoryScreenState();
 }
 
-class _ListCategoryScreenState extends State<CategoryScreen> {
+class _ListCategoryScreenState extends State<FoodCategoryScreen> {
   late List<SerachItem> combinedList =
       []; // Combined list of categories and subcategories
   List<SerachItem> filteredList = []; // Filtered list for search suggestions
@@ -56,18 +59,18 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
     // Handle search submission
     print('Search submitted: $item');
     if (item.type == "category") {
-      navigate(
-          context: context,
-          screen: AllCategoriesScreen(
-              categories: [item.model],
-              subCategories: categoryProvider.subCategories));
+      // navigate(
+      //     context: context,
+      //     screen: AllCategoriesScreen(
+      //         categories: [item.model],
+      //         subCategories: categoryProvider.subCategories));
     } else {
-      navigate(
-          context: context,
-          screen: AllSubCategoryScreen(
-              subCategories: [item.model],
-              categories: categoryProvider.categories,
-              isOperable: false));
+      // navigate(
+      //     context: context,
+      //     screen: AllSubCategoryScreen(
+      //         subCategories: [item.model],
+      //         categories: categoryProvider.categories,
+      //         isOperable: false));
     }
     setState(() {
       filteredList = []; // Optionally clear search results after submission
@@ -82,7 +85,7 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
 
     // Ensure categories and subcategories are loaded
     if (categoryProvider.categories.isNotEmpty ||
-        categoryProvider.subCategories.isNotEmpty) {
+        categoryProvider.selectsubCategories.isNotEmpty) {
       // Combine category and subcategory names once data is available
       List<SerachItem> categoryItems = categoryProvider.categories.isNotEmpty
           ? categoryProvider.categories
@@ -94,11 +97,11 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
               .toList()
           : [];
       List<SerachItem> subCategoryItems =
-          categoryProvider.subCategories.isNotEmpty
-              ? categoryProvider.subCategories
+          categoryProvider.selectsubCategories.isNotEmpty
+              ? categoryProvider.selectsubCategories
                   .map<SerachItem>((subCategory) => SerachItem(
-                      id: subCategory.id,
-                      name: subCategory.name,
+                      id: subCategory.id ?? 0,
+                      name: subCategory?.name ?? "",
                       type: "sub_category",
                       model: subCategory))
                   .toList()
@@ -106,6 +109,8 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
       combinedList = [...categoryItems, ...subCategoryItems];
       print("Combined List: $combinedList"); // Debugging output
     }
+
+    final gap = SizedBox(height: screenWidth * 0.02);
 
     return Scaffold(
       //resizeToAvoidBottomInset: true,
@@ -122,39 +127,29 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: screenHeight * 0.1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: screenWidth * 0.8,
-                    child: TextField(
-                      controller: searchController,
-                      focusNode: searchFocusNode,
-                      decoration: InputDecoration(
-                        hintText: "Search here",
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              BorderSide(color: FbColors.black, width: 0.5),
-                        ),
-                      ),
-                      onChanged:
-                          _filterSearch, // Update filtered list as user types
-                      //onSubmitted: _onSubmitted, // Trigger search on submit
-                    ),
+              SizedBox(height: screenHeight * 0.08),
+              SizedBox(
+                height: screenWidth * 0.15,
+                child: TextField(
+                  controller: searchController,
+                  focusNode: searchFocusNode,
+                  decoration: searchBarDecoration(
+                    hint: 'Search here',
                   ),
-                  const Icon(Icons.more_vert)
-                ],
+                  onChanged: _filterSearch,
+                ),
               ),
               if (filteredList.isEmpty)
                 Expanded(
                     child: Column(
                   children: [
                     if (searchController.text.isNotEmpty)
-                      const Text("No results"),
-                    SizedBox(height: screenHeight * .02),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: screenWidth * 0.07),
+                        child: const Text("No results"),
+                      ),
+                    gap,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -165,146 +160,125 @@ class _ListCategoryScreenState extends State<CategoryScreen> {
                               fontweight: FontWeight.w600,
                               color: FbColors.greendark),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            navigate(
-                                context: context,
-                                screen: AllCategoriesScreen(
-                                  categories: categoryProvider.categories,
-                                  subCategories: categoryProvider.subCategories,
-                                ));
-                          },
-                          child: const Text(
-                            "View All",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
+                        // TextButton(
+                        //   onPressed: () {
+                        //     navigate(
+                        //         context: context,
+                        //         screen: AllCategoriesScreen(
+                        //           categories: categoryProvider.categories,
+                        //           subCategories: categoryProvider.subCategories,
+                        //         ));
+                        //   },
+                        //   child: const Text(
+                        //     "View All",
+                        //     style: TextStyle(
+                        //         color: Colors.grey,
+                        //         decoration: TextDecoration.underline),
+                        //   ),
+                        // ),
                       ],
                     ),
-                    SizedBox(height: screenHeight * .01),
-                    // Conditional rendering: display search results or original content
+                    //  category  List  Horzontal
                     SizedBox(
-                      height: screenHeight * .14,
+                      height: screenHeight * .19,
                       child: Consumer<CategoryViewModel>(
                         builder: (context, data, _) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
+                          return GridView.builder(
                             itemCount: data.categories.length,
                             itemBuilder: (context, index) {
-                              return SizedBox(
-                                width: screenWidth * .23,
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        navigate(
-                                          context: context,
-                                          screen: AllSubCategoryScreen(
-                                            subCategories: data.subCategories,
-                                            categories: data.categories,
-                                            isOperable: true,
-                                          ),
-                                        );
-                                      },
-                                      child: CircleAvatar(
-                                        radius: screenWidth * .1,
-                                        backgroundImage: NetworkImage(
-                                          data.categories[index].category_image,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      data.categories[index].name,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
+                              return categoryCard(
+                                text: data.categories[index].name,
+                                onTap: () {
+                                  navigate(
+                                      context: context,
+                                      screen: FoodCategorybySubcategory(
+                                          isOperable: true,
+                                          categoryId:
+                                              data.categories[index]?.id ?? 0)
+                                      // AllSubCategoryScreen(
+                                      //   subCategories: data.subCategories,
+                                      //   categories: data.categories,
+                                      //   isOperable: true,
+                                      // ),
+                                      );
+                                },
+                                radius: screenWidth * .115,
+                                image: NetworkImage(
+                                  data.categories[index].category_image,
                                 ),
                               );
                             },
+                            padding: EdgeInsets.only(top: screenHeight * .015),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3, childAspectRatio: 0.7),
                           );
                         },
                       ),
                     ),
-                    SizedBox(height: screenHeight * .02),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Select Sub Categories",
-                          style: mainFont(
-                              fontsize: 18,
-                              fontweight: FontWeight.w600,
-                              color: FbColors.greendark),
-                        ),
-                        if (categoryProvider.subCategories.isNotEmpty)
-                          TextButton(
-                            onPressed: () {
-                              navigate(
-                                context: context,
-                                screen: AllSubCategoryScreen(
-                                  subCategories: categoryProvider.subCategories,
-                                  categories: categoryProvider.categories,
-                                  isOperable: false,
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              "View All",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.underline),
-                            ),
-                          )
-                      ],
-                    ),
-                    Consumer<CategoryViewModel>(
-                      builder: (context, data, _) {
-                        return Expanded(
-                          child: GridView.builder(
-                            padding: EdgeInsets.only(top: screenHeight * .015),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              childAspectRatio: 0.7,
-                            ),
-                            itemCount: data.subCategories.length,
-                            itemBuilder: (context, index) {
-                              return SizedBox(
-                                width: screenWidth * .23,
-                                child: Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        navigate(
-                                            context: context,
-                                            screen: ListProductsScreen(
-                                              subCategory:
-                                                  data.subCategories[index],
-                                              subCategories: data.subCategories,
-                                            ));
-                                      },
-                                      child: CircleAvatar(
-                                        radius: screenWidth * .1,
-                                        backgroundImage: NetworkImage(
-                                          data.subCategories[index]
-                                              .sub_category_image,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      data.subCategories[index].name,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    )
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       "Select Sub Categories",
+                    //       style: mainFont(
+                    //           fontsize: 18,
+                    //           fontweight: FontWeight.w600,
+                    //           color: FbColors.greendark),
+                    //     ),
+                    //     if (categoryProvider.subCategories.isNotEmpty)
+                    //       TextButton(
+                    //         onPressed: () {
+                    //           navigate(
+                    //             context: context,
+                    //             screen: AllSubCategoryScreen(
+                    //               subCategories: categoryProvider.subCategories,
+                    //               categories: categoryProvider.categories,
+                    //               isOperable: false,
+                    //             ),
+                    //           );
+                    //         },
+                    //         child: const Text(
+                    //           "View All",
+                    //           style: TextStyle(
+                    //               color: Colors.grey,
+                    //               decoration: TextDecoration.underline),
+                    //         ),
+                    //       )
+                    //   ],
+                    // ),
+                    // Expanded(
+                    //   child: Consumer<CategoryViewModel>(
+                    //     builder: (context, data, _) {
+                    //       return GridView.builder(
+                    //         padding: const EdgeInsets.all(5),
+                    //         gridDelegate:
+                    //             const SliverGridDelegateWithFixedCrossAxisCount(
+                    //                 crossAxisCount: 3,
+                    //                 childAspectRatio: .57,
+                    //                 crossAxisSpacing: 14),
+                    //         itemCount: data.subCategories.length,
+                    //         itemBuilder: (context, index) {
+                    //           return subCategoryCard(
+                    //             height: screenWidth * 0.33,
+                    //             text: data.subCategories[index].name,
+                    //             image: data
+                    //                 .subCategories[index].sub_category_image,
+                    //             onTap: () {
+                    //               navigate(
+                    //                 context: context,
+                    //                 screen: ListProductsScreen(
+                    //                   subCategory: data.subCategories[index],
+                    //                   subCategories: data.subCategories,
+                    //                 ),
+                    //               );
+                    //             },
+                    //           );
+                    //         },
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ))
               else

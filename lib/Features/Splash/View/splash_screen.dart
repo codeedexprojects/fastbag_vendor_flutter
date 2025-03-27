@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: FbColors.mainbackgroundColor,
       body: Center(
         child: Image.asset(
-          "logo.png".imagePath,
+          "logo.png".iconPath,
           height: screenHeight * 0.35,
           width: screenWidth * 0.8,
           fit: BoxFit.fill,

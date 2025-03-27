@@ -29,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final gap = SizedBox(height: MediaQuery.of(context).size.width * .04);
     return Scaffold(
       backgroundColor: FbColors.mainbackgroundColor,
+      resizeToAvoidBottomInset: true,
       body: Form(
         key: formKey,
         child: SingleChildScrollView(
@@ -40,16 +41,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Container(
                 margin: const EdgeInsets.all(12),
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    FbTextFormField(
-                        label: "emailaddress/phone no",
-                        controller: emailController,
-                        validator: emailValidator),
+                    SizedBox(
+                      height: screenHeight*0.13,
+                      child: FbTextFormField(
+                          label: "emailaddress/phone no",
+                          controller: emailController,
+                          validator: emailValidator),
+                    ),
                     TextButton(
                         onPressed: () {
                           // navigate(
@@ -96,7 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onSubmit() {
     if (formKey.currentState!.validate()) {
-      navigate(context: context, screen: FbBottomNav());
       Provider.of<AuthViewModel>(context, listen: false).vendorLogin(
           email: emailController.text,
           password: passwordContoller.text,

@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
+import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Commons/validators.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_categoryby_subCategory_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_file_picker.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/View/widgets/fb_category_form_field.dart';
@@ -13,8 +16,11 @@ import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../grocery/model/grocery_catgeory_model.dart';
+
 class AddSubCategoryScreen extends StatefulWidget {
   final List<CategoryModel> categories;
+
   const AddSubCategoryScreen({super.key, required this.categories});
 
   @override
@@ -23,12 +29,12 @@ class AddSubCategoryScreen extends StatefulWidget {
 
 class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
   var nameController = TextEditingController();
+  var subCategoryController = TextEditingController();
   File? _selectedImage;
   int vendorId = 0;
   bool _switchValue = false;
   var _formKey = GlobalKey<FormState>();
   CategoryModel? selectedCategory;
-
   @override
   void initState() {
     FbStore.retrieveData(FbLocalStorage.vendorId).then((data) {
@@ -56,16 +62,21 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
         );
         return;
       }
-      SubCategoryModel category = SubCategoryModel(
+      FoodCategoryBySubcategoryModel category = FoodCategoryBySubcategoryModel(
           id: 0,
-          categoryId: selectedCategory!.id,
-          is_enabled: _switchValue,
+          category: selectedCategory!.id,
+          enableSubcategory: _switchValue,
           name: nameController.text,
-          sub_category_image: _selectedImage?.path ?? "",
+          subcategoryImage: _selectedImage?.path ?? "",
           vendor: vendorId);
 
-      await categoryViewModel.addProductSubCategory(
-          subCategories: category, context: context);
+      await categoryViewModel
+          .addProductSubCategory(subCategories: category, context: context)
+          .then((v) {
+            categoryViewModel.allsubcategorypage=1;
+        categoryViewModel.getAllSubCategoryLoading(
+            categoryId: selectedCategory!.id);
+      });
 
       setState(() {
         nameController.clear();
@@ -77,8 +88,11 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: FbColors.backgroundcolor,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -87,41 +101,55 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text("Add Sub Category"),
+        title: Text(
+          "Add Sub Category",
+          style: inter(fontWeight: FontWeight.w500, fontSize: 16),
+        ),
       ),
       body: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              FbCategoryFormField(
-                  label: "Category Name",
-                  controller: nameController,
-                  validator: customValidatornoSpaceError),
-              FbCategoryFilePicker(
-                onFilePicked: (file) => _onFilePicked(file),
-                fileCategory: "Category",
-              ),
-              FbProductCategoryDropdown(
-                categories: widget.categories,
-                selectedCategory: selectedCategory,
-                onChanged: (dynamic category) {
-                  setState(() {
-                    selectedCategory = category; // Update the selected category
-                  });
-                  print('Selected Category: ${category?.name}');
-                },
-              ),
-              FbToggleSwitch(
-                title: 'Mark Category in stock',
-                initialValue: _switchValue,
-                onToggleChanged: (value) {
-                  setState(() {
-                    _switchValue = value;
-                  });
-                },
-              ),
-              FbButton(onClick: _onSubmitForm, label: "Add to Sub Category")
-            ],
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth / 17),
+            child: Column(
+              children: [
+                SizedBox(height: screenWidth * .06),
+                FbCategoryFormField(
+                  keyboard:TextInputType.name ,
+                    label: "Sub Category Name",
+                    controller: nameController,
+                    validator: customValidatornoSpaceError),
+                FbCategoryFormField(
+                    label: "Describe Sub Category",
+                    controller: subCategoryController,
+                    validator: customValidatornoSpaceError),
+                FbCategoryFilePicker(
+                  onFilePicked: (file) => _onFilePicked(file),
+                  fileCategory: "Category",
+                ),
+                FbProductCategoryDropdown(
+                  categories: widget.categories,
+                  selectedCategory: selectedCategory,
+                  onChanged: (dynamic category) {
+                    setState(() {
+                      selectedCategory =
+                          category; // Update the selected category
+                    });
+                    print('Selected Category: ${category?.name}');
+                  },
+                ),
+                FbToggleSwitch(
+                  title: 'Mark Category in stock',
+                  initialValue: _switchValue,
+                  onToggleChanged: (value) {
+                    setState(() {
+                      _switchValue = value;
+                    });
+                  },
+                ),
+                SizedBox(height: screenWidth * .08),
+                FbButton(onClick: _onSubmitForm, label: "Add")
+              ],
+            ),
           )),
     );
   }

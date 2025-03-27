@@ -5,62 +5,61 @@ import 'package:dio/dio.dart';
 import 'package:fastbag_vendor_flutter/Commons/base_url.dart';
 import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_detail_class.dart';
 import 'package:fastbag_vendor_flutter/Features/Products/Model/food_item_model.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/Model/food_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../Commons/colors.dart';
+import '../../../Commons/flush_bar.dart';
 
 class ProductRepository {
   final Dio _dio = Dio();
 
-  Future<dynamic> getAllProducts(BuildContext context) async {
+  Future<List<FoodResponseModel>?> getAllProducts(
+      BuildContext context,   {int? subCatId, int? page,}) async {
     print("inside");
-    print("${baseUrl}food/dishes/");
+
     try {
       print("inside try");
       // Create FormData for file uploads
       SVProgressHUD.show();
 
-      String token = await StoreManager().getAccessToken() as String;
+      final prefs = await SharedPreferences.getInstance();
+      // var tokenId = prefs.getString('access_token');
+      var vendorId = prefs.getInt('vendor_id');
       // Add the authorization header with the token
-      _dio.options.headers = {"Authorization": "Bearer $token"};
-      print(token);
 
       // Perform the POST request
       Response response = await _dio.get(
-        "${baseUrl}food/dishes/",
-      );
+        "${baseUrl}food/products/subcategory/$subCatId/vendor/$vendorId/?page=$page",
+      );print("777777777777777777777777777777777777777777777777777777${page}");
 
       // Handle the response
       if (response.statusCode == 200) {
+        print("products fetched successful: ${response.data}");
+
         SVProgressHUD.dismiss();
-        print("products fetched successful: ${response.data["results"]}");
-        List<dynamic> res = response.data["results"];
-        return res;
+        List jsonList = response.data;
+        List<FoodResponseModel> jsonData =
+            jsonList.map((v) => FoodResponseModel.fromJson(v)).toList();
+        return jsonData;
+        // List<dynamic> res = response.data["results"];
+        // return res;
 
         // showDialog(
         //   context: context,
         //   barrierDismissible: true, // Allow dismissing by tapping outside
         //   builder: (BuildContext context) => const FbBottomDialog(),
         // );
-      } else if (response.statusCode == 401) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("OOPs something happened in products get")),
-        );
-        SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
-      } else {
-        SVProgressHUD.dismiss();
-        print("products fetching failed: ${response.data}");
       }
+    } on DioException catch (e) {
+      print(e.response);
     } catch (e) {
-      SVProgressHUD.dismiss();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text("OOPs something happened category get , Error: $e")),
-      );
-      print("Error: $e");
+      print(e);
     }
   }
 
@@ -80,7 +79,7 @@ class ProductRepository {
           filename: basename(imagePath),
         ));
       }
-      Map<String,dynamic> data={
+      Map<String, dynamic> data = {
         "vendor": model.vendor,
         "category": model.category,
         "subcategory": model.subcategory,
@@ -125,16 +124,22 @@ class ProductRepository {
       if (response.statusCode == 201) {
         SVProgressHUD.dismiss();
         print("product added successful: ${response.data}");
-        showDialog(
-          context: context,
-          barrierDismissible: true, // Allow dismissing by tapping outside
-          builder: (BuildContext context) => const FbBottomDialog(
-            text: "Product Added",
-            descrription:
-                "Your product has been added to the list and is visible to customers",
-            type: FbBottomDialogType.addSubCategory,
-          ),
-        );
+        Navigator.pop(context);
+        await showFlushbar(
+            context: context,
+            color: FbColors.buttonColor,
+            message: "Product Added",
+            icon: Icons.check);
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: true, // Allow dismissing by tapping outside
+        //   builder: (BuildContext context) => const FbBottomDialog(
+        //     text: "Product Added",
+        //     descrription:
+        //         "Your product has been added to the list and is visible to customers",
+        //     type: FbBottomDialogType.addSubCategory,
+        //   ),
+        // );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OOPs something happened")),
@@ -156,140 +161,248 @@ class ProductRepository {
     }
   }
 
-  Future<dynamic> deleteProduct(BuildContext context,int productId) async {
-    print("inside");
-    print("${baseUrl}food/dishes/$productId/");
+  // Future<dynamic> deleteProduct(BuildContext context, int productId) async {
+  //   print("inside");
+  //   print("${baseUrl}food/dishes/$productId/");
+  //   try {
+  //     print("inside try");
+  //     // Create FormData for file uploads
+  //     SVProgressHUD.show();
+  //
+  //     String token = await StoreManager().getAccessToken() as String;
+  //     // Add the authorization header with the token
+  //     _dio.options.headers = {"Authorization": "Bearer $token"};
+  //     print(token);
+  //
+  //     // Perform the POST request
+  //     Response response = await _dio.delete(
+  //       "${baseUrl}food/dishes/$productId/",
+  //     );
+  //     print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${response}");
+  //     // Handle the response
+  //     if (response.statusCode == 200) {
+  //       SVProgressHUD.dismiss();
+  //       print("product delete successful: ${response.data["results"]}");
+  //       print("${response.data}");
+  //       // List<dynamic> res = response.data["results"];
+  //       showFlushbar(
+  //           context: context,
+  //           color: FbColors.buttonColor,
+  //           icon: Icons.check,
+  //           message: "product delete successful");
+  //       Navigator.pop(context);
+  //
+  //       return response.data;
+  //
+  //     } else if (response.statusCode == 401) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //             content: Text("OOPs something happened in products get")),
+  //       );
+  //
+  //       SVProgressHUD.dismiss();
+  //       print("Bad data: ${response.data}");
+  //     } else {
+  //       SVProgressHUD.dismiss();
+  //       print("product deletion failed: ${response.data}");
+  //     }
+  //   } catch (e) {
+  //     SVProgressHUD.dismiss();
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //           content: Text("OOPs something happened category get , Error: $e")),
+  //     );
+  //     print("Error: $e");
+  //   }
+  // }
+
+  enableDisableProduct(productId, bool isProductEnabled) async {
     try {
-      print("inside try");
-      // Create FormData for file uploads
-      SVProgressHUD.show();
-
-      String token = await StoreManager().getAccessToken() as String;
-      // Add the authorization header with the token
-      _dio.options.headers = {"Authorization": "Bearer $token"};
-      print(token);
-
-      // Perform the POST request
-      Response response = await _dio.delete(
-        "${baseUrl}food/dishes/$productId/",
+      final token = await StoreManager().getAccessToken();
+      // Set headers
+      Options options = Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
       );
+      final fromData = FormData.fromMap({"is_available": isProductEnabled});
 
-      // Handle the response
-      if (response.statusCode == 200) {
-        SVProgressHUD.dismiss();
-        print("product delete successful: ${response.data["results"]}");
-        print(response.data);
-        // List<dynamic> res = response.data["results"];
-         return response.data;
+      Response response = await _dio.patch(
+          "${baseUrl}food/dishes/$productId/",
+          data: fromData,
+          options: options);
+      return response.data;
+    } on DioException catch (e) {
+      print("DioError: ${e.response?.statusCode}");
 
-        // showDialog(
-        //   context: context,
-        //   barrierDismissible: true, // Allow dismissing by tapping outside
-        //   builder: (BuildContext context) => const FbBottomDialog(),
-        // );
+      // Print the full Dio error for debugging
+      print("DioError: ${e.response?.data}");
+
+      // Handle different Dio error types
+      if (e.response != null) {
+        throw 'Failed to Update. Please try again.';
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw 'Unexpected error occurred. Please try again.';
+    }
+  }
+
+  Future<dynamic> deleteProduct(BuildContext context, int productId) async {
+    try {
+      SVProgressHUD.show();
+      String token = await StoreManager().getAccessToken() as String;
+      _dio.options.headers = {"Authorization": "Bearer $token"};
+      Response response = await _dio.delete("${baseUrl}food/dishes/$productId/");
+      SVProgressHUD.dismiss(); // Hide loading indicator
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        showFlushbar(
+            context: context,
+            color: FbColors.errorcolor,
+            icon: Icons.delete,
+            message: "Product deleted successfully!");
+        return response.data;
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text("OOPs something happened in products get")),
         );
-        SVProgressHUD.dismiss();
-        print("Bad data: ${response.data}");
+        Future.delayed(Duration(seconds: 1), () {
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
+        });
+        return response.data;
       } else {
-        SVProgressHUD.dismiss();
-        print("product deletion failed: ${response.data}");
+        print("Product deletion failed. Status: ${response.statusCode}");
+        print("Response data: ${response.data}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to delete product!")),
+        );
       }
     } catch (e) {
       SVProgressHUD.dismiss();
+      print("Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text("OOPs something happened category get , Error: $e")),
+        SnackBar(content: Text("Error deleting product: $e")),
       );
+    }
+  }
+
+
+  Future<dynamic> EditProductItem(
+      BuildContext context, FoodItemModel model) async {
+    print("inside API call");
+    print("${baseUrl}food/dishes/${model.id}/");
+
+    try {
+      print("inside try");
+
+      List<MultipartFile> imageFiles = [];
+
+      // Add only new images as files
+      // if (newImages != null) {
+      //   for (File file in model.image_urls) {
+      //     imageFiles.add(await MultipartFile.fromFile(
+      //       file.path,
+      //       filename: basename(file.path),
+      //     ));
+      //   }
+      // }
+
+      Map<String, dynamic> data = {
+        "vendor": model.vendor,
+        "category": model.category,
+        "subcategory": model.subcategory,
+        "name": model.name,
+        "description": model.description,
+        "price": model.price,
+        "offer_price": model.offer_price,
+        "wholesale_price": model.wholesale_price,
+        "variants": jsonEncode(model.variants),
+        "discount": model.discount,
+        "is_available": model.is_available,
+        "is_popular_product": model.is_popular_product,
+        "is_offer_product": model.is_offer_product,
+        //"images": imageFiles, // Only new images as files
+      };
+
+      print(data);
+      FormData formData = FormData.fromMap(data);
+      print("Final FormData: ${formData.fields}");
+
+      SVProgressHUD.show();
+
+      String token = await StoreManager().getAccessToken() as String;
+      _dio.options.headers = {"Authorization": "Bearer $token"};
+
+      print(token);
+
+      Response response = await _dio.patch(
+        "${baseUrl}food/dishes/${model.id}/",
+        data: formData,
+        options: Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+
+      print(response.statusCode);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        SVProgressHUD.dismiss();
+        print("Product edit successful: ${response.data}");
+        Navigator.pop(context);
+        await showFlushbar(
+            context: context,
+            color: FbColors.buttonColor,
+            message: "Product Updated",
+            icon: Icons.check);
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: true,
+        //   builder: (BuildContext context) => const FbBottomDialog(
+        //     text: "Product Edited",
+        //     descrription: "Your product has been updated successfully",
+        //     type: FbBottomDialogType.addSubCategory,
+        //   ),
+        // );
+      } else {
+        SVProgressHUD.dismiss();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Oops! Something went wrong.")),
+        );
+        print("Bad data: ${response.data}");
+      }
+    } catch (e) {
+      SVProgressHUD.dismiss();
       print("Error: $e");
     }
   }
 
-  Future<dynamic> EditProductItem(BuildContext context, FoodItemModel model) async {
-  print("inside API call");
-  print("${baseUrl}food/dishes/${model.id}/");
-
-  try {
-    print("inside try");
-
-    List<MultipartFile> imageFiles = [];
-
-    // Add only new images as files
-    // if (newImages != null) {
-    //   for (File file in model.image_urls) {
-    //     imageFiles.add(await MultipartFile.fromFile(
-    //       file.path,
-    //       filename: basename(file.path),
-    //     ));
-    //   }
-    // }
-
-    Map<String, dynamic> data = {
-      "vendor": model.vendor,
-      "category": model.category,
-      "subcategory": model.subcategory,
-      "name": model.name,
-      "description": model.description,
-      "price": model.price,
-      "offer_price": model.offer_price,
-      "wholesale_price": model.wholesale_price,
-      "variants": jsonEncode(model.variants),
-      "discount": model.discount,
-      "is_available": model.is_available,
-      "is_popular_product": model.is_popular_product,
-      "is_offer_product": model.is_offer_product,
-      //"images": imageFiles, // Only new images as files
-    };
-
-    print(data);
-    FormData formData = FormData.fromMap(data);
-    print("Final FormData: ${formData.fields}");
-
-    SVProgressHUD.show();
-
-    String token = await StoreManager().getAccessToken() as String;
-    _dio.options.headers = {"Authorization": "Bearer $token"};
-
-    print(token);
-
-    Response response = await _dio.patch(
-      "${baseUrl}food/dishes/${model.id}/",
-      data: formData,
-      options: Options(
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      ),
-    );
-
-    print(response.statusCode);
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      SVProgressHUD.dismiss();
-      print("Product edit successful: ${response.data}");
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) => const FbBottomDialog(
-          text: "Product Edited",
-          descrription: "Your product has been updated successfully",
-          type: FbBottomDialogType.addSubCategory,
+  Future<FoodDetail?> fetchfoodDetail(int productId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var tokenId = prefs.getString('access_token');
+      print('toekn id $tokenId');
+      var headers = {'Authorization': 'Bearer $tokenId'};
+      var dio = Dio();
+      var response = await dio.request(
+        '${baseUrl}/food/dishes/$productId/',
+        options: Options(
+          method: 'GET',
+          headers: headers,
         ),
       );
-    } else {
-      SVProgressHUD.dismiss();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Oops! Something went wrong.")),
-      );
-      print("Bad data: ${response.data}");
-    }
-  } catch (e) {
-    SVProgressHUD.dismiss();
-    print("Error: $e");
-  }
-}
 
+      if (response.statusCode == 200) {
+        print(response.data);
+        return FoodDetail.fromJson(response.data);
+      }
+    } on DioException catch (e) {
+      print("error ${e.response}");
+      print(e.response);
+    }
+  }
 }

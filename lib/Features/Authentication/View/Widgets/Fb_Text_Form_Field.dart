@@ -6,7 +6,6 @@ class FbTextFormField extends StatefulWidget {
   final TextInputType? keyboard;
   final TextEditingController controller;
   final String? Function(String?)? validator;
-  final bool border;
 
   const FbTextFormField({
     super.key,
@@ -14,7 +13,6 @@ class FbTextFormField extends StatefulWidget {
     this.keyboard,
     required this.controller,
     this.validator,
-    this.border = false,
   });
 
   @override
@@ -76,7 +74,7 @@ class _FbTextFormFieldState extends State<FbTextFormField> {
           TextFormField(
             controller: widget.controller,
             obscureText: (widget.label == "Password" ||
-                    widget.label == "Confirm Password") &&
+                widget.label == "Confirm Password") &&
                 _isObscure,
             keyboardType: widget.keyboard,
             focusNode: _focusNode,
@@ -88,84 +86,55 @@ class _FbTextFormFieldState extends State<FbTextFormField> {
             },
             inputFormatters: widget.label == "Phone No"
                 ? [
-                    LengthLimitingTextInputFormatter(10),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ]
+              LengthLimitingTextInputFormatter(10),
+              FilteringTextInputFormatter.digitsOnly,
+            ]
                 : widget.label == "Pincode"
-                    ? [
-                        LengthLimitingTextInputFormatter(6),
-                        FilteringTextInputFormatter.digitsOnly,
-                      ]
-                    : widget.label == "fssai" || widget.label == "FSSAI No"
-                        ? [
-                            LengthLimitingTextInputFormatter(14),
-                            FilteringTextInputFormatter.digitsOnly,
-                          ]
-                        : null,
+                ? [
+              LengthLimitingTextInputFormatter(6),
+              FilteringTextInputFormatter.digitsOnly,
+            ]
+                : widget.label == "fssai" || widget.label == "FSSAI No"
+                ? [
+              LengthLimitingTextInputFormatter(14),
+              FilteringTextInputFormatter.digitsOnly,
+            ]
+                : null,
             decoration: InputDecoration(
               suffixIcon: (widget.label == "Password" ||
-                      widget.label == "Confirm Password")
+                  widget.label == "Confirm Password")
                   ? Column(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            _isObscure
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.grey,
-                          ),
-                          onPressed: _toggleVisibilityOfPwd,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                        if (_showCheckIcon)
-                          const Icon(Icons.check, color: Colors.green),
-                      ],
-                    )
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      _isObscure
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: _toggleVisibilityOfPwd,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  if (_showCheckIcon)
+                    const Icon(Icons.check, color: Colors.green),
+                ],
+              )
                   : _showCheckIcon
-                      ? const Icon(Icons.check, color: Colors.green)
-                      : null,
-              enabledBorder: widget.border
-                  ? OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 199, 199, 199)),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    )
-                  : const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-              focusedBorder: widget.border
-                  ? OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    )
-                  : const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-              border: widget.border
-                  ? OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    )
-                  : const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-              errorBorder: widget.border
-                  ? OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    )
-                  : const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
+                  ? const Icon(Icons.check, color: Colors.green)
+                  : null,
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              border: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              errorBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              ),
             ),
           ),
         ],

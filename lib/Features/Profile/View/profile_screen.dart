@@ -1,8 +1,14 @@
+import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
+import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
+import 'package:fastbag_vendor_flutter/Features/Products/fashion/view/add_fashion_product.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/View/payment_transaction.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/View/profile_payments.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/widgets/fb_logout_dialog.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/edit_shop_details_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/View/settings.dart';
+import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_shop_view_model.dart';
 import 'package:fastbag_vendor_flutter/Features/Profile/ViewModel/profile_view_model.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
@@ -22,13 +28,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     FbStore.retrieveData(FbLocalStorage.vendorId);
+    final profileShopProvider =
+    Provider.of<ProfileShopViewModel>(context,listen: false);
+    profileShopProvider.getShopProfile(context: context);
     super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
     final profileProvider =
         Provider.of<ProfileViewModel>(context, listen: false);
+    final profileShopProvider =
+    Provider.of<ProfileShopViewModel>(context);
     // profileProvider.getVendorProfile(vendorId: vendorId!, context: context);
 
     final screenHeight = MediaQuery.of(context).size.height;
@@ -64,14 +76,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor:
                           Colors.grey[200], // Optional: Background color
                       child: ClipOval(
-                        child: abc
-                            ? const Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.grey,
-                              )
-                            : Image.network(
-                                'https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg',
+                        child:
+                        // abc
+                        //     ? const Icon(
+                        //         Icons.person,
+                        //         size: 40,
+                        //         color: Colors.grey,
+                        //       )
+                        //     :
+                        Image.network(
+                                profileShopProvider.shop?.displayImage ?? "loading",
                                 fit: BoxFit
                                     .cover, // Ensures the image fills the circle
                                 width:
@@ -88,12 +102,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                       ),
                     ),
-                    title: Text("Yoonus",
+                    title: Text(profileShopProvider.shop?.ownerName ?? "name",
                         style: nunito(
                             fontSize: screenWidth * 0.05,
-                            fontBold: FontWeight.w700)),
+                            fontWeight: FontWeight.w700)),
                     subtitle: Text(
-                      "Oorakam",
+                      profileShopProvider.shop?.storeTypeName ?? 'Store Type Name',
                       style: nunito(fontSize: screenWidth * 0.04),
                     ),
                   ),
@@ -116,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     ListTile(
                       leading: Image.asset(
-                        'assets/icons/shop.png',
+                        'assets/profileicon/shop.png',
                         width: 25,
                         height: 25,
                       ),
@@ -135,7 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/icons/notification.png',
+                        'assets/profileicon/notification.png',
                         width: 25,
                         height: 25,
                       ),
@@ -151,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/icons/wallet.png',
+                        'assets/profileicon/wallet.png',
                         width: 25,
                         height: 25,
                       ),
@@ -162,12 +176,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       onTap: () {
-                        // Handle payments
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentTransaction()));
                       },
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/icons/setting.png',
+                        'assets/profileicon/setting.png',
                         width: 25,
                         height: 25,
                       ),
@@ -184,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/icons/logout.png',
+                        'assets/profileicon/logout.png',
                         width: 25,
                         height: 25,
                       ),

@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-TextStyle nunito({
-  fontSize,
-  fontBold = FontWeight.w500,
-}) {
+TextStyle nunito(
+    {double? fontSize, FontWeight fontWeight = FontWeight.w500, Color? color}) {
   return GoogleFonts.nunito(
-      fontSize: fontSize, fontWeight: fontBold, color: Colors.black);
+      fontSize: fontSize, fontWeight: fontWeight, color: color);
+}
+
+TextStyle poppins(
+    {double? fontSize, FontWeight fontWeight = FontWeight.w500, Color? color}) {
+  return GoogleFonts.poppins(
+      fontSize: fontSize, fontWeight: fontWeight, color: color);
+}
+
+TextStyle inter(
+    {double? fontSize, FontWeight fontWeight = FontWeight.w500, Color? color}) {
+  return GoogleFonts.inter(
+      fontSize: fontSize, fontWeight: fontWeight, color: color);
 }
 
 TextStyle mainFont(
@@ -14,10 +24,10 @@ TextStyle mainFont(
     required FontWeight fontweight,
     required Color color}) {
   return GoogleFonts.poppins(
-      fontSize: fontsize,
-      fontWeight: fontweight,
-      color: color,
-      letterSpacing: 1);
+    fontSize: fontsize,
+    fontWeight: fontweight,
+    color: color,
+  );
 }
 
 TextStyle normalFont(
@@ -58,10 +68,11 @@ TextStyle normalFont3(
     required FontWeight fontweight,
     required Color color}) {
   return GoogleFonts.barlow(
-      fontSize: fontsize,
-      fontWeight: FontWeight.bold,
-      color: color,
-      fontStyle: FontStyle.italic);
+    fontSize: fontsize,
+    fontWeight: FontWeight.bold,
+    color: color,
+    // fontStyle: FontStyle.italic
+  );
 }
 
 TextStyle normalFont4(
@@ -69,10 +80,22 @@ TextStyle normalFont4(
     required FontWeight fontweight,
     required Color color}) {
   return GoogleFonts.nunito(
+
       fontSize: fontsize,
-      fontWeight: FontWeight.bold,
       color: color,
-      fontStyle: FontStyle.italic);
+      );
+
+}
+
+TextStyle normalFont5(
+    {required double fontsize,
+    required FontWeight fontweight,
+    required Color color}) {
+  return GoogleFonts.inder(
+    fontSize: fontsize,
+    color: color,
+    // fontStyle: FontStyle.italic
+  );
 }
 
 TextStyle homeFont(
