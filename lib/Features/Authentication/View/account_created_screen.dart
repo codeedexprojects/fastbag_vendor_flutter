@@ -18,7 +18,7 @@ class AccountCreatedScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(248, 250, 250, 1),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(screenWidth * .05),
         child: Column(
           children: [
