@@ -1,10 +1,6 @@
 import 'package:fastbag_vendor_flutter/Commons/colors.dart';
 import 'package:fastbag_vendor_flutter/Commons/flush_bar.dart';
-import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_dialog.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Model/sub_category_model.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/Repository/category_repository.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/fashion/model/fashion_categoryby_subcategory.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 
@@ -96,11 +92,13 @@ class FashionCategoryViewModel extends ChangeNotifier {
   bool productloadingall = false;
 
   getFashionCategorybySubCategories({required int categoryId}) async {
+
     productloadingall = true;
     await _categoryRepository
         .fashionpCategorybySubCategoryGet(
             categoryId: categoryId, page: allcategorypage)
         .then((v) {
+      _subCategoryModel = v;
       _selectsubCategory = v?.results ?? [];
       v?.results != null
           ? productloadingall = false
@@ -110,6 +108,7 @@ class FashionCategoryViewModel extends ChangeNotifier {
   }
 
   getAllSubCategoryLoading({required int categoryId}) async {
+
     if (allcategorypage == _subCategoryModel?.totalPages) {
       return;
     }

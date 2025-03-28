@@ -227,6 +227,7 @@ class FashionCategoryRepository {
       );
 
       if (response.statusCode == 204) {
+        Navigator.pop(context);
         showFlushbar(
             context: context,
             color: FbColors.errorcolor,

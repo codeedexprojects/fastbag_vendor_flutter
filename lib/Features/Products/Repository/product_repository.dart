@@ -256,6 +256,7 @@ class ProductRepository {
       Response response = await _dio.delete("${baseUrl}food/dishes/$productId/");
       SVProgressHUD.dismiss(); // Hide loading indicator
       if (response.statusCode == 200 || response.statusCode == 204) {
+        Navigator.pop(context);
         showFlushbar(
             context: context,
             color: FbColors.errorcolor,

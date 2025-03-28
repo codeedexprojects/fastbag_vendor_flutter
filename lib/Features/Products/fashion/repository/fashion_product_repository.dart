@@ -328,11 +328,12 @@ class FashionProductRepository {
       print(response.data);
 
       if (response.statusCode == 204) {
+        Navigator.of(context).pop();
         showFlushbar(
             context: context,
             color: FbColors.errorcolor,
             icon: Icons.delete,
-            message: "Product delete successfully");
+            message: 'Product Deleted Successfully');
       }
       // return response.data;
     } on DioException catch (e) {

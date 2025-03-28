@@ -116,16 +116,40 @@ class _SubCategoryEditListState extends State<SubCategoryEditList> {
                         ),
                         GestureDetector(
                             onTap: () {
-                              categoryProvider
-                                  .deleteSubCategory(
-                                      context: context,
-                                      subcategoryId: categoryProvider
-                                              .selectsubCategories[index].id ??
-                                          0)
-                                  .then((v) {
-                                categoryProvider.getFoodCategorybySubCategories(
-                                    categoryId: widget.categoryId ?? 0);
+                              showDialog(context: context, builder: (BuildContext context){
+                                return AlertDialog(
+                                    backgroundColor: FbColors.backgroundcolor,
+                                    title:  Text("Confirm Deletion",style:normalFont2(fontsize: 20, fontweight: FontWeight.w700, color: FbColors.black),),
+                                    content: const Text("Are you sure you want to delete this SubCategory?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+                                      TextButton(onPressed: (){
+                                        categoryProvider.allsubcategorypage = 1;
+                                        categoryProvider
+                                            .deleteSubCategory(
+                                                context: context,
+                                                subcategoryId: categoryProvider
+                                                        .selectsubCategories[index].id ??
+                                                    0).then((v) {
+      categoryProvider.getFoodCategorybySubCategories(
+          categoryId: widget.categoryId ?? 0);
+    });
+                                      }, child: Text('Delete',style: TextStyle(color: FbColors.errorcolor),))    ]
+                                );
                               });
+
+                              // categoryProvider
+                              //     .deleteSubCategory(
+                              //         context: context,
+                              //         subcategoryId: categoryProvider
+                              //                 .selectsubCategories[index].id ??
+                              //             0);
+                              //
                             },
                             child: Icon(
                               Icons.delete,

@@ -121,19 +121,50 @@ class ProductEditDeleteScreen extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    data
-                                        .deleteFoodItem(
-                                            context: context,
-                                            productId: data
-                                                .foodProducts[index].id as int)
-                                        .then((res) {
-                                      data.getProductCategories(
-                                          context: context,
-                                          subCatId: data
-                                                  .foodProducts[index]
-                                                  .subcategory ??
-                                              0);
+                                    showDialog(context: context, builder: (BuildContext context){
+                                      return AlertDialog(
+                                          backgroundColor: FbColors.backgroundcolor,
+                                          title:  Text("Confirm Deletion",style:normalFont2(fontsize: 20, fontweight: FontWeight.w700, color: FbColors.black),),
+                                          content: const Text("Are you sure you want to delete this Product?"),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("Cancel"),
+                                            ),
+                                            TextButton(onPressed: (){
+                                              data
+                                                  .deleteFoodItem(
+                                                      context: context,
+                                                      productId: data
+                                                          .foodProducts[index].id as int)
+                                                .then((res) {
+                                              data.getProductCategories(
+                                                  context: context,
+                                                  subCatId: data
+                                                          .foodProducts[index]
+                                                          .subcategory ??
+                                                         0);
+                                              }
+                                              );
+                                            }, child: Text('Delete',style: TextStyle(color: FbColors.errorcolor),))    ]
+                                      );
                                     });
+                                    // data
+                                    //     .deleteFoodItem(
+                                    //         context: context,
+                                    //         productId: data
+                                    //             .foodProducts[index].id as int);
+                                      //   .then((res) {
+                                      // data.getProductCategories(
+                                      //     context: context,
+                                      //     subCatId: data
+                                      //             .foodProducts[index]
+                                      //             .subcategory ??
+                                    //   //         0);
+                                    // }
+                                    // );
                                   },
                                   child: const Icon(
                                     Icons.delete,

@@ -12,6 +12,7 @@ class FashionProductViewModel extends ChangeNotifier {
   final FashionProductRepository _productRepository =
       FashionProductRepository();
 
+  bool hasMorePages = true;
   Results? fashionProductDetail;
 
   List<Results> _fashionProducts = [];
@@ -24,7 +25,10 @@ class FashionProductViewModel extends ChangeNotifier {
     await _productRepository
         .fashiongetAllProducts(subcategoryId: subCategoryId)
         .then((v) {
-      _fashionProducts = v?.results ?? [];
+      print(v);
+      _fashionProducts = v?.results ?? []; // Update pagination control
+
+      notifyListeners();
       notifyListeners();
     });
   }
@@ -44,20 +48,23 @@ class FashionProductViewModel extends ChangeNotifier {
     }
   }
 
+//  Add Product
+
   Future<void> addFashionProduct(
       {required BuildContext context,
       required data,
-      required imageData}) async {
+      required imageData,
+      required subCategoryId}) async {
     try {
       SVProgressHUD.show();
       final response =
           await _productRepository.addFastionProduct(context, data);
 
-      _fashionProducts.add(Results.fromJson((response)));
-
-      print('response------------>$response');
       final productId = response['id'];
-      print('--------------->$productId');
+
+      if (response['subcategoryid'] == subCategoryId)
+        _fashionProducts.add(Results.fromJson((response)));
+
       updateImage(context, productId, imageData);
       notifyListeners();
       Navigator.pop(context);
@@ -237,6 +244,7 @@ class FashionProductViewModel extends ChangeNotifier {
             subcategoryId: subCategoryId, page: allproductPage)
         .then((value) {
       _fashionProducts = value?.results ?? [];
+
       value?.results != null
           ? productloadingInAll = false
           : productloadingInAll = false;

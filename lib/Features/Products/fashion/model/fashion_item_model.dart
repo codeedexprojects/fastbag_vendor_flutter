@@ -1,12 +1,14 @@
 class FashionItemModel {
   int? count;
+  int? totalPages;
   dynamic next;
   dynamic previous;
   List<Results>? results;
 
-  FashionItemModel({this.count, this.next, this.previous, this.results});
+  FashionItemModel({this.count,this.totalPages, this.next, this.previous, this.results});
 
   FashionItemModel.fromJson(Map<String, dynamic> json) {
+    totalPages=json['total_pages'];
     count = json['count'];
     next = json['next'];
     previous = json['previous'];
@@ -20,6 +22,7 @@ class FashionItemModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['total_pages']= this.totalPages;
     data['count'] = this.count;
     data['next'] = this.next;
     data['previous'] = this.previous;

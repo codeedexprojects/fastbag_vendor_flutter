@@ -170,7 +170,7 @@ class _EditGroceryProductScreenState extends State<EditGroceryProductScreen> {
     // Initialize category and subcategory
     selectedCategory = groceryViewModel.categories
         .firstWhere((cat) => cat.id == widget.product.category);
-    selectedSubCategory = groceryViewModel.allSubCategories
+    selectedSubCategory = groceryViewModel.subCategoriesByCategory
         .firstWhere((sub) => sub.id == widget.product.subCategory);
 
     categoryController.text = selectedCategory.name ?? '';
