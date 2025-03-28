@@ -128,6 +128,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         isSubmitting = true;
         isResendEnabled = false;
         resendCountDown = 60;
+        
       });
 
       final response = await _dio.post(
