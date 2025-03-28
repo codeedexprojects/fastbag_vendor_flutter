@@ -180,7 +180,10 @@ class _AddFashionProductState extends State<AddFashionProduct> {
         return;
       } else {
         productProvider.addFashionProduct(
-            context: context, data: data, imageData: imageData);
+            subCategoryId: widget.subCategory.id,
+            context: context,
+            data: data,
+            imageData: imageData);
       }
     }
   }

@@ -46,7 +46,7 @@ class _ColorPickerScreenState extends State<ColorPickerScreen> {
               fontsize: 16, fontweight: FontWeight.w500, color: Colors.black),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
