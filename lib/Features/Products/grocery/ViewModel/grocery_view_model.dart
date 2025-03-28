@@ -237,7 +237,8 @@ class GroceryViewModel extends ChangeNotifier {
       subCategoriesByCategory.removeWhere((sub) => sub.id == subCategoryId);
 
       notifyListeners();
-      showFlushbar(
+      Navigator.pop(context);
+      await showFlushbar(
           context: context,
           color: Colors.red,
           icon: Icons.delete,
@@ -407,7 +408,8 @@ class GroceryViewModel extends ChangeNotifier {
       // Remove the Product from List
       subCategoryProducts.removeWhere((product) => product.id == productId);
       notifyListeners();
-      showFlushbar(
+      Navigator.pop(context);
+      await showFlushbar(
           context: context,
           color: Colors.red,
           icon: Icons.delete,

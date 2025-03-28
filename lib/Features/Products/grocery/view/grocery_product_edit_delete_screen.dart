@@ -86,10 +86,44 @@ class GroceryProductEditDeleteScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              groceryViewModel.deleteProducts(
-                                  context,
-                                  groceryViewModel
-                                      .subCategoryProducts[index].id);
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        backgroundColor:
+                                            FbColors.backgroundcolor,
+                                        title: Text(
+                                          "Confirm Deletion",
+                                          style: normalFont2(
+                                              fontsize: 20,
+                                              fontweight: FontWeight.w700,
+                                              color: FbColors.black),
+                                        ),
+                                        content: const Text(
+                                            "Are you sure you want to delete this SubCategory?"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                              onPressed: () {
+                                                groceryViewModel.deleteProducts(
+                                                    context,
+                                                    groceryViewModel
+                                                        .subCategoryProducts[
+                                                            index]
+                                                        .id);
+                                              },
+                                              child: Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: FbColors.errorcolor),
+                                              ))
+                                        ]);
+                                  });
                             },
                             child: const Icon(
                               Icons.delete,
