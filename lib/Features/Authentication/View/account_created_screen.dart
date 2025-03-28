@@ -1,11 +1,9 @@
 import 'package:fastbag_vendor_flutter/Commons/fb_button.dart';
 import 'package:fastbag_vendor_flutter/Commons/fonts.dart';
 import 'package:fastbag_vendor_flutter/Extentions/navigation_helper.dart';
-import 'package:fastbag_vendor_flutter/Features/Products/View/add_sub_category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
-import '../../Dashboard/view/dashboard_screen.dart';
 
 class AccountCreatedScreen extends StatelessWidget {
   const AccountCreatedScreen({super.key});
@@ -20,7 +18,7 @@ class AccountCreatedScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(248, 250, 250, 1),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(screenWidth * .05),
         child: Column(
           children: [
@@ -78,14 +76,23 @@ class AccountCreatedScreen extends StatelessWidget {
                   subtitle: const Text(
                       "Add items to your product list with images  "),
                 )),
+            const SizedBox(
+              height: 40,
+            ),
             FbButton(
                 onClick: () {
                   //navigate(context: context, screen: const AddSubCategoryScreen());
                 },
                 label: "Continue to Setup"),
+            const SizedBox(
+              height: 10,
+            ),
             FbButton(
               onClick: () {
-                navigate(context: context, screen: FbBottomNav(),type: NavigationType.pushAndRemoveUntil);
+                navigate(
+                    context: context,
+                    screen: FbBottomNav(),
+                    type: NavigationType.pushAndRemoveUntil);
               },
               label: "Skip for later",
               color: Colors.white,

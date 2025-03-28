@@ -8,6 +8,7 @@ import 'package:fastbag_vendor_flutter/Extentions/store_manager.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/Widgets/fb_auth_title.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/View/account_created_screen.dart';
 import 'package:fastbag_vendor_flutter/Features/Authentication/ViewModel/auth_view_model.dart';
+import 'package:fastbag_vendor_flutter/Features/BottomNavigation/CommonWidgets/fb_bottom_nav.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_local_storage.dart';
 import 'package:fastbag_vendor_flutter/storage/fb_store.dart';
 
@@ -82,7 +83,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       if (response.statusCode == 200) {
         print(response.data);
 
-        FbStore.storeData(FbLocalStorage.vendorId, response.data['Vendor-Admin']);
+        FbStore.storeData(
+            FbLocalStorage.vendorId, response.data['Vendor-Admin']);
 
         String accessToken = response.data['access'];
         String refreshToken = response.data['refresh'];
@@ -98,7 +100,10 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
           const SnackBar(content: Text("OTP verified successfully!")),
         );
         // Navigate to the next screen
-        navigate(context: context, screen: const AccountCreatedScreen());
+        navigate(
+            context: context,
+            screen: FbBottomNav(),
+            type: NavigationType.pushAndRemoveUntil);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Invalid OTP. Please try again!")),
@@ -106,9 +111,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       }
     } on DioException catch (dioError) {
       print("Somthing Happend${dioError.response}");
-    }
-
-    catch (e) {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e}")),
       );

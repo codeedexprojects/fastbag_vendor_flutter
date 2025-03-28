@@ -159,8 +159,9 @@ class GroceryViewModel extends ChangeNotifier {
       final response = await _groceryRepo.addSubCategory(data);
       // add subcategory  to  List
       final newSubCategory = GrocerySubCategoryModel.fromJson(response);
-      if (categoryId == response['category'])
+      if (categoryId == response['category'] && !hasMorePages) {
         subCategoriesByCategory.add(newSubCategory);
+      }
       notifyListeners();
 
       Navigator.pop(context);
@@ -308,7 +309,7 @@ class GroceryViewModel extends ChangeNotifier {
 // Add Product to List
       print(response);
       final newProduct = GroceryProductsModel.fromJson(response);
-      if (subCategoryId == response['sub_category']) {
+      if (subCategoryId == response['sub_category'] && !hasMorePages) {
         subCategoryProducts.add(newProduct);
       }
       notifyListeners();
