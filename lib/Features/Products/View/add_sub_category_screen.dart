@@ -74,7 +74,7 @@ class _AddSubCategoryScreenState extends State<AddSubCategoryScreen> {
           .addProductSubCategory(subCategories: category, context: context)
           .then((v) {
             categoryViewModel.allsubcategorypage=1;
-        categoryViewModel.getAllSubCategoryLoading(
+        categoryViewModel.getFoodCategorybySubCategories(
             categoryId: selectedCategory!.id);
       });
 

@@ -80,13 +80,13 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final _viewModel = Provider.of<FashionProductViewModel>(context);
 
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_errorMessage != null) {
-      return Center(child: Text(_errorMessage!));
-    }
+    // if (_isLoading) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
+    //
+    // if (_errorMessage != null) {
+    //   return Center(child: Text(_errorMessage!));
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -117,21 +117,38 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               _buildMainImage(_viewModel, screenWidth),
               const SizedBox(height: 24.78),
               _buildThumbnailList(_viewModel, screenWidth),
-              const SizedBox(height: 36),
+              const SizedBox(height: 20),
               _buildProductHeader(_viewModel, screenWidth),
+              SizedBox(height: 5,),
               _buildMaterialAndRating(_viewModel),
+              SizedBox(height: 5,),
               _buildStockInfo(),
+              SizedBox(height: 5,),
               if (_viewModel.fashionProductDetail?.colors?.isNotEmpty == true)
-                _buildColorSection(_viewModel),
+                Row(
+                  children: [
+                 Text(
+                      'Color',
+                      style: normalFont1(
+                          fontsize: 20,
+                          fontweight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                  ],
+                ),
+              SizedBox(height: 5,),
+              _buildColorSection(_viewModel),
+              SizedBox(height: 5,),
+              if (_viewModel.fashionProductDetail?.colors?.isNotEmpty == true)
               if (_hasValidSizes(_viewModel)) _buildSizeSelection(_viewModel),
-              const SizedBox(height: 17),
+              const SizedBox(height: 15),
               const Divider(
                 color: Colors.grey,
                 thickness: 1,
                 indent: 34,
                 endIndent: 34,
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 5),
               _buildDescription(_viewModel),
             ],
           ),
@@ -159,7 +176,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
             placeholder: (context, url) =>
                 Image.asset(PlaceholderImage.placeholderimage),
             errorWidget: (context, url, error) =>
-                const Icon(Icons.error_outline),
+                Image.asset(PlaceholderImage.placeholderimage),
           ),
         ),
       ),
@@ -286,7 +303,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
     return Row(
       children: [
         Text(
-          'Available Stock : ${Stock ?? 'N/A'} units',
+          'Available Stock : ${Stock ?? '0'} units',
           style: normalFont5(
             fontsize: 15,
             fontweight: FontWeight.w500,
@@ -301,7 +318,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
     _viewModel,
   ) {
     return SizedBox(
-      height: 80,
+      height: 60,
       child: ListView.builder(
         itemCount: _viewModel.fashionProductDetail?.colors?.length ?? 0,
         scrollDirection: Axis.horizontal,
@@ -312,6 +329,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Column(
                 children: [
+
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -377,6 +395,7 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
             color: Colors.black,
           ),
         ),
+        SizedBox(height: 5,),
         SizedBox(
           height: 50,
           child: ListView.builder(
@@ -424,18 +443,47 @@ class _ProductDetailScreenState extends State<FashionProductDetailScreen> {
   Widget _buildDescription(FashionProductViewModel viewModel) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Container(
-        width: 335,
-        child: Text(
-          viewModel.fashionProductDetail?.description ??
-              'No description available',
-          style: normalFont4(
-            fontsize: 16,
-            fontweight: FontWeight.w400,
-            color: FbColors.black,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "Description",
+                style: normalFont1(
+                    fontsize: 15,
+                    fontweight: FontWeight.w900,
+                    color: FbColors.black),
+              ),
+            ],
           ),
-        ),
+          Text(
+            textAlign: TextAlign.start,
+            viewModel.fashionProductDetail?.description ??
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text',
+            style: normalFont4(
+                fontsize: 16,
+                fontweight: FontWeight.w400,
+                color: OrderColor.textColor),
+          ),
+        ],
       ),
+
+
+
+      // Container(
+      //   width: 335,
+      //   child: Text(
+      //     viewModel.fashionProductDetail?.description ??
+      //         'No description available',
+      //     style: normalFont4(
+      //       fontsize: 16,
+      //       fontweight: FontWeight.w400,
+      //       color: FbColors.black,
+      //     ),
+      //   ),
+      // ),
     );
   }
 } // Update your color extension to handle more cases

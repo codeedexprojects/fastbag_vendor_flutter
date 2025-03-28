@@ -60,7 +60,7 @@ TextStyle normalFont2(
       fontSize: fontsize,
       fontWeight: FontWeight.bold,
       color: color,
-      fontStyle: FontStyle.italic);
+      );
 }
 
 TextStyle normalFont3(

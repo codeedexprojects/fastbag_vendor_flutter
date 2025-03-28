@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../Commons/flush_bar.dart';
+
 class ProductEditDeleteScreen extends StatefulWidget {
   // final List<FashionSubCategoryModel> subCategories;
   // final List<FashionCategoryModel> categories;
@@ -167,16 +169,41 @@ class _ProductEditDeleteScreenState extends State<ProductEditDeleteScreen> {
                                 width: 20,
                               ),
                               GestureDetector(
-                                  onTap: () {
-                                    fashionProductViewModel.deleteProduct(
-                                        context: context,
-                                        productId: fashionProductViewModel
-                                            .fashionProducts[index].id!);
-                                  },
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  )),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title:  Text("Confirm Deletion"),
+                                        content: const Text("Are you sure you want to delete this product?"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+
+                                              fashionProductViewModel.deleteProduct(
+                                                context: context,
+                                                productId: fashionProductViewModel.fashionProducts[index].id!,
+                                              );
+                                            },
+                                            child: const Text("Delete", style: TextStyle(color: Colors.red)),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                              ),
+
                             ],
                           ),
                         ),

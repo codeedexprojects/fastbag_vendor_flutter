@@ -85,7 +85,7 @@ class _EditSubCategoryScreenState extends State<EditSubCategoryScreen> {
           .editProductSubCategory(subCategories: category, context: context)
           .then((v) {
         categoryViewModel.allsubcategorypage = 1;
-        categoryViewModel.getAllSubCategoryLoading(
+        categoryViewModel.getFoodCategorybySubCategories(
             categoryId: selectedCategory?.id ?? 0);
       });
 

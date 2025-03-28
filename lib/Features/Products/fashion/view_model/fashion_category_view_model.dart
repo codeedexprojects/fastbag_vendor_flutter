@@ -92,11 +92,13 @@ class FashionCategoryViewModel extends ChangeNotifier {
   bool productloadingall = false;
 
   getFashionCategorybySubCategories({required int categoryId}) async {
+
     productloadingall = true;
     await _categoryRepository
         .fashionpCategorybySubCategoryGet(
             categoryId: categoryId, page: allcategorypage)
         .then((v) {
+      _subCategoryModel = v;
       _selectsubCategory = v?.results ?? [];
       v?.results != null
           ? productloadingall = false
@@ -106,6 +108,7 @@ class FashionCategoryViewModel extends ChangeNotifier {
   }
 
   getAllSubCategoryLoading({required int categoryId}) async {
+
     if (allcategorypage == _subCategoryModel?.totalPages) {
       return;
     }
