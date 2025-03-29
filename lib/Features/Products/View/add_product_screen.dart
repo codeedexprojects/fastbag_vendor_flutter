@@ -130,6 +130,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           variants: variants,
         );
         productProvider.addFoodItem(context: context, model: model).then((v) {
+          productProvider.allProductPage=1;
           productProvider.getProductCategories(
               context: context, subCatId: widget.subCategory.id ?? 0);
         });
