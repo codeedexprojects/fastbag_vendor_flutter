@@ -1,3 +1,4 @@
+
 // class FoodResponseModel {
 //   int? id;
 //   int? vendor;
@@ -99,7 +100,7 @@
 //
 // class Variants {
 //   String? name;
-//   dynamic price;
+//   int? price;
 //   String? stock;
 //
 //   Variants({this.name, this.price, this.stock});
@@ -137,6 +138,42 @@
 //     return data;
 //   }
 // }
+class FoodProductListModel {
+  int? count;
+  int? totalPages;
+  dynamic next;
+  dynamic previous;
+  List<FoodResponseModel>? results;
+
+  FoodProductListModel(
+      {this.count, this.totalPages, this.next, this.previous, this.results});
+
+  FoodProductListModel.fromJson(Map<String, dynamic> json) {
+    count = json['count'];
+    totalPages = json['total_pages'];
+    next = json['next'];
+    previous = json['previous'];
+    if (json['results'] != null) {
+      results = <FoodResponseModel>[];
+      json['results'].forEach((v) {
+        results!.add(new FoodResponseModel.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['count'] = this.count;
+    data['total_pages'] = this.totalPages;
+    data['next'] = this.next;
+    data['previous'] = this.previous;
+    if (this.results != null) {
+      data['results'] = this.results!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
 class FoodResponseModel {
   int? id;
   int? vendor;
@@ -238,7 +275,7 @@ class FoodResponseModel {
 
 class Variants {
   String? name;
-  int? price;
+  dynamic price;
   String? stock;
 
   Variants({this.name, this.price, this.stock});

@@ -19,7 +19,7 @@ import '../../../Commons/flush_bar.dart';
 class ProductRepository {
   final Dio _dio = Dio();
 
-  Future<List<FoodResponseModel>?> getAllProducts(
+  Future<FoodProductListModel?> getAllProducts(
       BuildContext context,   {int? subCatId, int? page,}) async {
     print("inside");
 
@@ -43,10 +43,11 @@ class ProductRepository {
         print("products fetched successful: ${response.data}");
 
         SVProgressHUD.dismiss();
-        List jsonList = response.data;
-        List<FoodResponseModel> jsonData =
-            jsonList.map((v) => FoodResponseModel.fromJson(v)).toList();
-        return jsonData;
+        return FoodProductListModel.fromJson(response.data);
+        // List jsonList = response.data;
+        // List<FoodResponseModel> jsonData =
+        //     jsonList.map((v) => FoodResponseModel.fromJson(v)).toList();
+        // return jsonData;
         // List<dynamic> res = response.data["results"];
         // return res;
 

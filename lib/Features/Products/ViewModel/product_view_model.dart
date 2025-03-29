@@ -7,6 +7,7 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 
 class ProductViewModel extends ChangeNotifier {
   final ProductRepository _productRepository = ProductRepository();
+  FoodProductListModel? _foodProductListModel;
 
   List<FoodResponseModel> _foodProducts = [];
 
@@ -29,13 +30,14 @@ class ProductViewModel extends ChangeNotifier {
   // }
 
   Future getProductCategories(
-      {required BuildContext context,  int? subCatId}) async {
+      {required BuildContext context, int? subCatId}) async {
     productLoadingInAll = true;
     await _productRepository
         .getAllProducts(context, page: allProductPage, subCatId: subCatId)
         .then(
       (value) {
-        _foodProducts = value?? [];
+        _foodProductListModel = value;
+        _foodProducts = value?.results ?? [];
         _foodProducts != null
             ? productLoadingInAll = false
             : productLoadingInAll = false;
@@ -45,18 +47,22 @@ class ProductViewModel extends ChangeNotifier {
   }
 
   getAllProductLoading({required BuildContext context, int? subCatId}) async {
+    if(allProductPage==_foodProductListModel?.totalPages){
+      return;
+    }
     gettingAllProducts = true;
     notifyListeners();
     allProductPage++;
     await _productRepository
         .getAllProducts(context, page: allProductPage, subCatId: subCatId)
         .then(
-            (value) {
-          _foodProducts = value?? [];
-          _foodProducts != null?
-              _foodProducts.addAll(value?? [])
-              : gettingAllProducts=false;
-        },
+      (value) {
+        _foodProductListModel = value;
+        _foodProducts = value?.results ?? [];
+        _foodProducts != null
+            ? _foodProducts.addAll(value?.results ?? [])
+            : gettingAllProducts = false;
+      },
     );
     notifyListeners();
   }
